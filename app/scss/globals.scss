@@ -1,0 +1,55 @@
+@import 'normalize.css';
+
+@mixin center-align {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+[data-theme='light'] {
+    --background: #ede0d0;
+    --foreground: #171717;
+}
+
+[data-theme='dark'] {
+    --background: #212020;
+    --foreground: #c8c8c8;
+}
+
+html,
+body {
+    max-width: 100vw;
+    overflow-x: hidden;
+    font-size: 62.5%;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 1.6rem;
+}
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.default-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--background);
+    color: var(--foreground);
+
+    * {
+        width: 100%;
+    }
+}

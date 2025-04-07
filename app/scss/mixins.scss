@@ -1,0 +1,12 @@
+// mixins.scss
+@mixin center-align {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+@mixin font-default {
+    font-size: 1.4rem;
+    font-color: var(--foreground);
+}
