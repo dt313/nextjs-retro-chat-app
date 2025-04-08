@@ -1,0 +1,270 @@
+@use '/app/scss/mixins.scss' as *;
+
+@keyframes fadeIn {
+    0% {
+        width: 0;
+    }
+
+    100% {
+        width: 100%;
+    }
+}
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    height: calc(100vh - var(--header-height));
+    overflow: hidden;
+    @include respond-to('laptop') {
+    }
+}
+
+.left-side,
+.right-side {
+    height: 100%;
+}
+
+.content {
+    height: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+// left
+
+.left-side {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 0;
+    position: relative;
+    border-right: var(--solid-border);
+    transition: all 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.toggle-btn {
+    height: 40px;
+    width: 8px;
+    position: absolute;
+    right: 2px;
+    border-radius: 12px;
+    background-color: #292626;
+    transition: all 0.6s cubic-bezier(0.075, 0.82, 0.165, 1);
+    z-index: 1;
+
+    &:hover {
+        opacity: 0.8;
+        width: 12px;
+        cursor: pointer;
+    }
+
+    @include respond-to('mobile') {
+        display: none;
+    }
+}
+
+.left-side.show {
+    width: 25%;
+
+    @include respond-to('laptop') {
+        width: 40%;
+    }
+
+    @include respond-to('mobile') {
+        width: 100%;
+        border: none;
+        transition: none;
+
+        .toggle-btn {
+            display: none;
+        }
+    }
+}
+
+.left-side.hide {
+    width: 0;
+    border: none;
+    .left-wrap {
+        visibility: hidden;
+    }
+    .toggle-btn {
+        right: -16px;
+    }
+}
+
+// right
+
+.right-side {
+    width: 0;
+    border-left: var(--solid-border);
+    transition: all 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
+    position: relative;
+
+    @include respond-to('laptop') {
+        position: absolute;
+        right: 0;
+        top: var(--header-height);
+        height: calc(100vh - var(--header-height));
+        border: none;
+        background-color: var(--background);
+        z-index: 1;
+    }
+}
+
+.right-side.show {
+    width: 25%;
+
+    @include respond-to('laptop') {
+        width: 100%;
+    }
+}
+
+.right-side.show.left-visible {
+    @include respond-to('laptop') {
+        width: 60%;
+    }
+}
+
+.right-side.hide {
+    width: 0;
+
+    .r-close-btn {
+        display: none;
+    }
+}
+
+.r-close-btn {
+    display: none;
+    width: 0;
+    height: 0;
+
+    @include respond-to('laptop') {
+        display: block;
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        width: 36px;
+        height: 36px;
+        border-radius: 10rem;
+        @include center-align;
+
+        &:hover {
+            background-color: #a5a2a2;
+        }
+    }
+}
+
+// content
+
+.content.show {
+    width: 100%;
+
+    @include respond-to('laptop') {
+        border: none;
+    }
+}
+
+.content.hide {
+    width: 0;
+    visibility: hidden;
+
+    @include respond-to('laptop') {
+        width: 100%;
+        visibility: visible;
+    }
+
+    @include respond-to('mobile') {
+        width: 0;
+        visibility: hidden;
+    }
+}
+
+.c-close-btn {
+    display: none;
+    width: 0;
+    height: 0;
+
+    @include respond-to('mobile') {
+        display: block;
+        position: absolute;
+        top: 24px;
+        left: 12px;
+        width: 36px;
+        height: 36px;
+        border-radius: 10rem;
+        @include center-align;
+
+        &:hover {
+            background-color: #a5a2a2;
+        }
+    }
+}
+
+.c-header {
+    height: var(--header-height);
+    border-bottom: var(--solid-border);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+
+    @include respond-to('mobile') {
+        padding-left: 64px;
+    }
+}
+
+.c-content {
+    flex: 1;
+    overflow: auto;
+    padding: 12px 24px;
+}
+
+.c-footer {
+    border-top: var(--solid-border);
+}
+
+.user-info {
+    width: 100%;
+    display: flex;
+    height: 100%;
+    align-items: center;
+}
+
+.h-avatar {
+    margin-right: 8px;
+}
+
+.dots-icon:hover {
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+.user-name {
+    display: block;
+    font-family: Lora;
+    color: var(--foreground);
+    font-size: 1.5rem;
+    overflow: hidden;
+    text-wrap: nowrap;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.user-status {
+    font-family: var(--font-family);
+    font-size: 1.4rem;
+    line-height: 1.5;
+    color: var(--text-low-color);
+    font-weight: 400;
+}
+
+.online:after {
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: var(--green);
+    border-radius: 50%;
+    margin-left: 12px;
+}

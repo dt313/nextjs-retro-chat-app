@@ -1,12 +1,29 @@
 // mixins.scss
 @mixin center-align {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
 
 @mixin font-default {
     font-size: 1.4rem;
     font-color: var(--foreground);
+}
+
+$breakpoints: (
+    'mobile': 600px,
+    'tablet': 768px,
+    'laptop': 1024px,
+    'desktop': 1480px,
+);
+
+@mixin respond-to($device) {
+    @if map-has-key($breakpoints, $device) {
+        $size: map-get($breakpoints, $device);
+        @media (max-width: $size) {
+            @content;
+        }
+    } @else {
+        @warn "Breakpoint '#{$device}' không tồn tại trong $breakpoints.";
+    }
 }

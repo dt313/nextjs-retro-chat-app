@@ -1,28 +1,29 @@
 {
-  "name": "retro-chat",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@reduxjs/toolkit": "^2.6.1",
-    "classnames": "^2.5.1",
-    "next": "15.2.4",
-    "normalize.css": "^8.0.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-redux": "^9.2.0",
-    "redux": "^5.0.1",
-    "sass": "^1.86.3"
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "eslint": "^9",
-    "eslint-config-next": "15.2.4",
-    "prettier": "^3.5.3"
-  }
+    "name": "retro-chat",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "@reduxjs/toolkit": "^2.6.1",
+        "classnames": "^2.5.1",
+        "next": "15.2.4",
+        "normalize.css": "^8.0.1",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0",
+        "react-icons": "^5.5.0",
+        "react-redux": "^9.2.0",
+        "redux": "^5.0.1",
+        "sass": "^1.86.3"
+    },
+    "devDependencies": {
+        "@eslint/eslintrc": "^3",
+        "eslint": "^9",
+        "eslint-config-next": "15.2.4",
+        "prettier": "^3.5.3"
+    }
 }

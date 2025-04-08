@@ -1,0 +1,45 @@
+.wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.input {
+    max-height: 100px;
+    width: 100%;
+    padding: 8px 1rem;
+    outline: none;
+    resize: none;
+    font-size: 1.6rem;
+    line-height: 1.4;
+    background-color: transparent;
+    font-family: var(--font-family);
+    border: none;
+    transition: height 0.2s ease-in-out;
+}
+
+.extra {
+    height: 40px;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.attachment {
+    display: flex;
+    gap: 8px;
+}
+
+.submit-icon {
+    background-color: var(--black);
+    color: var(--background);
+    border-radius: 50rem;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.9;
+    }
+}

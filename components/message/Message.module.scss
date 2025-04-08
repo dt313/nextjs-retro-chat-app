@@ -1,0 +1,38 @@
+.wrapper {
+    width: 100%;
+    margin: 24px 0;
+}
+
+.message {
+    width: 100%;
+    display: flex;
+}
+
+.avatar {
+    margin-right: 12px;
+}
+
+.m-content {
+    max-width: 60%;
+    width: fit-content;
+    padding: 12px;
+    border: var(--solid-border);
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    border-bottom-left-radius: 12px;
+    box-shadow: var(--box-shadow);
+}
+
+.isSender {
+    .message {
+        justify-content: flex-end;
+    }
+
+    .m-content {
+        border-top-right-radius: 0px;
+        border-top-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+        border-bottom-left-radius: 12px;
+        background-color: #edcfac;
+    }
+}

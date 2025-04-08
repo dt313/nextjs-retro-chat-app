@@ -3,8 +3,6 @@ import { useSelector } from 'react-redux';
 
 function ThemeWrapper({ children }) {
     const { theme } = useSelector((state) => state.theme);
-
-    console.log(theme);
     return <div data-theme={theme}>{children}</div>;
 }
 

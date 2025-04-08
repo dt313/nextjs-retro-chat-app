@@ -1,0 +1,48 @@
+.wrapper {
+    width: 100%;
+}
+
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 8px;
+
+    .close-icon {
+        transform: translateY(-2px);
+    }
+
+    .open-icon {
+        transform: translateY(0px);
+    }
+
+    &:hover {
+        .close-icon {
+            transform: translateY(0px);
+        }
+
+        .open-icon {
+            transform: translateY(-2px);
+        }
+    }
+}
+
+.label {
+    display: inline-block;
+    width: 100%;
+    font-size: 1.5rem;
+    margin-bottom: 6px;
+
+    &::first-letter {
+        text-transform: uppercase;
+    }
+}
+
+.icon {
+    transition: all 0.2 ease-in-out;
+}
+.summary {
+    margin-bottom: 12px;
+}
