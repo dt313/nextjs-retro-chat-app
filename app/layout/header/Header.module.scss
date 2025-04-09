@@ -18,6 +18,7 @@
     margin: 0;
     font-family: var(--large-retro-font-family);
     color: var(--foreground);
+    cursor: pointer;
 }
 
 .header-menu {
@@ -34,11 +35,31 @@
     transition: background-color 0.2s ease;
 }
 
-.message-icon {
-    color: var(--red);
+.hmenu-item:hover {
+    background-color: #bbbbbb77;
+    cursor: pointer;
 }
 
-.hmenu-item:hover {
-    background-color: #abaaaa;
+.message:hover {
+    background-color: transparent;
     cursor: pointer;
+}
+
+.message {
+    position: relative;
+}
+
+.message-count {
+    @include center-align;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: var(--black);
+    color: var(--background);
+    font-size: 1.2rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-weight: 600;
+    font-family: var(--font-family);
 }

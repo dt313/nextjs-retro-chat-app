@@ -43,7 +43,6 @@ function Message({ id }) {
 
     // Set initial layout based on breakpoint
     useEffect(() => {
-        console.log(breakpoint);
         if (breakpoint === 'lg' || breakpoint === 'xl') {
             setIsShowLeft(true);
             setIsShowRight(true);

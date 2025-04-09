@@ -1,0 +1,93 @@
+.wrapper {
+    width: fit-content;
+    height: fit-content;
+    position: relative;
+}
+
+.children {
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.dropbox {
+    position: absolute;
+    z-index: 5;
+    transition: all 0.2s ease-in-out;
+    top: 130%;
+}
+
+.dropbox.right {
+    left: 170%;
+    transform: translateX(-100%);
+    min-width: 100%;
+
+    .triangle {
+        left: 83%;
+    }
+}
+
+.dropbox.left {
+    left: -70%;
+    transform: translateX(0);
+    .triangle {
+        left: 13%;
+    }
+}
+
+.dropbox.center {
+    left: 50%;
+    transform: translateX(-50%);
+
+    .triangle {
+        left: 47.8%;
+    }
+}
+
+@keyframes fadeDown {
+    from {
+        opacity: 0;
+        visibility: hidden;
+        top: 50%;
+    }
+    to {
+        opacity: 1;
+        visibility: visible;
+        top: 130%;
+    }
+}
+
+@keyframes opacityDown {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.dropbox.show {
+    opacity: 1;
+    visibility: visible;
+    animation: fadeDown 0.3s ease-in-out;
+}
+
+.dropbox.hide {
+    opacity: 0;
+    visibility: hidden;
+    display: none;
+    animation: opacityDown 0.2s ease-in-out;
+}
+
+.triangle {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 12px 12px 12px;
+    border-color: transparent transparent #ddc4aa transparent;
+    position: absolute;
+    top: -12px;
+}

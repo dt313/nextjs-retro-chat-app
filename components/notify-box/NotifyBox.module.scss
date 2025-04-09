@@ -1,0 +1,79 @@
+.wrapper {
+    background-color: #fff;
+    width: 360px;
+    max-height: 400px;
+    border-radius: 12px;
+    --header-height: 48px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.header {
+    height: var(--header-height);
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ddc4aa;
+    border-radius: 12px 12px 0 0;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 600;
+    font-family: Lona;
+}
+
+.notify-list {
+    height: calc(400px - var(--header-height));
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 12px 0;
+    overscroll-behavior: none;
+
+    &::-webkit-scrollbar {
+        width: 2px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--text-low-color);
+        border-radius: 3px;
+    }
+}
+
+.notify-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 12px;
+    cursor: pointer;
+    &:hover {
+        background-color: var(--background);
+    }
+}
+
+.avatar {
+    margin-right: 12px;
+}
+
+.notify-content {
+    flex: 1;
+}
+
+.message {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.time {
+    font-size: 1.3rem;
+    color: var(--text-low-color);
+}
+
+.setting-icon {
+    cursor: pointer;
+}

@@ -1,6 +1,6 @@
 'use client';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import classNames from 'classnames/bind';
 import styles from './search.module.scss';
 import InputSearch from '@/components/input-search';
@@ -8,7 +8,7 @@ import SearchCard from '@/components/search-card';
 
 const cx = classNames.bind(styles);
 
-function Search() {
+function SearchContent() {
     const [searchValue, setSearchValue] = useState('');
     const [filterValue, setFilterValue] = useState('user');
     const searchParams = useSearchParams();
@@ -92,4 +92,10 @@ function Search() {
     );
 }
 
-export default Search;
+export default function Search() {
+    return (
+        <Suspense fallback={<div>Đang tải...</div>}>
+            <SearchContent />
+        </Suspense>
+    );
+}

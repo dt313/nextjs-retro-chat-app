@@ -12,7 +12,9 @@ function Overlay({ children, onClick, nonBackdrop = false, className }) {
 
     return (
         <div className={cx('wrapper', classes)} onClick={onClick}>
-            {children}
+            <div className={cx('content')} onClick={(e) => e.stopPropagation()}>
+                {children}
+            </div>
         </div>
     );
 }

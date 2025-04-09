@@ -1,15 +1,23 @@
 @use '/app/scss/mixins.scss' as *;
 
 .wrapper {
-    padding: 44px 20px 44px 20px;
     width: 100%;
-    max-height: 648px;
+    height: 100%;
+}
+
+.container {
+    padding: 0 12px;
+    width: 100%;
+    max-height: 684px;
     height: 100%;
     @include center-align;
     flex-direction: column;
     justify-content: flex-start;
     overflow-y: auto;
+    position: relative;
+    background-color: transparent;
     overscroll-behavior: none;
+    z-index: 1;
 }
 
 .header,
@@ -21,35 +29,10 @@
     margin-bottom: 12px;
 }
 
-.header {
-    margin-top: 44px;
-}
-
-.logo {
-    width: 60px;
-    height: 60px;
-    border-radius: 12px;
-    margin-bottom: 24px;
-}
-
-.header {
-    .title {
-        font-size: 3rem;
-        font-family: var(--font-family);
-        margin-bottom: 24px;
-    }
-
-    .description {
-        max-width: 380px;
-        font-size: 1.6rem;
-        font-family: var(--font-family);
-        margin-bottom: 24px;
-        text-align: center;
-    }
-}
-
 .auth-list {
     margin-bottom: 24px;
+    max-width: 360px;
+    width: 100%;
 }
 
 .auth-item {
@@ -58,7 +41,6 @@
     margin-bottom: 12px;
     height: 44px;
     padding: 4px 8px;
-    min-width: 360px;
     width: 100%;
     background-color: #ededed;
     border: 2px solid #d2d2d2;
@@ -81,13 +63,17 @@
 
     .auth-item-text {
         display: inline-block;
-        padding: 0 60px;
+        padding: 0 40px;
         font-size: 1.6rem;
         font-family: var(--font-family);
         font-weight: 500;
         width: 100%;
         text-align: center;
     }
+}
+
+.footer {
+    margin-bottom: 24px;
 }
 
 .redirect-text {
@@ -126,7 +112,7 @@
     position: absolute;
     top: 24px;
     left: 24px;
-
+    z-index: 5;
     &:hover {
         opacity: 0.8;
 
@@ -140,5 +126,21 @@
 .back-text {
     font-size: 1.6rem;
     font-family: var(--font-family);
-    font-weight: 400;
+    font-weight: 500;
+}
+
+.password-auth {
+    width: 100%;
+}
+
+.forgot-password {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    border-radius: 16px;
 }

@@ -15,9 +15,8 @@
     left: 0;
     width: 100%;
     height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @include center-align;
+
     z-index: 1000;
     background-color: rgba(0, 0, 0, 0.5);
     animation: overlay-in 0.2s ease-in-out;
@@ -26,4 +25,9 @@
 
 .nonBackdrop {
     background-color: transparent;
+}
+
+.content {
+    width: 100%;
+    @include center-align;
 }

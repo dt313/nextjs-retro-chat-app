@@ -6,12 +6,39 @@
 
 .container {
     max-width: 576px;
-
+    width: 100%;
     background-color: #fff;
     min-height: 500px;
-    width: 100%;
     border-radius: 16px;
     position: relative;
+}
+
+.container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    opacity: 0.08;
+    background-image:
+        radial-gradient(#ffffff40, #fff0 40%),
+        radial-gradient(hsl(280, 100%, 75%) 30%, hsl(190, 100%, 70%), hsla(190, 100%, 70%, 0.4) 41%, transparent 52%),
+        radial-gradient(hsl(48, 100%, 70%) 37%, transparent 46%),
+        linear-gradient(155deg, transparent 65%, hsl(10, 100%, 60%) 95%), linear-gradient(45deg, #ff00cc, #3333ff);
+
+    background-size:
+        200% 200%,
+        285% 500%,
+        285% 500%,
+        cover,
+        cover;
+    background-position:
+        bottom left,
+        109% 68%,
+        109% 68%,
+        center,
+        center;
 }
 
 .close-icon {
@@ -22,6 +49,7 @@
     border-radius: 50%;
     background-color: #d2d2d2;
     transition: opacity 0.2s ease;
+    z-index: 5;
 
     &:hover {
         opacity: 0.8;

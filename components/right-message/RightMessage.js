@@ -1,9 +1,9 @@
 import classNames from 'classnames/bind';
 import styles from './RightMessage.module.scss';
-import Avatar from '../avatar/Avatar';
+import Avatar from '../avatar';
 import Information from '../information';
 import Details from '../details';
-
+import AttachImages from '../attach-images';
 const cx = classNames.bind(styles);
 
 const INFORMATION = [
@@ -41,8 +41,7 @@ function RightMessage({ hide }) {
                     culpa laborum laborum mollit ipsum. Magna aliqua pariatur anim quis fugiat pariatur laborum minim.
                 </Details>
                 <Details label="Images">
-                    Ad dolor ex est laborum incididunt quis excepteur. Laborum sunt laborum adipisicing consectetur esse
-                    culpa laborum laborum mollit ipsum. Magna aliqua pariatur anim quis fugiat pariatur laborum minim.
+                    <AttachImages />
                 </Details>
             </div>
         </div>

@@ -5,10 +5,33 @@ import styles from './MessageInput.module.scss';
 import { BsImage } from 'react-icons/bs';
 import { CgAttachment } from 'react-icons/cg';
 import { FaArrowUp } from 'react-icons/fa6';
-
-import Icon from '../icon';
+import Image from '@/components/image';
+import Icon from '@/components/icon';
 import { useAutoResize } from '@/hooks';
+import { RiCloseLine } from 'react-icons/ri';
 const cx = classNames.bind(styles);
+
+const preview = [
+    {
+        id: 1,
+        type: 'image',
+    },
+    {
+        id: 2,
+        type: 'file',
+        name: 'file.txt',
+    },
+
+    {
+        id: 3,
+        type: 'image',
+    },
+    {
+        id: 4,
+        type: 'file',
+        name: 'file.txt',
+    },
+];
 
 function MessageInput({ onSubmit }) {
     const [value, setValue] = useState('');
@@ -37,6 +60,26 @@ function MessageInput({ onSubmit }) {
 
     return (
         <div className={cx('wrapper')}>
+            {/* <div className={cx('preview')}>
+                {preview.map((item) => {
+                    if (item.type === 'image') {
+                        return (
+                            <div className={cx('preview-image')} key={item.id}>
+                                <Icon className={cx('preview-delete')} element={<RiCloseLine />} />
+                                <Image className={cx('preview-img')} />
+                            </div>
+                        );
+                    }
+                    if (item.type === 'file') {
+                        return (
+                            <div className={cx('preview-file')} key={item.id}>
+                                <Icon className={cx('preview-delete')} element={<RiCloseLine />} />
+                                <span className={cx('preview-file-name')}>{item.name}</span>
+                            </div>
+                        );
+                    }
+                })}
+            </div> */}
             <textarea
                 ref={textRef}
                 className={cx('input')}

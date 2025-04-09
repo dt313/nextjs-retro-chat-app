@@ -1,0 +1,29 @@
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 80px;
+}
+
+.logo {
+    margin-bottom: 24px;
+}
+
+.header {
+    margin-bottom: 0;
+
+    .title {
+        font-size: 3rem;
+        font-family: var(--font-family);
+        margin-bottom: 24px;
+        text-align: center;
+    }
+
+    .description {
+        max-width: 380px;
+        font-size: 1.5rem;
+        font-family: var(--font-family);
+        margin-bottom: 24px;
+        text-align: center;
+    }
+}
