@@ -4,7 +4,7 @@ const initialState = {
     theme: 'light',
 };
 
-const toastReducer = (state = initialState, action) => {
+const themeReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'TOGGLE_THEME':
             return {
@@ -17,4 +17,4 @@ const toastReducer = (state = initialState, action) => {
     }
 };
 
-export default toastReducer;
+export default themeReducer;

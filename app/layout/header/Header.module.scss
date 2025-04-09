@@ -28,4 +28,17 @@
     @include center-align;
     margin-left: 8px;
     color: var(--foreground);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    transition: background-color 0.2s ease;
+}
+
+.message-icon {
+    color: var(--red);
+}
+
+.hmenu-item:hover {
+    background-color: #abaaaa;
+    cursor: pointer;
 }

@@ -1,0 +1,144 @@
+@use '/app/scss/mixins.scss' as *;
+
+.wrapper {
+    padding: 44px 20px 44px 20px;
+    width: 100%;
+    max-height: 648px;
+    height: 100%;
+    @include center-align;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow-y: auto;
+    overscroll-behavior: none;
+}
+
+.header,
+.auth-list,
+.footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.header {
+    margin-top: 44px;
+}
+
+.logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+}
+
+.header {
+    .title {
+        font-size: 3rem;
+        font-family: var(--font-family);
+        margin-bottom: 24px;
+    }
+
+    .description {
+        max-width: 380px;
+        font-size: 1.6rem;
+        font-family: var(--font-family);
+        margin-bottom: 24px;
+        text-align: center;
+    }
+}
+
+.auth-list {
+    margin-bottom: 24px;
+}
+
+.auth-item {
+    @include center-align;
+    justify-content: flex-start;
+    margin-bottom: 12px;
+    height: 44px;
+    padding: 4px 8px;
+    min-width: 360px;
+    width: 100%;
+    background-color: #ededed;
+    border: 2px solid #d2d2d2;
+    position: relative;
+    border-radius: 10rem;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #d2d2d2;
+    }
+
+    .auth-logo {
+        margin-left: 12px;
+        width: 32px;
+        height: 32px;
+        position: absolute;
+        left: 0;
+        padding: 4px;
+    }
+
+    .auth-item-text {
+        display: inline-block;
+        padding: 0 60px;
+        font-size: 1.6rem;
+        font-family: var(--font-family);
+        font-weight: 500;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+.redirect-text {
+    color: var(--text-color);
+    opacity: 0.9;
+    font-size: 1.6rem;
+    font-family: var(--font-family);
+    font-weight: 400;
+    margin-bottom: 12px;
+}
+
+.link-text {
+    font-weight: 600;
+    color: var(--red);
+    margin-bottom: 12px;
+    font-size: 1.6rem;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.foot-des-text {
+    max-width: 360px;
+    font-size: 1.4rem;
+    font-family: var(--font-family);
+    text-align: center;
+    margin-bottom: 12px;
+    color: var(--text-low-color);
+}
+
+.back {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 24px;
+    cursor: pointer;
+    position: absolute;
+    top: 24px;
+    left: 24px;
+
+    &:hover {
+        opacity: 0.8;
+
+        .back-icon {
+            transition: transform 0.2s ease;
+            transform: translateX(-4px);
+        }
+    }
+}
+
+.back-text {
+    font-size: 1.6rem;
+    font-family: var(--font-family);
+    font-weight: 400;
+}

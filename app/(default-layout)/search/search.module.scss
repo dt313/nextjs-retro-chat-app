@@ -1,0 +1,70 @@
+@use '/app/scss/mixins.scss' as *;
+.wrapper {
+    @include center-align;
+
+    flex-direction: column;
+}
+
+.container {
+    width: 100%;
+    max-width: 1400px;
+    padding: 0 24px;
+    background-image: url('../../../assets/images/search-bg-1.png'), url('../../../assets/images/search-bg-2.png');
+    background-size: 200px, 180px;
+    background-position:
+        top left,
+        top right;
+    background-repeat: no-repeat;
+    mix-blend-mode: multiply;
+}
+
+.header {
+    @include center-align;
+    flex-direction: column;
+}
+
+.title {
+    font-size: 3rem;
+    font-weight: 600;
+    text-align: center;
+    font-family: var(--font-family);
+    padding: 16px 0;
+    text-shadow: 2px 2px #fefefe;
+}
+
+.title-strong {
+    font-family: var(--large-retro-font-family);
+}
+
+.search-input {
+    max-width: 600px;
+    width: 100%;
+}
+
+.filter {
+    margin-top: 40px;
+    @include center-align;
+}
+
+.filter-item {
+    font-size: 1.6rem;
+    font-family: var(--font-family);
+    color: var(--text-color);
+    margin-right: 24px;
+    border-bottom: var(--solid-border);
+    cursor: pointer;
+}
+
+.filter-item.active {
+    font-weight: 600;
+    border-bottom: 2px solid var(--black);
+}
+
+.list {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    margin-top: 40px;
+    gap: 16px;
+    padding-bottom: 100px;
+}

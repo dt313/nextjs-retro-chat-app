@@ -1,0 +1,29 @@
+@use '/app/scss/mixins.scss' as *;
+
+.wrapper {
+    @include center-align;
+}
+
+.container {
+    max-width: 576px;
+
+    background-color: #fff;
+    min-height: 500px;
+    width: 100%;
+    border-radius: 16px;
+    position: relative;
+}
+
+.close-icon {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: #d2d2d2;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+        opacity: 0.8;
+    }
+}

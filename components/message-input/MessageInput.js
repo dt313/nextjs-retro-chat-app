@@ -7,7 +7,7 @@ import { CgAttachment } from 'react-icons/cg';
 import { FaArrowUp } from 'react-icons/fa6';
 
 import Icon from '../icon';
-import { useAutoResize } from '@/hook';
+import { useAutoResize } from '@/hooks';
 const cx = classNames.bind(styles);
 
 function MessageInput({ onSubmit }) {

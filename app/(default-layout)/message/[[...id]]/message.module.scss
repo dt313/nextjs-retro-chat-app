@@ -181,6 +181,10 @@
     }
 }
 
+.no-id {
+    @include center-align;
+}
+
 .c-close-btn {
     display: none;
     width: 0;

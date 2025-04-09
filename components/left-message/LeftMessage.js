@@ -3,9 +3,8 @@ import { useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './LeftMessage.module.scss';
 import { FiSearch } from 'react-icons/fi';
-import Input from '../input';
+import InputSearch from '../input-search';
 import MessagePreview from '../message-preview';
-import { isRejected } from '@reduxjs/toolkit';
 
 const cx = classNames.bind(styles);
 
@@ -42,7 +41,7 @@ function LeftMessage({ className }) {
     return (
         <div className={cx('wrapper', className)}>
             <div className={cx('search-wrapper')}>
-                <Input
+                <InputSearch
                     placeholder="Search"
                     value={searchValue}
                     onChange={handleChangeSearchValue}
