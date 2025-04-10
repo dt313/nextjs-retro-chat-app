@@ -1,0 +1,33 @@
+.reaction {
+    padding: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    border-radius: 9999px;
+}
+
+.reaction.dark {
+    background-color: #333;
+    border: 1px solid var(--border-color);
+}
+
+.reaction.light {
+    background-color: #e8e8e8;
+    border: 1px solid var(--border-color);
+}
+
+.icon-box {
+    height: 32px;
+    width: 32px;
+    margin: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+
+    &:hover {
+        transform: scale(1.3);
+    }
+}

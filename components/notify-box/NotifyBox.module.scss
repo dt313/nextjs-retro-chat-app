@@ -1,3 +1,5 @@
+@use '@/app/scss/mixins' as *;
+
 .wrapper {
     background-color: #fff;
     width: 360px;
@@ -5,6 +7,10 @@
     border-radius: 12px;
     --header-height: 48px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+    @include respond-to('mobile') {
+        width: 300px;
+    }
 }
 
 .header {

@@ -29,7 +29,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    position: relative;
+    overflow-x: hidden;
 }
 
 // left
@@ -221,7 +221,8 @@
 .c-content {
     flex: 1;
     overflow: auto;
-    padding: 12px 24px;
+    // padding: 12px 24px;
+    position: relative;
 }
 
 .c-footer {
@@ -271,4 +272,48 @@
     background-color: var(--green);
     border-radius: 50%;
     margin-left: 12px;
+}
+
+.reply-box {
+    width: 100%;
+    position: sticky;
+    bottom: 0;
+    background-color: #d7d7d7;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+
+    .reply-content {
+        font-family: var(--font-family);
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .reply-name {
+        @include font-default;
+        text-align: left;
+        font-size: 1.5rem;
+    }
+
+    .reply-text {
+        display: inline-block;
+        @include font-default;
+        font-size: 1.4rem;
+        color: var(--text-low-color);
+        text-align: left;
+        margin-top: 4px;
+        margin-left: 4px;
+        max-width: 500px;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .reply-close {
+        margin-left: 12px;
+    }
 }

@@ -1,0 +1,40 @@
+.wrapper {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.light {
+    background-color: #d2d2d2;
+    color: #333;
+
+    &:hover {
+        opacity: 0.8;
+    }
+}
+
+.dark {
+    background-color: #414141;
+    color: #fff;
+
+    &:hover {
+        opacity: 0.9;
+    }
+}
+
+.small {
+    width: 20px;
+    height: 20px;
+}
+
+.medium {
+    width: 24px;
+    height: 24px;
+}
+
+.large {
+    width: 36px;
+    height: 36px;
+}

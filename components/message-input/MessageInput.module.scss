@@ -51,9 +51,10 @@
     background-color: var(--black);
     color: var(--background);
     border-radius: 50rem;
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     cursor: pointer;
+    margin-bottom: 4px;
 
     &:hover {
         opacity: 0.9;
@@ -61,17 +62,9 @@
 }
 
 .preview-delete {
-    cursor: pointer;
-    font-size: 1.6rem;
-    background-color: var(--black);
-    color: var(--background);
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
     position: absolute;
     top: -8px;
     right: -8px;
-    transition: color 0.2s ease-in-out;
     box-shadow:
         #fff 0px 13px 27px -5px,
         #fff 0px 8px 16px -8px;

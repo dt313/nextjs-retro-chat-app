@@ -8,7 +8,7 @@ import { FaArrowUp } from 'react-icons/fa6';
 import Image from '@/components/image';
 import Icon from '@/components/icon';
 import { useAutoResize } from '@/hooks';
-import { RiCloseLine } from 'react-icons/ri';
+import CloseIcon from '@/components/close-icon';
 const cx = classNames.bind(styles);
 
 const preview = [
@@ -46,8 +46,11 @@ function MessageInput({ onSubmit }) {
 
         onSubmit({
             user: 'Alice',
-            message: value,
+            content: {
+                message: value,
+            },
             timestamp: '2025-04-08T14:30:00Z',
+            type: 'text',
         });
     };
 
@@ -65,7 +68,7 @@ function MessageInput({ onSubmit }) {
                     if (item.type === 'image') {
                         return (
                             <div className={cx('preview-image')} key={item.id}>
-                                <Icon className={cx('preview-delete')} element={<RiCloseLine />} />
+                                <CloseIcon theme="dark" small className={cx('preview-delete')} />
                                 <Image className={cx('preview-img')} />
                             </div>
                         );
@@ -73,7 +76,7 @@ function MessageInput({ onSubmit }) {
                     if (item.type === 'file') {
                         return (
                             <div className={cx('preview-file')} key={item.id}>
-                                <Icon className={cx('preview-delete')} element={<RiCloseLine />} />
+                                <CloseIcon theme="dark" small className={cx('preview-delete')} />
                                 <span className={cx('preview-file-name')}>{item.name}</span>
                             </div>
                         );

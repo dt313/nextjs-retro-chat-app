@@ -1,4 +1,4 @@
-import { TOGGLE_THEME } from '../actions/themeAction';
+import { TOGGLE_THEME } from '../actions/theme-action';
 
 const initialState = {
     theme: 'light',

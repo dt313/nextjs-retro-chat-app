@@ -13,8 +13,10 @@ import { messages } from '@/config/ui-config';
 import { redirect } from 'next/navigation';
 import RightMessage from '@/components/right-message';
 import { RiArrowRightSLine, RiArrowLeftSLine } from 'react-icons/ri';
+import CloseIcon from '@/components/close-icon';
 import useBreakpoint from '@/hooks/useBreakpoint';
-
+import { useSelector, useDispatch } from 'react-redux';
+import { closeReplyBox } from '@/redux/actions/reply-box-action';
 const cx = classNames.bind(styles);
 
 function Message({ id }) {
@@ -23,6 +25,8 @@ function Message({ id }) {
     const [isShowContent, setIsShowContent] = useState(false);
     const [messagesList, setMessageList] = useState(messages);
     const breakpoint = useBreakpoint();
+    const dispatch = useDispatch();
+    const replyBox = useSelector((state) => state.replyBox);
 
     const handleAddMessage = (content) => {
         setMessageList((prev) => [...prev, content]);
@@ -98,6 +102,20 @@ function Message({ id }) {
                     </div>
                     <div className={cx('c-content')}>
                         <MessageBox list={messagesList} />
+                        {replyBox.isOpen && (
+                            <div className={cx('reply-box')}>
+                                <div className={cx('reply-content')}>
+                                    <strong className={cx('reply-name')}> Đang trả lời {replyBox.data.username}</strong>
+                                    <p className={cx('reply-text')}>{replyBox.data.message}</p>
+                                </div>
+                                <CloseIcon
+                                    theme="dark"
+                                    small
+                                    className={cx('reply-close')}
+                                    onClick={() => dispatch(closeReplyBox())}
+                                />
+                            </div>
+                        )}
                     </div>
                     <div className={cx('c-footer')}>
                         <MessageInput onSubmit={handleAddMessage} />

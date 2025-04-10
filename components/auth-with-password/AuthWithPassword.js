@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './AuthWithPassword.module.scss';
 import Input from '@/components/input';
-import { REGISTER_AUTH_BOX } from '@/redux/actions/authBoxAction';
+import { REGISTER_AUTH_BOX } from '@/redux/actions/auth-box-action';
 const cx = classNames.bind(styles);
 
 function AuthWithPassword({ type }) {

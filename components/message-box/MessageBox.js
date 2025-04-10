@@ -15,9 +15,13 @@ function MessageBox({ list = [] }) {
     return (
         <div className={cx('wrapper')}>
             {list.map((mes, index) => (
-                <Message key={index} isSender={mes.user === 'Alice'}>
-                    {mes.message}
-                </Message>
+                <Message
+                    type={mes.type}
+                    key={index}
+                    isSender={mes.user === 'Alice'}
+                    content={mes.content}
+                    timestamp={mes.timestamp}
+                />
             ))}
 
             <div ref={messageEndRef}></div>

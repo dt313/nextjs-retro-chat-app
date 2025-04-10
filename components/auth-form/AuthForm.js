@@ -6,7 +6,7 @@ import Image from '@/components/image';
 import images from '@/assets/images';
 import Icon from '@/components/icon';
 import AuthWithPassword from '@/components/auth-with-password';
-import { LOGIN_AUTH_BOX, REGISTER_AUTH_BOX, FORGET_PASSWORD_BOX, openAuthBox } from '@/redux/actions/authBoxAction';
+import { LOGIN_AUTH_BOX, REGISTER_AUTH_BOX, FORGET_PASSWORD_BOX, openAuthBox } from '@/redux/actions/auth-box-action';
 import { useDispatch } from 'react-redux';
 import { RiArrowLeftSLine } from 'react-icons/ri';
 import ForgotPassword from '@/components/forgot-password';

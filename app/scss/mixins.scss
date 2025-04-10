@@ -7,8 +7,8 @@
 
 @mixin font-default {
     font-size: 1.4rem;
-    font-weight: var(--font-family);
-    font-color: var(--text-color);
+    font-family: var(--font-family);
+    color: var(--text-color);
 }
 
 $breakpoints: (

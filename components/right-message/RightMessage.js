@@ -4,6 +4,7 @@ import Avatar from '../avatar';
 import Information from '../information';
 import Details from '../details';
 import AttachImages from '../attach-images';
+import AttachFile from '../attach-file';
 const cx = classNames.bind(styles);
 
 const INFORMATION = [
@@ -37,8 +38,7 @@ function RightMessage({ hide }) {
                     culpa laborum laborum mollit ipsum. Magna aliqua pariatur anim quis fugiat pariatur laborum minim.
                 </Details>
                 <Details label="File, Attachment">
-                    Ad dolor ex est laborum incididunt quis excepteur. Laborum sunt laborum adipisicing consectetur esse
-                    culpa laborum laborum mollit ipsum. Magna aliqua pariatur anim quis fugiat pariatur laborum minim.
+                    <AttachFile />
                 </Details>
                 <Details label="Images">
                     <AttachImages />

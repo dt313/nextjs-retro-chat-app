@@ -1,4 +1,4 @@
-import { OPEN_AUTH_BOX, CLOSE_AUTH_BOX, LOGIN_AUTH_BOX } from '../actions/authBoxAction';
+import { OPEN_AUTH_BOX, CLOSE_AUTH_BOX, LOGIN_AUTH_BOX } from '../actions/auth-box-action';
 
 const initialState = {
     type: LOGIN_AUTH_BOX,

@@ -8,7 +8,7 @@ import Dropdown from '@/components/drop-down';
 import Avatar from '@/components/avatar/Avatar';
 import Icon from '@/components/icon/Icon';
 import { useDispatch } from 'react-redux';
-import { openAuthBox, LOGIN_AUTH_BOX } from '@/redux/actions/authBoxAction';
+import { openAuthBox, LOGIN_AUTH_BOX } from '@/redux/actions/auth-box-action';
 import NotifyBox from '@/components/notify-box';
 import MessageIcon from '@/components/message-icon';
 const cx = classNames.bind(styles);
