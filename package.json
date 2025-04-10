@@ -10,6 +10,7 @@
     },
     "dependencies": {
         "@reduxjs/toolkit": "^2.6.1",
+        "@tippyjs/react": "^4.2.6",
         "classnames": "^2.5.1",
         "next": "15.2.4",
         "normalize.css": "^8.0.1",
