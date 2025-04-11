@@ -17,6 +17,8 @@ function Avatar({ src, className, size = 60, fallback = images.noUser, ...props 
             fallback={fallback}
             {...props}
             style={{ width: `${size}px`, height: `${size}px` }}
+            width={size}
+            height={size}
         />
     );
 }

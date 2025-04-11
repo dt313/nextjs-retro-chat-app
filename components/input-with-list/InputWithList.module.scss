@@ -1,0 +1,34 @@
+@use '/app/scss/mixins.scss' as *;
+.wrapper {
+    width: 100%;
+    @include center-align;
+    position: relative;
+}
+.options {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    max-height: 200px;
+    width: 100%;
+    top: calc(100% - 12px);
+}
+
+.list {
+    max-height: 200px;
+    height: 100%;
+    max-width: 360px;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    width: 100%;
+    border-radius: 8px;
+    overflow-y: auto;
+    overscroll-behavior: none;
+}
+
+.list-item {
+    padding: 12px;
+    cursor: pointer;
+    &:hover {
+        background-color: #f0f0f0;
+    }
+}

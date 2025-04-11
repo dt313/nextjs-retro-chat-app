@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import classNames from 'classnames/bind';
 import { usePathname, useRouter } from 'next/navigation';
 import styles from './Header.module.scss';
@@ -11,9 +12,11 @@ import { useDispatch } from 'react-redux';
 import { openAuthBox, LOGIN_AUTH_BOX } from '@/redux/actions/auth-box-action';
 import NotifyBox from '@/components/notify-box';
 import MessageIcon from '@/components/message-icon';
+import Creation from '@/components/creation';
 const cx = classNames.bind(styles);
 
 function Header() {
+    const [isOpenCreation, setIsOpenCreation] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
     const dispatch = useDispatch();
@@ -31,7 +34,7 @@ function Header() {
                     </span>
                 )}
 
-                <span className={cx('hmenu-item')}>
+                <span className={cx('hmenu-item')} onClick={() => setIsOpenCreation(true)}>
                     <Icon element={<PiNotePencilFill />} />
                 </span>
 
@@ -44,6 +47,8 @@ function Header() {
                     <Avatar size={40} />
                 </span>
             </div>
+
+            {isOpenCreation && <Creation onClose={() => setIsOpenCreation(false)} />}
         </header>
     );
 }

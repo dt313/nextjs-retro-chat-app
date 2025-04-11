@@ -13,13 +13,19 @@ function AuthWithPassword({ type }) {
         name: '',
     });
 
-    const handleChangeAuthData = (key) => {};
+    const handleChangeAuthData = (e) => {
+        setAuthData({
+            ...authData,
+            [e.target.name]: e.target.value,
+        });
+    };
     return (
         <div className={cx('wrapper')}>
             {type === REGISTER_AUTH_BOX && (
                 <Input
                     label="Họ và tên"
                     value={authData.name}
+                    name="name"
                     onChange={handleChangeAuthData}
                     placeholder="Họ và tên"
                 />
@@ -27,10 +33,16 @@ function AuthWithPassword({ type }) {
             <Input
                 label="Tên đăng nhập"
                 value={authData.email}
+                name="email"
                 onChange={handleChangeAuthData}
                 placeholder="Email or username"
             />
-            <Input value={authData.password} onChange={handleChangeAuthData} placeholder="Nhập password" />
+            <Input
+                value={authData.password}
+                name="password"
+                onChange={handleChangeAuthData}
+                placeholder="Nhập password"
+            />
             {type === REGISTER_AUTH_BOX && (
                 <Input value={authData.password} onChange={handleChangeAuthData} placeholder="Mã xác nhận" />
             )}

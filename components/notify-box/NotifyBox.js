@@ -6,7 +6,6 @@ import NotifyItem from './NofifyItem';
 const cx = classNames.bind(styles);
 
 function NotifyBox() {
-    console.log('render');
     return (
         <div className={cx('wrapper')}>
             <div className={cx('header')}>

@@ -17,7 +17,7 @@ function AuthFormWrap() {
 
     return (
         <Overlay className={cx('wrapper')} onClick={() => dispatch(closeAuthBox())}>
-            <div className={cx('container')}>
+            <div className={cx('container')} onClick={(e) => e.stopPropagation()}>
                 <CloseIcon large className={cx('close-icon')} onClick={() => dispatch(closeAuthBox())} />
                 <AuthForm type={authBox.type} />
             </div>

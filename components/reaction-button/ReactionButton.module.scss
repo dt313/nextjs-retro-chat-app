@@ -1,0 +1,248 @@
+@keyframes open {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}
+
+.no-underline:hover {
+    text-decoration: none;
+    cursor: default;
+}
+
+.icon-box {
+    width: 22px;
+    height: 22px;
+    margin-right: -4px;
+    border: 2px solid var(--background);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 99999px;
+}
+.icon-box:first-child {
+    z-index: 7;
+}
+.icon-box:nth-child(2) {
+    z-index: 6;
+}
+.icon-box:nth-child(3) {
+    z-index: 5;
+}
+.icon-box:nth-child(4) {
+    z-index: 4;
+}
+.icon-box:nth-child(5) {
+    z-index: 3;
+}
+.icon-box:nth-child(6) {
+    z-index: 2;
+}
+.icon-box:nth-child(7) {
+    z-index: 1;
+}
+
+.total {
+    margin-left: 8px;
+    font-size: 1.4rem;
+    font-family: var(--font-family);
+}
+
+// Reaction List User
+
+.reactions-listbox {
+    padding: 8px 20px 0px 20px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    font-family: var(--system-ui);
+    max-width: 600px;
+    width: 100%;
+    height: 468px;
+    cursor: default;
+    animation: open 0.2s cubic-bezier(0, 0.56, 0.62, 0.57);
+}
+
+.header {
+    width: 100%;
+    height: 48px;
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tabs {
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    .tab {
+        margin-right: 4px;
+        padding: 0 8px;
+        width: 84px;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 12px;
+        transition:
+            background-color 0.2s ease-in-out,
+            color 0.2s ease-in-out;
+        position: relative;
+
+        &:hover {
+            background-color: #e1e1e1;
+            cursor: pointer;
+        }
+    }
+
+    .no-hover:hover {
+        background-color: transparent;
+    }
+
+    .more {
+        width: 100px;
+    }
+
+    .active {
+        color: green;
+        position: relative;
+
+        .sub-tabs {
+            color: #fff;
+        }
+    }
+
+    .active::before {
+        content: '';
+        width: 100%;
+        height: 3px;
+        background-color: green;
+        position: absolute;
+        bottom: 0;
+    }
+
+    .active:hover {
+        background-color: transparent;
+        cursor: default;
+    }
+
+    .tab-name {
+        font-size: 1.3rem;
+        font-weight: 600;
+    }
+
+    .tab-number {
+        margin-left: 8px;
+        font-size: 1.4rem;
+        font-weight: 500;
+        font-size: var(--font-family);
+    }
+    .addition-icon {
+        margin-left: 4px;
+    }
+}
+
+.sub-tabs.subtabs-active {
+    display: block;
+}
+
+.sub-tabs.large {
+    width: 140%;
+}
+
+.sub-tabs {
+    display: none;
+    margin-top: 4px;
+    width: 120%;
+    background-color: #ffffff;
+    position: absolute;
+    top: 48px;
+    left: 0;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+
+    border-radius: 12px;
+    padding: 4px;
+
+    .check {
+        color: green;
+        position: absolute;
+        right: 4px;
+    }
+
+    .tab {
+        display: flex;
+        justify-content: flex-start;
+        padding: 4px 0;
+        width: 100%;
+        padding: 6px 12px;
+        border-radius: 4px;
+        color: #000;
+
+        .tab-number {
+            font-size: var(--font-family);
+            margin-left: 12px;
+            font-weight: 500;
+        }
+
+        &:hover {
+            background-color: #d9d9d9;
+        }
+    }
+}
+
+.content {
+    height: calc(100% - 78px);
+    margin-top: 24px;
+    overflow-x: hidden;
+
+    .reacted-user {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .reacted-user:hover {
+        cursor: pointer;
+    }
+
+    .avatar-box {
+        position: relative;
+    }
+
+    .avatar {
+        width: 40px;
+        height: 40px;
+    }
+
+    .reacted-icon {
+        position: absolute;
+        right: 8px;
+        bottom: 2px;
+    }
+
+    .reacted-name {
+        margin-left: 4px;
+        font-size: 1.4rem;
+        font-weight: 500;
+        font-family: var(--system-ui);
+        letter-spacing: 0.5px;
+    }
+
+    .reacted-name:hover {
+        text-decoration: underline;
+    }
+}

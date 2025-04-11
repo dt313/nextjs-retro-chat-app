@@ -1,7 +1,9 @@
 @use '/app/scss/mixins.scss' as *;
+
 .wrapper {
     width: 100%;
     margin: 24px 0;
+    --empty-space-left: 48px;
 }
 
 .message {
@@ -35,30 +37,6 @@
     cursor: pointer;
 }
 
-.isSender {
-    .message {
-        justify-content: flex-end;
-        flex-direction: row-reverse;
-    }
-
-    .m-text {
-        border-top-right-radius: 0px;
-        border-top-left-radius: 12px;
-        border-bottom-right-radius: 12px;
-        border-bottom-left-radius: 12px;
-        background-color: #edcfac;
-    }
-
-    .tools {
-        flex-direction: row-reverse;
-    }
-
-    .time {
-        right: 0;
-        left: unset;
-    }
-}
-
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -80,7 +58,7 @@
     border-radius: 6px;
     position: absolute;
     top: -20px;
-    left: 48px;
+    left: var(--empty-space-left);
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     animation: fadeIn 0.2s ease-in-out;
     animation-delay: 0.3s;
@@ -103,5 +81,45 @@
         &:hover {
             background-color: #c7c7c7;
         }
+    }
+}
+
+.icon-wrapper {
+    width: fit-content;
+}
+
+.reactions {
+    position: absolute;
+    bottom: -16px;
+    left: var(--empty-space-left);
+}
+
+// sender message
+.isSender {
+    .message {
+        justify-content: flex-end;
+        flex-direction: row-reverse;
+    }
+
+    .m-text {
+        border-top-right-radius: 0px;
+        border-top-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+        border-bottom-left-radius: 12px;
+        background-color: #edcfac;
+    }
+
+    .tools {
+        flex-direction: row-reverse;
+    }
+
+    .time {
+        right: 0;
+        left: unset;
+    }
+
+    .reactions {
+        right: 0;
+        left: unset;
     }
 }

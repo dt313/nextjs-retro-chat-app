@@ -4,6 +4,10 @@
     border-radius: 50%;
     cursor: pointer;
     transition: opacity 0.2s ease;
+    .icon {
+        width: 18px;
+        height: 18px;
+    }
 }
 
 .light {
@@ -27,14 +31,27 @@
 .small {
     width: 20px;
     height: 20px;
+    .icon {
+        width: 8px;
+        height: 8px;
+    }
 }
 
 .medium {
     width: 24px;
     height: 24px;
+    .icon {
+        width: 12px;
+        height: 12px;
+    }
 }
 
 .large {
     width: 36px;
     height: 36px;
+
+    .icon {
+        width: 18px;
+        height: 18px;
+    }
 }

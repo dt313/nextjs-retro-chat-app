@@ -1,0 +1,53 @@
+@use '/app/scss/mixins.scss' as *;
+.wrapper {
+    width: 100%;
+    display: flex;
+    padding: 8px;
+    margin-bottom: 4px;
+    border-radius: 8px;
+
+    &:hover {
+        background-color: #e9e9e9;
+    }
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 12px;
+    flex: 1;
+}
+
+.name {
+    @include font-default;
+    font-size: 1.6rem;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.status {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--red);
+}
+
+.status.online {
+    background-color: var(--green);
+}
+
+.action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.action-icon {
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+    &:hover {
+        color: var(--red);
+    }
+}

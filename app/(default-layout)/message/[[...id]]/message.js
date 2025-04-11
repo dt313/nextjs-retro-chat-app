@@ -1,22 +1,26 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { redirect } from 'next/navigation';
+import { useSelector, useDispatch } from 'react-redux';
+
 import classNames from 'classnames/bind';
 import styles from './message.module.scss';
 import LeftMessage from '@/components/left-message';
 import Avatar from '@/components/avatar';
 import Image from '@/components/image';
-import { BsThreeDots } from 'react-icons/bs';
-import Icon from '@/components/icon';
+import ImagePreview from '@/components/image-preview';
 import MessageInput from '@/components/message-input';
 import MessageBox from '@/components/message-box/MessageBox';
-import { messages } from '@/config/ui-config';
-import { redirect } from 'next/navigation';
+import Icon from '@/components/icon';
 import RightMessage from '@/components/right-message';
-import { RiArrowRightSLine, RiArrowLeftSLine } from 'react-icons/ri';
 import CloseIcon from '@/components/close-icon';
+
+import { RiArrowRightSLine, RiArrowLeftSLine } from 'react-icons/ri';
+import { BsThreeDots } from 'react-icons/bs';
+import { messages } from '@/config/ui-config';
 import useBreakpoint from '@/hooks/useBreakpoint';
-import { useSelector, useDispatch } from 'react-redux';
 import { closeReplyBox } from '@/redux/actions/reply-box-action';
+
 const cx = classNames.bind(styles);
 
 function Message({ id }) {

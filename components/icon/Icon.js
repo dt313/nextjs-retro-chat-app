@@ -5,10 +5,10 @@ const cx = classNames.bind(styles);
 
 function Icon({ element, className, large, small, medium, onClick }) {
     const classes = cx('wrapper', {
-        [className]: className,
         large,
         small,
         medium,
+        [className]: className,
     });
     return (
         <span className={classes} onClick={onClick}>

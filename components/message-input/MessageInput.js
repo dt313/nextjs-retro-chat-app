@@ -63,7 +63,7 @@ function MessageInput({ onSubmit }) {
 
     return (
         <div className={cx('wrapper')}>
-            {/* <div className={cx('preview')}>
+            <div className={cx('preview')}>
                 {preview.map((item) => {
                     if (item.type === 'image') {
                         return (
@@ -82,7 +82,7 @@ function MessageInput({ onSubmit }) {
                         );
                     }
                 })}
-            </div> */}
+            </div>
             <textarea
                 ref={textRef}
                 className={cx('input')}

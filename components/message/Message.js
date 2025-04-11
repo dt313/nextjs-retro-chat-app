@@ -9,8 +9,13 @@ import { IoArrowUndo } from 'react-icons/io5';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Icon from '../icon';
 import { useDispatch } from 'react-redux';
-import { openReplyBox, closeReplyBox } from '../../redux/actions/reply-box-action';
+import { openReplyBox, closeReplyBox } from '@/redux/actions/reply-box-action';
 import Tippy from '@tippyjs/react';
+import HeadlessTippy from '@tippyjs/react/headless';
+import ReactionButton from '@/components/reaction-button';
+import Reaction from '@/components/reaction';
+import { images, reactions } from '@/config/ui-config';
+import { openImgPreview } from '@/redux/actions/img-preview-action';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light.css';
 
@@ -19,7 +24,7 @@ const cx = classNames.bind(styles);
 function Message({ type, className, isSender, content, timestamp }) {
     const [isShowTime, setIsShowTime] = useState(false);
     const [isShowTools, setIsShowTools] = useState(false);
-
+    const [isShowReaction, setIsShowReaction] = useState(false);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -30,6 +35,10 @@ function Message({ type, className, isSender, content, timestamp }) {
         [className]: className,
         isSender,
     });
+
+    const handleOpenImagePreview = () => {
+        dispatch(openImgPreview({ currentIndex: 3, listImages: images }));
+    };
 
     const renderMessage = () => {
         if (type === 'text') {
@@ -64,6 +73,7 @@ function Message({ type, className, isSender, content, timestamp }) {
                     onMouseLeave={handleMouseLeave}
                     width={200}
                     height={200}
+                    onClick={handleOpenImagePreview}
                 />
             );
         }
@@ -88,12 +98,21 @@ function Message({ type, className, isSender, content, timestamp }) {
         setIsShowTime(false);
     };
 
+    const handleMouseEnterMessage = () => {
+        setIsShowTools(true);
+    };
+
+    const handleMouseLeaveMessage = () => {
+        if (isShowReaction) return;
+        setIsShowTools(false);
+    };
+
     return (
         <div className={classes}>
             <div
                 className={cx('message')}
-                onMouseEnter={() => setIsShowTools(true)}
-                onMouseLeave={() => setIsShowTools(false)}
+                onMouseEnter={handleMouseEnterMessage}
+                onMouseLeave={handleMouseLeaveMessage}
             >
                 {!isSender && <Avatar className={cx('avatar')} size={36} />}
 
@@ -101,13 +120,24 @@ function Message({ type, className, isSender, content, timestamp }) {
 
                 {isShowTools ? (
                     <div className={cx('tools')}>
-                        <Tippy content="Emoji" placement="top" theme="light">
-                            <div>
+                        <HeadlessTippy
+                            visible={isShowReaction}
+                            onClickOutside={() => setIsShowReaction(false)}
+                            render={(attrs) => (
+                                <div className={cx('box')} tabIndex="-1" {...attrs}>
+                                    <Reaction theme="light" />
+                                </div>
+                            )}
+                            theme="light"
+                            interactive
+                        >
+                            <div className={cx('icon-wrapper')} onClick={() => setIsShowReaction(!isShowReaction)}>
                                 <Icon className={cx('tool-icon')} element={<RxFace />} medium />
                             </div>
-                        </Tippy>
+                        </HeadlessTippy>
+
                         <Tippy content="Reply" placement="top" theme="light">
-                            <div>
+                            <div className={cx('icon-wrapper')}>
                                 <Icon
                                     className={cx('tool-icon')}
                                     element={<IoArrowUndo />}
@@ -117,7 +147,7 @@ function Message({ type, className, isSender, content, timestamp }) {
                             </div>
                         </Tippy>
                         <Tippy content="More" placement="top" theme="light">
-                            <div>
+                            <div className={cx('icon-wrapper')}>
                                 <Icon className={cx('tool-icon')} element={<BsThreeDotsVertical />} medium />
                             </div>
                         </Tippy>
@@ -127,6 +157,7 @@ function Message({ type, className, isSender, content, timestamp }) {
                 )}
 
                 {isShowTime && <span className={cx('time')}>{timestamp}</span>}
+                <div className={cx('reactions')}>{<ReactionButton list={reactions} total={10} reacted={false} />}</div>
             </div>
         </div>
     );
