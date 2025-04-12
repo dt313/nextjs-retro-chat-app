@@ -26,15 +26,10 @@
     margin-bottom: 4px;
 }
 
-.status {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: var(--red);
-}
-
-.status.online {
-    background-color: var(--green);
+.count {
+    @include font-default;
+    font-weight: 400;
+    margin-bottom: 4px;
 }
 
 .action {

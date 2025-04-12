@@ -7,8 +7,7 @@ import classNames from 'classnames/bind';
 import styles from './message.module.scss';
 import LeftMessage from '@/components/left-message';
 import Avatar from '@/components/avatar';
-import Image from '@/components/image';
-import ImagePreview from '@/components/image-preview';
+import MessageIcon from '@/components/message-icon';
 import MessageInput from '@/components/message-input';
 import MessageBox from '@/components/message-box/MessageBox';
 import Icon from '@/components/icon';
@@ -127,7 +126,7 @@ function Message({ id }) {
                 </div>
             ) : (
                 <div className={cx('content', isShowContent ? 'show' : 'hide', 'no-id')}>
-                    <Image />
+                    <MessageIcon superLarge />
                 </div>
             )}
 

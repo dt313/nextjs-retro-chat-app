@@ -297,4 +297,7 @@ const images = [
         src: 'https://images.unsplash.com/photo-1555992336-fb0d29498b13?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mzl8fHJldHJvfGVufDB8fDB8fHww',
     },
 ];
-export { messages, reactions, types, users, groups, images };
+
+const FILE_ACCEPT_LIST =
+    '.jpg,.jpeg,.png,.txt,.csv,,.md,.js,.ts,.jsx,.tsx,.html,.css,.scss,.json,.xml,.py,.java,.cpp,.c,.cs,.php,.rb,.go,.rs,.sh,.bat,.kt,.sql';
+export { messages, reactions, types, users, groups, images, FILE_ACCEPT_LIST };

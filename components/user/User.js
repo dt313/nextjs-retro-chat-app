@@ -9,10 +9,12 @@ const cx = classNames.bind(styles);
 function User({ avatar, name, isOnline, id }) {
     return (
         <div className={cx('wrapper')}>
-            <Avatar size={40} src={avatar} />
+            <div className={cx('avatar-wrapper')}>
+                <Avatar size={40} src={avatar} />
+                <span className={cx('status', { online: isOnline })}></span>
+            </div>
             <div className={cx('info')}>
                 <span className={cx('name')}>{name}</span>
-                <span className={cx('status', { online: isOnline })}></span>
             </div>
 
             <div className={cx('action')}>

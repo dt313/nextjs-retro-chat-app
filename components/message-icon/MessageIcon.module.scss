@@ -64,3 +64,16 @@
         height: 8px;
     }
 }
+
+.superLarge {
+    width: 200px;
+    height: 180px;
+    border-top-right-radius: 48px;
+    border-top-left-radius: 48px;
+    border-bottom-left-radius: 48px;
+    gap: 20px;
+    .eye {
+        width: 20px;
+        height: 20px;
+    }
+}

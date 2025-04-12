@@ -4,7 +4,7 @@ import styles from './MessageIcon.module.scss';
 
 const cx = classNames.bind(styles);
 
-function MessageIcon({ className, small, medium, large }) {
+function MessageIcon({ className, small, medium, large, superLarge }) {
     const [isBlinking, setIsBlinking] = useState(false);
 
     useEffect(() => {
@@ -25,7 +25,7 @@ function MessageIcon({ className, small, medium, large }) {
         };
     }, []);
 
-    const classes = cx('wrapper', { small, medium, large, [className]: className });
+    const classes = cx('wrapper', { small, medium, large, superLarge, [className]: className });
 
     return (
         <span className={classes}>
