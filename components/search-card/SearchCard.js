@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './SearchCard.module.scss';
 import Image from '@/components/image';
-import images from '@/assets/images';
 const cx = classNames.bind(styles);
 
 function SearchCard({ name = 'John Doe', email = 'john.doe@example.com', createdAt = '2021-01-01' }) {

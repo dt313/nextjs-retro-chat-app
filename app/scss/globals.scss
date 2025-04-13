@@ -65,15 +65,21 @@ a {
     text-decoration: none;
 }
 
-.default-layout {
+.default-layout,
+.other-layout {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    height: 100%;
     background-color: var(--background);
     color: var(--foreground);
 
-    .container,
-    .headerm .content {
+    .container {
+        height: 100%;
+        width: 100%;
+    }
+
+    .header .content {
         width: 100%;
     }
 }

@@ -1,3 +1,5 @@
+'use client';
+
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './Image.module.scss';
