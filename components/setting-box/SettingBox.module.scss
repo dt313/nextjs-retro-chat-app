@@ -1,0 +1,57 @@
+@use '/app/scss/mixins.scss' as *;
+
+.wrapper {
+    max-width: 400px;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 12px;
+    padding-bottom: 24px;
+}
+
+.header {
+    @include center-align;
+    padding: 24px;
+    position: relative;
+
+    .title {
+        @include font-default;
+        font-size: 2rem;
+    }
+
+    .close-icon {
+        position: absolute;
+        right: 12px;
+        top: 12px;
+    }
+}
+
+.content {
+    padding: 0 24px;
+
+    .description {
+        @include font-default;
+        font-size: 1.4rem;
+        color: #666;
+        text-align: center;
+    }
+}
+
+.delete-btn {
+    @include center-align;
+    width: 100%;
+    margin-top: 24px;
+    padding: 12px 0;
+    border-radius: 50rem;
+    background-color: var(--red);
+    border: none;
+    @include font-default;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #fff;
+    transition: all 0.3s ease;
+
+    &:hover {
+        cursor: pointer;
+        opacity: 0.9;
+    }
+}

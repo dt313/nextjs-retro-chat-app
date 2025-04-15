@@ -25,6 +25,7 @@ function Message({ type, className, isSender, content, timestamp }) {
     const [isShowTime, setIsShowTime] = useState(false);
     const [isShowTools, setIsShowTools] = useState(false);
     const [isShowReaction, setIsShowReaction] = useState(false);
+    const [isShowMore, setIsShowMore] = useState(false);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -103,7 +104,7 @@ function Message({ type, className, isSender, content, timestamp }) {
     };
 
     const handleMouseLeaveMessage = () => {
-        if (isShowReaction) return;
+        if (isShowReaction || isShowMore) return;
         setIsShowTools(false);
     };
 
@@ -146,11 +147,23 @@ function Message({ type, className, isSender, content, timestamp }) {
                                 />
                             </div>
                         </Tippy>
-                        <Tippy content="More" placement="top" theme="light">
-                            <div className={cx('icon-wrapper')}>
+                        <HeadlessTippy
+                            visible={isShowMore}
+                            onClickOutside={() => setIsShowMore(false)}
+                            render={(attrs) => (
+                                <div className={cx('box')} tabIndex="-1" {...attrs}>
+                                    <div className={cx('more-menu')}>
+                                        <span className={cx('more-item')}>Chuyển tiếp</span>
+                                        <span className={cx('more-item')}>Xóa</span>
+                                    </div>
+                                </div>
+                            )}
+                            interactive
+                        >
+                            <div className={cx('icon-wrapper')} onClick={() => setIsShowMore(!isShowMore)}>
                                 <Icon className={cx('tool-icon')} element={<BsThreeDotsVertical />} medium />
                             </div>
-                        </Tippy>
+                        </HeadlessTippy>
                     </div>
                 ) : (
                     <div className={cx('tools')}></div>

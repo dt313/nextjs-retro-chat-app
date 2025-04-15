@@ -187,6 +187,7 @@
 
 .c-close-btn {
     display: none;
+    visibility: hidden;
     width: 0;
     height: 0;
 
@@ -198,6 +199,8 @@
         width: 36px;
         height: 36px;
         border-radius: 10rem;
+        visibility: visible;
+
         @include center-align;
 
         &:hover {
@@ -212,7 +215,7 @@
     display: flex;
     align-items: center;
     padding: 0 24px;
-
+    position: relative;
     @include respond-to('mobile') {
         padding-left: 64px;
     }

@@ -16,6 +16,12 @@
     margin-right: 12px;
 }
 
+.attach-file {
+    &:first-child {
+        padding-top: 0;
+    }
+}
+
 .file {
     display: flex;
     align-items: center;

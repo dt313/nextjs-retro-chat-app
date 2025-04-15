@@ -123,3 +123,27 @@
         left: unset;
     }
 }
+
+// more menu
+.more-menu {
+    display: flex;
+    flex-direction: column;
+    padding: 4px 0;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+    .more-item {
+        @include font-default;
+        font-size: 1.4rem;
+        cursor: pointer;
+        padding: 8px 12px;
+        margin: 0 4px;
+        font-weight: 500;
+        border-radius: 4px;
+    }
+
+    .more-item:hover {
+        background-color: #bebebe;
+    }
+}

@@ -6,9 +6,9 @@ const cx = classNames.bind(styles);
 
 function File({ name, size, secondary, primary, className }) {
     const classes = cx('file', {
-        [className]: className,
         secondary,
         primary,
+        [className]: className,
     });
     return (
         <div className={classes}>

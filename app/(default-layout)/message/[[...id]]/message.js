@@ -31,6 +31,7 @@ function Message({ id }) {
     const dispatch = useDispatch();
     const replyBox = useSelector((state) => state.replyBox);
 
+    console.log(replyBox);
     const handleAddMessage = (content) => {
         setMessageList((prev) => [...prev, content]);
     };

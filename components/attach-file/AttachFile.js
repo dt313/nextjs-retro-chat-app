@@ -29,7 +29,7 @@ function AttachFile() {
     return (
         <div className={cx('wrapper')}>
             {FILES.map((file, index) => (
-                <File key={index} name={file.name} size={file.size} />
+                <File key={index} className={cx('attach-file')} name={file.name} size={file.size} />
             ))}
         </div>
     );
