@@ -2,7 +2,7 @@
 import { useSelector } from 'react-redux';
 import { useMemo } from 'react';
 import ImagePreview from './ImagePreview';
-import { reshapeImages } from '@/helpers/images';
+import { reshapeImages } from '@/helpers';
 
 function ImagePreviewWrap() {
     const imgPreview = useSelector((state) => state.imgPreview);

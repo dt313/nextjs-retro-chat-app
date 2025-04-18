@@ -8,6 +8,14 @@ import Image from 'next/image';
 
 const cx = classNames.bind(styles);
 
+const isExternal = (url) => {
+    try {
+        const u = new URL(url);
+        return u.hostname !== process.env.NEXT_PUBLIC_DOMAIN;
+    } catch {
+        return false;
+    }
+};
 function AImage({ src, alt = 'default', className, fallback = images.noImage, ...props }) {
     const classes = cx('wrapper', {
         [className]: className,
@@ -18,7 +26,11 @@ function AImage({ src, alt = 'default', className, fallback = images.noImage, ..
         e.target.src = fallback;
     };
 
-    return <Image className={classes} src={src || fallback} alt={alt} onError={handleError} {...props} />;
+    if (isExternal(src)) {
+        return <img className={classes} src={src || fallback} alt={alt} onError={handleError} {...props} />;
+    } else {
+        return <Image className={classes} src={src || fallback} alt={alt} onError={handleError} {...props} />;
+    }
 }
 
 AImage.propTypes = {

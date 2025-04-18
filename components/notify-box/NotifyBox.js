@@ -5,7 +5,8 @@ import { IoSettings } from 'react-icons/io5';
 import NotifyItem from './NofifyItem';
 const cx = classNames.bind(styles);
 
-function NotifyBox() {
+function NotifyBox({ list = [] }) {
+    console.log(list);
     return (
         <div className={cx('wrapper')}>
             <div className={cx('header')}>
@@ -14,15 +15,9 @@ function NotifyBox() {
             </div>
 
             <div className={cx('notify-list')}>
-                <NotifyItem />
-                <NotifyItem />
-                <NotifyItem />
-                <NotifyItem />
-                <NotifyItem />
-                <NotifyItem />
-                <NotifyItem />
-                <NotifyItem />
-                <NotifyItem />
+                {list.map((item) => {
+                    return <NotifyItem key={item._id} user={item.sender} />;
+                })}
             </div>
         </div>
     );

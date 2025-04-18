@@ -7,12 +7,12 @@ const initialState = {
 
 const authBoxReducer = (state = initialState, action) => {
     switch (action.type) {
-        case 'OPEN_AUTH_BOX':
+        case OPEN_AUTH_BOX:
             return {
                 type: action.payload,
                 isOpen: true,
             };
-        case 'CLOSE_AUTH_BOX':
+        case CLOSE_AUTH_BOX:
             return {
                 ...state,
                 isOpen: false,

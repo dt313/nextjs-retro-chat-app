@@ -11,7 +11,9 @@
     "dependencies": {
         "@reduxjs/toolkit": "^2.6.1",
         "@tippyjs/react": "^4.2.6",
+        "axios": "^1.8.4",
         "classnames": "^2.5.1",
+        "js-cookie": "^3.0.5",
         "lodash": "^4.17.21",
         "next": "15.2.4",
         "normalize.css": "^8.0.1",

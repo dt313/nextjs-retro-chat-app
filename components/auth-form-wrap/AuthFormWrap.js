@@ -5,13 +5,38 @@ import AuthForm from '@/components/auth-form';
 import Overlay from '@/components/overlay';
 import { useSelector, useDispatch } from 'react-redux';
 import { closeAuthBox } from '@/redux/actions/auth-box-action';
+import { setOffline, setOnline } from '@/redux/actions/status-action';
 import CloseIcon from '../close-icon';
+import { useEffect } from 'react';
+import { initSocket } from '@/config/ws';
+import { storageUtils } from '@/utils';
+import { notificationService } from '@/services';
+import { getAllNotifications } from '@/redux/actions/notification-action';
 
 const cx = classNames.bind(styles);
 
 function AuthFormWrap() {
     const authBox = useSelector((state) => state.authBox);
+    const { isAuthenticated, user } = useSelector((state) => state.auth);
+    const { status } = useSelector((state) => state.status);
     const dispatch = useDispatch();
+    console.log('Status ', status);
+    const fetchNotifications = async () => {
+        const res = await notificationService.getAllNotifications(user._id);
+        if (!!res && Array.isArray(res)) {
+            dispatch(getAllNotifications(res));
+        }
+    };
+    useEffect(() => {
+        if (isAuthenticated) {
+            const token = storageUtils.getAccessToken();
+            initSocket(token);
+            dispatch(setOnline());
+            fetchNotifications();
+        } else {
+            dispatch(setOffline());
+        }
+    }, [isAuthenticated, user]);
 
     if (!authBox.isOpen) return null;
 

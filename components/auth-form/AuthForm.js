@@ -2,15 +2,18 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './AuthForm.module.scss';
+import { useDispatch } from 'react-redux';
+import { RiArrowLeftSLine } from 'react-icons/ri';
+
 import Image from '@/components/image';
 import images from '@/assets/images';
 import Icon from '@/components/icon';
 import AuthWithPassword from '@/components/auth-with-password';
-import { LOGIN_AUTH_BOX, REGISTER_AUTH_BOX, FORGET_PASSWORD_BOX, openAuthBox } from '@/redux/actions/auth-box-action';
-import { useDispatch } from 'react-redux';
-import { RiArrowLeftSLine } from 'react-icons/ri';
 import ForgotPassword from '@/components/forgot-password';
 import FormHeader from '@/components/form-header';
+import { authService } from '@/services';
+import { LOGIN_AUTH_BOX, REGISTER_AUTH_BOX, FORGET_PASSWORD_BOX, openAuthBox } from '@/redux/actions/auth-box-action';
+
 const cx = classNames.bind(styles);
 
 const AuthItem = ({ type, image, text, onClick }) => {
@@ -26,7 +29,7 @@ const AuthItem = ({ type, image, text, onClick }) => {
 
 function AuthForm({ type = LOGIN_AUTH_BOX }) {
     const [isShowPasswordAuth, setIsShowPasswordAuth] = useState(false);
-    const [isShowForgetPassword, setIsShowForgetPassword] = useState(false);
+
     const dispatch = useDispatch();
 
     const authItems = [
@@ -38,10 +41,16 @@ function AuthForm({ type = LOGIN_AUTH_BOX }) {
         {
             image: images.ggIcon,
             text: 'Google',
+            onClick: () => {
+                window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
+            },
         },
         {
             image: images.ghIcon,
             text: 'Github',
+            onClick: () => {
+                window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/github`;
+            },
         },
         {
             image: images.fbIcon,
@@ -65,7 +74,7 @@ function AuthForm({ type = LOGIN_AUTH_BOX }) {
 
     return (
         <div className={cx('wrapper')}>
-            {(isShowPasswordAuth || isShowForgetPassword) && (
+            {isShowPasswordAuth && (
                 <div className={cx('back')} onClick={() => setIsShowPasswordAuth(false)}>
                     <Icon className={cx('back-icon')} element={<RiArrowLeftSLine />} />
                     <span className={cx('back-text')}>Quay lại</span>

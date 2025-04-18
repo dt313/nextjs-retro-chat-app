@@ -3,4 +3,4 @@ const reshapeImages = (list, index) => {
     return list.slice(index).concat(list.slice(0, index));
 };
 
-export { reshapeImages };
+export default reshapeImages;
