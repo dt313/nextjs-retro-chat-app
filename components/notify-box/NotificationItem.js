@@ -4,19 +4,19 @@ import Avatar from '@/components/avatar/Avatar';
 
 const cx = classNames.bind(styles);
 
-function NotifyItem({ type, user }) {
+function NotificationItem({ avatar, render }) {
     return (
         <div className={cx('notify-item')}>
             <div className={cx('avatar')}>
-                <Avatar src={user?.avatar} className={cx('img')} size={40} />
+                <Avatar src={avatar} className={cx('img')} size={40} />
             </div>
 
             <div className={cx('notify-content')}>
-                <p className={cx('message')}>has sent you a message a message a message</p>
-                <span className={cx('time')}>12:00</span>
+                {render()}
+                <span className={cx('time')}>12.00</span>
             </div>
         </div>
     );
 }
 
-export default NotifyItem;
+export default NotificationItem;

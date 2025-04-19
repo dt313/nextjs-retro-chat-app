@@ -65,6 +65,7 @@ function Header() {
                 <Dropdown position="right" content={<NotifyBox list={notifications} />}>
                     <span className={cx('hmenu-item')}>
                         <Icon element={<IoNotifications />} className={cx({ active: isHasNotification })} />
+                        {isHasNotification && <span className={cx('notify-count')}>1</span>}
                     </span>
                 </Dropdown>
                 <span

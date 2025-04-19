@@ -7,6 +7,7 @@ import Avatar from '@/components/avatar';
 import Icon from '@/components/icon';
 import { FiUserPlus } from 'react-icons/fi';
 import { FaFacebookMessenger } from 'react-icons/fa';
+import { MdOutlineGroupAdd } from 'react-icons/md';
 import { BsQrCode } from 'react-icons/bs';
 import Squares from '@/components/squares';
 import { groupService, userService } from '@/services';
@@ -61,20 +62,35 @@ function Profile({ slug }) {
                         </p>
                     </div>
 
-                    <div className={cx('statistics')}>
-                        <div className={cx('statistic-item')}>
-                            <span className={cx('value')}>23</span>
-                            <span className={cx('label')}>Connections</span>
+                    {type === 'user' && (
+                        <div className={cx('statistics')}>
+                            <div className={cx('statistic-item')}>
+                                <span className={cx('value')}>23</span>
+                                <span className={cx('label')}>Connections</span>
+                            </div>
+                            <div className={cx('statistic-item')}>
+                                <span className={cx('value')}>35</span>
+                                <span className={cx('label')}>Friends</span>
+                            </div>
+                            <div className={cx('statistic-item')}>
+                                <span className={cx('value')}>52</span>
+                                <span className={cx('label')}>Groups</span>
+                            </div>
                         </div>
-                        <div className={cx('statistic-item')}>
-                            <span className={cx('value')}>35</span>
-                            <span className={cx('label')}>Friends</span>
+                    )}
+
+                    {type === 'group' && (
+                        <div className={cx('statistics')}>
+                            <div className={cx('statistic-item')}>
+                                <span className={cx('value')}>52</span>
+                                <span className={cx('label')}>Members</span>
+                            </div>
+                            <div className={cx('statistic-item')}>
+                                <span className={cx('value')}>23</span>
+                                <span className={cx('label')}>Onlines</span>
+                            </div>
                         </div>
-                        <div className={cx('statistic-item')}>
-                            <span className={cx('value')}>52</span>
-                            <span className={cx('label')}>Groups</span>
-                        </div>
-                    </div>
+                    )}
 
                     <div className={cx('actions')}>
                         <button className={cx('action-button')}>
@@ -82,8 +98,12 @@ function Profile({ slug }) {
                             <span className={cx('button-text')}>Chat</span>
                         </button>
                         <button className={cx('action-button')}>
-                            <Icon element={<FiUserPlus />} />
-                            <span className={cx('button-text')}>Add Friend</span>
+                            {type === 'user' ? (
+                                <Icon element={<FiUserPlus />} />
+                            ) : (
+                                <Icon element={<MdOutlineGroupAdd />} />
+                            )}
+                            <span className={cx('button-text')}>{type === 'user' ? 'Add Friend' : 'Tham gia'}</span>
                         </button>
                         <button className={cx('action-button')}>
                             <Icon element={<BsQrCode />} />

@@ -49,7 +49,8 @@
     position: relative;
 }
 
-.message-count {
+.message-count,
+.notify-count {
     @include center-align;
     width: 16px;
     height: 16px;
@@ -62,6 +63,10 @@
     left: 0;
     font-weight: 600;
     font-family: var(--font-family);
+}
+
+.notify-count {
+    left: 4px;
 }
 
 .active {

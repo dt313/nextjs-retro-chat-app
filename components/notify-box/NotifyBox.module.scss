@@ -83,3 +83,50 @@
 .setting-icon {
     cursor: pointer;
 }
+
+// question notification
+
+.question-box,
+.text-notify {
+    width: 100%;
+    margin-bottom: 4px;
+
+    .qb-content {
+        margin-bottom: 8px;
+        font-family: var(--font-family);
+        font-size: 1.6rem;
+    }
+
+    .name:hover {
+        text-decoration: underline;
+    }
+
+    .reply-box {
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .reply-btn {
+        margin-right: 12px;
+        padding: 4px 12px;
+        border-radius: 4px;
+        border: none;
+        background-color: var(--red);
+        color: #fff;
+        font-size: 1.3rem;
+        cursor: pointer;
+    }
+
+    .reply-btn:hover {
+        opacity: 0.9;
+    }
+
+    .cancel-btn {
+        background-color: #a8a8a8;
+        color: black;
+    }
+}
+
+.text-notify .qb-content {
+    margin-bottom: 4px;
+}
