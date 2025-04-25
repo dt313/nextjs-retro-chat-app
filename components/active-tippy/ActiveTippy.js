@@ -6,7 +6,7 @@ import { useState } from 'react';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light.css';
 const cx = classNames.bind(styles);
-function HeadlessTippy({ children, tippy, ...props }) {
+function ActiveTippy({ children, tippy, ...props }) {
     const [visible, setVisible] = useState(false);
     return (
         <Tippy
@@ -26,9 +26,9 @@ function HeadlessTippy({ children, tippy, ...props }) {
     );
 }
 
-HeadlessTippy.propTypes = {
+ActiveTippy.propTypes = {
     children: PropTypes.node.isRequired,
     tippy: PropTypes.node.isRequired,
 };
 
-export default HeadlessTippy;
+export default ActiveTippy;

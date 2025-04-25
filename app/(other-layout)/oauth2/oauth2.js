@@ -1,4 +1,5 @@
 'use client';
+import { Suspense } from 'react';
 import { userService } from '@/services';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
@@ -36,4 +37,12 @@ function OAuth2() {
     return <></>;
 }
 
-export default OAuth2;
+function OAuth2Wrap() {
+    return (
+        <Suspense fallback={<div>Đang tải...</div>}>
+            <OAuth2 />
+        </Suspense>
+    );
+}
+
+export default OAuth2Wrap;

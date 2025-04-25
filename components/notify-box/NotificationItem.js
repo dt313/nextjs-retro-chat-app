@@ -1,10 +1,11 @@
 import classNames from 'classnames/bind';
 import styles from './NotifyBox.module.scss';
 import Avatar from '@/components/avatar/Avatar';
+import { calculateTime } from '@/helpers';
 
 const cx = classNames.bind(styles);
 
-function NotificationItem({ avatar, render }) {
+function NotificationItem({ avatar, render, time, content }) {
     return (
         <div className={cx('notify-item')}>
             <div className={cx('avatar')}>
@@ -12,8 +13,9 @@ function NotificationItem({ avatar, render }) {
             </div>
 
             <div className={cx('notify-content')}>
-                {render()}
-                <span className={cx('time')}>12.00</span>
+                {!content && render()}
+                {content && <p className={cx('content')}>{content}</p>}
+                <span className={cx('time')}>{calculateTime(time)}</span>
             </div>
         </div>
     );

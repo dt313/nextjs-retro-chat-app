@@ -1,8 +1,13 @@
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
 import styles from './NotifyBox.module.scss';
 import Icon from '@/components/icon/Icon';
-import { IoSettings } from 'react-icons/io5';
 import NotificationItem from './NotificationItem';
+
+import { invitationService } from '@/services';
+import { IoSettings } from 'react-icons/io5';
+
 import {
     NOTIFICATION_FRIEND_REQUEST,
     NOTIFICATION_FRIEND_ACCEPTED,
@@ -10,11 +15,36 @@ import {
     NOTIFICATION_GROUP_JOINTED,
     NOTIFICATION_REPLY_MESSAGE,
     NOTIFICATION_MENTION,
+    FRIEND_REQUEST_ACCEPTED,
+    TEMP_NOTIFICATION_FRIEND_ACCEPTED,
+    TEMP_NOTIFICATION_FRIEND_REJECTED,
+    FRIEND_REQUEST_REJECTED,
 } from '@/config/types';
+import { changeTypeNotification } from '@/redux/actions/notification-action';
 const cx = classNames.bind(styles);
 
 function NotifyBox({ list = [] }) {
     console.log(list);
+    const dispatch = useDispatch();
+    const handleReplyFriendRequest = async (senderId, status, notificationId) => {
+        const res = await invitationService.replyFriendRequest({
+            sender: senderId,
+            status,
+        });
+
+        if (res) {
+            console.log('RES FRIEND_REQUEST ACCEPTED', res.data);
+            dispatch(
+                changeTypeNotification({
+                    notificationId,
+                    type:
+                        status === FRIEND_REQUEST_ACCEPTED
+                            ? TEMP_NOTIFICATION_FRIEND_ACCEPTED
+                            : TEMP_NOTIFICATION_FRIEND_REJECTED,
+                }),
+            );
+        }
+    };
 
     const renderNotificationContent = (notification) => {
         const { type, sender, group } = notification;
@@ -27,8 +57,22 @@ function NotifyBox({ list = [] }) {
                             <strong className={cx('name')}>{sender?.fullName}</strong> đã gửi lời mời kết bạn
                         </p>
                         <div className={cx('reply-box')}>
-                            <button className={cx('reply-btn')}>Đồng ý</button>
-                            <button className={cx('reply-btn', 'cancel-btn')}>Từ chối</button>
+                            <button
+                                className={cx('reply-btn')}
+                                onClick={() =>
+                                    handleReplyFriendRequest(sender._id, FRIEND_REQUEST_ACCEPTED, notification._id)
+                                }
+                            >
+                                Đồng ý
+                            </button>
+                            <button
+                                className={cx('reply-btn', 'cancel-btn')}
+                                onClick={() =>
+                                    handleReplyFriendRequest(sender._id, FRIEND_REQUEST_REJECTED, notification._id)
+                                }
+                            >
+                                Từ chối
+                            </button>
                         </div>
                     </div>
                 );
@@ -78,6 +122,26 @@ function NotifyBox({ list = [] }) {
                         </p>
                     </div>
                 );
+            case TEMP_NOTIFICATION_FRIEND_ACCEPTED:
+                return (
+                    <div className={cx('text-notify')}>
+                        <p className={cx('qb-content')}>
+                            Bạn đã chấp nhận lời mời kết bạn của{' '}
+                            <strong className={cx('name')}>{sender?.fullName}</strong>
+                        </p>
+                    </div>
+                );
+
+            case TEMP_NOTIFICATION_FRIEND_REJECTED:
+                return (
+                    <div className={cx('text-notify')}>
+                        <p className={cx('qb-content')}>
+                            Bạn đã từ chối lời mời kết bạn của{' '}
+                            <strong className={cx('name')}>{sender?.fullName}</strong>
+                        </p>
+                    </div>
+                );
+
             default:
                 return '';
         }
@@ -97,6 +161,7 @@ function NotifyBox({ list = [] }) {
                             key={item._id}
                             avatar={item?.sender?.avatar}
                             render={() => renderNotificationContent(item)}
+                            time={item?.createdAt}
                         />
                     );
                 })}

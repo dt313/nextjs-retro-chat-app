@@ -9,6 +9,8 @@ import InputWithList from '@/components/input-with-list';
 import { types, users, groups } from '@/config/ui-config';
 import User from '@/components/user';
 import Group from '@/components/group';
+import { conversationService } from '@/services';
+import { useRouter } from 'next/navigation';
 const cx = classNames.bind(styles);
 
 function Creation({ onClose }) {
@@ -22,6 +24,8 @@ function Creation({ onClose }) {
     const [activeTab, setActiveTab] = useState('user');
     const [list, setList] = useState([]);
 
+    const router = useRouter();
+
     useEffect(() => {
         setList(activeTab === 'user' ? users : groups);
     }, [activeTab]);
@@ -34,8 +38,13 @@ function Creation({ onClose }) {
         setGroup({ ...group, type: item.name });
     };
 
-    const handleCreate = () => {
-        console.log(group);
+    const handleCreate = async () => {
+        const res = await conversationService.create({ ...group, isGroup: true });
+        const { _id } = res;
+
+        if (_id) {
+            window.location.href = `/message/${_id}`;
+        }
     };
 
     return (

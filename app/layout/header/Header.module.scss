@@ -72,3 +72,27 @@
 .active {
     color: var(--red);
 }
+
+// user menu
+
+.user-menu {
+    padding: 4px;
+    min-width: 100px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+    .um-item {
+        flex: 1;
+        padding: 8px 24px;
+        border-radius: 4px;
+        @include font-default;
+    }
+
+    .um-item:hover {
+        background-color: #c2c2c2;
+        cursor: pointer;
+    }
+}

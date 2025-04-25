@@ -5,7 +5,7 @@ import classNames from 'classnames/bind';
 import styles from './search.module.scss';
 import InputSearch from '@/components/input-search';
 import SearchCard from '@/components/search-card';
-import { userService, groupService } from '@/services';
+import { userService, groupService, authService } from '@/services';
 import { getSocket } from '@/config/ws';
 import { useSelector } from 'react-redux';
 const cx = classNames.bind(styles);
@@ -110,6 +110,9 @@ function SearchContent() {
                                 members={item?.participants?.length || 1}
                                 createdAt={item.createdAt}
                                 avatar={item.avatar}
+                                isFriendRequestByMe={item.isFriendRequestedByMe}
+                                isFriendRequestByOther={item.isFriendRequestedByOther}
+                                isFriend={item.isFriend}
                             />
                         );
                     })}

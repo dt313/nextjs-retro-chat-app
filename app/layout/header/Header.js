@@ -7,6 +7,7 @@ import styles from './Header.module.scss';
 
 import { PiNotePencilFill } from 'react-icons/pi';
 import { IoNotifications } from 'react-icons/io5';
+import HeadlessTippy from '@tippyjs/react/headless';
 
 import Dropdown from '@/components/drop-down';
 import Avatar from '@/components/avatar/Avatar';
@@ -17,12 +18,14 @@ import MessageIcon from '@/components/message-icon';
 import Creation from '@/components/creation';
 import eventBus from '@/config/emit';
 import { addNotification } from '@/redux/actions/notification-action';
+import { logout } from '@/redux/actions/auth-action';
 
 const cx = classNames.bind(styles);
 
 function Header() {
     const [isOpenCreation, setIsOpenCreation] = useState(false);
     const [isHasNotification, setIsHasNotification] = useState(false);
+    const [isShowMenu, setIsShowMenu] = useState(false);
     const { notifications } = useSelector((state) => state.notification);
     const pathname = usePathname();
     const router = useRouter();
@@ -68,23 +71,57 @@ function Header() {
                         {isHasNotification && <span className={cx('notify-count')}>1</span>}
                     </span>
                 </Dropdown>
-                <span
-                    className={cx('hmenu-item')}
-                    onClick={() => {
-                        if (isAuthenticated) {
-                            router.push('/profile');
-                        } else {
-                            dispatch(openAuthBox(LOGIN_AUTH_BOX));
-                        }
-                    }}
+                <HeadlessTippy
+                    visible={isShowMenu}
+                    onClickOutside={() => setIsShowMenu(false)}
+                    render={(attrs) => (
+                        <div className={cx('box')} tabIndex="-1" {...attrs}>
+                            <UserMenu />
+                        </div>
+                    )}
+                    theme="light"
+                    interactive
                 >
-                    <Avatar size={40} />
-                </span>
+                    <span
+                        className={cx('hmenu-item')}
+                        onClick={() => {
+                            if (isAuthenticated) {
+                                setIsShowMenu(true);
+                            } else {
+                                dispatch(openAuthBox(LOGIN_AUTH_BOX));
+                            }
+                        }}
+                    >
+                        <Avatar size={40} />
+                    </span>
+                </HeadlessTippy>
             </div>
 
             {isOpenCreation && <Creation onClose={() => setIsOpenCreation(false)} />}
         </header>
     );
 }
+
+const UserMenu = () => {
+    const router = useRouter();
+    const dispatch = useDispatch();
+    const { user: me } = useSelector((state) => state.auth);
+
+    const handleLogout = () => {
+        dispatch(logout());
+
+        window.location.href = '/';
+    };
+    return (
+        <div className={cx('user-menu')}>
+            <span className={cx('um-item')} onClick={() => router.push(`/profile/@${me._id}`)}>
+                Trang cá nhân
+            </span>
+            <span className={cx('um-item')} onClick={handleLogout}>
+                Logout
+            </span>
+        </div>
+    );
+};
 
 export default Header;

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './AuthWithPassword.module.scss';
@@ -6,15 +7,15 @@ import styles from './AuthWithPassword.module.scss';
 import Input from '@/components/input';
 import SubmitButton from './SubmitButton';
 
-import { REGISTER_AUTH_BOX, LOGIN_AUTH_BOX } from '@/redux/actions/auth-box-action';
+import { REGISTER_AUTH_BOX, LOGIN_AUTH_BOX, openAuthBox, closeAuthBox } from '@/redux/actions/auth-box-action';
 import { login } from '@/redux/actions/auth-action';
 import { authService } from '@/services';
-import { storageUtils } from '@/utils';
 import { useDispatch } from 'react-redux';
 
 const cx = classNames.bind(styles);
 
 function AuthWithPassword({ type }) {
+    const router = useRouter();
     const [authData, setAuthData] = useState({
         email: '',
         password: '',
@@ -36,8 +37,7 @@ function AuthWithPassword({ type }) {
             case REGISTER_AUTH_BOX:
                 try {
                     const res = await authService.register(authData);
-                    const { accessToken, user } = res;
-                    dispatch(login({ accessToken, user }));
+                    dispatch(openAuthBox(LOGIN_AUTH_BOX));
                 } catch (error) {
                     console.log(error);
                 } finally {
@@ -49,6 +49,8 @@ function AuthWithPassword({ type }) {
                     const res = await authService.login({ email, password });
                     const { accessToken, user } = res;
                     dispatch(login({ accessToken, user }));
+                    router.push('/');
+                    dispatch(closeAuthBox());
                 } catch (error) {
                     console.log(error);
                 } finally {

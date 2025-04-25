@@ -41,7 +41,7 @@ export const refreshToken = async () => {
         const res = await axios.get('/auth/refresh-token');
         return res?.data;
     } catch (error) {
-        throw new Error(error || 'Failed to public');
+        throw new Error(error || 'Failed to get refresh token');
     }
 };
 

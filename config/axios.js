@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { storageUtils } from '@/utils';
+import handleHttpError from '@/helpers/handle-http-error';
 const instance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL,
     headers: {
@@ -12,6 +13,9 @@ const NO_AUTH_HEADER_URLS = [];
 const OPTION_AUTH_HEADER_URLS = [];
 instance.interceptors.request.use(
     async function (config) {
+        if (config.url.startsWith('/auth')) {
+            return config;
+        }
         config.headers.Authorization = `Bearer ${storageUtils.getAccessToken()}`;
         return config;
     },
@@ -27,7 +31,6 @@ instance.interceptors.response.use(
         if (response.data) {
             return response.data;
         } else {
-            // Nếu code khác 1000, trả lỗi về cho người dùng
             return Promise.reject({
                 message: response?.data?.message || 'Lỗi máy chủ',
                 code: response?.data?.code,
@@ -35,23 +38,9 @@ instance.interceptors.response.use(
         }
     },
     function (error) {
-        let customError = {
-            message: 'Đã xảy ra lỗi không xác định',
-            code: -1,
-        };
+        const errorMessage = handleHttpError(error.response.data);
 
-        if (error.code === 'ERR_NETWORK') {
-            customError.message = 'Không thể kết nối tới máy chủ. Vui lòng kiểm tra mạng.';
-        } else if (error.response) {
-            const { status, data } = error.response;
-            customError.code = status;
-            customError.message = data?.message || `Lỗi từ máy chủ (${status})`;
-        } else if (error.message) {
-            customError.message = error.message;
-        }
-
-        console.error('Response error:', customError);
-        return Promise.reject(customError);
+        return Promise.reject(errorMessage);
     },
 );
 

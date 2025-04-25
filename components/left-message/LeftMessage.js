@@ -1,10 +1,12 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './LeftMessage.module.scss';
 import { FiSearch } from 'react-icons/fi';
 import InputSearch from '../input-search';
 import MessagePreview from '../message-preview';
+import { conversationService } from '@/services';
+import { useSelector } from 'react-redux';
 
 const cx = classNames.bind(styles);
 
@@ -34,9 +36,21 @@ const MESSAGES = [
 
 function LeftMessage({ className }) {
     const [searchValue, setSearchValue] = useState('');
+    const [conversations, setConversations] = useState([]);
     const handleChangeSearchValue = (e) => {
         setSearchValue(e.target.value);
     };
+
+    console.log(conversations);
+    const fetchConversations = async () => {
+        const res = await conversationService.getByMe();
+        if (res && Array.isArray(res)) {
+            setConversations(res);
+        }
+    };
+    useEffect(() => {
+        fetchConversations();
+    }, []);
 
     return (
         <div className={cx('wrapper', className)}>
@@ -49,7 +63,7 @@ function LeftMessage({ className }) {
                 />
             </div>
             <div className={cx('message-list')}>
-                {MESSAGES.map((message, index) => (
+                {conversations.map((message, index) => (
                     <MessagePreview
                         className={cx('message-preview')}
                         key={index}

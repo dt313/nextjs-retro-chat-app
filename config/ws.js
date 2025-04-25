@@ -30,6 +30,10 @@ export const initSocket = (token) => {
         console.log('WS server closed');
     });
 
+    socket.addEventListener('error', (event) => {
+        console.log('Websocket Error: ', event);
+    });
+
     return socket;
 };
 
