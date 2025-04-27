@@ -17,9 +17,20 @@ const refreshToken = async () => {
 
 export default function handleHttpError(error) {
     const { status, message } = error;
+
     if (status === 401 && message === 'Access Token Expired') {
         refreshToken();
         return;
     }
-    return error_message;
+
+    if (
+        (status === 401 && message === 'Unauthorized') ||
+        message === 'Refresh Token Expired' ||
+        message === 'Invalid Refresh Token'
+    ) {
+        storageUtils.clearAuth();
+        window.location.reload();
+    }
+
+    return message;
 }

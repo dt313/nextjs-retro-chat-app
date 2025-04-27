@@ -19,6 +19,8 @@ import {
     NOTIFICATION_FRIEND_REQUEST,
 } from '@/config/types';
 import { changeTypeNotification } from '@/redux/actions/notification-action';
+import { addToast, createToast } from '@/redux/actions/toast-action';
+import { set } from 'lodash';
 
 const cx = classNames.bind(styles);
 
@@ -42,26 +44,58 @@ function SearchCard({
     const { notifications } = useSelector((state) => state.notification);
 
     const handleFriendRequest = async () => {
-        const res = await invitationService.createFriendRequest({
-            id,
-        });
-    };
+        try {
+            const res = await invitationService.createFriendRequest({
+                id,
+            });
 
-    const handleAcceptFriendRequest = async () => {
-        const res = await invitationService.replyFriendRequest({
-            sender: id,
-            status: FRIEND_REQUEST_ACCEPTED,
-        });
-
-        if (res) {
-            setFriend(true);
-            const notificationId = getNotificationId(notifications, id, NOTIFICATION_FRIEND_REQUEST);
-            console.log('notificationId', notificationId);
+            if (!!res) {
+                setFriendRequestByMe(true);
+            }
+        } catch (error) {
+            console.log('Toast : ', error.message);
             dispatch(
-                changeTypeNotification({ notificationId: notificationId, type: TEMP_NOTIFICATION_FRIEND_ACCEPTED }),
+                addToast({
+                    content: error.message,
+                    type: 'error',
+                }),
             );
         }
     };
+
+    const handleAcceptFriendRequest = async () => {
+        try {
+            const res = await invitationService.replyFriendRequest({
+                sender: id,
+                status: FRIEND_REQUEST_ACCEPTED,
+            });
+
+            if (!!res) {
+                setFriend(true);
+                const notificationId = getNotificationId(notifications, id, NOTIFICATION_FRIEND_REQUEST);
+                console.log('notificationId', notificationId);
+                dispatch(
+                    changeTypeNotification({ notificationId: notificationId, type: TEMP_NOTIFICATION_FRIEND_ACCEPTED }),
+                );
+            }
+        } catch (error) {
+            console.log('Error accepting friend request', error);
+        }
+    };
+
+    const handleCancelFriendRequest = async () => {
+        try {
+            const res = await invitationService.cancelFriendRequest(id);
+
+            if (!!res) {
+                console.log('Cancel ', res);
+                setFriendRequestByMe(false);
+            }
+        } catch (error) {
+            console.log('Error accepting friend request', error);
+        }
+    };
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('header')}>
@@ -110,7 +144,7 @@ function SearchCard({
                 {type === 'user' &&
                     !friend &&
                     (friendRequestByMe ? (
-                        <div className={cx('action-item')}>
+                        <div className={cx('action-item')} onClick={handleCancelFriendRequest}>
                             <Icon className={cx('ai-icon')} element={<RiUserSharedLine />} medium />
                             <span className={cx('ai-label')}>Đã gửi yêu cầu</span>
                         </div>

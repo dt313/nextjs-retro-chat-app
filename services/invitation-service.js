@@ -17,3 +17,12 @@ export const replyFriendRequest = async (data) => {
         throw new Error(error || 'Failed to reply request');
     }
 };
+
+export const cancelFriendRequest = async (id) => {
+    try {
+        const res = await axios.post(`/invitation/user/cancel/${id}`);
+        return res?.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to reply request');
+    }
+};

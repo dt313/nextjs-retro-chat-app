@@ -6,6 +6,7 @@ import imgPreviewReducer from './img-preview-reducer';
 import authReducer from './auth-reducer';
 import statusReducer from './status-reducer';
 import notificationReducer from './notification-reducer';
+import toastReducer from './toast-reducer';
 
 const rootReducer = combineReducers({
     theme: themeReducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
     auth: authReducer,
     status: statusReducer,
     notification: notificationReducer,
+    toast: toastReducer,
 });
 
 export default rootReducer;

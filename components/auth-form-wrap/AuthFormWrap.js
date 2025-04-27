@@ -22,6 +22,7 @@ function AuthFormWrap() {
     const dispatch = useDispatch();
     console.log('Status ', status);
     const fetchNotifications = async () => {
+        if (!user) return;
         const res = await notificationService.getAllNotifications(user._id);
         if (!!res && Array.isArray(res)) {
             dispatch(getAllNotifications(res));
