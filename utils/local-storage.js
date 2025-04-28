@@ -1,24 +1,29 @@
 export const setAccessToken = (token) => {
-    if (typeof window === 'undefined') return null;
-    localStorage.setItem('accessToken', JSON.stringify(token));
+    if (typeof window !== 'undefined') window.localStorage.setItem('accessToken', JSON.stringify(token));
 };
 
 export const getAccessToken = () => {
-    if (typeof window === 'undefined') return null;
-    return localStorage.getItem('accessToken') ? JSON.parse(localStorage.getItem('accessToken')) : null;
+    if (typeof window !== 'undefined') {
+        return window.localStorage.getItem('accessToken')
+            ? JSON.parse(window.localStorage.getItem('accessToken'))
+            : null;
+    }
 };
 
 export const setUser = (user) => {
-    if (typeof window === 'undefined') return null;
-    localStorage.setItem('user', JSON.stringify(user));
+    if (typeof window !== 'undefined') {
+        window.localStorage.setItem('user', JSON.stringify(user));
+    }
 };
 
 export const getUser = () => {
-    if (typeof window === 'undefined') return null;
-    return localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
+    if (typeof window !== 'undefined') {
+        return window.localStorage.getItem('user') ? JSON.parse(window.localStorage.getItem('user')) : null;
+    }
 };
 export const clearAuth = () => {
-    if (typeof window === 'undefined') return null;
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('user');
+    if (typeof window !== 'undefined') {
+        window.localStorage.removeItem('accessToken');
+        window.localStorage.removeItem('user');
+    }
 };

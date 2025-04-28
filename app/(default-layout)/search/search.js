@@ -1,12 +1,11 @@
 'use client';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useState, useEffect, Suspense, useRef } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import classNames from 'classnames/bind';
 import styles from './search.module.scss';
 import InputSearch from '@/components/input-search';
-import SearchCard from '@/components/search-card';
-import { userService, groupService, authService } from '@/services';
-import { getSocket } from '@/config/ws';
+import { UserCard, GroupCard } from '@/components/search-card';
+import { userService, groupService } from '@/services';
 import { useSelector } from 'react-redux';
 const cx = classNames.bind(styles);
 
@@ -32,9 +31,6 @@ function SearchContent() {
 
     useEffect(() => {
         fetchAPI(filterValue);
-
-        const socket = getSocket();
-        console.log(socket);
     }, [filterValue]);
 
     function changeSearchParams(q, filter) {
@@ -99,22 +95,37 @@ function SearchContent() {
 
                 <div className={cx('list')}>
                     {list.map((item) => {
-                        return (
-                            <SearchCard
-                                key={item._id}
-                                id={item._id}
-                                type={filterValue}
-                                slug={filterValue === 'user' ? item.username : item._id}
-                                name={filterValue === 'user' ? item.fullName : item.name}
-                                email={item?.email || null}
-                                members={item?.participants?.length || 1}
-                                createdAt={item.createdAt}
-                                avatar={item.avatar}
-                                isFriendRequestByMe={item.isFriendRequestedByMe}
-                                isFriendRequestByOther={item.isFriendRequestedByOther}
-                                isFriend={item.isFriend}
-                            />
-                        );
+                        if (filterValue === 'user') {
+                            return (
+                                <UserCard
+                                    key={item._id}
+                                    id={item._id}
+                                    slug={item.username}
+                                    name={item.fullName}
+                                    email={item.email}
+                                    avatar={item.avatar}
+                                    isFriendRequestByMe={item.isFriendRequestedByMe}
+                                    isFriendRequestByOther={item.isFriendRequestedByOther}
+                                    isFriend={item.isFriend}
+                                    createdAt={item.createdAt}
+                                />
+                            );
+                        }
+                        if (filterValue === 'group') {
+                            const isJoined = item.participants?.some((user) => user === me._id);
+                            return (
+                                <GroupCard
+                                    key={item._id}
+                                    id={item._id}
+                                    name={item.name}
+                                    createdAt={item.createdAt}
+                                    members={item.participants?.length}
+                                    thumbnail={item.thumbnail}
+                                    isJoined={isJoined}
+                                    isPrivate={item.isPrivate}
+                                />
+                            );
+                        }
                     })}
                 </div>
             </div>

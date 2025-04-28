@@ -9,6 +9,7 @@ const refreshToken = async () => {
         const { accessToken } = res;
         if (accessToken) {
             storageUtils.setAccessToken(accessToken);
+            window.location.reload();
         }
     } catch (err) {
         console.log(err);

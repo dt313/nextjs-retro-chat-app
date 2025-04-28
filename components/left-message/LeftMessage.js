@@ -66,8 +66,9 @@ function LeftMessage({ className }) {
                 {conversations.map((message, index) => (
                     <MessagePreview
                         className={cx('message-preview')}
-                        key={index}
-                        avatar=""
+                        key={message._id}
+                        slug={message._id}
+                        avatar={message.thumbnail}
                         name={message.name}
                         message={message.message}
                         time={message.time}

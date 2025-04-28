@@ -24,8 +24,8 @@ import { changeTypeNotification } from '@/redux/actions/notification-action';
 const cx = classNames.bind(styles);
 
 function NotifyBox({ list = [] }) {
-    console.log(list);
     const dispatch = useDispatch();
+    console.log(list);
     const handleReplyFriendRequest = async (senderId, status, notificationId) => {
         const res = await invitationService.replyFriendRequest({
             sender: senderId,
@@ -33,7 +33,6 @@ function NotifyBox({ list = [] }) {
         });
 
         if (res) {
-            console.log('RES FRIEND_REQUEST ACCEPTED', res.data);
             dispatch(
                 changeTypeNotification({
                     notificationId,
@@ -101,7 +100,7 @@ function NotifyBox({ list = [] }) {
                 return (
                     <div className={cx('text-notify')}>
                         <p className={cx('qb-content')}>
-                            <strong className={cx('name')}>{sender?.fullName}</strong> đã tham gia nhóm
+                            <strong className={cx('name')}>{sender?.fullName}</strong> đã tham gia nhóm{' '}
                             <strong className={cx('name')}>{group.name}</strong> của bạn
                         </p>
                     </div>

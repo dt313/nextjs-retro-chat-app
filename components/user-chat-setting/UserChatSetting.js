@@ -9,11 +9,13 @@ import SettingBox from '@/components/setting-box';
 import { TbAlphabetLatin } from 'react-icons/tb';
 import { IoIosImages } from 'react-icons/io';
 import { MdDelete } from 'react-icons/md';
+import { set } from 'lodash';
 const cx = classNames.bind(styles);
 
 function UserChatSetting() {
     const [isShowSetting, setIsShowSetting] = useState(false);
     const [settingBox, setSettingBox] = useState({});
+    const [settingValue, setSettingValue] = useState('');
 
     const settingMenu = [
         {
@@ -59,7 +61,14 @@ function UserChatSetting() {
 
             {isShowSetting && (
                 <Overlay>
-                    <SettingBox onClose={() => setIsShowSetting(false)} content={settingBox} />
+                    <SettingBox
+                        onClose={() => {
+                            setIsShowSetting(false);
+                            setSettingValue('');
+                        }}
+                        content={settingBox}
+                        submitText={settingBox.type === 'delete' ? 'Xoá' : 'Lưu'}
+                    />
                 </Overlay>
             )}
         </div>

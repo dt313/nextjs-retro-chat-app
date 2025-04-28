@@ -19,19 +19,16 @@ import {
     NOTIFICATION_FRIEND_REQUEST,
 } from '@/config/types';
 import { changeTypeNotification } from '@/redux/actions/notification-action';
-import { addToast, createToast } from '@/redux/actions/toast-action';
-import { set } from 'lodash';
+import { addToast } from '@/redux/actions/toast-action';
 
 const cx = classNames.bind(styles);
 
-function SearchCard({
+function UserCard({
     id,
-    type,
     slug,
     name = 'John Doe',
     email = 'john.doe@example.com',
     createdAt = '2021-01-01',
-    members = 0,
     avatar,
     isFriendRequestByMe = false,
     isFriendRequestByOther = false,
@@ -92,28 +89,37 @@ function SearchCard({
                 setFriendRequestByMe(false);
             }
         } catch (error) {
-            console.log('Error accepting friend request', error);
+            dispatch(
+                addToast({
+                    type: 'error',
+                    content: error.message,
+                }),
+            );
+        } finally {
+            setFriendRequestByMe(false);
         }
     };
 
     return (
         <div className={cx('wrapper')}>
             <div className={cx('header')}>
-                <h3 className={cx('title')}>Office {type === 'user' ? 'member' : 'group'}</h3>
+                <h3 className={cx('title')}>Office Member</h3>
                 <h2 className={cx('title')}>of the RETRO CHAT</h2>
             </div>
             <div className={cx('content')}>
-                <div className={cx('avatar')}>
-                    <Image src={avatar} className={cx('avatar-img')} width={100} height={100} alt="avatar" />
-                </div>
+                {avatar && (
+                    <div className={cx('avatar')}>
+                        <Image src={avatar} className={cx('avatar-img')} width={100} height={100} alt="avatar" />
+                    </div>
+                )}
                 <div className={cx('info')}>
                     <div className={cx('info-item')}>
                         <span className={cx('label')}>NAME</span>
                         <p className={cx('info-content')}>{name}</p>
                     </div>
                     <div className={cx('info-item')}>
-                        <span className={cx('label')}>{type === 'user' ? 'EMAIL' : 'MEMBERS'}</span>
-                        <p className={cx('info-content')}>{type === 'user' ? email : members}</p>
+                        <span className={cx('label')}>Email</span>
+                        <p className={cx('info-content')}>{email}</p>
                     </div>
                     <div className={cx('info-item')}>
                         <span className={cx('label')}>CREATED AT</span>
@@ -126,23 +132,17 @@ function SearchCard({
                 <div
                     className={cx('action-item')}
                     onClick={() => {
-                        if (type === 'user') {
-                            router.push(`/profile/@${slug}`);
-                        } else {
-                            console.log('goto ', slug);
-                            router.push(`/profile/${slug}`);
-                        }
+                        router.push(`/profile/@${slug}`);
                     }}
                 >
                     <Icon className={cx('ai-icon')} element={<FaRegUserCircle />} medium />
-                    <span className={cx('ai-label')}>{type === 'user' ? 'Trang cá nhân' : 'Trang'}</span>
+                    <span className={cx('ai-label')}>Trang cá nhân</span>
                 </div>
-                <div className={cx('action-item')}>
+                <div className={cx('action-item')} onClick={() => router.push(`/message/${id}`)}>
                     <Icon className={cx('ai-icon')} element={<FaFacebookMessenger />} medium />
-                    <span className={cx('ai-label')}>{type === 'user' ? 'Nhắn tin' : 'Tham gia'}</span>
+                    <span className={cx('ai-label')}>Nhắn tin</span>
                 </div>{' '}
-                {type === 'user' &&
-                    !friend &&
+                {!friend &&
                     (friendRequestByMe ? (
                         <div className={cx('action-item')} onClick={handleCancelFriendRequest}>
                             <Icon className={cx('ai-icon')} element={<RiUserSharedLine />} medium />
@@ -164,10 +164,10 @@ function SearchCard({
     );
 }
 
-SearchCard.propTypes = {
+UserCard.propTypes = {
     name: PropTypes.string,
     email: PropTypes.string,
     createdAt: PropTypes.string,
 };
 
-export default SearchCard;
+export default UserCard;

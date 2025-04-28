@@ -18,15 +18,18 @@ import { images, reactions } from '@/config/ui-config';
 import { openImgPreview } from '@/redux/actions/img-preview-action';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light.css';
+import { calculateTime } from '@/helpers';
 
 const cx = classNames.bind(styles);
 
-function Message({ type, className, isSender, content, timestamp }) {
+function Message({ type, className, avatar, isSender, content, timestamp }) {
     const [isShowTime, setIsShowTime] = useState(false);
     const [isShowTools, setIsShowTools] = useState(false);
     const [isShowReaction, setIsShowReaction] = useState(false);
     const [isShowMore, setIsShowMore] = useState(false);
     const dispatch = useDispatch();
+
+    console.log('isSender ', content, type, isSender);
 
     useEffect(() => {
         dispatch(closeReplyBox());
@@ -43,7 +46,7 @@ function Message({ type, className, isSender, content, timestamp }) {
 
     const renderMessage = () => {
         if (type === 'text') {
-            const formattedContent = content.message.split('\n').map((line, index) => (
+            const formattedContent = content.split('\n').map((line, index) => (
                 <Fragment key={index}>
                     {line}
                     <br />
@@ -115,7 +118,7 @@ function Message({ type, className, isSender, content, timestamp }) {
                 onMouseEnter={handleMouseEnterMessage}
                 onMouseLeave={handleMouseLeaveMessage}
             >
-                {!isSender && <Avatar className={cx('avatar')} size={36} />}
+                {!isSender && <Avatar src={avatar} className={cx('avatar')} size={36} />}
 
                 {renderMessage()}
 
@@ -169,7 +172,7 @@ function Message({ type, className, isSender, content, timestamp }) {
                     <div className={cx('tools')}></div>
                 )}
 
-                {isShowTime && <span className={cx('time')}>{timestamp}</span>}
+                {isShowTime && <span className={cx('time')}>{calculateTime(timestamp)}</span>}
                 <div className={cx('reactions')}>{<ReactionButton list={reactions} total={10} reacted={false} />}</div>
             </div>
         </div>

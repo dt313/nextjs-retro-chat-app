@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './SettingBox.module.scss';
 
@@ -7,7 +8,15 @@ import SubmitButton from '@/components/auth-with-password/SubmitButton';
 
 const cx = classNames.bind(styles);
 
-function SettingBox({ onClose, content }) {
+function SettingBox({ onClose, content, submitText = 'Lưu', handleSubmit }) {
+    const [value, setValue] = useState('');
+    const handleOnChange = (e) => {
+        if (content.type === 'image') {
+            setValue(e.target.files[0]);
+            return;
+        }
+        setValue(e.target.value);
+    };
     return (
         <div className={cx('wrapper')}>
             <div className={cx('header')}>
@@ -18,10 +27,20 @@ function SettingBox({ onClose, content }) {
             <div className={cx('content')}>
                 <p className={cx('description')}>{content.description}</p>
                 {content.type !== 'delete' && (
-                    <SettingInput type={content.type} label={content.label} placeholder={content.placeholder} />
+                    <SettingInput
+                        type={content.type}
+                        label={content.label}
+                        placeholder={content.placeholder}
+                        value={value}
+                        onChange={handleOnChange}
+                    />
                 )}
-                {content.type !== 'delete' && <SubmitButton>Lưu</SubmitButton>}
-                {content.type === 'delete' && <button className={cx('delete-btn')}>Xóa</button>}
+                <SubmitButton
+                    className={cx({ deleteBtn: content.type === 'delete' })}
+                    onClick={() => handleSubmit(value)}
+                >
+                    {submitText}
+                </SubmitButton>
             </div>
         </div>
     );

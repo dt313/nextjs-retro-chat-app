@@ -73,6 +73,10 @@
     color: var(--red);
 }
 
+.avatar {
+    border: 2px solid #868686;
+}
+
 // user menu
 
 .user-menu {
@@ -94,5 +98,20 @@
     .um-item:hover {
         background-color: #c2c2c2;
         cursor: pointer;
+    }
+
+    .separate {
+        padding-bottom: 12px;
+        border-bottom: 1px solid #c2c2c2;
+        margin: 4px 0 12px 0;
+    }
+
+    .no-hover {
+        border-radius: 0px;
+    }
+
+    .no-hover:hover {
+        background-color: transparent;
+        cursor: default;
     }
 }

@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import { redirect } from 'next/navigation';
 import { useSelector, useDispatch } from 'react-redux';
-
 import classNames from 'classnames/bind';
 import styles from './message.module.scss';
 import LeftMessage from '@/components/left-message';
@@ -16,24 +15,59 @@ import CloseIcon from '@/components/close-icon';
 
 import { RiArrowRightSLine, RiArrowLeftSLine } from 'react-icons/ri';
 import { BsThreeDots } from 'react-icons/bs';
-import { messages } from '@/config/ui-config';
+
 import useBreakpoint from '@/hooks/useBreakpoint';
 import { closeReplyBox } from '@/redux/actions/reply-box-action';
+import { conversationService, messageService } from '@/services';
+import eventBus from '@/config/emit';
 
 const cx = classNames.bind(styles);
 
-function Message({ id }) {
+function Message({ id, isGroup, data }) {
     const [isShowRight, setIsShowRight] = useState(false);
     const [isShowLeft, setIsShowLeft] = useState(false);
     const [isShowContent, setIsShowContent] = useState(false);
-    const [messagesList, setMessageList] = useState(messages);
+    const [messagesList, setMessageList] = useState([]);
     const breakpoint = useBreakpoint();
     const dispatch = useDispatch();
     const replyBox = useSelector((state) => state.replyBox);
 
-    console.log(replyBox);
-    const handleAddMessage = (content) => {
-        setMessageList((prev) => [...prev, content]);
+    useEffect(() => {
+        const fetchMessages = async () => {
+            const res = await conversationService.getMessageOfConversationById(id);
+
+            if (res) {
+                setMessageList(res);
+            }
+        };
+
+        fetchMessages();
+    }, []);
+
+    useEffect(() => {
+        const handleAddMessage = (message) => {
+            if (message) {
+                setMessageList((prev) => [...prev, message]);
+            }
+        };
+
+        eventBus.on(`message-${id}`, handleAddMessage);
+
+        return () => {
+            eventBus.off(`message-${id}`, handleAddMessage);
+        };
+    }, []);
+
+    const handleAddMessage = async (message) => {
+        const data = {
+            replyTo: replyBox.isOpen ? replyBox.data._id : null,
+            ...message,
+            isGroup,
+        };
+        const res = await messageService.create(id, data);
+        if (res) {
+            setMessageList((prev) => [...prev, res]);
+        }
     };
 
     const toggleRightSide = () => {
@@ -98,7 +132,7 @@ function Message({ id }) {
                         <div className={cx('user-info')}>
                             <Avatar className={cx('h-avatar')} size={44} />
                             <div className={cx('user-info-text')}>
-                                <strong className={cx('user-name')}>Danh Tuan</strong>
+                                <strong className={cx('user-name')}>{data.name}</strong>
                                 <div className={cx('user-status', 'online')}>Online</div>
                             </div>
                         </div>

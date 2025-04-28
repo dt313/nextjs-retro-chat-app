@@ -10,6 +10,7 @@ import { IoNotifications } from 'react-icons/io5';
 import HeadlessTippy from '@tippyjs/react/headless';
 
 import Dropdown from '@/components/drop-down';
+
 import Avatar from '@/components/avatar/Avatar';
 import Icon from '@/components/icon/Icon';
 import { openAuthBox, LOGIN_AUTH_BOX } from '@/redux/actions/auth-box-action';
@@ -31,7 +32,7 @@ function Header() {
     const router = useRouter();
     const dispatch = useDispatch();
 
-    const { isAuthenticated } = useSelector((state) => state.auth);
+    const { isAuthenticated, user: me } = useSelector((state) => state.auth);
 
     useEffect(() => {
         const handleNotification = (data) => {
@@ -92,7 +93,7 @@ function Header() {
                             }
                         }}
                     >
-                        <Avatar size={40} />
+                        <Avatar src={me?.avatar} size={40} className={cx('avatar')} />
                     </span>
                 </HeadlessTippy>
             </div>
@@ -114,6 +115,7 @@ const UserMenu = () => {
     };
     return (
         <div className={cx('user-menu')}>
+            <span className={cx('um-item', 'separate', 'no-hover')}>{me.fullName}</span>
             <span className={cx('um-item')} onClick={() => router.push(`/profile/@${me._id}`)}>
                 Trang cá nhân
             </span>

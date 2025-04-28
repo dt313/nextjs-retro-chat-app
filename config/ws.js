@@ -21,6 +21,13 @@ export const initSocket = (token) => {
                 eventBus.emit('notification', data.notification);
                 break;
 
+            case 'message':
+                const { message, conversationId } = data;
+                if (message && conversationId) {
+                    eventBus.emit(`message-${conversationId}`, data.message);
+                }
+                break;
+
             default:
                 console.warn('? unknow message type', type);
         }

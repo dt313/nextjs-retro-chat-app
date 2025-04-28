@@ -16,6 +16,8 @@
     .title {
         @include font-default;
         font-size: 2rem;
+        padding-right: 26px;
+        text-align: center;
     }
 
     .close-icon {
@@ -54,4 +56,8 @@
         cursor: pointer;
         opacity: 0.9;
     }
+}
+
+.deleteBtn {
+    background: var(--red) !important;
 }

@@ -1,36 +1,45 @@
 import { useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
+
 import styles from './Creation.module.scss';
 import Overlay from '@/components/overlay';
 import Input from '@/components/input';
 import SubmitButton from '@/components/auth-with-password/SubmitButton';
 import CloseIcon from '@/components/close-icon';
 import InputWithList from '@/components/input-with-list';
-import { types, users, groups } from '@/config/ui-config';
 import User from '@/components/user';
 import Group from '@/components/group';
+import ImageInput from '@/components/image-input';
+import ToggleSwitch from '@/components/toggle-switch';
+
+import { types, users, groups } from '@/config/ui-config';
 import { conversationService } from '@/services';
-import { useRouter } from 'next/navigation';
 const cx = classNames.bind(styles);
 
 function Creation({ onClose }) {
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [group, setGroup] = useState({
         name: '',
+        thumbnail: '',
         type: '',
         description: '',
         rule: '',
+        password: '',
     });
 
     const [activeTab, setActiveTab] = useState('user');
     const [list, setList] = useState([]);
-
-    const router = useRouter();
 
     useEffect(() => {
         setList(activeTab === 'user' ? users : groups);
     }, [activeTab]);
 
     const handleChange = (e) => {
+        if (e.target.name === 'thumbnail') {
+            console.log('image change');
+            const file = e.target.files[0];
+            setGroup({ ...group, thumbnail: file });
+        }
         setGroup({ ...group, [e.target.name]: e.target.value });
     };
 
@@ -53,6 +62,12 @@ function Creation({ onClose }) {
                 <div className={cx('l-side')}>
                     <h3 className={cx('ls-title')}>Create a new group</h3>
                     <div className={cx('ls-content')}>
+                        <ImageInput
+                            className={cx('image-input')}
+                            value={group.thumbnail}
+                            name="thumbnail"
+                            onChange={handleChange}
+                        />
                         <Input
                             className={cx('ls-input')}
                             name="name"
@@ -71,7 +86,6 @@ function Creation({ onClose }) {
                             onChange={handleChange}
                             onSelect={handleSelectType}
                         />
-
                         <Input
                             inputType="textarea"
                             className={cx('ls-input')}
@@ -81,7 +95,6 @@ function Creation({ onClose }) {
                             label="Giới thiệu"
                             placeholder="Giới thiệu về nhóm"
                         />
-
                         <Input
                             inputType="textarea"
                             className={cx('ls-input')}
@@ -91,6 +104,26 @@ function Creation({ onClose }) {
                             label="Nội quy"
                             placeholder="Nội quy của nhóm"
                         />
+                        <div className={cx('password-option')}>
+                            <ToggleSwitch
+                                small
+                                id="toggleSwitch"
+                                checked={isPasswordVisible}
+                                onChange={() => setIsPasswordVisible(!isPasswordVisible)}
+                            />
+                            <span className={cx('toggle-label')}>Thiết lập mật khẩu</span>
+                        </div>
+                        {isPasswordVisible && (
+                            <Input
+                                className={cx('ls-input')}
+                                name="password"
+                                value={group.password}
+                                onChange={handleChange}
+                                label="Password"
+                                placeholder="Password"
+                                type="password"
+                            />
+                        )}
                         <SubmitButton onClick={handleCreate}>Create</SubmitButton>
                     </div>
                 </div>

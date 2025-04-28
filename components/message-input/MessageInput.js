@@ -49,12 +49,8 @@ function MessageInput({ onSubmit }) {
         if (value.trim() === '') return;
 
         onSubmit({
-            user: 'Alice',
-            content: {
-                message: value,
-            },
-            timestamp: '2025-04-08T14:30:00Z',
-            type: 'text',
+            content: value,
+            attachments: files.length > 0 ? files : null,
         });
     };
 

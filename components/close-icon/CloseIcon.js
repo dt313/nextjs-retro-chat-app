@@ -2,7 +2,7 @@ import classNames from 'classnames/bind';
 import styles from './CloseIcon.module.scss';
 import Icon from '../icon';
 import { RiCloseLine } from 'react-icons/ri';
-import Close from '@/assets/svg/close';
+import Close from '@/assets/svg/emoji/close';
 const cx = classNames.bind(styles);
 
 function CloseIcon({ onClick, className, theme = 'light', small, large, medium }) {

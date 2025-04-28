@@ -1,11 +1,11 @@
 import { uniqBy } from 'lodash';
-import Angry from '@/assets/svg/angry';
-import Care from '@/assets/svg/care';
-import Haha from '@/assets/svg/haha';
-import Like from '@/assets/svg/like';
-import Love from '@/assets/svg/love';
-import Sad from '@/assets/svg/sad';
-import Wow from '@/assets/svg/wow';
+import Angry from '@/assets/svg/emoji/angry';
+import Care from '@/assets/svg/emoji/care';
+import Haha from '@/assets/svg/emoji/haha';
+import Like from '@/assets/svg/emoji/like';
+import Love from '@/assets/svg/emoji/love';
+import Sad from '@/assets/svg/emoji/sad';
+import Wow from '@/assets/svg/emoji/wow';
 import { RiHeart3Line } from 'react-icons/ri';
 import { FaCaretDown } from 'react-icons/fa';
 

@@ -15,7 +15,6 @@
         top left,
         top right;
     background-repeat: no-repeat;
-    mix-blend-mode: multiply;
 }
 
 .header {
@@ -39,6 +38,7 @@
 .search-input {
     max-width: 600px;
     width: 100%;
+    background-color: transparent;
 }
 
 .filter {
