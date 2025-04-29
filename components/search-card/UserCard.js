@@ -11,7 +11,7 @@ import { FaRegUserCircle, FaFacebookMessenger } from 'react-icons/fa';
 import { FaUserPlus } from 'react-icons/fa6';
 import { RiUserReceivedLine, RiUserSharedLine } from 'react-icons/ri';
 
-import { invitationService } from '@/services';
+import { conversationService, invitationService } from '@/services';
 import { calculateTime, getNotificationId } from '@/helpers';
 import {
     FRIEND_REQUEST_ACCEPTED,
@@ -100,6 +100,23 @@ function UserCard({
         }
     };
 
+    const handleClickMessenger = async () => {
+        try {
+            const res = await conversationService.getOrCreateConversation({ withUserId: id });
+            console.log('res', res);
+            if (res) {
+                router.push(`/conversation/${res._id}`);
+            }
+        } catch (error) {
+            dispatch(
+                addToast({
+                    type: 'error',
+                    content: error.message,
+                }),
+            );
+        }
+    };
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('header')}>
@@ -138,7 +155,7 @@ function UserCard({
                     <Icon className={cx('ai-icon')} element={<FaRegUserCircle />} medium />
                     <span className={cx('ai-label')}>Trang cá nhân</span>
                 </div>
-                <div className={cx('action-item')} onClick={() => router.push(`/message/${id}`)}>
+                <div className={cx('action-item')} onClick={handleClickMessenger}>
                     <Icon className={cx('ai-icon')} element={<FaFacebookMessenger />} medium />
                     <span className={cx('ai-label')}>Nhắn tin</span>
                 </div>{' '}

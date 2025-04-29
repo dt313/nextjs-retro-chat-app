@@ -55,8 +55,8 @@ function Header() {
                 Retro
             </h1>
             <div className={cx('header-menu')}>
-                {!pathname.startsWith('/message') && (
-                    <span className={cx('hmenu-item', 'message')} onClick={() => router.push('/message')}>
+                {!pathname.startsWith('/conversation') && (
+                    <span className={cx('hmenu-item', 'message')} onClick={() => router.push('/conversation')}>
                         <span className={cx('message-count')}>1</span>
                         <MessageIcon small />
                     </span>

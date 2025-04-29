@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import styles from './RightMessage.module.scss';
 
@@ -16,6 +17,7 @@ import SearchItem from './SearchItem';
 import { IoSearch } from 'react-icons/io5';
 import { FaRegUserCircle } from 'react-icons/fa';
 import { TiUserAdd } from 'react-icons/ti';
+import { getAvatarFromConversation, getNameFromConversation } from '@/helpers';
 const cx = classNames.bind(styles);
 
 const INFORMATION = [
@@ -29,10 +31,12 @@ const INFORMATION = [
     },
 ];
 
-function RightMessage({ hide, isGroup = true }) {
+function RightMessage({ hide, isGroup = true, data }) {
     const [isShowSearch, setIsShowSearch] = useState(false);
     const [simValue, setSimValue] = useState('');
     const router = useRouter();
+
+    const { user: me } = useSelector((state) => state.auth);
 
     const handleChangeSimValue = (e) => {
         setSimValue(e.target.value);
@@ -40,8 +44,8 @@ function RightMessage({ hide, isGroup = true }) {
     return (
         <div className={cx('wrapper', hide && 'hide')}>
             <div className={cx('header')}>
-                <Avatar className={cx('avatar')} size={96} />
-                <h4 className={cx('name')}>Danh Tuan</h4>
+                <Avatar src={getAvatarFromConversation(data, me._id)} className={cx('avatar')} size={96} />
+                <h4 className={cx('name')}>{getNameFromConversation(data, me._id)}</h4>
             </div>
 
             <div className={cx('action')}>

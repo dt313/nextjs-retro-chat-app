@@ -29,8 +29,6 @@ function Message({ type, className, avatar, isSender, content, timestamp }) {
     const [isShowMore, setIsShowMore] = useState(false);
     const dispatch = useDispatch();
 
-    console.log('isSender ', content, type, isSender);
-
     useEffect(() => {
         dispatch(closeReplyBox());
     }, []);

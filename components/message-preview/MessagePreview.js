@@ -3,17 +3,18 @@ import styles from './MessagePreview.module.scss';
 import Avatar from '../avatar/Avatar';
 import { useRouter } from 'next/navigation';
 const cx = classNames.bind(styles);
-function MessagePreview({ className, slug, avatar, name, message, time, isReaded }) {
+function MessagePreview({ className, slug, avatar, name, message, time, isReaded, active }) {
     const router = useRouter();
 
     const classes = cx('wrapper', {
         [className]: className,
         className,
         isReaded,
+        active,
     });
 
     const handleClick = () => {
-        router.push(`/message/${slug}`);
+        router.push(`/conversation/${slug}`);
     };
     return (
         <div className={classes} onClick={handleClick}>

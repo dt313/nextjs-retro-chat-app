@@ -24,7 +24,7 @@ function OAuth2() {
                     });
                     console.log(res.data);
                     dispatch(login({ accessToken: token, user: res.data }));
-                    router.push('/message');
+                    router.push('/conversation');
                 };
 
                 fetchAPI();

@@ -20,7 +20,6 @@ function AuthFormWrap() {
     const { isAuthenticated, user } = useSelector((state) => state.auth);
     const { status } = useSelector((state) => state.status);
     const dispatch = useDispatch();
-    console.log('Status ', status);
     const fetchNotifications = async () => {
         if (!user) return;
         const res = await notificationService.getAllNotifications(user._id);

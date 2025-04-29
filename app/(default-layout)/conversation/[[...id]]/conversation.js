@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { redirect } from 'next/navigation';
 import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
-import styles from './message.module.scss';
+import styles from './conversation.module.scss';
 import LeftMessage from '@/components/left-message';
 import Avatar from '@/components/avatar';
 import MessageIcon from '@/components/message-icon';
@@ -20,14 +20,17 @@ import useBreakpoint from '@/hooks/useBreakpoint';
 import { closeReplyBox } from '@/redux/actions/reply-box-action';
 import { conversationService, messageService } from '@/services';
 import eventBus from '@/config/emit';
+import { getAvatarFromConversation, getNameFromConversation } from '@/helpers';
 
 const cx = classNames.bind(styles);
 
-function Message({ id, isGroup, data }) {
+function Conversation({ id, data, isGroup }) {
     const [isShowRight, setIsShowRight] = useState(false);
     const [isShowLeft, setIsShowLeft] = useState(false);
     const [isShowContent, setIsShowContent] = useState(false);
     const [messagesList, setMessageList] = useState([]);
+
+    const { user: me } = useSelector((state) => state.auth);
     const breakpoint = useBreakpoint();
     const dispatch = useDispatch();
     const replyBox = useSelector((state) => state.replyBox);
@@ -62,7 +65,7 @@ function Message({ id, isGroup, data }) {
         const data = {
             replyTo: replyBox.isOpen ? replyBox.data._id : null,
             ...message,
-            isGroup,
+            isGroup: isGroup,
         };
         const res = await messageService.create(id, data);
         if (res) {
@@ -118,7 +121,7 @@ function Message({ id, isGroup, data }) {
     return (
         <div className={cx('wrapper')}>
             <div className={cx('left-side', isShowLeft ? 'show' : 'hide')}>
-                <LeftMessage className={cx('left-wrap')} />
+                <LeftMessage className={cx('left-wrap')} activeId={id} />
                 <span className={cx('toggle-btn')} onClick={toggleLeftSide}></span>
             </div>
             {id ? (
@@ -130,9 +133,13 @@ function Message({ id, isGroup, data }) {
                             onClick={() => redirect('/message')}
                         />
                         <div className={cx('user-info')}>
-                            <Avatar className={cx('h-avatar')} size={44} />
+                            <Avatar
+                                src={getAvatarFromConversation(data, me._id)}
+                                className={cx('h-avatar')}
+                                size={44}
+                            />
                             <div className={cx('user-info-text')}>
-                                <strong className={cx('user-name')}>{data.name}</strong>
+                                <strong className={cx('user-name')}>{getNameFromConversation(data, me._id)}</strong>
                                 <div className={cx('user-status', 'online')}>Online</div>
                             </div>
                         </div>
@@ -167,10 +174,10 @@ function Message({ id, isGroup, data }) {
 
             <div className={cx('right-side', isShowRight ? 'show' : 'hide', { 'left-visible': isShowLeft })}>
                 <Icon className={cx('r-close-btn')} element={<RiArrowRightSLine />} onClick={toggleRightSide} />
-                <RightMessage hide={!isShowRight} />
+                <RightMessage hide={!isShowRight} data={data} />
             </div>
         </div>
     );
 }
 
-export default Message;
+export default Conversation;

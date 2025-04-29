@@ -117,7 +117,7 @@ function GroupCard({
                         <span className={cx('ai-label')}>Tham gia</span>
                     </div>
                 ) : (
-                    <div className={cx('action-item')} onClick={() => router.push(`/message/${id}`)}>
+                    <div className={cx('action-item')} onClick={() => router.push(`/conversation/${id}`)}>
                         <Icon className={cx('ai-icon')} element={<FaFacebookMessenger />} medium />
                         <span className={cx('ai-label')}>Nhắn tin</span>
                     </div>

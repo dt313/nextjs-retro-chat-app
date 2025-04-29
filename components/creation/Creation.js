@@ -1,8 +1,9 @@
+'use client';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import classNames from 'classnames/bind';
 
 import styles from './Creation.module.scss';
-import Overlay from '@/components/overlay';
 import Input from '@/components/input';
 import SubmitButton from '@/components/auth-with-password/SubmitButton';
 import CloseIcon from '@/components/close-icon';
@@ -11,9 +12,11 @@ import User from '@/components/user';
 import Group from '@/components/group';
 import ImageInput from '@/components/image-input';
 import ToggleSwitch from '@/components/toggle-switch';
+import Overlay from '@/components/overlay';
 
 import { types, users, groups } from '@/config/ui-config';
 import { conversationService } from '@/services';
+import { on } from 'events';
 const cx = classNames.bind(styles);
 
 function Creation({ onClose }) {
@@ -29,6 +32,8 @@ function Creation({ onClose }) {
 
     const [activeTab, setActiveTab] = useState('user');
     const [list, setList] = useState([]);
+
+    const router = useRouter();
 
     useEffect(() => {
         setList(activeTab === 'user' ? users : groups);
@@ -48,11 +53,12 @@ function Creation({ onClose }) {
     };
 
     const handleCreate = async () => {
-        const res = await conversationService.create({ ...group, isGroup: true });
+        const res = await conversationService.createGroupConversation({ ...group });
         const { _id } = res;
 
         if (_id) {
-            window.location.href = `/message/${_id}`;
+            onClose();
+            router.push(`/conversation/${_id}`);
         }
     };
 

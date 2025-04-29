@@ -12,6 +12,10 @@
     }
 }
 
+.wrapper.active {
+    background-color: #7a7a7a77;
+}
+
 .avatar {
     margin-right: 8px;
 }
@@ -33,16 +37,19 @@
 }
 
 .message {
+    flex: 1;
     display: flex;
+    justify-content: space-between;
     font-family: var(--font-family);
     font-size: 1.4rem;
     line-height: 1.5;
     font-weight: 600;
+    margin-right: 40px;
 }
 
 .message-text {
-    max-width: calc(100% - 44px - 24px - 80px);
-    width: 100%;
+    flex: 1;
+    max-width: calc(100% - 80px);
     overflow: hidden;
     text-wrap: nowrap;
     white-space: nowrap;
@@ -50,7 +57,7 @@
 }
 
 .time {
-    margin-left: 12px;
+    flex-shrink: 0;
     text-wrap: nowrap;
 }
 

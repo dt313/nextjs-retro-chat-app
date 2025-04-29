@@ -1,8 +1,8 @@
 import axios from '@/config/axios';
 
-export const create = async (data) => {
+export const createGroupConversation = async (data) => {
     try {
-        const res = await axios.post('/conversations', data);
+        const res = await axios.post('/conversations/group', data);
         return res?.data;
     } catch (error) {
         throw new Error(error || 'Failed to create conversation');
@@ -23,7 +23,7 @@ export const getConversationById = async (id) => {
         const res = await axios.get(`/conversations/${id}`);
         return res?.data;
     } catch (error) {
-        throw new Error(error || 'Failed to get conversations');
+        throw new Error(error || 'Failed to get conversation');
     }
 };
 
@@ -32,6 +32,15 @@ export const getMessageOfConversationById = async (id) => {
         const res = await axios.get(`/conversations/message/${id}`);
         return res?.data;
     } catch (error) {
-        throw new Error(error || 'Failed to get conversations');
+        throw new Error(error || 'Failed to get conversation');
+    }
+};
+
+export const getOrCreateConversation = async ({ withUserId }) => {
+    try {
+        const res = await axios.get(`/conversations/get-or-create/${withUserId}`);
+        return res?.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to get-or-create conversation');
     }
 };

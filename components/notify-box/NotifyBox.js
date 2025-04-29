@@ -25,7 +25,7 @@ const cx = classNames.bind(styles);
 
 function NotifyBox({ list = [] }) {
     const dispatch = useDispatch();
-    console.log(list);
+
     const handleReplyFriendRequest = async (senderId, status, notificationId) => {
         const res = await invitationService.replyFriendRequest({
             sender: senderId,
@@ -45,7 +45,7 @@ function NotifyBox({ list = [] }) {
         }
     };
 
-    const renderNotificationContent = (notification) => {
+    const renderNotificationContent = (notification = {}) => {
         const { type, sender, group } = notification;
         switch (type) {
             case NOTIFICATION_FRIEND_REQUEST:
@@ -101,7 +101,7 @@ function NotifyBox({ list = [] }) {
                     <div className={cx('text-notify')}>
                         <p className={cx('qb-content')}>
                             <strong className={cx('name')}>{sender?.fullName}</strong> đã tham gia nhóm{' '}
-                            <strong className={cx('name')}>{group.name}</strong> của bạn
+                            <strong className={cx('name')}>{group?.name}</strong> của bạn
                         </p>
                     </div>
                 );

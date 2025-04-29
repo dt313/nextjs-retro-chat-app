@@ -3,4 +3,13 @@ import { default as reshapeImages } from './image-reshape';
 import { default as calculateTime } from './calculate-time';
 import { default as handleHttpError } from './handle-http-error';
 import { default as getNotificationId } from './find-notification-id';
-export { getReactionIconList, reshapeImages, calculateTime, getNotificationId };
+import { getNameFromConversation, getAvatarFromConversation } from './conversation-info';
+export {
+    getReactionIconList,
+    reshapeImages,
+    calculateTime,
+    getNotificationId,
+    getNameFromConversation,
+    getAvatarFromConversation,
+    handleHttpError,
+};

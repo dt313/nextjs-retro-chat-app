@@ -13,8 +13,6 @@ function MessageBox({ list = [] }) {
         messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [list]);
 
-    console.log('list', list);
-
     return (
         <div className={cx('wrapper')}>
             {list.map((mes, index) => (

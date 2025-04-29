@@ -27,7 +27,8 @@ export default function handleHttpError(error) {
     if (
         (status === 401 && message === 'Unauthorized') ||
         message === 'Refresh Token Expired' ||
-        message === 'Invalid Refresh Token'
+        message === 'Invalid Refresh Token' ||
+        message === 'Invalid Access Token'
     ) {
         storageUtils.clearAuth();
         window.location.reload();

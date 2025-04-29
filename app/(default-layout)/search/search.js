@@ -112,7 +112,6 @@ function SearchContent() {
                             );
                         }
                         if (filterValue === 'group') {
-                            const isJoined = item.participants?.some((user) => user === me._id);
                             return (
                                 <GroupCard
                                     key={item._id}
@@ -121,7 +120,7 @@ function SearchContent() {
                                     createdAt={item.createdAt}
                                     members={item.participants?.length}
                                     thumbnail={item.thumbnail}
-                                    isJoined={isJoined}
+                                    isJoined={item.isJoined}
                                     isPrivate={item.isPrivate}
                                 />
                             );
