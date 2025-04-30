@@ -40,6 +40,9 @@ function MessageInput({ onSubmit }) {
     const textRef = useAutoResize(value);
     const fileInputRef = useRef(null);
     const [files, setFiles] = useState([]);
+    const [previewFiles, setPreviewFiles] = useState([]);
+
+    console.log(files);
 
     const handleChange = (e) => {
         setValue(e.target.value);
@@ -67,17 +70,27 @@ function MessageInput({ onSubmit }) {
 
     const handleFileChange = (e) => {
         const inputFiles = e.target.files;
+        let newPreviewFiles = [];
         let newFiles = [];
         if (inputFiles.length > 0) {
             for (const file of inputFiles) {
+                const isExist = files.some((f) => f.name === file.name && f.size === file.size);
+                console.log(isExist);
+                if (isExist) {
+                    console.log('isExisted ');
+                    alert(`${file.name} is attached`);
+                    continue;
+                }
                 if (file.type.startsWith('image/')) {
-                    newFiles.push({
+                    newPreviewFiles.push({
                         id: uuidv4(),
                         type: 'image',
                         src: URL.createObjectURL(file),
                     });
+                    newFiles.push(file);
                 } else {
-                    newFiles.push({ id: uuidv4(), type: 'file', name: file.name });
+                    newPreviewFiles.push({ id: uuidv4(), type: 'file', name: file.name });
+                    newFiles.push(file);
                 }
             }
         }
@@ -85,18 +98,20 @@ function MessageInput({ onSubmit }) {
             alert('You can only upload up to 10 files');
             return;
         }
+        setPreviewFiles((prev) => [...prev, ...newPreviewFiles]);
         setFiles((prev) => [...prev, ...newFiles]);
     };
 
     const handleDeleteFile = (id) => {
-        setFiles((prev) => prev.filter((item) => item.id !== id));
+        setPreviewFiles((prev) => prev.filter((item) => item.id !== id));
+        setFiles((prev) => prev.filter((_, index) => previewFiles[index].id !== id));
     };
 
     return (
         <div className={cx('wrapper')}>
-            {files.length > 0 && (
+            {previewFiles.length > 0 && (
                 <div className={cx('preview')}>
-                    {files.map((item) => {
+                    {previewFiles.map((item) => {
                         if (item.type === 'image') {
                             return (
                                 <div className={cx('preview-image')} key={item.id}>

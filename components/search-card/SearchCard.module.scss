@@ -69,8 +69,11 @@
 
 .info-item {
     .label {
+        font-family: var(--font-family);
         font-size: 1.2rem;
         color: var(--red);
+        font-weight: 600;
+        text-transform: uppercase;
     }
 
     .info-content {

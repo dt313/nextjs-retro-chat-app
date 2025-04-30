@@ -21,13 +21,17 @@ import { closeReplyBox } from '@/redux/actions/reply-box-action';
 import { conversationService, messageService } from '@/services';
 import eventBus from '@/config/emit';
 import { getAvatarFromConversation, getNameFromConversation } from '@/helpers';
+import { set } from 'lodash';
+import { addToast } from '@/redux/actions/toast-action';
 
 const cx = classNames.bind(styles);
 
-function Conversation({ id, data, isGroup }) {
+function Conversation({ id }) {
     const [isShowRight, setIsShowRight] = useState(false);
     const [isShowLeft, setIsShowLeft] = useState(false);
     const [isShowContent, setIsShowContent] = useState(false);
+
+    const [conversation, setConversation] = useState(null);
     const [messagesList, setMessageList] = useState([]);
 
     const { user: me } = useSelector((state) => state.auth);
@@ -35,39 +39,64 @@ function Conversation({ id, data, isGroup }) {
     const dispatch = useDispatch();
     const replyBox = useSelector((state) => state.replyBox);
 
-    useEffect(() => {
-        const fetchMessages = async () => {
-            const res = await conversationService.getMessageOfConversationById(id);
-
-            if (res) {
-                setMessageList(res);
+    const fetchConversation = async () => {
+        try {
+            if (!id) {
+                setConversation({});
+                setMessageList([]);
+                return;
             }
-        };
+            const conversation = await conversationService.getConversationById(id);
+            if (conversation) {
+                setConversation(conversation);
+            }
 
-        fetchMessages();
+            const messages = await conversationService.getMessageOfConversationById(id);
+            if (messages) {
+                setMessageList(messages);
+            }
+        } catch (error) {
+            console.log('Error fetching conversation:', error.message);
+            dispatch(addToast({ type: 'error', content: error.message }));
+            redirect('/conversation');
+        }
+    };
+
+    useEffect(() => {
+        fetchConversation();
     }, []);
 
     useEffect(() => {
-        const handleAddMessage = (message) => {
+        const addMessageFromWS = (message) => {
             if (message) {
                 setMessageList((prev) => [...prev, message]);
             }
         };
 
-        eventBus.on(`message-${id}`, handleAddMessage);
+        eventBus.on(`message-${id}`, addMessageFromWS);
 
         return () => {
-            eventBus.off(`message-${id}`, handleAddMessage);
+            eventBus.off(`message-${id}`, addMessageFromWS);
         };
     }, []);
 
     const handleAddMessage = async (message) => {
-        const data = {
-            replyTo: replyBox.isOpen ? replyBox.data._id : null,
-            ...message,
-            isGroup: isGroup,
-        };
-        const res = await messageService.create(id, data);
+        console.log(message);
+        const formData = new FormData();
+        if (message.attachments) {
+            for (const file of message.attachments) {
+                formData.append('attachments', file);
+            }
+        }
+        if (replyBox.isOpen) {
+            formData.append('replyTo', replyBox.data._id);
+        }
+        formData.append('isGroup', conversation.isGroup);
+        formData.append('content', message.content);
+        console.log('formData', formData);
+
+        const res = await messageService.create(id, formData);
+
         if (res) {
             setMessageList((prev) => [...prev, res]);
         }
@@ -134,12 +163,14 @@ function Conversation({ id, data, isGroup }) {
                         />
                         <div className={cx('user-info')}>
                             <Avatar
-                                src={getAvatarFromConversation(data, me._id)}
+                                src={getAvatarFromConversation(conversation, me._id)}
                                 className={cx('h-avatar')}
                                 size={44}
                             />
                             <div className={cx('user-info-text')}>
-                                <strong className={cx('user-name')}>{getNameFromConversation(data, me._id)}</strong>
+                                <strong className={cx('user-name')}>
+                                    {getNameFromConversation(conversation, me._id)}
+                                </strong>
                                 <div className={cx('user-status', 'online')}>Online</div>
                             </div>
                         </div>
@@ -174,7 +205,7 @@ function Conversation({ id, data, isGroup }) {
 
             <div className={cx('right-side', isShowRight ? 'show' : 'hide', { 'left-visible': isShowLeft })}>
                 <Icon className={cx('r-close-btn')} element={<RiArrowRightSLine />} onClick={toggleRightSide} />
-                <RightMessage hide={!isShowRight} data={data} />
+                <RightMessage hide={!isShowRight} data={conversation} />
             </div>
         </div>
     );

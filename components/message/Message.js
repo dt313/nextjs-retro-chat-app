@@ -1,6 +1,9 @@
-import { Fragment, useState, useEffect } from 'react';
+import { Fragment, useState, useEffect, useMemo } from 'react';
+import { useDispatch } from 'react-redux';
+import Tippy from '@tippyjs/react';
 import classNames from 'classnames/bind';
 import styles from './Message.module.scss';
+
 import Avatar from '../avatar';
 import File from '../attach-file/File';
 import AImage from '../image';
@@ -8,17 +11,16 @@ import { RxFace } from 'react-icons/rx';
 import { IoArrowUndo } from 'react-icons/io5';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Icon from '../icon';
-import { useDispatch } from 'react-redux';
 import { openReplyBox, closeReplyBox } from '@/redux/actions/reply-box-action';
-import Tippy from '@tippyjs/react';
 import HeadlessTippy from '@tippyjs/react/headless';
 import ReactionButton from '@/components/reaction-button';
 import Reaction from '@/components/reaction';
 import { images, reactions } from '@/config/ui-config';
 import { openImgPreview } from '@/redux/actions/img-preview-action';
+import { calculateTime } from '@/helpers';
+
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light.css';
-import { calculateTime } from '@/helpers';
 
 const cx = classNames.bind(styles);
 
@@ -27,6 +29,7 @@ function Message({ type, className, avatar, isSender, content, timestamp }) {
     const [isShowTools, setIsShowTools] = useState(false);
     const [isShowReaction, setIsShowReaction] = useState(false);
     const [isShowMore, setIsShowMore] = useState(false);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -44,7 +47,7 @@ function Message({ type, className, avatar, isSender, content, timestamp }) {
 
     const renderMessage = () => {
         if (type === 'text') {
-            const formattedContent = content.split('\n').map((line, index) => (
+            const formattedContent = content?.split('\n').map((line, index) => (
                 <Fragment key={index}>
                     {line}
                     <br />
@@ -65,18 +68,34 @@ function Message({ type, className, avatar, isSender, content, timestamp }) {
             );
         }
 
-        if (type === 'image') {
+        if (type === 'images') {
+            const isMultiImage = content?.length > 3;
+
             return (
-                <AImage
-                    className={cx('m-image')}
-                    src={content.src}
-                    alt={content.alt}
+                <div
+                    className={cx('imagesStack', {
+                        imagesStack2: content?.length == 2,
+                        imagesStack3: content?.length == 3,
+                        imagesStack4: isMultiImage,
+                    })}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
-                    width={200}
-                    height={200}
-                    onClick={handleOpenImagePreview}
-                />
+                >
+                    {content?.length > 0 &&
+                        content.map((im) => {
+                            return (
+                                <AImage
+                                    key={im._id}
+                                    className={cx('m-image')}
+                                    src={im.url}
+                                    alt={im.name}
+                                    width={200}
+                                    height={200}
+                                    onClick={handleOpenImagePreview}
+                                />
+                            );
+                        })}
+                </div>
             );
         }
 

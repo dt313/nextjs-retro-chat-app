@@ -44,6 +44,7 @@ function Creation({ onClose }) {
             console.log('image change');
             const file = e.target.files[0];
             setGroup({ ...group, thumbnail: file });
+            return;
         }
         setGroup({ ...group, [e.target.name]: e.target.value });
     };
@@ -53,7 +54,16 @@ function Creation({ onClose }) {
     };
 
     const handleCreate = async () => {
-        const res = await conversationService.createGroupConversation({ ...group });
+        const formData = new FormData();
+        if (group.thumbnail) formData.append('thumbnail', group.thumbnail);
+        formData.append('name', group.name);
+        formData.append('type', group.type);
+        formData.append('description', group.description);
+        formData.append('rule', group.rule);
+        formData.append('password', group.password);
+
+        console.log('formData', formData);
+        const res = await conversationService.createGroupConversation(formData);
         const { _id } = res;
 
         if (_id) {

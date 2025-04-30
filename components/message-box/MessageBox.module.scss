@@ -5,3 +5,9 @@
     padding: 12px 24px;
     padding-bottom: 52px;
 }
+
+.message-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+}

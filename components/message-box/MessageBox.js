@@ -15,16 +15,50 @@ function MessageBox({ list = [] }) {
 
     return (
         <div className={cx('wrapper')}>
-            {list.map((mes, index) => (
-                <Message
-                    type={mes.messageType}
-                    key={index}
-                    avatar={mes.sender.avatar}
-                    isSender={mes.sender._id === me._id}
-                    content={mes.content}
-                    timestamp={mes.createdAt}
-                />
-            ))}
+            {list.map((mes) => {
+                const attachments = mes.attachments || [];
+                const images = mes.images || null;
+
+                console.log(mes.content);
+                return (
+                    <div key={mes._id} className={cx('message-wrapper')}>
+                        <Message
+                            type="text"
+                            avatar={mes.sender?.avatar}
+                            isSender={mes.sender?._id === me._id}
+                            content={mes.content}
+                            timestamp={mes.createdAt}
+                        />
+
+                        {attachments?.length > 0 &&
+                            attachments.map((at) => {
+                                if (at.type === 'file') {
+                                    return (
+                                        <Message
+                                            key={at._id}
+                                            type={at.type}
+                                            avatar={mes.sender?.avatar}
+                                            isSender={mes.sender?._id === me._id}
+                                            content={{ name: at.name, size: at.size }}
+                                            timestamp={mes.createdAt}
+                                        />
+                                    );
+                                }
+                            })}
+
+                        {images && (
+                            <Message
+                                key={images?._id}
+                                type="images"
+                                avatar={mes.sender?.avatar}
+                                isSender={mes.sender?._id === me._id}
+                                content={images?.images}
+                                timestamp={mes.createdAt}
+                            />
+                        )}
+                    </div>
+                );
+            })}
 
             <div ref={messageEndRef}></div>
         </div>

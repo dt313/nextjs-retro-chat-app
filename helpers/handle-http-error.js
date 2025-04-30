@@ -19,6 +19,8 @@ const refreshToken = async () => {
 export default function handleHttpError(error) {
     const { status, message } = error;
 
+    console.log('handleHttpError', error);
+
     if (status === 401 && message === 'Access Token Expired') {
         refreshToken();
         return;

@@ -27,6 +27,8 @@ export function deleteToast(id) {
 export function addToast(payload) {
     return {
         type: ADD_TOAST,
-        payload: payload,
+        payload: {
+            ...createToast(payload),
+        },
     };
 }

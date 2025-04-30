@@ -1,8 +1,14 @@
 import axios from '@/config/axios';
+import { storageUtils } from '@/utils';
+import defaultAxios from 'axios';
 
 export const createGroupConversation = async (data) => {
     try {
-        const res = await axios.post('/conversations/group', data);
+        const res = await axios.post(`/conversations/group`, data, {
+            headers: {
+                'Content-Type': undefined,
+            },
+        });
         return res?.data;
     } catch (error) {
         throw new Error(error || 'Failed to create conversation');
