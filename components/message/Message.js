@@ -1,5 +1,5 @@
 import { Fragment, useState, useEffect, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Tippy from '@tippyjs/react';
 import classNames from 'classnames/bind';
 import styles from './Message.module.scss';
@@ -9,6 +9,8 @@ import File from '../attach-file/File';
 import AImage from '../image';
 import { RxFace } from 'react-icons/rx';
 import { IoArrowUndo } from 'react-icons/io5';
+import { RiReplyFill } from 'react-icons/ri';
+
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Icon from '../icon';
 import { openReplyBox, closeReplyBox } from '@/redux/actions/reply-box-action';
@@ -21,14 +23,16 @@ import { calculateTime } from '@/helpers';
 
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light.css';
+import { getReplyContent, getReplyLabelName, getReplyType } from '@/helpers/conversation-info';
 
 const cx = classNames.bind(styles);
 
-function Message({ type, className, avatar, isSender, content, timestamp }) {
+function Message({ type, id, className, sender, content, timestamp, replyData = {} }) {
     const [isShowTime, setIsShowTime] = useState(false);
     const [isShowTools, setIsShowTools] = useState(false);
     const [isShowReaction, setIsShowReaction] = useState(false);
     const [isShowMore, setIsShowMore] = useState(false);
+    const { user: me } = useSelector((state) => state.auth);
 
     const dispatch = useDispatch();
 
@@ -38,7 +42,7 @@ function Message({ type, className, avatar, isSender, content, timestamp }) {
 
     const classes = cx('wrapper', {
         [className]: className,
-        isSender,
+        isSender: sender._id === me._id,
     });
 
     const handleOpenImagePreview = () => {
@@ -105,8 +109,12 @@ function Message({ type, className, avatar, isSender, content, timestamp }) {
     const handleOpenReplyBox = () => {
         dispatch(
             openReplyBox({
-                username: content.user,
-                message: content.message,
+                user: sender,
+                message: {
+                    id,
+                    type: getReplyType(type),
+                    content,
+                },
             }),
         );
     };
@@ -135,7 +143,7 @@ function Message({ type, className, avatar, isSender, content, timestamp }) {
                 onMouseEnter={handleMouseEnterMessage}
                 onMouseLeave={handleMouseLeaveMessage}
             >
-                {!isSender && <Avatar src={avatar} className={cx('avatar')} size={36} />}
+                {!(sender._id === me._id) && <Avatar src={sender?.avatar} className={cx('avatar')} size={36} />}
 
                 {renderMessage()}
 
@@ -192,6 +200,16 @@ function Message({ type, className, avatar, isSender, content, timestamp }) {
                 {isShowTime && <span className={cx('time')}>{calculateTime(timestamp)}</span>}
                 <div className={cx('reactions')}>{<ReactionButton list={reactions} total={10} reacted={false} />}</div>
             </div>
+
+            {replyData && replyData?.replyType && (
+                <div className={cx('reply-message')}>
+                    <p className={cx('reply-label')}>
+                        <Icon className={cx('reply-icon')} element={<RiReplyFill />} />
+                        {getReplyLabelName(replyData.replyTo.sender, sender, me._id)}
+                    </p>
+                    <p className={cx('reply-content')}>{getReplyContent(replyData)}</p>
+                </div>
+            )}
         </div>
     );
 }

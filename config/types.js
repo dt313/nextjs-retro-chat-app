@@ -13,6 +13,10 @@ const TEMP_NOTIFICATION_FRIEND_REJECTED = 'temp_friend_request_rejected';
 const FRIEND_REQUEST_ACCEPTED = 'accepted';
 const FRIEND_REQUEST_REJECTED = 'rejected';
 
+const REPLY_ATTACHMENT = 'Attachment';
+const REPLY_IMAGE_ATTACHMENT = 'ImageAttachment';
+const REPLY_MESSAGE = 'Message';
+
 export {
     ONLINE,
     OFFLINE,
@@ -26,4 +30,7 @@ export {
     FRIEND_REQUEST_REJECTED,
     TEMP_NOTIFICATION_FRIEND_ACCEPTED,
     TEMP_NOTIFICATION_FRIEND_REJECTED,
+    REPLY_ATTACHMENT,
+    REPLY_IMAGE_ATTACHMENT,
+    REPLY_MESSAGE,
 };

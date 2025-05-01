@@ -4,11 +4,15 @@
     width: 100%;
     margin: 12px 0;
     --empty-space-left: 48px;
+    position: relative;
+    display: flex;
+    flex-direction: column-reverse;
 }
 
 .message {
     display: flex;
     position: relative;
+    z-index: 2;
 }
 
 .avatar {
@@ -24,6 +28,7 @@
     border-bottom-right-radius: 12px;
     border-bottom-left-radius: 12px;
     box-shadow: var(--box-shadow);
+    background-color: var(--background);
     word-break: break-word;
 }
 
@@ -225,6 +230,18 @@
     .imagesStack4 {
         justify-content: flex-end;
     }
+
+    .reply-message {
+        align-items: flex-end;
+        left: unset;
+
+        .reply-content {
+            border-top-right-radius: 0px;
+            border-top-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            border-bottom-left-radius: 12px;
+        }
+    }
 }
 
 // more menu
@@ -251,4 +268,40 @@
     }
 }
 
-//images-wrapper
+// reply message
+
+.reply-message {
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+    position: relative;
+    top: 12px;
+    left: 48px;
+
+    .reply-content {
+        background-color: #10101076;
+        max-width: 50%;
+        width: fit-content;
+        padding: 12px;
+        padding-bottom: 24px;
+        @include font-default;
+        border: var(--solid-border);
+        border-top-right-radius: 12px;
+        border-bottom-right-radius: 12px;
+        border-bottom-left-radius: 12px;
+        box-shadow: var(--box-shadow);
+        cursor: pointer;
+    }
+
+    .reply-label {
+        width: fit-content;
+        @include font-default;
+        margin-bottom: 4px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .reply-icon {
+        font-size: 1.4rem;
+    }
+}

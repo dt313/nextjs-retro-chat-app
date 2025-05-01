@@ -21,7 +21,6 @@ import { closeReplyBox } from '@/redux/actions/reply-box-action';
 import { conversationService, messageService } from '@/services';
 import eventBus from '@/config/emit';
 import { getAvatarFromConversation, getNameFromConversation } from '@/helpers';
-import { set } from 'lodash';
 import { addToast } from '@/redux/actions/toast-action';
 
 const cx = classNames.bind(styles);
@@ -37,8 +36,9 @@ function Conversation({ id }) {
     const { user: me } = useSelector((state) => state.auth);
     const breakpoint = useBreakpoint();
     const dispatch = useDispatch();
-    const replyBox = useSelector((state) => state.replyBox);
+    const { isOpenReplyBox, replyData } = useSelector((state) => state.replyBox);
 
+    console.log(replyData);
     const fetchConversation = async () => {
         try {
             if (!id) {
@@ -88,8 +88,10 @@ function Conversation({ id }) {
                 formData.append('attachments', file);
             }
         }
-        if (replyBox.isOpen) {
-            formData.append('replyTo', replyBox.data._id);
+
+        if (isOpenReplyBox) {
+            formData.append('replyTo', replyData.message.id);
+            formData.append('replyType', replyData.message.type);
         }
         formData.append('isGroup', conversation.isGroup);
         formData.append('content', message.content);
@@ -178,11 +180,20 @@ function Conversation({ id }) {
                     </div>
                     <div className={cx('c-content')}>
                         <MessageBox list={messagesList} />
-                        {replyBox.isOpen && (
+                        {isOpenReplyBox && (
                             <div className={cx('reply-box')}>
                                 <div className={cx('reply-content')}>
-                                    <strong className={cx('reply-name')}> Đang trả lời {replyBox.data.username}</strong>
-                                    <p className={cx('reply-text')}>{replyBox.data.message}</p>
+                                    <strong className={cx('reply-name')}>
+                                        Đang trả lời{' '}
+                                        {me._id === replyData.user?._id ? 'chính bạn' : replyData.user.fullName}
+                                    </strong>
+                                    <p className={cx('reply-text')}>
+                                        {replyData?.message.type === 'ImageAttachment'
+                                            ? 'Trả lời hình ảnh'
+                                            : replyData?.message.type === 'Attachment'
+                                              ? 'Trả lời tệp đính kèm'
+                                              : replyData.message.content}
+                                    </p>
                                 </div>
                                 <CloseIcon
                                     theme="dark"

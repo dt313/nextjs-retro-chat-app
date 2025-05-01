@@ -42,8 +42,6 @@ function MessageInput({ onSubmit }) {
     const [files, setFiles] = useState([]);
     const [previewFiles, setPreviewFiles] = useState([]);
 
-    console.log(files);
-
     const handleChange = (e) => {
         setValue(e.target.value);
     };
@@ -55,10 +53,16 @@ function MessageInput({ onSubmit }) {
             content: value,
             attachments: files.length > 0 ? files : null,
         });
+
+        setValue('');
+        setFiles([]);
+        setPreviewFiles([]);
     };
 
     const handleKeyDown = (e) => {
+        if (e.isComposing || e.keyCode === 229) return;
         if (e.key === 'Enter' && !e.shiftKey) {
+            console.log(e.key);
             e.preventDefault();
             handleSubmit();
         }

@@ -8,7 +8,6 @@ const cx = classNames.bind(styles);
 
 function MessageBox({ list = [] }) {
     const messageEndRef = useRef(null);
-    const { user: me } = useSelector((state) => state.auth);
     useEffect(() => {
         messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [list]);
@@ -19,14 +18,14 @@ function MessageBox({ list = [] }) {
                 const attachments = mes.attachments || [];
                 const images = mes.images || null;
 
-                console.log(mes.content);
                 return (
                     <div key={mes._id} className={cx('message-wrapper')}>
                         <Message
                             type="text"
-                            avatar={mes.sender?.avatar}
-                            isSender={mes.sender?._id === me._id}
+                            id={mes._id}
+                            sender={mes.sender}
                             content={mes.content}
+                            replyData={{ replyTo: mes.replyTo, replyType: mes.replyType, sender: mes.sender }}
                             timestamp={mes.createdAt}
                         />
 
@@ -37,9 +36,14 @@ function MessageBox({ list = [] }) {
                                         <Message
                                             key={at._id}
                                             type={at.type}
-                                            avatar={mes.sender?.avatar}
-                                            isSender={mes.sender?._id === me._id}
+                                            id={at._id}
+                                            sender={mes.sender}
                                             content={{ name: at.name, size: at.size }}
+                                            replyData={{
+                                                replyTo: mes.replyTo,
+                                                replyType: mes.replyType,
+                                                sender: mes.sender,
+                                            }}
                                             timestamp={mes.createdAt}
                                         />
                                     );
@@ -50,9 +54,10 @@ function MessageBox({ list = [] }) {
                             <Message
                                 key={images?._id}
                                 type="images"
-                                avatar={mes.sender?.avatar}
-                                isSender={mes.sender?._id === me._id}
+                                id={images._id}
+                                sender={mes.sender}
                                 content={images?.images}
+                                replyData={{ replyTo: mes.replyTo, replyType: mes.replyType, sender: mes.sender }}
                                 timestamp={mes.createdAt}
                             />
                         )}

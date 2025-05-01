@@ -138,6 +138,7 @@
     display: none;
     width: 0;
     height: 0;
+    padding: unset !important;
 
     @include respond-to('laptop') {
         display: block;
@@ -309,7 +310,6 @@
         color: var(--text-low-color);
         text-align: left;
         margin-top: 4px;
-        margin-left: 4px;
         max-width: 500px;
         width: 100%;
         overflow: hidden;
