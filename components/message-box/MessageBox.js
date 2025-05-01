@@ -26,6 +26,7 @@ function MessageBox({ list = [] }) {
                             sender={mes.sender}
                             content={mes.content}
                             replyData={{ replyTo: mes.replyTo, replyType: mes.replyType, sender: mes.sender }}
+                            reactions={mes.reactions}
                             timestamp={mes.createdAt}
                         />
 
@@ -44,6 +45,7 @@ function MessageBox({ list = [] }) {
                                                 replyType: mes.replyType,
                                                 sender: mes.sender,
                                             }}
+                                            reactions={at.reactions}
                                             timestamp={mes.createdAt}
                                         />
                                     );
@@ -58,6 +60,7 @@ function MessageBox({ list = [] }) {
                                 sender={mes.sender}
                                 content={images?.images}
                                 replyData={{ replyTo: mes.replyTo, replyType: mes.replyType, sender: mes.sender }}
+                                reactions={images.reactions}
                                 timestamp={mes.createdAt}
                             />
                         )}

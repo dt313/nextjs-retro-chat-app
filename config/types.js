@@ -17,6 +17,14 @@ const REPLY_ATTACHMENT = 'Attachment';
 const REPLY_IMAGE_ATTACHMENT = 'ImageAttachment';
 const REPLY_MESSAGE = 'Message';
 
+const REACTION_TYPE_HAHA = 'haha';
+const REACTION_TYPE_LIKE = 'like';
+const REACTION_TYPE_LOVE = 'love';
+const REACTION_TYPE_CARE = 'care';
+const REACTION_TYPE_ANGRY = 'angry';
+const REACTION_TYPE_SAD = 'sad';
+const REACTION_TYPE_WOW = 'wow';
+
 export {
     ONLINE,
     OFFLINE,
@@ -33,4 +41,11 @@ export {
     REPLY_ATTACHMENT,
     REPLY_IMAGE_ATTACHMENT,
     REPLY_MESSAGE,
+    REACTION_TYPE_HAHA,
+    REACTION_TYPE_LIKE,
+    REACTION_TYPE_LOVE,
+    REACTION_TYPE_CARE,
+    REACTION_TYPE_ANGRY,
+    REACTION_TYPE_SAD,
+    REACTION_TYPE_WOW,
 };

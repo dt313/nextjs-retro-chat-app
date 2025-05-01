@@ -74,78 +74,78 @@ const messages = [
 ];
 
 const reactions = [
-    // {
-    //     id: 1,
-    //     type: 'LIKE',
-    //     reacted_user: {
-    //         username: 'johndoe',
-    //         name: 'John Doe',
-    //         avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-    //     },
-    // },
-    // {
-    //     id: 2,
-    //     type: 'HAHA',
-    //     reacted_user: {
-    //         username: 'janedoe',
-    //         name: 'Jane Doe',
-    //         avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-    //     },
-    // },
-    // {
-    //     id: 3,
-    //     type: 'LOVE',
-    //     reacted_user: {
-    //         username: 'alice123',
-    //         name: 'Alice',
-    //         avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-    //     },
-    // },
-    // {
-    //     id: 4,
-    //     type: 'ANGRY',
-    //     reacted_user: {
-    //         username: 'bobcool',
-    //         name: '',
-    //         avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-    //     },
-    // },
-    // {
-    //     id: 5,
-    //     type: 'CARE',
-    //     reacted_user: {
-    //         username: 'alice123',
-    //         name: 'Alice',
-    //         avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-    //     },
-    // },
-    // {
-    //     id: 6,
-    //     type: 'WOW',
-    //     reacted_user: {
-    //         username: 'alice123',
-    //         name: 'Alice',
-    //         avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-    //     },
-    // },
-    // {
-    //     id: 7,
-    //     type: 'SAD',
-    //     reacted_user: {
-    //         username: 'alice123',
-    //         name: 'Alice',
-    //         avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-    //     },
-    // },
-    // {
-    //     id: 8,
-    //     type: 'ANGRY',
-    //     reacted_user: {
-    //         username: 'alice123',
-    //         name: 'Alice',
-    //         avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-    //     },
-    // },
+    {
+        id: 1,
+        type: 'LIKE',
+        reacted_user: {
+            username: 'johndoe',
+            name: 'John Doe',
+            avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
+        },
+    },
+    {
+        id: 2,
+        type: 'HAHA',
+        reacted_user: {
+            username: 'janedoe',
+            name: 'Jane Doe',
+            avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
+        },
+    },
+    {
+        id: 3,
+        type: 'LOVE',
+        reacted_user: {
+            username: 'alice123',
+            name: 'Alice',
+            avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
+        },
+    },
+    {
+        id: 4,
+        type: 'ANGRY',
+        reacted_user: {
+            username: 'bobcool',
+            name: '',
+            avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
+        },
+    },
+    {
+        id: 5,
+        type: 'CARE',
+        reacted_user: {
+            username: 'alice123',
+            name: 'Alice',
+            avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
+        },
+    },
+    {
+        id: 6,
+        type: 'WOW',
+        reacted_user: {
+            username: 'alice123',
+            name: 'Alice',
+            avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
+        },
+    },
+    {
+        id: 7,
+        type: 'SAD',
+        reacted_user: {
+            username: 'alice123',
+            name: 'Alice',
+            avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
+        },
+    },
+    {
+        id: 8,
+        type: 'ANGRY',
+        reacted_user: {
+            username: 'alice123',
+            name: 'Alice',
+            avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
+        },
+    },
 ];
 
 const types = [

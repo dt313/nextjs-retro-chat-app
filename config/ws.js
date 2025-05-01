@@ -24,7 +24,22 @@ export const initSocket = (token) => {
             case 'message':
                 const { message, conversationId } = data;
                 if (message && conversationId) {
-                    eventBus.emit(`message-${conversationId}`, data.message);
+                    eventBus.emit(`message-${conversationId}`, message);
+                }
+                break;
+
+            case 'reaction':
+                const { reaction, messageId } = data;
+                if (reaction && messageId) {
+                    eventBus.emit(`reaction-${messageId}`, reaction);
+                }
+                break;
+
+            case 'cancel-reaction':
+                const { cancelReaction, cancelMessageId } = data;
+                console.log(data);
+                if (cancelReaction && cancelMessageId) {
+                    eventBus.emit(`cancel-reaction-${cancelMessageId}`, cancelReaction);
                 }
                 break;
 

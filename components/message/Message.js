@@ -17,21 +17,24 @@ import { openReplyBox, closeReplyBox } from '@/redux/actions/reply-box-action';
 import HeadlessTippy from '@tippyjs/react/headless';
 import ReactionButton from '@/components/reaction-button';
 import Reaction from '@/components/reaction';
-import { images, reactions } from '@/config/ui-config';
+import { images } from '@/config/ui-config';
 import { openImgPreview } from '@/redux/actions/img-preview-action';
 import { calculateTime } from '@/helpers';
 
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light.css';
 import { getReplyContent, getReplyLabelName, getReplyType } from '@/helpers/conversation-info';
+import { messageService } from '@/services';
+import eventBus from '@/config/emit';
 
 const cx = classNames.bind(styles);
 
-function Message({ type, id, className, sender, content, timestamp, replyData = {} }) {
+function Message({ type, id, className, sender, content, timestamp, replyData = {}, reactions = [] }) {
     const [isShowTime, setIsShowTime] = useState(false);
     const [isShowTools, setIsShowTools] = useState(false);
     const [isShowReaction, setIsShowReaction] = useState(false);
     const [isShowMore, setIsShowMore] = useState(false);
+    const [reactionsList, setReactionsList] = useState(reactions);
     const { user: me } = useSelector((state) => state.auth);
 
     const dispatch = useDispatch();
@@ -39,6 +42,29 @@ function Message({ type, id, className, sender, content, timestamp, replyData = 
     useEffect(() => {
         dispatch(closeReplyBox());
     }, []);
+
+    useEffect(() => {
+        const reactionFromWS = (reaction) => {
+            if (reaction) {
+                addOrChangeReaction(reaction);
+            }
+        };
+
+        const deleteReaction = (reaction) => {
+            if (reaction) {
+                const newReactions = reactionsList.filter((r) => r._id !== reaction._id);
+                setReactionsList(newReactions);
+            }
+        };
+
+        eventBus.on(`reaction-${id}`, reactionFromWS);
+        eventBus.on(`cancel-reaction-${id}`, deleteReaction);
+
+        return () => {
+            eventBus.off(`reaction-${id}`, reactionFromWS);
+            eventBus.off(`cancel-reaction-${id}`, deleteReaction);
+        };
+    }, [id]);
 
     const classes = cx('wrapper', {
         [className]: className,
@@ -119,6 +145,49 @@ function Message({ type, id, className, sender, content, timestamp, replyData = 
         );
     };
 
+    const addOrChangeReaction = (res) => {
+        const isExist = reactionsList.some((r) => r._id === res._id);
+
+        if (!isExist) {
+            setReactionsList((pre) => [...pre, res]);
+        } else {
+            setReactionsList((prev) => prev.map((r) => (r._id === res._id ? res : r)));
+        }
+    };
+
+    const handleReaction = async (reactionType) => {
+        try {
+            const res = await messageService.reaction(id, {
+                messageType: getReplyType(type),
+                type: reactionType,
+            });
+
+            if (res) {
+                addOrChangeReaction(res);
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsShowReaction(false);
+        }
+    };
+
+    const handleCancelReaction = async (id) => {
+        try {
+            const res = await messageService.cancelReaction(id);
+            if (res) {
+                const newReactions = reactionsList.filter((r) => r.user._id !== me._id);
+                setReactionsList(newReactions);
+            }
+
+            if (res) {
+                addOrChangeReaction(res);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     const handleMouseEnter = () => {
         setIsShowTime(true);
     };
@@ -139,12 +208,11 @@ function Message({ type, id, className, sender, content, timestamp, replyData = 
     return (
         <div className={classes}>
             <div
-                className={cx('message')}
+                className={cx('message', { hasReply: replyData?.replyType })}
                 onMouseEnter={handleMouseEnterMessage}
                 onMouseLeave={handleMouseLeaveMessage}
             >
                 {!(sender._id === me._id) && <Avatar src={sender?.avatar} className={cx('avatar')} size={36} />}
-
                 {renderMessage()}
 
                 {isShowTools ? (
@@ -153,8 +221,8 @@ function Message({ type, id, className, sender, content, timestamp, replyData = 
                             visible={isShowReaction}
                             onClickOutside={() => setIsShowReaction(false)}
                             render={(attrs) => (
-                                <div className={cx('box')} tabIndex="-1" {...attrs}>
-                                    <Reaction theme="light" />
+                                <div className={cx('reaction-box')} tabIndex="-1" {...attrs}>
+                                    <Reaction theme="light" onClick={handleReaction} />
                                 </div>
                             )}
                             theme="light"
@@ -196,9 +264,23 @@ function Message({ type, id, className, sender, content, timestamp, replyData = 
                 ) : (
                     <div className={cx('tools')}></div>
                 )}
-
                 {isShowTime && <span className={cx('time')}>{calculateTime(timestamp)}</span>}
-                <div className={cx('reactions')}>{<ReactionButton list={reactions} total={10} reacted={false} />}</div>
+                {reactionsList?.length > 0 && (
+                    <div
+                        className={cx('reactions', {
+                            imageReactions2: type === 'images' && content?.length === 2,
+                            imageReactions3: type === 'images' && content?.length === 3,
+                        })}
+                    >
+                        {
+                            <ReactionButton
+                                list={reactionsList}
+                                total={reactionsList?.length}
+                                handleDelete={handleCancelReaction}
+                            />
+                        }
+                    </div>
+                )}
             </div>
 
             {replyData && replyData?.replyType && (

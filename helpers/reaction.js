@@ -8,12 +8,21 @@ import Sad from '@/assets/svg/emoji/sad';
 import Wow from '@/assets/svg/emoji/wow';
 import { RiHeart3Line } from 'react-icons/ri';
 import { FaCaretDown } from 'react-icons/fa';
+import {
+    REACTION_TYPE_ANGRY,
+    REACTION_TYPE_CARE,
+    REACTION_TYPE_HAHA,
+    REACTION_TYPE_LIKE,
+    REACTION_TYPE_LOVE,
+    REACTION_TYPE_SAD,
+    REACTION_TYPE_WOW,
+} from '@/config/types';
 
 const getCountPerType = (list = [], type) => {
     return list.filter((r) => r.type === type).length;
 };
 
-const ListCountPerType = (list = [], type) => {
+const listCountPerType = (list = [], type) => {
     return list.filter((r) => r.type === type);
 };
 
@@ -49,7 +58,7 @@ const getTabObject = (list, type, test = false) => {
         type: type,
         additionIcon: null,
         count: getCountPerType(list, type),
-        list: ListCountPerType(list, type),
+        list: listCountPerType(list, type),
     };
 };
 
@@ -62,19 +71,19 @@ export function getReactionIconList(list) {
 
 export function getReactionIcon(type) {
     switch (type) {
-        case 'LIKE':
+        case REACTION_TYPE_LIKE:
             return Like;
-        case 'LOVE':
+        case REACTION_TYPE_LOVE:
             return Love;
-        case 'ANGRY':
+        case REACTION_TYPE_ANGRY:
             return Angry;
-        case 'CARE':
+        case REACTION_TYPE_CARE:
             return Care;
-        case 'SAD':
+        case REACTION_TYPE_SAD:
             return Sad;
-        case 'WOW':
+        case REACTION_TYPE_WOW:
             return Wow;
-        case 'HAHA':
+        case REACTION_TYPE_HAHA:
             return Haha;
         default:
             return RiHeart3Line;

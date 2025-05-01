@@ -12,15 +12,23 @@
 .message {
     display: flex;
     position: relative;
-    z-index: 2;
+}
+
+.message.hasReply {
+    top: -12px;
 }
 
 .avatar {
     margin-right: 12px;
 }
 
+.text-wrap {
+    max-width: 100%;
+    width: fit-content;
+}
+
 .m-text {
-    max-width: 60%;
+    max-width: 100%;
     width: fit-content;
     padding: 12px;
     border: var(--solid-border);
@@ -68,13 +76,11 @@
     display: flex;
     flex-direction: column;
     .m-image:first-child {
-        z-index: 1;
     }
     .m-image:nth-child(2) {
         position: relative;
         bottom: 24px;
         left: 20%;
-        z-index: 2;
     }
 }
 
@@ -84,19 +90,16 @@
     display: flex;
     flex-direction: column;
     .m-image:first-child {
-        z-index: 1;
     }
     .m-image:nth-child(2) {
         position: relative;
         bottom: 24px;
         left: 20%;
-        z-index: 2;
     }
     .m-image:nth-child(3) {
         position: relative;
         bottom: 48px;
         left: 0;
-        z-index: 3;
     }
 }
 
@@ -141,6 +144,7 @@
     animation: fadeIn 0.2s ease-in-out;
     animation-delay: 0.3s;
     animation-fill-mode: forwards;
+    z-index: 10;
 }
 
 .tools {
@@ -162,6 +166,10 @@
     }
 }
 
+.reaction-box {
+    z-index: 10;
+}
+
 .icon-wrapper {
     width: fit-content;
 }
@@ -170,6 +178,15 @@
     position: absolute;
     bottom: -16px;
     left: var(--empty-space-left);
+}
+
+.imageReactions2 {
+    bottom: 8px;
+    left: 20%;
+}
+
+.imageReactions3 {
+    bottom: 32px;
 }
 
 // sender message
@@ -207,13 +224,11 @@
             position: unset;
             bottom: 0;
             left: 0;
-            z-index: 1;
         }
         .m-image:first-child {
             position: relative;
             top: 24px;
             right: 20%;
-            z-index: 2;
         }
     }
 
@@ -223,7 +238,6 @@
         .m-image:nth-child(2) {
             position: relative;
             left: -20%;
-            z-index: 2;
         }
     }
 
@@ -241,6 +255,11 @@
             border-bottom-right-radius: 12px;
             border-bottom-left-radius: 12px;
         }
+    }
+
+    .imageReactions2 {
+        bottom: -16px;
+        left: unset;
     }
 }
 
@@ -273,13 +292,10 @@
 .reply-message {
     display: flex;
     flex-direction: column;
-    z-index: 1;
-    position: relative;
-    top: 12px;
-    left: 48px;
+    margin-left: 48px;
 
     .reply-content {
-        background-color: #10101076;
+        background-color: #ffffff99;
         max-width: 50%;
         width: fit-content;
         padding: 12px;

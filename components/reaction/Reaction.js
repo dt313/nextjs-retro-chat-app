@@ -8,6 +8,15 @@ import Love from '@/assets/svg/emoji/love';
 import Sad from '@/assets/svg/emoji/sad';
 import Wow from '@/assets/svg/emoji/wow';
 import Care from '@/assets/svg/emoji/care';
+import {
+    REACTION_TYPE_ANGRY,
+    REACTION_TYPE_CARE,
+    REACTION_TYPE_HAHA,
+    REACTION_TYPE_LIKE,
+    REACTION_TYPE_LOVE,
+    REACTION_TYPE_SAD,
+    REACTION_TYPE_WOW,
+} from '@/config/types';
 const cx = classNames.bind(styles);
 function Reaction({ onClick, theme = 'dark' }) {
     return (
@@ -15,7 +24,7 @@ function Reaction({ onClick, theme = 'dark' }) {
             <span
                 className={cx('icon-box')}
                 onClick={() => {
-                    onClick('LIKE');
+                    onClick(REACTION_TYPE_LIKE);
                 }}
             >
                 <Like className={cx('icon')} />
@@ -23,7 +32,7 @@ function Reaction({ onClick, theme = 'dark' }) {
             <span
                 className={cx('icon-box')}
                 onClick={() => {
-                    onClick('LOVE');
+                    onClick(REACTION_TYPE_LOVE);
                 }}
             >
                 <Love className={cx('icon')} />
@@ -31,7 +40,7 @@ function Reaction({ onClick, theme = 'dark' }) {
             <span
                 className={cx('icon-box')}
                 onClick={() => {
-                    onClick('CARE');
+                    onClick(REACTION_TYPE_CARE);
                 }}
             >
                 <Care className={cx('icon')} />
@@ -39,7 +48,7 @@ function Reaction({ onClick, theme = 'dark' }) {
             <span
                 className={cx('icon-box')}
                 onClick={() => {
-                    onClick('HAHA');
+                    onClick(REACTION_TYPE_HAHA);
                 }}
             >
                 <Haha className={cx('icon')} />
@@ -47,7 +56,7 @@ function Reaction({ onClick, theme = 'dark' }) {
             <span
                 className={cx('icon-box')}
                 onClick={() => {
-                    onClick('ANGRY');
+                    onClick(REACTION_TYPE_ANGRY);
                 }}
             >
                 <Angry className={cx('icon')} />
@@ -55,7 +64,7 @@ function Reaction({ onClick, theme = 'dark' }) {
             <span
                 className={cx('icon-box')}
                 onClick={() => {
-                    onClick('SAD');
+                    onClick(REACTION_TYPE_SAD);
                 }}
             >
                 <Sad className={cx('icon')} />
@@ -63,7 +72,7 @@ function Reaction({ onClick, theme = 'dark' }) {
             <span
                 className={cx('icon-box')}
                 onClick={() => {
-                    onClick('WOW');
+                    onClick(REACTION_TYPE_WOW);
                 }}
             >
                 <Wow className={cx('icon')} />

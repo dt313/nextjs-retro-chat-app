@@ -18,6 +18,7 @@ import { IoSearch } from 'react-icons/io5';
 import { FaRegUserCircle } from 'react-icons/fa';
 import { TiUserAdd } from 'react-icons/ti';
 import { getAvatarFromConversation, getNameFromConversation } from '@/helpers';
+import eventBus from '@/config/emit';
 const cx = classNames.bind(styles);
 
 const INFORMATION = [
