@@ -179,7 +179,7 @@ function Conversation({ id }) {
                         <Icon className={cx('dots-icon')} element={<BsThreeDots />} onClick={toggleRightSide} />
                     </div>
                     <div className={cx('c-content')}>
-                        <MessageBox list={messagesList} />
+                        <MessageBox list={messagesList} conversationId={id} />
                         {isOpenReplyBox && (
                             <div className={cx('reply-box')}>
                                 <div className={cx('reply-content')}>
@@ -205,7 +205,7 @@ function Conversation({ id }) {
                         )}
                     </div>
                     <div className={cx('c-footer')}>
-                        <MessageInput onSubmit={handleAddMessage} />
+                        <MessageInput onSubmit={handleAddMessage} conversationId={id} />
                     </div>
                 </div>
             ) : (

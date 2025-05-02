@@ -8,7 +8,7 @@ import { closeAuthBox } from '@/redux/actions/auth-box-action';
 import { setOffline, setOnline } from '@/redux/actions/status-action';
 import CloseIcon from '../close-icon';
 import { useEffect } from 'react';
-import { initSocket } from '@/config/ws';
+import { getSocket, initSocket } from '@/config/ws';
 import { storageUtils } from '@/utils';
 import { notificationService } from '@/services';
 import { getAllNotifications } from '@/redux/actions/notification-action';

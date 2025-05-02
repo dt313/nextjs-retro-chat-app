@@ -4,11 +4,19 @@
     overflow-y: scroll;
     overflow-x: hidden;
     padding: 12px 24px;
-    padding-bottom: 52px;
 }
 
 .message-wrapper {
     display: flex;
     flex-direction: column;
     height: fit-content;
+}
+
+.typing-users {
+    display: flex;
+    align-items: center;
+}
+
+.typing-loading {
+    margin-left: 24px;
 }

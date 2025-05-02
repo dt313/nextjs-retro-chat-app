@@ -37,9 +37,21 @@ export const initSocket = (token) => {
 
             case 'cancel-reaction':
                 const { cancelReaction, cancelMessageId } = data;
-                console.log(data);
                 if (cancelReaction && cancelMessageId) {
                     eventBus.emit(`cancel-reaction-${cancelMessageId}`, cancelReaction);
+                }
+                break;
+            case 'typing':
+                const { conversationId: typingConversationId, typingUser } = data;
+                if (typingConversationId && typingUser) {
+                    eventBus.emit(`typing-${typingConversationId}`, typingUser);
+                }
+                break;
+            case 'no-typing':
+                const { conversationId: noTypingConversationId, typingUser: noTypingUser } = data;
+                console.log('no - typing', noTypingUser, noTypingConversationId);
+                if (noTypingConversationId && noTypingUser) {
+                    eventBus.emit(`no-typing-${noTypingConversationId}`, noTypingUser);
                 }
                 break;
 

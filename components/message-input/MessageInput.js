@@ -11,41 +11,57 @@ import { useAutoResize } from '@/hooks';
 import CloseIcon from '@/components/close-icon';
 import { FILE_ACCEPT_LIST } from '@/config/ui-config';
 import { v4 as uuidv4 } from 'uuid';
+import { getSocket } from '@/config/ws';
+import { useSelector } from 'react-redux';
 const cx = classNames.bind(styles);
 
-const preview = [
-    {
-        id: 1,
-        type: 'image',
-    },
-    {
-        id: 2,
-        type: 'file',
-        name: 'file.txt',
-    },
-
-    {
-        id: 3,
-        type: 'image',
-    },
-    {
-        id: 4,
-        type: 'file',
-        name: 'file.txt',
-    },
-];
-
-function MessageInput({ onSubmit }) {
+function MessageInput({ onSubmit, conversationId }) {
     const [value, setValue] = useState('');
     const textRef = useAutoResize(value);
     const fileInputRef = useRef(null);
     const [files, setFiles] = useState([]);
     const [previewFiles, setPreviewFiles] = useState([]);
 
+    const { user: me } = useSelector((state) => state.auth);
     const handleChange = (e) => {
         setValue(e.target.value);
     };
 
+    const handleFocus = () => {
+        const socket = getSocket();
+        console.log(socket);
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            socket.send(
+                JSON.stringify({
+                    type: 'TYPING',
+                    data: {
+                        conversationId,
+                        userId: me._id,
+                    },
+                }),
+            );
+        } else {
+            console.error('WebSocket is null or undefined');
+        }
+    };
+
+    const handleBlur = () => {
+        const socket = getSocket();
+        console.log(socket);
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            socket.send(
+                JSON.stringify({
+                    type: 'NO_TYPING',
+                    data: {
+                        conversationId,
+                        userId: me._id,
+                    },
+                }),
+            );
+        } else {
+            console.error('WebSocket is null or undefined');
+        }
+    };
     const handleSubmit = () => {
         if (value.trim() === '') return;
 
@@ -151,7 +167,9 @@ function MessageInput({ onSubmit }) {
                 type="text"
                 placeholder="Type a message..."
                 value={value}
+                onFocus={handleFocus}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 onKeyDown={handleKeyDown}
             />
             <div className={cx('extra')}>

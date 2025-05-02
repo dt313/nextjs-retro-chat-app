@@ -1,16 +1,47 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './MessageBox.module.scss';
-import Message from '../message/Message';
-import { useSelector } from 'react-redux';
+import Message from '@/components/message/Message';
+import Avatar from '@/components/avatar';
+import eventBus from '@/config/emit';
+import { ThreeDotLoading } from '../loading';
 
 const cx = classNames.bind(styles);
 
-function MessageBox({ list = [] }) {
+function MessageBox({ list = [], conversationId }) {
     const messageEndRef = useRef(null);
+    const [typingUsers, setTypingUsers] = useState([]);
     useEffect(() => {
         messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [list]);
+
+    console.log('typing users', typingUsers);
+
+    useEffect(() => {
+        const handleTyping = (typingUser) => {
+            setTypingUsers((prev) => {
+                const alreadyTyping = prev.some((user) => user._id === typingUser._id);
+                if (alreadyTyping) return prev;
+                return [...prev, typingUser];
+            });
+        };
+
+        const handleNoTyping = (noTypingUser) => {
+            console.log('handle noTy', noTypingUser);
+            setTypingUsers((prev) => {
+                const newTypingUsers = prev.filter((user) => user._id !== noTypingUser._id);
+                return newTypingUsers;
+            });
+        };
+
+        eventBus.on(`typing-${conversationId}`, handleTyping);
+        eventBus.on(`no-typing-${conversationId}`, handleNoTyping);
+
+        return () => {
+            eventBus.off(`typing-${conversationId}`, handleTyping);
+            eventBus.off(`no-typing-${conversationId}`, handleNoTyping);
+        };
+    }, [eventBus]);
 
     return (
         <div className={cx('wrapper')}>
@@ -67,6 +98,15 @@ function MessageBox({ list = [] }) {
                     </div>
                 );
             })}
+
+            {typingUsers.length > 0 && (
+                <div className={cx('typing-users')}>
+                    {typingUsers.map((user) => {
+                        return <Avatar key={user._id} src={user.avatar} size={28} />;
+                    })}
+                    <ThreeDotLoading className={cx('typing-loading')} />
+                </div>
+            )}
 
             <div ref={messageEndRef}></div>
         </div>
