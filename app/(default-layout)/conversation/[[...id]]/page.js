@@ -3,7 +3,6 @@ import Conversation from './conversation';
 
 async function Page({ params }) {
     const { id } = await params;
-    let res = null;
     if (Array.isArray(id) && id.length > 1) {
         redirect('/404');
     }

@@ -1,21 +1,31 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import styles from './LeftMessage.module.scss';
 import { FiSearch } from 'react-icons/fi';
 import InputSearch from '@/components/input-search';
-import MessagePreview from '@/components/message-preview';
+import ConversationPreview from '@/components/conversation-preview';
 import { conversationService } from '@/services';
-import { calculateTime, getAvatarFromConversation, getNameFromConversation } from '@/helpers';
+import {
+    calculateTime,
+    checkIsRead,
+    getAvatarFromConversation,
+    getLastMessageContent,
+    getNameFromConversation,
+} from '@/helpers';
+import eventBus from '@/config/emit';
+import { initConversation, newConversation } from '@/redux/actions/conversations-action';
+import _ from 'lodash';
 
 const cx = classNames.bind(styles);
 
 function LeftMessage({ className, activeId }) {
     const [searchValue, setSearchValue] = useState('');
-    const [conversations, setConversations] = useState([]);
 
     const { user: me } = useSelector((state) => state.auth);
+    const dispatch = useDispatch();
+    const { list } = useSelector((state) => state.conversations);
     const handleChangeSearchValue = (e) => {
         setSearchValue(e.target.value);
     };
@@ -23,9 +33,22 @@ function LeftMessage({ className, activeId }) {
     const fetchConversations = async () => {
         const res = await conversationService.getByMe();
         if (res && Array.isArray(res)) {
-            setConversations(res);
+            // setConversations(res);
+            dispatch(initConversation(res));
         }
     };
+
+    useEffect(() => {
+        const handleSortConversation = (conversation) => {
+            dispatch(newConversation(conversation));
+        };
+
+        eventBus.on('last-conversation', handleSortConversation);
+        return () => {
+            eventBus.off('last-conversation', handleSortConversation);
+        };
+    }, [list]);
+
     useEffect(() => {
         fetchConversations();
     }, []);
@@ -41,16 +64,16 @@ function LeftMessage({ className, activeId }) {
                 />
             </div>
             <div className={cx('message-list')}>
-                {conversations.map((conv, index) => (
-                    <MessagePreview
+                {list.map((conv, index) => (
+                    <ConversationPreview
                         className={cx('message-preview')}
                         key={conv._id}
                         slug={conv._id}
                         avatar={getAvatarFromConversation(conv, me._id)}
                         name={getNameFromConversation(conv, me._id)}
-                        message={conv.lastMessage?.content}
-                        time={calculateTime(conv.lastMessage?.createdAt)}
-                        isReaded={conv.isReaded}
+                        message={getLastMessageContent(conv.lastMessage, me._id)}
+                        time={calculateTime(conv.lastMessage?.sentAt)}
+                        isReaded={checkIsRead(conv.lastMessage.readedBy, me._id)}
                         active={activeId === conv._id}
                     />
                 ))}

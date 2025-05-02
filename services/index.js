@@ -5,6 +5,7 @@ import * as invitationService from './invitation-service';
 import * as notificationService from './notification-service';
 import * as conversationService from './conversation-service';
 import * as messageService from './message-service';
+import * as attachmentService from './attachment-service';
 export {
     authService,
     userService,
@@ -13,4 +14,5 @@ export {
     notificationService,
     conversationService,
     messageService,
+    attachmentService,
 };

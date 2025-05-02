@@ -55,6 +55,14 @@ export const initSocket = (token) => {
                 }
                 break;
 
+            case 'last-conversation':
+                const { conversation: lastConversation } = data;
+                console.log('last-conversation', lastConversation);
+                if (lastConversation) {
+                    eventBus.emit(`last-conversation`, lastConversation);
+                }
+                break;
+
             default:
                 console.warn('? unknow message type', type);
         }

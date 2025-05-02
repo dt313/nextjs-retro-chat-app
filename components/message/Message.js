@@ -64,7 +64,7 @@ function Message({ type, id, className, sender, content, timestamp, replyData = 
             eventBus.off(`reaction-${id}`, reactionFromWS);
             eventBus.off(`cancel-reaction-${id}`, deleteReaction);
         };
-    }, [id]);
+    }, [reactionsList, id]);
 
     const classes = cx('wrapper', {
         [className]: className,
@@ -147,7 +147,7 @@ function Message({ type, id, className, sender, content, timestamp, replyData = 
 
     const addOrChangeReaction = (res) => {
         const isExist = reactionsList.some((r) => r._id === res._id);
-
+        console.log('isExist ', isExist, res, reactionsList);
         if (!isExist) {
             setReactionsList((pre) => [...pre, res]);
         } else {

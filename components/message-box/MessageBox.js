@@ -15,8 +15,6 @@ function MessageBox({ list = [], conversationId }) {
         messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [list]);
 
-    console.log('typing users', typingUsers);
-
     useEffect(() => {
         const handleTyping = (typingUser) => {
             setTypingUsers((prev) => {
@@ -51,15 +49,17 @@ function MessageBox({ list = [], conversationId }) {
 
                 return (
                     <div key={mes._id} className={cx('message-wrapper')}>
-                        <Message
-                            type="text"
-                            id={mes._id}
-                            sender={mes.sender}
-                            content={mes.content}
-                            replyData={{ replyTo: mes.replyTo, replyType: mes.replyType, sender: mes.sender }}
-                            reactions={mes.reactions}
-                            timestamp={mes.createdAt}
-                        />
+                        {mes?.content && (
+                            <Message
+                                type="text"
+                                id={mes._id}
+                                sender={mes.sender}
+                                content={mes.content}
+                                replyData={{ replyTo: mes.replyTo, replyType: mes.replyType, sender: mes.sender }}
+                                reactions={mes.reactions}
+                                timestamp={mes.createdAt}
+                            />
+                        )}
 
                         {attachments?.length > 0 &&
                             attachments.map((at) => {
@@ -102,7 +102,7 @@ function MessageBox({ list = [], conversationId }) {
             {typingUsers.length > 0 && (
                 <div className={cx('typing-users')}>
                     {typingUsers.map((user) => {
-                        return <Avatar key={user._id} src={user.avatar} size={28} />;
+                        return <Avatar key={user._id} src={user.avatar} size={24} />;
                     })}
                     <ThreeDotLoading className={cx('typing-loading')} />
                 </div>

@@ -7,7 +7,7 @@ import authReducer from './auth-reducer';
 import statusReducer from './status-reducer';
 import notificationReducer from './notification-reducer';
 import toastReducer from './toast-reducer';
-
+import conversationsReducer from './conversations-reducer';
 const rootReducer = combineReducers({
     theme: themeReducer,
     authBox: authBoxReducer,
@@ -17,6 +17,7 @@ const rootReducer = combineReducers({
     status: statusReducer,
     notification: notificationReducer,
     toast: toastReducer,
+    conversations: conversationsReducer,
 });
 
 export default rootReducer;

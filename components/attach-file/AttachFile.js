@@ -1,34 +1,31 @@
 import classNames from 'classnames/bind';
 import styles from './AttachFile.module.scss';
 import File from './File';
+import { attachmentService } from '@/services';
+import { useState, useEffect } from 'react';
 const cx = classNames.bind(styles);
 
-const FILES = [
-    {
-        id: 1,
-        name: 'file1.pdf',
-        size: '1024 KB',
-    },
-    {
-        id: 2,
-        name: 'file2.docx',
-        size: '1024 MB',
-    },
-    {
-        id: 3,
-        name: 'file-test-color.txt',
-        size: '1024 MB',
-    },
-    {
-        id: 1,
-        name: 'file1.pdf',
-        size: '1024 KB',
-    },
-];
-function AttachFile() {
+function AttachFile({ conversationId }) {
+    const [files, setFiles] = useState([]);
+    const fetchFiles = async () => {
+        try {
+            const res = await attachmentService.getFilesOfConversation(conversationId);
+            console.log(res);
+            if (res && Array.isArray(res)) {
+                setFiles(res);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchFiles();
+    }, []);
+
     return (
         <div className={cx('wrapper')}>
-            {FILES.map((file, index) => (
+            {files.map((file, index) => (
                 <File key={index} className={cx('attach-file')} name={file.name} size={file.size} />
             ))}
         </div>

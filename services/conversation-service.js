@@ -50,3 +50,12 @@ export const getOrCreateConversation = async ({ withUserId }) => {
         throw new Error(error || 'Failed to get-or-create conversation');
     }
 };
+
+export const readLastMessage = async (id) => {
+    try {
+        const res = await axios.get(`/conversations/read-last-message/${id}`);
+        return res?.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to read last message of conversation');
+    }
+};

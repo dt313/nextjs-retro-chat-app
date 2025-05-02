@@ -22,6 +22,7 @@ import { conversationService, messageService } from '@/services';
 import eventBus from '@/config/emit';
 import { getAvatarFromConversation, getNameFromConversation } from '@/helpers';
 import { addToast } from '@/redux/actions/toast-action';
+import { readLastMessage } from '@/redux/actions/conversations-action';
 
 const cx = classNames.bind(styles);
 
@@ -34,11 +35,11 @@ function Conversation({ id }) {
     const [messagesList, setMessageList] = useState([]);
 
     const { user: me } = useSelector((state) => state.auth);
+    const { list } = useSelector((state) => state.conversations);
     const breakpoint = useBreakpoint();
     const dispatch = useDispatch();
     const { isOpenReplyBox, replyData } = useSelector((state) => state.replyBox);
 
-    console.log(replyData);
     const fetchConversation = async () => {
         try {
             if (!id) {
@@ -56,7 +57,6 @@ function Conversation({ id }) {
                 setMessageList(messages);
             }
         } catch (error) {
-            console.log('Error fetching conversation:', error.message);
             dispatch(addToast({ type: 'error', content: error.message }));
             redirect('/conversation');
         }
@@ -65,6 +65,21 @@ function Conversation({ id }) {
     useEffect(() => {
         fetchConversation();
     }, []);
+
+    const handleReadLastMessage = async () => {
+        try {
+            const [conv] = list.filter((c) => c._id === id);
+            const alreadyRead = conv.lastMessage.readedBy.includes(me._id);
+            if (!alreadyRead) {
+                const res = await conversationService.readLastMessage(id);
+                if (res) {
+                    dispatch(readLastMessage({ conversationId: id, meId: me._id }));
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     useEffect(() => {
         const addMessageFromWS = (message) => {
@@ -81,7 +96,6 @@ function Conversation({ id }) {
     }, []);
 
     const handleAddMessage = async (message) => {
-        console.log(message);
         const formData = new FormData();
         if (message.attachments) {
             for (const file of message.attachments) {
@@ -178,7 +192,7 @@ function Conversation({ id }) {
                         </div>
                         <Icon className={cx('dots-icon')} element={<BsThreeDots />} onClick={toggleRightSide} />
                     </div>
-                    <div className={cx('c-content')}>
+                    <div className={cx('c-content')} onClick={handleReadLastMessage}>
                         <MessageBox list={messagesList} conversationId={id} />
                         {isOpenReplyBox && (
                             <div className={cx('reply-box')}>
@@ -204,7 +218,7 @@ function Conversation({ id }) {
                             </div>
                         )}
                     </div>
-                    <div className={cx('c-footer')}>
+                    <div className={cx('c-footer')} onClick={handleReadLastMessage}>
                         <MessageInput onSubmit={handleAddMessage} conversationId={id} />
                     </div>
                 </div>

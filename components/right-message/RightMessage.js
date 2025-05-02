@@ -18,7 +18,6 @@ import { IoSearch } from 'react-icons/io5';
 import { FaRegUserCircle } from 'react-icons/fa';
 import { TiUserAdd } from 'react-icons/ti';
 import { getAvatarFromConversation, getNameFromConversation } from '@/helpers';
-import eventBus from '@/config/emit';
 const cx = classNames.bind(styles);
 
 const INFORMATION = [
@@ -38,6 +37,8 @@ function RightMessage({ hide, isGroup = true, data }) {
     const router = useRouter();
 
     const { user: me } = useSelector((state) => state.auth);
+
+    console.log('data', data);
 
     const handleChangeSimValue = (e) => {
         setSimValue(e.target.value);
@@ -76,10 +77,10 @@ function RightMessage({ hide, isGroup = true, data }) {
                     <UserChatSetting />
                 </Details>
                 <Details label="File, Attachment">
-                    <AttachFile />
+                    <AttachFile conversationId={data?._id} />
                 </Details>
                 <Details label="Images">
-                    <AttachImages />
+                    <AttachImages conversationId={data?._id} />
                 </Details>
             </div>
             {isShowSearch && (
