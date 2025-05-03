@@ -4,14 +4,14 @@ import Icon from '../icon';
 import { FaFileLines } from 'react-icons/fa6';
 const cx = classNames.bind(styles);
 
-function File({ name, size, secondary, primary, className }) {
+function File({ name, size, secondary, primary, className, onClick }) {
     const classes = cx('file', {
         secondary,
         primary,
         [className]: className,
     });
     return (
-        <div className={classes}>
+        <div className={classes} onClick={onClick}>
             <Icon className={cx('icon')} element={<FaFileLines />} />
             <div className={cx('file-info')}>
                 <strong className={cx('file-name')}>{name}</strong>

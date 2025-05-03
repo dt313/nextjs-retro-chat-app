@@ -1,0 +1,84 @@
+@use '/app/scss/mixins.scss' as *;
+.wrapper {
+    width: 100%;
+    margin-bottom: 24px;
+}
+
+.search {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 8px 12px;
+}
+
+.search-input {
+    outline: none;
+    border: none;
+    width: 100%;
+    height: 100%;
+    margin-left: 12px;
+    @include font-default;
+}
+
+.members {
+    margin-top: 24px;
+    max-height: 400px;
+    overflow-y: scroll;
+
+    .member {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .info {
+        flex: 1;
+        margin-left: 8px;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .name {
+        @include font-default;
+        font-weight: 500;
+        font-size: 1.5rem;
+        margin-bottom: 4px;
+    }
+
+    .date {
+        @include font-default;
+        font-weight: 500;
+        font-size: 1.3rem;
+    }
+
+    .menu-icon {
+        cursor: pointer;
+        margin-right: 8px;
+        overscroll-behavior: none;
+    }
+}
+
+.actions {
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 8px 4px;
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    z-index: 2;
+
+    .action {
+        text-align: center;
+        padding: 8px 8px;
+        @include font-default;
+        font-weight: 500;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    .action:hover {
+        background-color: #b7b7b7;
+    }
+}

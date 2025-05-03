@@ -230,7 +230,7 @@ function Conversation({ id }) {
 
             <div className={cx('right-side', isShowRight ? 'show' : 'hide', { 'left-visible': isShowLeft })}>
                 <Icon className={cx('r-close-btn')} element={<RiArrowRightSLine />} onClick={toggleRightSide} />
-                <RightMessage hide={!isShowRight} data={conversation} />
+                <RightMessage hide={!isShowRight} data={conversation} isGroup={conversation?.isGroup} />
             </div>
         </div>
     );

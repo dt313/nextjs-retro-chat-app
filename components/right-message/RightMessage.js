@@ -18,6 +18,8 @@ import { IoSearch } from 'react-icons/io5';
 import { FaRegUserCircle } from 'react-icons/fa';
 import { TiUserAdd } from 'react-icons/ti';
 import { getAvatarFromConversation, getNameFromConversation } from '@/helpers';
+import ExpandableText from '../expandable-text';
+import GroupMembers from '../group-members';
 const cx = classNames.bind(styles);
 
 const INFORMATION = [
@@ -31,7 +33,7 @@ const INFORMATION = [
     },
 ];
 
-function RightMessage({ hide, isGroup = true, data }) {
+function RightMessage({ hide, isGroup = true, data = {} }) {
     const [isShowSearch, setIsShowSearch] = useState(false);
     const [simValue, setSimValue] = useState('');
     const router = useRouter();
@@ -67,12 +69,29 @@ function RightMessage({ hide, isGroup = true, data }) {
             </div>
 
             <div className={cx('information')}>
-                {INFORMATION.map((inf, index) => {
-                    return <Information key={index} label={inf.name} content={inf.content} />;
-                })}
+                {!isGroup ? (
+                    INFORMATION.map((inf, index) => {
+                        return <Information key={index} label={inf.name} content={inf.content} />;
+                    })
+                ) : (
+                    <div className={cx('group-description')}>
+                        <ExpandableText className={cx('description')}>{data?.description}</ExpandableText>
+                        <div className={cx('rules')}>
+                            <h3 className={cx('rules-header')}>Important Rules</h3>
+                            <div className={cx('rules-text')}>
+                                <ExpandableText>{data?.rules || 'There is no content'}</ExpandableText>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
 
             <div className={cx('attachments')}>
+                {isGroup && (
+                    <Details label="Members">
+                        <GroupMembers list={data?.participants} />
+                    </Details>
+                )}
                 <Details label="chat setting">
                     <UserChatSetting />
                 </Details>

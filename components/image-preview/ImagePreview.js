@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react/jsx-no-comment-textnodes */
 'use client';
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
@@ -57,7 +59,7 @@ function ImagePreview({ images }) {
                     <Icon element={<BsFillCaretLeftFill />} className={cx('arrow', 'prev')} onClick={goToPrev} />
                     <div className={cx('image-slider')}>
                         <div className={cx('image-wrap')}>
-                            <img className={cx('img')} src={images[currentIndex].src} alt={images[currentIndex].id} />
+                            <img className={cx('img')} src={images[currentIndex].url} alt={images[currentIndex].name} />
                         </div>
                     </div>
                     <Icon element={<BsFillCaretRightFill />} className={cx('arrow', 'next')} onClick={goToNext} />
@@ -87,9 +89,10 @@ function ImagePreview({ images }) {
                         ]}
                     >
                         {images.map((image, index) => (
+                            // eslint-disable-next-line @next/next/no-img-element
                             <div key={index} onClick={() => handleClickImage(index)}>
                                 <div className={cx('image-wrap', { active: currentIndex === index })}>
-                                    <img className={cx('img')} src={image.src} alt={image.id} />
+                                    <img className={cx('img')} src={image.url} alt={image.name} />
                                 </div>
                             </div>
                         ))}

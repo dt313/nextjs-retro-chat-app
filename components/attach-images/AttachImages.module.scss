@@ -1,3 +1,5 @@
+@use '/app/scss/mixins.scss' as *;
+
 .wrapper {
     width: 100%;
 }
@@ -16,6 +18,7 @@
     height: 50px;
     object-fit: cover;
     background-color: #fff;
+    cursor: pointer;
 }
 
 .sm.image {
@@ -26,4 +29,8 @@
 .lg.image {
     width: 70px;
     height: 70px;
+}
+
+.no-content {
+    @include font-default;
 }

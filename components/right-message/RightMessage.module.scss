@@ -33,6 +33,35 @@
     width: 100%;
 }
 
+// group
+.group-description {
+    margin-bottom: 24px;
+
+    .description {
+        text-align: center;
+    }
+}
+
+.rules {
+    margin-top: 24px;
+    &-header {
+        width: 100%;
+        text-align: center;
+        font-family: var(--large-retro-font-family);
+        font-size: 2rem;
+        background-color: #333;
+        padding: 12px;
+        color: #fff;
+    }
+
+    &-text {
+        padding: 12px 8px 22px 8px;
+        border: var(--solid-border);
+    }
+}
+
+//
+
 .attachments {
     width: 100%;
 }

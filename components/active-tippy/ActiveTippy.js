@@ -11,6 +11,7 @@ function ActiveTippy({ children, tippy, ...props }) {
     return (
         <Tippy
             visible={visible}
+            interactive
             onClickOutside={() => setVisible(false)}
             render={(attrs) => (
                 <div className={cx('box')} tabIndex="-1" {...attrs}>

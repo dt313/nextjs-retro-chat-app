@@ -3,6 +3,7 @@ import styles from './AttachFile.module.scss';
 import File from './File';
 import { attachmentService } from '@/services';
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 const cx = classNames.bind(styles);
 
 function AttachFile({ conversationId }) {
@@ -23,11 +24,46 @@ function AttachFile({ conversationId }) {
         fetchFiles();
     }, []);
 
+    const handleDownload = async (url) => {
+        try {
+            console.log(url);
+            const response = await fetch(url, {
+                method: 'GET',
+                mode: 'cors', // quan trọng nếu file từ domain khác
+            });
+
+            if (!response.ok) {
+                throw new Error('Không thể tải file');
+            }
+
+            const blob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(blobUrl);
+        } catch (error) {
+            console.error('Lỗi khi tải file:', error);
+            alert(url);
+        }
+    };
     return (
         <div className={cx('wrapper')}>
             {files.map((file, index) => (
-                <File key={index} className={cx('attach-file')} name={file.name} size={file.size} />
+                <File
+                    key={index}
+                    className={cx('attach-file')}
+                    name={file.name}
+                    size={file.size}
+                    onClick={() => handleDownload(file.url)}
+                />
             ))}
+
+            {files.length === 0 && <p className={cx('no-content')}>Không có file nào</p>}
         </div>
     );
 }

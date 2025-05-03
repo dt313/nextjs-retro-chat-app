@@ -26,7 +26,7 @@ function Creation({ onClose }) {
         thumbnail: '',
         type: '',
         description: '',
-        rule: '',
+        rules: '',
         password: '',
     });
 
@@ -59,7 +59,7 @@ function Creation({ onClose }) {
         formData.append('name', group.name);
         formData.append('type', group.type);
         formData.append('description', group.description);
-        formData.append('rule', group.rule);
+        formData.append('rules', group.rules);
         formData.append('password', group.password);
 
         console.log('formData', formData);
@@ -114,8 +114,8 @@ function Creation({ onClose }) {
                         <Input
                             inputType="textarea"
                             className={cx('ls-input')}
-                            name="rule"
-                            value={group.rule}
+                            name="rules"
+                            value={group.rules}
                             onChange={handleChange}
                             label="Nội quy"
                             placeholder="Nội quy của nhóm"

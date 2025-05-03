@@ -1,0 +1,30 @@
+@use '/app/scss/mixins.scss' as *;
+.text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 2rem;
+    @include font-default;
+    // transition: all 0.3s ease;
+}
+
+.text.expanded {
+    -webkit-line-clamp: unset;
+    max-height: none;
+}
+
+.toggle-btn {
+    font-family: var(--font-family);
+    color: var(--red);
+    font-size: 1.4rem;
+    font-weight: 500;
+    cursor: pointer;
+    float: right;
+    margin-bottom: 12px;
+    transition: color 0.3s ease;
+
+    &:hover {
+        color: #7c1818;
+    }
+}

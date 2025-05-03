@@ -3,6 +3,8 @@ import classNames from 'classnames/bind';
 import styles from './AttachImages.module.scss';
 import Image from '@/components/image';
 import { attachmentService } from '@/services';
+import { useDispatch } from 'react-redux';
+import { openImgPreview } from '@/redux/actions/img-preview-action';
 const cx = classNames.bind(styles);
 
 function AttachImages({ conversationId }) {
@@ -10,6 +12,7 @@ function AttachImages({ conversationId }) {
     const [images, setImages] = useState([]);
     const [wrapperWidth, setWrapperWidth] = useState(0);
 
+    const dispatch = useDispatch();
     useEffect(() => {
         const updateWidth = () => {
             if (wrapperRef.current) {
@@ -42,6 +45,13 @@ function AttachImages({ conversationId }) {
         fetchImages();
     }, []);
 
+    const handleOpenImagePreview = (id) => {
+        const index = images.findIndex((img) => img._id === id);
+        if (index !== -1) {
+            dispatch(openImgPreview({ currentIndex: index, listImages: images }));
+        }
+    };
+
     return (
         <div className={cx('wrapper')} ref={wrapperRef}>
             <div className={cx('container')}>
@@ -51,9 +61,12 @@ function AttachImages({ conversationId }) {
                         className={cx('image', { sm: wrapperWidth < 300, lg: wrapperWidth > 500 })}
                         key={image?._id}
                         src={image?.url}
+                        onClick={() => handleOpenImagePreview(image?._id)}
                     ></Image>
                 ))}
             </div>
+
+            {images.length === 0 && <p className={cx('no-content')}>Không có hình ảnh nào</p>}
         </div>
     );
 }

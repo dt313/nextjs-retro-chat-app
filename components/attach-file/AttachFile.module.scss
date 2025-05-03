@@ -74,3 +74,7 @@
     border: var(--solid-border);
     box-shadow: var(--box-shadow);
 }
+
+.no-content {
+    @include font-default;
+}
