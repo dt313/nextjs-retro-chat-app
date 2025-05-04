@@ -17,6 +17,8 @@ function ExpandableText({ children, className, lineClamp = 5 }) {
 
         if (contentRef.current.scrollHeight > maxHeight) {
             setShowToggle(true);
+        } else {
+            setShowToggle(false);
         }
     }, [children, lineClamp]);
 

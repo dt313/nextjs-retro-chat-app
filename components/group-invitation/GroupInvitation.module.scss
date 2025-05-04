@@ -1,0 +1,79 @@
+@use '/app/scss/mixins.scss' as *;
+.content {
+    max-width: 400px;
+    width: 100%;
+    max-height: 500px;
+    height: 100%;
+    padding: 8px 0;
+    background-color: #fff;
+    overscroll-behavior: none;
+    border-radius: 12px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow-y: hidden;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 44px;
+    position: relative;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 600;
+    font-family: var(--font-family);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.close-icon {
+    cursor: pointer;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.r-side {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    height: calc(100% - 44px);
+}
+
+.r-side-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 0;
+    gap: 24px;
+    @include font-default;
+}
+
+.rh-item {
+    @include font-default;
+    font-size: 1.6rem;
+    cursor: pointer;
+
+    &:hover {
+        color: var(--red);
+    }
+}
+
+.rh-item.active {
+    font-weight: 600;
+    color: var(--red);
+    border-bottom: 2px solid var(--red);
+}
+
+.r-side-content {
+    max-height: calc(100% - 44px);
+    height: 100%;
+    overflow-y: auto;
+    overscroll-behavior: none;
+    padding: 0 12px;
+}

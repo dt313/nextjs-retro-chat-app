@@ -13,13 +13,15 @@ import CloseIcon from '@/components/close-icon';
 import Icon from '@/components/icon';
 import UserChatSetting from '@/components/user-chat-setting';
 import SearchItem from './SearchItem';
+import ExpandableText from '@/components/expandable-text';
+import GroupMembers from '@/components/group-members';
+import GroupInvitation from '@/components/group-invitation';
 
 import { IoSearch } from 'react-icons/io5';
 import { FaRegUserCircle } from 'react-icons/fa';
 import { TiUserAdd } from 'react-icons/ti';
 import { getAvatarFromConversation, getNameFromConversation } from '@/helpers';
-import ExpandableText from '../expandable-text';
-import GroupMembers from '../group-members';
+
 const cx = classNames.bind(styles);
 
 const INFORMATION = [
@@ -35,6 +37,7 @@ const INFORMATION = [
 
 function RightMessage({ hide, isGroup = true, data = {} }) {
     const [isShowSearch, setIsShowSearch] = useState(false);
+    const [isShowInvitation, setIsShowInvitation] = useState(false);
     const [simValue, setSimValue] = useState('');
     const router = useRouter();
 
@@ -65,7 +68,14 @@ function RightMessage({ hide, isGroup = true, data = {} }) {
                     medium
                     onClick={() => setIsShowSearch(true)}
                 />
-                {isGroup && <Icon className={cx('action-icon')} element={<TiUserAdd />} medium />}
+                {isGroup && (
+                    <Icon
+                        className={cx('action-icon')}
+                        element={<TiUserAdd />}
+                        medium
+                        onClick={() => setIsShowInvitation(true)}
+                    />
+                )}
             </div>
 
             <div className={cx('information')}>
@@ -75,7 +85,9 @@ function RightMessage({ hide, isGroup = true, data = {} }) {
                     })
                 ) : (
                     <div className={cx('group-description')}>
-                        <ExpandableText className={cx('description')}>{data?.description}</ExpandableText>
+                        <ExpandableText className={cx('description')} lineClamp={5}>
+                            {data?.description}
+                        </ExpandableText>
                         <div className={cx('rules')}>
                             <h3 className={cx('rules-header')}>Important Rules</h3>
                             <div className={cx('rules-text')}>
@@ -133,6 +145,8 @@ function RightMessage({ hide, isGroup = true, data = {} }) {
                     </div>
                 </div>
             )}
+
+            {isShowInvitation && <GroupInvitation onClose={() => setIsShowInvitation(false)} />}
         </div>
     );
 }

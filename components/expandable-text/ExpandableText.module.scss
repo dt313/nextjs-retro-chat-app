@@ -6,7 +6,8 @@
     text-overflow: ellipsis;
     line-height: 2rem;
     @include font-default;
-    // transition: all 0.3s ease;
+    max-height: 100px;
+    transition: all 0.3s ease;
 }
 
 .text.expanded {
