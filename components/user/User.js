@@ -4,6 +4,7 @@ import Avatar from '@/components/avatar';
 import { FiUserPlus } from 'react-icons/fi';
 import { FaFacebookMessenger } from 'react-icons/fa';
 import { MdOutlineGroupAdd } from 'react-icons/md';
+import { BsSend } from 'react-icons/bs';
 import Icon from '@/components/icon';
 const cx = classNames.bind(styles);
 
@@ -27,6 +28,7 @@ function User({ avatar, name, isOnline, id, type = 'user' }) {
                 )}
 
                 {type === 'invitation' && <Icon className={cx('action-icon')} element={<MdOutlineGroupAdd />} medium />}
+                {type === 'forward' && <Icon className={cx('action-icon')} element={<BsSend />} medium />}
             </div>
         </div>
     );

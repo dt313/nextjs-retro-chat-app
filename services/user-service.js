@@ -26,3 +26,12 @@ export const getUserByUsername = async (username) => {
         throw new Error(error || 'Failed to fetch user');
     }
 };
+
+export const getFriends = async () => {
+    try {
+        const res = await axios.get(`/users/friends`);
+        return res.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to fetch user');
+    }
+};

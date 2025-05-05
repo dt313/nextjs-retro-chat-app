@@ -8,6 +8,10 @@
     padding-bottom: 24px;
 }
 
+.large {
+    max-width: 600px;
+}
+
 .header {
     @include center-align;
     padding: 24px;
@@ -35,6 +39,7 @@
         font-size: 1.4rem;
         color: #666;
         text-align: center;
+        margin-bottom: 24px;
     }
 }
 

@@ -26,14 +26,22 @@ import 'tippy.js/themes/light.css';
 import { getReplyContent, getReplyLabelName, getReplyType } from '@/helpers/conversation-info';
 import { messageService } from '@/services';
 import eventBus from '@/config/emit';
+import MessageForward from '../message-forward';
+import SettingBox from '../setting-box';
+import Overlay from '../overlay';
 
 const cx = classNames.bind(styles);
 
 function Message({ type, id, className, sender, content, timestamp, replyData = {}, reactions = [] }) {
-    const [isShowTime, setIsShowTime] = useState(false);
-    const [isShowTools, setIsShowTools] = useState(false);
-    const [isShowReaction, setIsShowReaction] = useState(false);
-    const [isShowMore, setIsShowMore] = useState(false);
+    const [visibility, setVisibility] = useState({
+        time: false,
+        tools: false,
+        reaction: false,
+        more: false,
+        forward: false,
+        delete: false,
+    });
+
     const [reactionsList, setReactionsList] = useState(reactions);
     const { user: me } = useSelector((state) => state.auth);
 
@@ -147,7 +155,6 @@ function Message({ type, id, className, sender, content, timestamp, replyData = 
 
     const addOrChangeReaction = (res) => {
         const isExist = reactionsList.some((r) => r._id === res._id);
-        console.log('isExist ', isExist, res, reactionsList);
         if (!isExist) {
             setReactionsList((pre) => [...pre, res]);
         } else {
@@ -168,7 +175,7 @@ function Message({ type, id, className, sender, content, timestamp, replyData = 
         } catch (error) {
             console.log(error);
         } finally {
-            setIsShowReaction(false);
+            setVisibility((prev) => ({ ...prev, reaction: false }));
         }
     };
 
@@ -189,20 +196,20 @@ function Message({ type, id, className, sender, content, timestamp, replyData = 
     };
 
     const handleMouseEnter = () => {
-        setIsShowTime(true);
+        setVisibility((prev) => ({ ...prev, time: true }));
     };
 
     const handleMouseLeave = () => {
-        setIsShowTime(false);
+        setVisibility((prev) => ({ ...prev, time: false }));
     };
 
     const handleMouseEnterMessage = () => {
-        setIsShowTools(true);
+        setVisibility((prev) => ({ ...prev, tools: true }));
     };
 
     const handleMouseLeaveMessage = () => {
-        if (isShowReaction || isShowMore) return;
-        setIsShowTools(false);
+        if (visibility.reaction || visibility.more) return;
+        setVisibility((prev) => ({ ...prev, tools: false }));
     };
 
     return (
@@ -215,11 +222,11 @@ function Message({ type, id, className, sender, content, timestamp, replyData = 
                 {!(sender._id === me._id) && <Avatar src={sender?.avatar} className={cx('avatar')} size={36} />}
                 {renderMessage()}
 
-                {isShowTools ? (
+                {visibility.tools ? (
                     <div className={cx('tools')}>
                         <HeadlessTippy
-                            visible={isShowReaction}
-                            onClickOutside={() => setIsShowReaction(false)}
+                            visible={visibility.reaction}
+                            onClickOutside={() => setVisibility((prev) => ({ ...prev, reaction: false }))}
                             render={(attrs) => (
                                 <div className={cx('reaction-box')} tabIndex="-1" {...attrs}>
                                     <Reaction theme="light" onClick={handleReaction} />
@@ -228,7 +235,10 @@ function Message({ type, id, className, sender, content, timestamp, replyData = 
                             theme="light"
                             interactive
                         >
-                            <div className={cx('icon-wrapper')} onClick={() => setIsShowReaction(!isShowReaction)}>
+                            <div
+                                className={cx('icon-wrapper')}
+                                onClick={() => setVisibility((prev) => ({ ...prev, reaction: !prev.reaction }))}
+                            >
                                 <Icon className={cx('tool-icon')} element={<RxFace />} medium />
                             </div>
                         </HeadlessTippy>
@@ -244,19 +254,32 @@ function Message({ type, id, className, sender, content, timestamp, replyData = 
                             </div>
                         </Tippy>
                         <HeadlessTippy
-                            visible={isShowMore}
-                            onClickOutside={() => setIsShowMore(false)}
+                            visible={visibility.more}
+                            onClickOutside={() => setVisibility((prev) => ({ ...prev, more: false }))}
                             render={(attrs) => (
                                 <div className={cx('box')} tabIndex="-1" {...attrs}>
                                     <div className={cx('more-menu')}>
-                                        <span className={cx('more-item')}>Chuyển tiếp</span>
-                                        <span className={cx('more-item')}>Xóa</span>
+                                        <span
+                                            className={cx('more-item')}
+                                            onClick={() => setVisibility((prev) => ({ ...prev, forward: true }))}
+                                        >
+                                            Chuyển tiếp
+                                        </span>
+                                        <span
+                                            className={cx('more-item')}
+                                            onClick={() => setVisibility((prev) => ({ ...prev, delete: true }))}
+                                        >
+                                            Xóa
+                                        </span>
                                     </div>
                                 </div>
                             )}
                             interactive
                         >
-                            <div className={cx('icon-wrapper')} onClick={() => setIsShowMore(!isShowMore)}>
+                            <div
+                                className={cx('icon-wrapper')}
+                                onClick={() => setVisibility((prev) => ({ ...prev, more: !prev.more }))}
+                            >
                                 <Icon className={cx('tool-icon')} element={<BsThreeDotsVertical />} medium />
                             </div>
                         </HeadlessTippy>
@@ -264,7 +287,7 @@ function Message({ type, id, className, sender, content, timestamp, replyData = 
                 ) : (
                     <div className={cx('tools')}></div>
                 )}
-                {isShowTime && <span className={cx('time')}>{calculateTime(timestamp)}</span>}
+                {visibility.time && <span className={cx('time')}>{calculateTime(timestamp)}</span>}
                 {reactionsList?.length > 0 && (
                     <div
                         className={cx('reactions', {
@@ -291,6 +314,26 @@ function Message({ type, id, className, sender, content, timestamp, replyData = 
                     </p>
                     <p className={cx('reply-content')}>{getReplyContent(replyData)}</p>
                 </div>
+            )}
+
+            {visibility.forward && (
+                <MessageForward onClose={() => setVisibility((prev) => ({ ...prev, forward: false }))} />
+            )}
+
+            {visibility.delete && (
+                <Overlay onClick={() => setVisibility((prev) => ({ ...prev, delete: false }))}>
+                    <div onClick={(e) => e.stopPropagation()}>
+                        <SettingBox
+                            onClose={() => setVisibility((prev) => ({ ...prev, delete: false }))}
+                            submitText="Xoá"
+                            content={{
+                                name: 'Xóa tin nhắn',
+                                type: 'delete',
+                                description: 'Bạn có chắc chắn muốn xóa tin nhắn này không ?',
+                            }}
+                        />
+                    </div>
+                </Overlay>
             )}
         </div>
     );

@@ -1,11 +1,11 @@
 import { REPLY_ATTACHMENT, REPLY_IMAGE_ATTACHMENT, REPLY_MESSAGE } from '@/config/types';
 
-export function getNameFromConversation(message, meId) {
-    if (message && message.isGroup === true) {
-        return message?.name;
-    } else if (message && message.isGroup === false) {
-        if (message?.participants) {
-            const participant = message?.participants?.find((item) => item.user._id !== meId);
+export function getNameFromConversation(conversation, meId) {
+    if (conversation && conversation.isGroup === true) {
+        return conversation?.name;
+    } else if (conversation && conversation.isGroup === false) {
+        if (conversation?.participants) {
+            const participant = conversation?.participants?.find((item) => item.user._id !== meId);
             return participant ? participant.user.fullName : '';
         }
     } else {
@@ -13,12 +13,25 @@ export function getNameFromConversation(message, meId) {
     }
 }
 
-export function getAvatarFromConversation(message, meId) {
-    if (message && message.isGroup === true) {
-        return message?.thumbnail;
-    } else if (message && message.isGroup === false) {
-        if (message?.participants) {
-            const participant = message?.participants?.find((item) => item.user._id !== meId);
+export function getEmailFromConversation(conversation, meId) {
+    if (conversation && conversation.isGroup === true) {
+        return '';
+    } else if (conversation && conversation.isGroup === false) {
+        if (conversation?.participants) {
+            const participant = conversation?.participants?.find((item) => item.user._id !== meId);
+            return participant ? participant.user.email : '';
+        }
+    } else {
+        return '';
+    }
+}
+
+export function getAvatarFromConversation(conversation, meId) {
+    if (conversation && conversation.isGroup === true) {
+        return conversation?.thumbnail;
+    } else if (conversation && conversation.isGroup === false) {
+        if (conversation?.participants) {
+            const participant = conversation?.participants?.find((item) => item.user._id !== meId);
             return participant ? participant.user.avatar : '';
         }
     } else {
@@ -29,7 +42,7 @@ export function getAvatarFromConversation(message, meId) {
 export const getReplyType = (type) => {
     switch (type) {
         case 'text':
-            return REPLY_MESSAGE;
+            return REPLY_conversation;
         case 'file':
             return REPLY_ATTACHMENT;
         case 'images':

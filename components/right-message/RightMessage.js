@@ -11,7 +11,7 @@ import AttachImages from '@/components/attach-images';
 import AttachFile from '@/components/attach-file';
 import CloseIcon from '@/components/close-icon';
 import Icon from '@/components/icon';
-import UserChatSetting from '@/components/user-chat-setting';
+import ChatSetting from '@/components/chat-setting';
 import SearchItem from './SearchItem';
 import ExpandableText from '@/components/expandable-text';
 import GroupMembers from '@/components/group-members';
@@ -21,29 +21,23 @@ import { IoSearch } from 'react-icons/io5';
 import { FaRegUserCircle } from 'react-icons/fa';
 import { TiUserAdd } from 'react-icons/ti';
 import { getAvatarFromConversation, getNameFromConversation } from '@/helpers';
+import { getEmailFromConversation } from '@/helpers/conversation-info';
 
 const cx = classNames.bind(styles);
-
-const INFORMATION = [
-    {
-        name: 'email',
-        content: 'danhtuan3103@gmail.com',
-    },
-    {
-        name: 'phone number',
-        content: '01048976769',
-    },
-];
 
 function RightMessage({ hide, isGroup = true, data = {} }) {
     const [isShowSearch, setIsShowSearch] = useState(false);
     const [isShowInvitation, setIsShowInvitation] = useState(false);
     const [simValue, setSimValue] = useState('');
     const router = useRouter();
-
     const { user: me } = useSelector((state) => state.auth);
 
-    console.log('data', data);
+    const INFORMATION = [
+        {
+            name: 'email',
+            content: getEmailFromConversation(data, me._id),
+        },
+    ];
 
     const handleChangeSimValue = (e) => {
         setSimValue(e.target.value);
@@ -105,7 +99,7 @@ function RightMessage({ hide, isGroup = true, data = {} }) {
                     </Details>
                 )}
                 <Details label="chat setting">
-                    <UserChatSetting />
+                    <ChatSetting isGroup={data?.isGroup} />
                 </Details>
                 <Details label="File, Attachment">
                     <AttachFile conversationId={data?._id} />
@@ -146,7 +140,7 @@ function RightMessage({ hide, isGroup = true, data = {} }) {
                 </div>
             )}
 
-            {isShowInvitation && <GroupInvitation onClose={() => setIsShowInvitation(false)} />}
+            {isShowInvitation && <GroupInvitation onClose={() => setIsShowInvitation(false)} id={data._id} />}
         </div>
     );
 }

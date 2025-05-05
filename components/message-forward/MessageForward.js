@@ -1,36 +1,34 @@
-import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
-import styles from './GroupInvitation.module.scss';
-
-import User from '@/components/user';
-import Overlay from '@/components/overlay';
+import styles from './MessageForward.module.scss';
 import CloseIcon from '../close-icon';
-import { groupService } from '@/services';
+import Overlay from '../overlay';
+import User from '../user';
 import Icon from '../icon';
 import { IoSearch } from 'react-icons/io5';
+import { useEffect, useState } from 'react';
+import { userService } from '@/services';
 
 const cx = classNames.bind(styles);
 
-function GroupInvitation({ onClose, id }) {
-    const [list, setList] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+function MessageForward({ onClose }) {
+    const [list, setList] = useState([]);
 
-    const fetchUser = async () => {
+    const fetchFriends = async () => {
         try {
-            const res = await groupService.getInvitationUsers(id);
+            const res = await userService.getFriends();
             if (res) setList(res);
         } catch (error) {
             console.log(error);
         }
     };
     useEffect(() => {
-        fetchUser();
+        fetchFriends();
     }, []);
-
     return (
         <Overlay className={cx('wrapper')} onClick={onClose}>
             <div className={cx('container')} onClick={(e) => e.stopPropagation()}>
                 <div className={cx('header')}>
-                    <h4 className={cx('title')}>Mời vào nhóm</h4>
+                    <h4 className={cx('title')}>Send to</h4>
                     <CloseIcon className={cx('close-icon')} large onClick={onClose} />
                 </div>
 
@@ -41,7 +39,7 @@ function GroupInvitation({ onClose, id }) {
 
                 <div className={cx('list')}>
                     {list.map((item) => (
-                        <User key={item._id} type="invitation" avatar={item.avatar} name={item.fullName} />
+                        <User key={item} type="forward" name={item.fullName} avatar={item.avatar} />
                     ))}
                 </div>
             </div>
@@ -49,4 +47,4 @@ function GroupInvitation({ onClose, id }) {
     );
 }
 
-export default GroupInvitation;
+export default MessageForward;

@@ -1,7 +1,7 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
-import styles from './UserChatSetting.module.scss';
+import styles from './ChatSetting.module.scss';
 import Icon from '@/components/icon';
 import Overlay from '@/components/overlay';
 import SettingBox from '@/components/setting-box';
@@ -9,15 +9,15 @@ import SettingBox from '@/components/setting-box';
 import { TbAlphabetLatin } from 'react-icons/tb';
 import { IoIosImages } from 'react-icons/io';
 import { MdDelete } from 'react-icons/md';
-import { set } from 'lodash';
 const cx = classNames.bind(styles);
 
-function UserChatSetting() {
+function ChatSetting({ isGroup }) {
     const [isShowSetting, setIsShowSetting] = useState(false);
     const [settingBox, setSettingBox] = useState({});
     const [settingValue, setSettingValue] = useState('');
+    const [settingMenu, setSettingMenu] = useState([]);
 
-    const settingMenu = [
+    const userChatSetting = [
         {
             id: 1,
             name: 'Chỉnh sửa biệt danh',
@@ -42,6 +42,49 @@ function UserChatSetting() {
             description: 'Bạn có chắc chắn muốn xóa cuộc trò chuyện này không?',
         },
     ];
+
+    const groupChatSetting = [
+        {
+            id: 1,
+            name: 'Chỉnh sửa phần giới thiệu',
+            icon: <TbAlphabetLatin />,
+            type: 'textarea',
+            description: 'Chỉnh sửa phần giới thiệu của nhóm',
+            label: 'Giới thiệu',
+            placeholder: 'Viết phần giới thiệu ở đây',
+        },
+        {
+            id: 1,
+            name: 'Chỉnh sửa quy định',
+            icon: <TbAlphabetLatin />,
+            type: 'textarea',
+            description: 'Chỉnh sửa phần quy định của nhóm',
+            label: 'Quy định',
+            placeholder: 'Viết quy định ở đây',
+        },
+        {
+            id: 2,
+            name: 'Chỉnh sửa hình nền',
+            icon: <IoIosImages />,
+            type: 'image',
+            description: 'Chỉnh sửa hình nền của đoạn chat của bạn',
+        },
+        {
+            id: 3,
+            name: 'Xóa cuộc trò chuyện',
+            icon: <MdDelete />,
+            type: 'delete',
+            description: 'Bạn có chắc chắn muốn xóa cuộc trò chuyện này không?',
+        },
+    ];
+
+    useEffect(() => {
+        if (!isGroup) {
+            setSettingMenu(userChatSetting);
+        } else {
+            setSettingMenu(groupChatSetting);
+        }
+    }, [isGroup]);
 
     return (
         <div className={cx('wrapper')}>
@@ -75,4 +118,4 @@ function UserChatSetting() {
     );
 }
 
-export default UserChatSetting;
+export default ChatSetting;

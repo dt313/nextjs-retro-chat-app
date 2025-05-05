@@ -10,14 +10,22 @@ const cx = classNames.bind(styles);
 function SettingInput({ type, label, placeholder, value, onChange }) {
     const [image, setImage] = useState(null);
 
+    console.log(type);
+
     const handleOnChange = (e) => {
         onChange(e);
     };
 
-    if (type === 'text') {
+    if (type === 'text' || type === 'textarea') {
         return (
             <div className={cx('wrapper')}>
-                <Input label={label} placeholder={placeholder} value={value} onChange={handleOnChange} />
+                <Input
+                    label={label}
+                    placeholder={placeholder}
+                    value={value}
+                    onChange={handleOnChange}
+                    inputType={type}
+                />
             </div>
         );
     }
@@ -26,13 +34,6 @@ function SettingInput({ type, label, placeholder, value, onChange }) {
         return (
             <div className={cx('ii-wrapper')}>
                 <ImageInput value={image} onChange={handleOnChange} />
-            </div>
-        );
-    }
-    if (type === 'textarea') {
-        return (
-            <div className={cx('wrapper')} value={value} onChange={handleOnChange}>
-                Textarea
             </div>
         );
     }
