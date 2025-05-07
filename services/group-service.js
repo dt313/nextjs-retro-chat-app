@@ -32,6 +32,6 @@ export const getInvitationUsers = async (groupId) => {
         const res = await axios.get(`/groups/invitation-users/${groupId}`);
         return res?.data;
     } catch (error) {
-        throw new Error(error || 'Failed to fetch users');
+        throw new Error(error || 'Failed to fetch invitation users');
     }
 };

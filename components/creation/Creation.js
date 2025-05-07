@@ -143,7 +143,7 @@ function Creation({ onClose }) {
                         <SubmitButton onClick={handleCreate}>Create</SubmitButton>
                     </div>
                 </div>
-
+                {/* 
                 <div className={cx('r-side')}>
                     <div className={cx('r-side-header')}>
                         <span
@@ -167,7 +167,7 @@ function Creation({ onClose }) {
                             return <Group key={item.id} {...item} />;
                         })}
                     </div>
-                </div>
+                </div> */}
 
                 <CloseIcon className={cx('close-icon')} large onClick={onClose} />
             </div>

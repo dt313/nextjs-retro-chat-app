@@ -10,7 +10,7 @@ import AImage from '../image';
 import { RxFace } from 'react-icons/rx';
 import { IoArrowUndo } from 'react-icons/io5';
 import { RiReplyFill } from 'react-icons/ri';
-
+import { ImArrowRight } from 'react-icons/im';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Icon from '../icon';
 import { openReplyBox, closeReplyBox } from '@/redux/actions/reply-box-action';
@@ -32,7 +32,17 @@ import Overlay from '../overlay';
 
 const cx = classNames.bind(styles);
 
-function Message({ type, id, className, sender, content, timestamp, replyData = {}, reactions = [] }) {
+function Message({
+    type,
+    id,
+    className,
+    sender,
+    content,
+    timestamp,
+    replyData = {},
+    reactions = [],
+    isForward = true,
+}) {
     const [visibility, setVisibility] = useState({
         time: false,
         tools: false,
@@ -106,7 +116,7 @@ function Message({ type, id, className, sender, content, timestamp, replyData = 
             );
         }
 
-        if (type === 'images') {
+        if (type === 'image') {
             const isMultiImage = content?.length > 3;
 
             return (
@@ -316,8 +326,21 @@ function Message({ type, id, className, sender, content, timestamp, replyData = 
                 </div>
             )}
 
+            {isForward && !replyData && sender._id === me._id && (
+                <div className={cx('reply-message')}>
+                    <p className={cx('reply-label')}>
+                        <Icon className={cx('reply-icon')} element={<ImArrowRight />} />
+                        Bạn đã chuyển tiếp một tin nhắn
+                    </p>
+                </div>
+            )}
+
             {visibility.forward && (
-                <MessageForward onClose={() => setVisibility((prev) => ({ ...prev, forward: false }))} />
+                <MessageForward
+                    messageId={id}
+                    messageType={type}
+                    onClose={() => setVisibility((prev) => ({ ...prev, forward: false }))}
+                />
             )}
 
             {visibility.delete && (

@@ -6,13 +6,15 @@ import User from '../user';
 import Icon from '../icon';
 import { IoSearch } from 'react-icons/io5';
 import { useEffect, useState } from 'react';
-import { userService } from '@/services';
+import { messageService, userService } from '@/services';
+import { useDispatch } from 'react-redux';
 
 const cx = classNames.bind(styles);
 
-function MessageForward({ onClose }) {
+function MessageForward({ messageId, messageType, onClose }) {
     const [list, setList] = useState([]);
 
+    const dispatch = useDispatch();
     const fetchFriends = async () => {
         try {
             const res = await userService.getFriends();
@@ -24,6 +26,25 @@ function MessageForward({ onClose }) {
     useEffect(() => {
         fetchFriends();
     }, []);
+
+    const handleForwardMessage = async (userId) => {
+        try {
+            const res = await messageService.forwardMessage(messageId, { friendId: userId, messageType });
+            if (res) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            dispatch(
+                addToast({
+                    type: 'error',
+                    content: error.message,
+                }),
+            );
+            return false;
+        }
+    };
+
     return (
         <Overlay className={cx('wrapper')} onClick={onClose}>
             <div className={cx('container')} onClick={(e) => e.stopPropagation()}>
@@ -39,7 +60,13 @@ function MessageForward({ onClose }) {
 
                 <div className={cx('list')}>
                     {list.map((item) => (
-                        <User key={item} type="forward" name={item.fullName} avatar={item.avatar} />
+                        <User
+                            key={item._id}
+                            type="forward"
+                            name={item.fullName}
+                            avatar={item.avatar}
+                            onClickForward={() => handleForwardMessage(item._id)}
+                        />
                     ))}
                 </div>
             </div>

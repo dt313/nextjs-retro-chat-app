@@ -28,6 +28,7 @@ function Header() {
     const [isHasNotification, setIsHasNotification] = useState(false);
     const [isShowMenu, setIsShowMenu] = useState(false);
     const { notifications } = useSelector((state) => state.notification);
+    console.log(notifications);
     const pathname = usePathname();
     const router = useRouter();
     const dispatch = useDispatch();
@@ -36,6 +37,7 @@ function Header() {
 
     useEffect(() => {
         const handleNotification = (data) => {
+            console.log(data);
             if (data) {
                 dispatch(addNotification(data));
                 setIsHasNotification(true);

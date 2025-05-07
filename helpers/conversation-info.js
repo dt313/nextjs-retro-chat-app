@@ -26,6 +26,19 @@ export function getEmailFromConversation(conversation, meId) {
     }
 }
 
+export function getUsernameFromConversation(conversation, meId) {
+    if (conversation && conversation.isGroup === true) {
+        return '';
+    } else if (conversation && conversation.isGroup === false) {
+        if (conversation?.participants) {
+            const participant = conversation?.participants?.find((item) => item.user._id !== meId);
+            return participant ? participant.user.username : '';
+        }
+    } else {
+        return '';
+    }
+}
+
 export function getAvatarFromConversation(conversation, meId) {
     if (conversation && conversation.isGroup === true) {
         return conversation?.thumbnail;
@@ -42,7 +55,7 @@ export function getAvatarFromConversation(conversation, meId) {
 export const getReplyType = (type) => {
     switch (type) {
         case 'text':
-            return REPLY_conversation;
+            return REPLY_MESSAGE;
         case 'file':
             return REPLY_ATTACHMENT;
         case 'images':

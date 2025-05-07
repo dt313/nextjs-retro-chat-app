@@ -39,7 +39,22 @@ function LeftMessage({ className, activeId }) {
     };
 
     useEffect(() => {
+        const fetchConversationsByName = async () => {
+            try {
+                const res = await conversationService.getConversationByName(searchValue);
+                if (res) {
+                    dispatch(initConversation(res));
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchConversationsByName();
+    }, [searchValue]);
+
+    useEffect(() => {
         const handleSortConversation = (conversation) => {
+            console.log('new conversation ', conversation);
             dispatch(newConversation(conversation));
         };
 

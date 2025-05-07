@@ -12,23 +12,27 @@ import AttachFile from '@/components/attach-file';
 import CloseIcon from '@/components/close-icon';
 import Icon from '@/components/icon';
 import ChatSetting from '@/components/chat-setting';
-import SearchItem from './SearchItem';
 import ExpandableText from '@/components/expandable-text';
 import GroupMembers from '@/components/group-members';
 import GroupInvitation from '@/components/group-invitation';
+import SearchItem from './SearchItem';
 
 import { IoSearch } from 'react-icons/io5';
 import { FaRegUserCircle } from 'react-icons/fa';
 import { TiUserAdd } from 'react-icons/ti';
-import { getAvatarFromConversation, getNameFromConversation } from '@/helpers';
-import { getEmailFromConversation } from '@/helpers/conversation-info';
+import { calculateTime, getAvatarFromConversation, getNameFromConversation } from '@/helpers';
+import { getEmailFromConversation, getUsernameFromConversation } from '@/helpers/conversation-info';
+import { conversationService } from '@/services';
+import { useBreakpoint } from '@/hooks';
 
 const cx = classNames.bind(styles);
 
-function RightMessage({ hide, isGroup = true, data = {} }) {
+function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
     const [isShowSearch, setIsShowSearch] = useState(false);
     const [isShowInvitation, setIsShowInvitation] = useState(false);
     const [simValue, setSimValue] = useState('');
+    const [simList, setSimList] = useState([]);
+    const breakpoint = useBreakpoint();
     const router = useRouter();
     const { user: me } = useSelector((state) => state.auth);
 
@@ -37,11 +41,37 @@ function RightMessage({ hide, isGroup = true, data = {} }) {
             name: 'email',
             content: getEmailFromConversation(data, me._id),
         },
+        {
+            name: 'username',
+            content: getUsernameFromConversation(data, me._id),
+        },
     ];
 
-    const handleChangeSimValue = (e) => {
-        setSimValue(e.target.value);
+    const handleChangeSimValue = async (e) => {
+        try {
+            const value = e.target.value;
+            setSimValue(value);
+            if (value === '') {
+                setSimList([]);
+                return;
+            }
+            const res = await conversationService.searchMessageOfConversation(data?._id, e.target.value);
+            if (res) {
+                setSimList(res);
+            }
+        } catch (error) {
+            console.log(error);
+        }
     };
+
+    const handleClickSimItem = (id) => {
+        router.push(`?message=${id}`);
+        console.log(breakpoint);
+        if (breakpoint === 'lg' || breakpoint === 'md' || breakpoint === 'sm') {
+            onClose();
+        }
+    };
+
     return (
         <div className={cx('wrapper', hide && 'hide')}>
             <div className={cx('header')}>
@@ -131,11 +161,19 @@ function RightMessage({ hide, isGroup = true, data = {} }) {
                     </div>
 
                     <div className={cx('sim-content')}>
-                        <SearchItem />
-                        <SearchItem />
-                        <SearchItem />
-                        <SearchItem />
-                        <SearchItem />
+                        {simList.map((mes) => {
+                            return (
+                                <SearchItem
+                                    key={mes._id}
+                                    id={mes._id}
+                                    name={mes.sender.fullName}
+                                    content={mes.content}
+                                    avatar={mes.sender.avatar}
+                                    time={calculateTime(mes.createdAt)}
+                                    onClick={handleClickSimItem}
+                                />
+                            );
+                        })}
                     </div>
                 </div>
             )}

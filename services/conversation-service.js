@@ -1,6 +1,4 @@
 import axios from '@/config/axios';
-import { storageUtils } from '@/utils';
-import defaultAxios from 'axios';
 
 export const createGroupConversation = async (data) => {
     try {
@@ -57,5 +55,23 @@ export const readLastMessage = async (id) => {
         return res?.data;
     } catch (error) {
         throw new Error(error || 'Failed to read last message of conversation');
+    }
+};
+
+export const getConversationByName = async (name) => {
+    try {
+        const res = await axios.get(`/conversations/search?name=${name}`);
+        return res?.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to search conversation');
+    }
+};
+
+export const searchMessageOfConversation = async (id, query) => {
+    try {
+        const res = await axios.get(`/conversations/message/${id}/search?query=${query}`);
+        return res?.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to search conversation');
     }
 };

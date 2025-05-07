@@ -61,3 +61,9 @@
         color: var(--red);
     }
 }
+
+.action-icon.no-hover {
+    &:hover {
+        color: unset;
+    }
+}

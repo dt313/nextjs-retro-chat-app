@@ -2,11 +2,11 @@ import classNames from 'classnames/bind';
 import styles from './Input.module.scss';
 const cx = classNames.bind(styles);
 
-function Input({ inputType = 'input', label, value, onChange, placeholder, className, ...props }) {
+function Input({ inputType = 'text', label, value, onChange, placeholder, className, ...props }) {
     return (
         <div className={cx('wrapper', { [className]: className })}>
             {label && <span className={cx('label')}>{label}</span>}
-            {inputType === 'input' && (
+            {inputType === 'text' && (
                 <input
                     className={cx('input')}
                     value={value}

@@ -54,7 +54,7 @@ function ChatSetting({ isGroup }) {
             placeholder: 'Viết phần giới thiệu ở đây',
         },
         {
-            id: 1,
+            id: 2,
             name: 'Chỉnh sửa quy định',
             icon: <TbAlphabetLatin />,
             type: 'textarea',
@@ -63,14 +63,14 @@ function ChatSetting({ isGroup }) {
             placeholder: 'Viết quy định ở đây',
         },
         {
-            id: 2,
+            id: 3,
             name: 'Chỉnh sửa hình nền',
             icon: <IoIosImages />,
             type: 'image',
             description: 'Chỉnh sửa hình nền của đoạn chat của bạn',
         },
         {
-            id: 3,
+            id: 4,
             name: 'Xóa cuộc trò chuyện',
             icon: <MdDelete />,
             type: 'delete',

@@ -148,6 +148,8 @@
     width: 100%;
     margin-bottom: 4px;
 
+    cursor: pointer;
+
     .search-item-info {
         display: flex;
         flex-direction: column;
@@ -171,5 +173,10 @@
         overflow: hidden;
         display: block;
         max-width: 100%;
+    }
+
+    .time {
+        font-weight: 300;
+        font-size: 1.3rem;
     }
 }

@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { redirect } from 'next/navigation';
+import { redirect, useSearchParams } from 'next/navigation';
 import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
 import styles from './conversation.module.scss';
@@ -33,6 +33,11 @@ function Conversation({ id }) {
 
     const [conversation, setConversation] = useState(null);
     const [messagesList, setMessageList] = useState([]);
+
+    const searchParams = useSearchParams();
+    const searchMessageId = searchParams.get('message');
+
+    console.log(searchMessageId);
 
     const { user: me } = useSelector((state) => state.auth);
     const { list } = useSelector((state) => state.conversations);
@@ -163,6 +168,10 @@ function Conversation({ id }) {
         }
     }, [id, breakpoint]);
 
+    const handleCloseRightSide = () => {
+        setIsShowRight(false);
+    };
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('left-side', isShowLeft ? 'show' : 'hide')}>
@@ -193,7 +202,7 @@ function Conversation({ id }) {
                         <Icon className={cx('dots-icon')} element={<BsThreeDots />} onClick={toggleRightSide} />
                     </div>
                     <div className={cx('c-content')} onClick={handleReadLastMessage}>
-                        <MessageBox list={messagesList} conversationId={id} />
+                        <MessageBox list={messagesList} conversationId={id} searchMessageId={searchMessageId} />
                         {isOpenReplyBox && (
                             <div className={cx('reply-box')}>
                                 <div className={cx('reply-content')}>
@@ -230,7 +239,14 @@ function Conversation({ id }) {
 
             <div className={cx('right-side', isShowRight ? 'show' : 'hide', { 'left-visible': isShowLeft })}>
                 <Icon className={cx('r-close-btn')} element={<RiArrowRightSLine />} onClick={toggleRightSide} />
-                <RightMessage hide={!isShowRight} data={conversation} isGroup={conversation?.isGroup} />
+                {id && (
+                    <RightMessage
+                        hide={!isShowRight}
+                        data={conversation}
+                        isGroup={conversation?.isGroup}
+                        onClose={handleCloseRightSide}
+                    />
+                )}
             </div>
         </div>
     );

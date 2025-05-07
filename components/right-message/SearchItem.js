@@ -3,15 +3,18 @@ import styles from './RightMessage.module.scss';
 import Avatar from '@/components/avatar';
 const cx = classNames.bind(styles);
 
-function SearchItem() {
+function SearchItem({ id, name, avatar, content, time = '', onClick }) {
+    const handleClick = () => {
+        onClick(id);
+    };
     return (
-        <div className={cx('search-item')}>
-            <Avatar size={36} />
+        <div className={cx('search-item')} onClick={handleClick}>
+            <Avatar size={36} src={avatar} />
             <div className={cx('search-item-info')}>
-                <span className={cx('search-item-name')}>Danh Tuan</span>
-                <p className={cx('search-item-message')}>
-                    Hello world how are you doing today?Hello world how are you doing today?
-                </p>
+                <span className={cx('search-item-name')}>
+                    {name} <span className={cx('time')}>({time})</span>
+                </span>
+                <p className={cx('search-item-message')}>{content}</p>
             </div>
         </div>
     );

@@ -5,15 +5,17 @@ import styles from './GroupInvitation.module.scss';
 import User from '@/components/user';
 import Overlay from '@/components/overlay';
 import CloseIcon from '../close-icon';
-import { groupService } from '@/services';
+import { groupService, invitationService } from '@/services';
 import Icon from '../icon';
 import { IoSearch } from 'react-icons/io5';
+import { useDispatch } from 'react-redux';
+import { addToast } from '@/redux/actions/toast-action';
 
 const cx = classNames.bind(styles);
 
 function GroupInvitation({ onClose, id }) {
-    const [list, setList] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-
+    const [list, setList] = useState([]);
+    const dispatch = useDispatch();
     const fetchUser = async () => {
         try {
             const res = await groupService.getInvitationUsers(id);
@@ -22,9 +24,41 @@ function GroupInvitation({ onClose, id }) {
             console.log(error);
         }
     };
+
     useEffect(() => {
         fetchUser();
     }, []);
+
+    const handleInvitation = async (userId) => {
+        try {
+            const res = await invitationService.createGroupInvitation(id, userId);
+            if (res) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            dispatch(
+                addToast({
+                    type: 'error',
+                    content: error.message,
+                }),
+            );
+            return false;
+        }
+    };
+
+    const handleCancelInvitation = async (userId) => {
+        try {
+            const res = await invitationService.cancelGroupInvitation(userId, id);
+            if (res) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    };
 
     return (
         <Overlay className={cx('wrapper')} onClick={onClose}>
@@ -41,7 +75,15 @@ function GroupInvitation({ onClose, id }) {
 
                 <div className={cx('list')}>
                     {list.map((item) => (
-                        <User key={item._id} type="invitation" avatar={item.avatar} name={item.fullName} />
+                        <User
+                            key={item._id}
+                            type="invitation"
+                            avatar={item.avatar}
+                            name={item.fullName}
+                            onClickInvitation={() => handleInvitation(item._id)}
+                            onCancelInvitation={() => handleCancelInvitation(item._id)}
+                            isSent={item.isRequested}
+                        />
                     ))}
                 </div>
             </div>

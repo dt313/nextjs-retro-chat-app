@@ -30,3 +30,12 @@ export const cancelReaction = async (reactionId) => {
         throw new Error(error || 'Failed to create message');
     }
 };
+
+export const forwardMessage = async (messageId, data) => {
+    try {
+        const res = await axios.post(`/messages/forward/${messageId}`, data);
+        return res?.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to forward message');
+    }
+};

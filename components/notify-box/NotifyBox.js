@@ -19,6 +19,10 @@ import {
     TEMP_NOTIFICATION_FRIEND_ACCEPTED,
     TEMP_NOTIFICATION_FRIEND_REJECTED,
     FRIEND_REQUEST_REJECTED,
+    GROUP_INVITATION_ACCEPTED,
+    TEMP_NOTIFICATION_GROUP_INVITATION_ACCEPTED,
+    TEMP_NOTIFICATION_GROUP_INVITATION_REJECTED,
+    GROUP_INVITATION_REJECTED,
 } from '@/config/types';
 import { changeTypeNotification } from '@/redux/actions/notification-action';
 const cx = classNames.bind(styles);
@@ -27,21 +31,49 @@ function NotifyBox({ list = [] }) {
     const dispatch = useDispatch();
 
     const handleReplyFriendRequest = async (senderId, status, notificationId) => {
-        const res = await invitationService.replyFriendRequest({
-            sender: senderId,
-            status,
-        });
+        try {
+            const res = await invitationService.replyFriendRequest({
+                senderId: senderId,
+                status,
+            });
 
-        if (res) {
-            dispatch(
-                changeTypeNotification({
-                    notificationId,
-                    type:
-                        status === FRIEND_REQUEST_ACCEPTED
-                            ? TEMP_NOTIFICATION_FRIEND_ACCEPTED
-                            : TEMP_NOTIFICATION_FRIEND_REJECTED,
-                }),
-            );
+            if (res) {
+                dispatch(
+                    changeTypeNotification({
+                        notificationId,
+                        type:
+                            status === FRIEND_REQUEST_ACCEPTED
+                                ? TEMP_NOTIFICATION_FRIEND_ACCEPTED
+                                : TEMP_NOTIFICATION_FRIEND_REJECTED,
+                    }),
+                );
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleReplyGroupInvitation = async (senderId, status, groupId, notificationId) => {
+        try {
+            const res = await invitationService.replyGroupInvitation({
+                senderId,
+                status,
+                groupId,
+            });
+
+            if (res) {
+                dispatch(
+                    changeTypeNotification({
+                        notificationId,
+                        type:
+                            status === GROUP_INVITATION_ACCEPTED
+                                ? TEMP_NOTIFICATION_GROUP_INVITATION_ACCEPTED
+                                : TEMP_NOTIFICATION_GROUP_INVITATION_REJECTED,
+                    }),
+                );
+            }
+        } catch (error) {
+            console.log(error);
         }
     };
 
@@ -91,8 +123,32 @@ function NotifyBox({ list = [] }) {
                             <strong className={cx('name')}>{group?.name}</strong>
                         </p>
                         <div className={cx('reply-box')}>
-                            <button className={cx('reply-btn')}>Đồng ý</button>
-                            <button className={cx('reply-btn', 'cancel-btn')}>Từ chối</button>
+                            <button
+                                className={cx('reply-btn')}
+                                onClick={() =>
+                                    handleReplyGroupInvitation(
+                                        sender._id,
+                                        GROUP_INVITATION_ACCEPTED,
+                                        group._id,
+                                        notification._id,
+                                    )
+                                }
+                            >
+                                Đồng ý
+                            </button>
+                            <button
+                                className={cx('reply-btn', 'cancel-btn')}
+                                onClick={() =>
+                                    handleReplyGroupInvitation(
+                                        sender._id,
+                                        GROUP_INVITATION_REJECTED,
+                                        group._id,
+                                        notification._id,
+                                    )
+                                }
+                            >
+                                Từ chối
+                            </button>
                         </div>
                     </div>
                 );
@@ -136,6 +192,26 @@ function NotifyBox({ list = [] }) {
                     <div className={cx('text-notify')}>
                         <p className={cx('qb-content')}>
                             Bạn đã từ chối lời mời kết bạn của{' '}
+                            <strong className={cx('name')}>{sender?.fullName}</strong>
+                        </p>
+                    </div>
+                );
+
+            case TEMP_NOTIFICATION_GROUP_INVITATION_ACCEPTED:
+                return (
+                    <div className={cx('text-notify')}>
+                        <p className={cx('qb-content')}>
+                            Bạn đã chấp nhận lời mời vào nhóm <strong className={cx('name')}>{group.name}</strong> của{' '}
+                            <strong className={cx('name')}>{sender?.fullName}</strong>
+                        </p>
+                    </div>
+                );
+
+            case TEMP_NOTIFICATION_GROUP_INVITATION_REJECTED:
+                return (
+                    <div className={cx('text-notify')}>
+                        <p className={cx('qb-content')}>
+                            Bạn đã từ chối lời mời vào nhóm <strong className={cx('name')}>{group.name}</strong> của{' '}
                             <strong className={cx('name')}>{sender?.fullName}</strong>
                         </p>
                     </div>

@@ -8,7 +8,7 @@ import { ThreeDotLoading } from '../loading';
 
 const cx = classNames.bind(styles);
 
-function MessageBox({ list = [], conversationId }) {
+function MessageBox({ list = [], conversationId, searchMessageId }) {
     const messageEndRef = useRef(null);
     const [typingUsers, setTypingUsers] = useState([]);
     useEffect(() => {
@@ -86,7 +86,7 @@ function MessageBox({ list = [], conversationId }) {
                         {images && (
                             <Message
                                 key={images?._id}
-                                type="images"
+                                type="image"
                                 id={images._id}
                                 sender={mes.sender}
                                 content={images?.images}

@@ -17,7 +17,7 @@ function Avatar({ src, className, size = 60, fallback = images.noUser, ...props 
             className={classes}
             src={src}
             fallback={fallback}
-            style={{ width: `${size}px`, height: `${size}px` }}
+            style={{ minWidth: `${size}px`, minHeight: `${size}px`, width: `${size}px`, height: `${size}px` }}
             width={size}
             height={size}
             {...props}
