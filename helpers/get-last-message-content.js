@@ -4,10 +4,10 @@ const getLastMessageContent = (message, meId) => {
         return '';
     }
     const isMe = sender._id === meId;
-    const name = isMe ? 'Bạn' : '';
+    const name = isMe ? 'Bạn' : sender.fullName;
     switch (type) {
         case 'text':
-            return `${isMe ? 'Bạn : ' : ''} ${content}`;
+            return `${name} : ${content}`;
         case 'file':
             return `${name} đã gửi tệp đính kèm`;
         case 'image':

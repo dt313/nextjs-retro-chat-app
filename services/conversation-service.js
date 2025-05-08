@@ -31,9 +31,9 @@ export const getConversationById = async (id) => {
     }
 };
 
-export const getMessageOfConversationById = async (id) => {
+export const getMessageOfConversationById = async (id, before = '', after = '') => {
     try {
-        const res = await axios.get(`/conversations/message/${id}`);
+        const res = await axios.get(`/conversations/message/${id}?before=${before}&after=${after}`);
         return res?.data;
     } catch (error) {
         throw new Error(error || 'Failed to get conversation');
@@ -70,6 +70,24 @@ export const getConversationByName = async (name) => {
 export const searchMessageOfConversation = async (id, query) => {
     try {
         const res = await axios.get(`/conversations/message/${id}/search?query=${query}`);
+        return res?.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to search conversation');
+    }
+};
+
+export const deleteUserFromConversation = async (groupId, deleteUserId) => {
+    try {
+        const res = await axios.post(`/conversations/group/${groupId}/delete-user`, { userId: deleteUserId });
+        return res?.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to search conversation');
+    }
+};
+
+export const changeUserRoleInConversation = async (groupId, data) => {
+    try {
+        const res = await axios.post(`/conversations/group/${groupId}/change-role`, data);
         return res?.data;
     } catch (error) {
         throw new Error(error || 'Failed to search conversation');

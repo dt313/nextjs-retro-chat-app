@@ -1,4 +1,11 @@
-import { REPLY_ATTACHMENT, REPLY_IMAGE_ATTACHMENT, REPLY_MESSAGE } from '@/config/types';
+import {
+    CONVERSATION_PARTICIPANT_ROLE_ADMIN,
+    CONVERSATION_PARTICIPANT_ROLE_CREATOR,
+    CONVERSATION_PARTICIPANT_ROLE_MEMBER,
+    REPLY_ATTACHMENT,
+    REPLY_IMAGE_ATTACHMENT,
+    REPLY_MESSAGE,
+} from '@/config/types';
 
 export function getNameFromConversation(conversation, meId) {
     if (conversation && conversation.isGroup === true) {
@@ -58,7 +65,7 @@ export const getReplyType = (type) => {
             return REPLY_MESSAGE;
         case 'file':
             return REPLY_ATTACHMENT;
-        case 'images':
+        case 'image':
             return REPLY_IMAGE_ATTACHMENT;
         default:
             return null;
@@ -92,5 +99,18 @@ export const getReplyLabelName = (data, sender, meId) => {
         } else {
             return `${sender.fullName} đã trả lời bạn ${data.firstName}`;
         }
+    }
+};
+
+export const getUserRole = (role) => {
+    switch (role) {
+        case CONVERSATION_PARTICIPANT_ROLE_CREATOR:
+            return 'Chủ nhóm';
+        case CONVERSATION_PARTICIPANT_ROLE_ADMIN:
+            return 'Quản trị viên';
+        case CONVERSATION_PARTICIPANT_ROLE_MEMBER:
+            return 'Thành viên';
+        default:
+            return 'Thành viên';
     }
 };

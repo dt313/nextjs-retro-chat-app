@@ -29,6 +29,7 @@ import eventBus from '@/config/emit';
 import MessageForward from '../message-forward';
 import SettingBox from '../setting-box';
 import Overlay from '../overlay';
+import { useRouter } from 'next/navigation';
 
 const cx = classNames.bind(styles);
 
@@ -42,6 +43,8 @@ function Message({
     replyData = {},
     reactions = [],
     isForward = true,
+    isDeleted = false,
+    isHighlight = false,
 }) {
     const [visibility, setVisibility] = useState({
         time: false,
@@ -52,8 +55,10 @@ function Message({
         delete: false,
     });
 
+    const [isDelete, setIsDelete] = useState(isDeleted);
     const [reactionsList, setReactionsList] = useState(reactions);
     const { user: me } = useSelector((state) => state.auth);
+    const router = useRouter();
 
     const dispatch = useDispatch();
 
@@ -94,6 +99,13 @@ function Message({
     };
 
     const renderMessage = () => {
+        if (isDelete) {
+            return (
+                <p className={cx('m-text', 'delete-message')}>
+                    {me._id === sender?._id ? 'Bạn' : sender.fullName} đã xóa tin nhắn này
+                </p>
+            );
+        }
         if (type === 'text') {
             const formattedContent = content?.split('\n').map((line, index) => (
                 <Fragment key={index}>
@@ -102,7 +114,12 @@ function Message({
                 </Fragment>
             ));
             return (
-                <p className={cx('m-text')} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                <p
+                    className={cx('m-text', { highlight: isHighlight })}
+                    id={`message-${id}`}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                >
                     {formattedContent}
                 </p>
             );
@@ -110,8 +127,13 @@ function Message({
 
         if (type === 'file') {
             return (
-                <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-                    <File className={cx('m-file')} primary name={content.name} size={content.size} />
+                <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} id={`message-${id}`}>
+                    <File
+                        className={cx('m-file', { highlight: isHighlight })}
+                        primary
+                        name={content.name}
+                        size={content.size}
+                    />
                 </div>
             );
         }
@@ -128,13 +150,14 @@ function Message({
                     })}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
+                    id={`message-${id}`}
                 >
                     {content?.length > 0 &&
                         content.map((im) => {
                             return (
                                 <AImage
                                     key={im._id}
-                                    className={cx('m-image')}
+                                    className={cx('m-image', { highlight: isHighlight })}
                                     src={im.url}
                                     alt={im.name}
                                     width={200}
@@ -189,7 +212,7 @@ function Message({
         }
     };
 
-    const handleCancelReaction = async (id) => {
+    const handleCancelReaction = async () => {
         try {
             const res = await messageService.cancelReaction(id);
             if (res) {
@@ -199,6 +222,18 @@ function Message({
 
             if (res) {
                 addOrChangeReaction(res);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleDeleteMessage = async () => {
+        try {
+            const res = await messageService.deleteMessage(type, id);
+            if (res) {
+                setIsDelete(true);
+                setVisibility((prev) => ({ ...prev, delete: false }));
             }
         } catch (error) {
             console.log(error);
@@ -232,7 +267,7 @@ function Message({
                 {!(sender._id === me._id) && <Avatar src={sender?.avatar} className={cx('avatar')} size={36} />}
                 {renderMessage()}
 
-                {visibility.tools ? (
+                {visibility.tools && !isDelete ? (
                     <div className={cx('tools')}>
                         <HeadlessTippy
                             visible={visibility.reaction}
@@ -275,12 +310,14 @@ function Message({
                                         >
                                             Chuyển tiếp
                                         </span>
-                                        <span
-                                            className={cx('more-item')}
-                                            onClick={() => setVisibility((prev) => ({ ...prev, delete: true }))}
-                                        >
-                                            Xóa
-                                        </span>
+                                        {me._id === sender._id && (
+                                            <span
+                                                className={cx('more-item')}
+                                                onClick={() => setVisibility((prev) => ({ ...prev, delete: true }))}
+                                            >
+                                                Xóa
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
                             )}
@@ -298,11 +335,11 @@ function Message({
                     <div className={cx('tools')}></div>
                 )}
                 {visibility.time && <span className={cx('time')}>{calculateTime(timestamp)}</span>}
-                {reactionsList?.length > 0 && (
+                {reactionsList?.length > 0 && !isDelete && (
                     <div
                         className={cx('reactions', {
-                            imageReactions2: type === 'images' && content?.length === 2,
-                            imageReactions3: type === 'images' && content?.length === 3,
+                            imageReactions2: type === 'image' && content?.length === 2,
+                            imageReactions3: type === 'image' && content?.length === 3,
                         })}
                     >
                         {
@@ -315,18 +352,18 @@ function Message({
                     </div>
                 )}
             </div>
-
-            {replyData && replyData?.replyType && (
+            {replyData && replyData?.replyType && !isDelete && (
                 <div className={cx('reply-message')}>
                     <p className={cx('reply-label')}>
                         <Icon className={cx('reply-icon')} element={<RiReplyFill />} />
                         {getReplyLabelName(replyData.replyTo.sender, sender, me._id)}
                     </p>
-                    <p className={cx('reply-content')}>{getReplyContent(replyData)}</p>
+                    <p className={cx('reply-content')} onClick={() => router.push(`?message=${replyData.id}`)}>
+                        {getReplyContent(replyData)}
+                    </p>
                 </div>
             )}
-
-            {isForward && !replyData && sender._id === me._id && (
+            {isForward && sender._id === me._id && !isDelete && (
                 <div className={cx('reply-message')}>
                     <p className={cx('reply-label')}>
                         <Icon className={cx('reply-icon')} element={<ImArrowRight />} />
@@ -334,7 +371,6 @@ function Message({
                     </p>
                 </div>
             )}
-
             {visibility.forward && (
                 <MessageForward
                     messageId={id}
@@ -342,7 +378,6 @@ function Message({
                     onClose={() => setVisibility((prev) => ({ ...prev, forward: false }))}
                 />
             )}
-
             {visibility.delete && (
                 <Overlay onClick={() => setVisibility((prev) => ({ ...prev, delete: false }))}>
                     <div onClick={(e) => e.stopPropagation()}>
@@ -354,6 +389,7 @@ function Message({
                                 type: 'delete',
                                 description: 'Bạn có chắc chắn muốn xóa tin nhắn này không ?',
                             }}
+                            handleSubmit={handleDeleteMessage}
                         />
                     </div>
                 </Overlay>

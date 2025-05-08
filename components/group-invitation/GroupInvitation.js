@@ -15,10 +15,11 @@ const cx = classNames.bind(styles);
 
 function GroupInvitation({ onClose, id }) {
     const [list, setList] = useState([]);
+    const [value, setValue] = useState('');
     const dispatch = useDispatch();
-    const fetchUser = async () => {
+    const fetchUser = async (value) => {
         try {
-            const res = await groupService.getInvitationUsers(id);
+            const res = await groupService.getInvitationUsers(id, value);
             if (res) setList(res);
         } catch (error) {
             console.log(error);
@@ -26,8 +27,8 @@ function GroupInvitation({ onClose, id }) {
     };
 
     useEffect(() => {
-        fetchUser();
-    }, []);
+        fetchUser(value);
+    }, [value]);
 
     const handleInvitation = async (userId) => {
         try {
@@ -60,6 +61,10 @@ function GroupInvitation({ onClose, id }) {
         }
     };
 
+    const handleOnChange = async (e) => {
+        setValue(e.target.value);
+    };
+
     return (
         <Overlay className={cx('wrapper')} onClick={onClose}>
             <div className={cx('container')} onClick={(e) => e.stopPropagation()}>
@@ -70,7 +75,12 @@ function GroupInvitation({ onClose, id }) {
 
                 <div className={cx('search')}>
                     <Icon className={cx('search-icon')} element={<IoSearch />} medium />
-                    <input className={cx('search-input')} placeholder="Search member" />
+                    <input
+                        className={cx('search-input')}
+                        placeholder="Search member"
+                        value={value}
+                        onChange={handleOnChange}
+                    />
                 </div>
 
                 <div className={cx('list')}>

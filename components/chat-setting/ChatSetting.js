@@ -70,6 +70,14 @@ function ChatSetting({ isGroup }) {
             description: 'Chỉnh sửa hình nền của đoạn chat của bạn',
         },
         {
+            id: 3,
+            name: 'Cài đặt mật khẩu',
+            icon: <IoIosImages />,
+            type: 'text',
+            description:
+                'Chỉnh sửa mật khẩu để tăng tính riêng tư của nhóm. Chỉ những người có mật khẩu mới có thể tham gia vào nhóm',
+        },
+        {
             id: 4,
             name: 'Xóa cuộc trò chuyện',
             icon: <MdDelete />,

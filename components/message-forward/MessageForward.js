@@ -13,19 +13,20 @@ const cx = classNames.bind(styles);
 
 function MessageForward({ messageId, messageType, onClose }) {
     const [list, setList] = useState([]);
+    const [value, setValue] = useState('');
 
     const dispatch = useDispatch();
-    const fetchFriends = async () => {
+    const fetchFriends = async (value) => {
         try {
-            const res = await userService.getFriends();
+            const res = await userService.getFriends(value);
             if (res) setList(res);
         } catch (error) {
             console.log(error);
         }
     };
     useEffect(() => {
-        fetchFriends();
-    }, []);
+        fetchFriends(value);
+    }, [value]);
 
     const handleForwardMessage = async (userId) => {
         try {
@@ -45,6 +46,10 @@ function MessageForward({ messageId, messageType, onClose }) {
         }
     };
 
+    const handleOnChange = (e) => {
+        setValue(e.target.value);
+    };
+
     return (
         <Overlay className={cx('wrapper')} onClick={onClose}>
             <div className={cx('container')} onClick={(e) => e.stopPropagation()}>
@@ -55,7 +60,12 @@ function MessageForward({ messageId, messageType, onClose }) {
 
                 <div className={cx('search')}>
                     <Icon className={cx('search-icon')} element={<IoSearch />} medium />
-                    <input className={cx('search-input')} placeholder="Search member" />
+                    <input
+                        className={cx('search-input')}
+                        placeholder="Search member"
+                        value={value}
+                        onChange={handleOnChange}
+                    />
                 </div>
 
                 <div className={cx('list')}>

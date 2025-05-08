@@ -23,6 +23,7 @@ import eventBus from '@/config/emit';
 import { getAvatarFromConversation, getNameFromConversation } from '@/helpers';
 import { addToast } from '@/redux/actions/toast-action';
 import { readLastMessage } from '@/redux/actions/conversations-action';
+import { before } from 'lodash';
 
 const cx = classNames.bind(styles);
 
@@ -31,13 +32,13 @@ function Conversation({ id }) {
     const [isShowLeft, setIsShowLeft] = useState(false);
     const [isShowContent, setIsShowContent] = useState(false);
 
+    const [isFinish, setIsFinish] = useState(false);
+
     const [conversation, setConversation] = useState(null);
     const [messagesList, setMessageList] = useState([]);
 
     const searchParams = useSearchParams();
     const searchMessageId = searchParams.get('message');
-
-    console.log(searchMessageId);
 
     const { user: me } = useSelector((state) => state.auth);
     const { list } = useSelector((state) => state.conversations);
@@ -59,7 +60,7 @@ function Conversation({ id }) {
 
             const messages = await conversationService.getMessageOfConversationById(id);
             if (messages) {
-                setMessageList(messages);
+                setMessageList(messages.reverse());
             }
         } catch (error) {
             dispatch(addToast({ type: 'error', content: error.message }));
@@ -172,6 +173,27 @@ function Conversation({ id }) {
         setIsShowRight(false);
     };
 
+    const handleLoadMoreMessage = async () => {
+        try {
+            if (!isFinish && messagesList.length > 0) {
+                const oldestMessage = messagesList[0];
+                console.log('oldest ', oldestMessage);
+                const before = oldestMessage.createdAt;
+                const messages = await conversationService.getMessageOfConversationById(id, before);
+                if (messages.length === 0) {
+                    setIsFinish(true);
+                }
+                if (messages) {
+                    setMessageList((prev) => [...messages.reverse(), ...prev]);
+                }
+            } else {
+                return;
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('left-side', isShowLeft ? 'show' : 'hide')}>
@@ -202,7 +224,13 @@ function Conversation({ id }) {
                         <Icon className={cx('dots-icon')} element={<BsThreeDots />} onClick={toggleRightSide} />
                     </div>
                     <div className={cx('c-content')} onClick={handleReadLastMessage}>
-                        <MessageBox list={messagesList} conversationId={id} searchMessageId={searchMessageId} />
+                        <MessageBox
+                            list={messagesList}
+                            conversationId={id}
+                            searchMessageId={searchMessageId}
+                            onLoadMore={handleLoadMoreMessage}
+                            isFinish={isFinish}
+                        />
                         {isOpenReplyBox && (
                             <div className={cx('reply-box')}>
                                 <div className={cx('reply-content')}>

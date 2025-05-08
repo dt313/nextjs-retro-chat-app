@@ -40,6 +40,17 @@
     word-break: break-word;
 }
 
+.highlight {
+    border: 2px solid var(--red) !important;
+    box-shadow: var(--red) 3px 3px !important;
+}
+
+.delete-message {
+    box-shadow: var(--box-shadow);
+    background-color: #b9b9b9 !important;
+    word-break: break-word;
+}
+
 .imagesStack {
     max-width: 200px;
     height: fit-content;

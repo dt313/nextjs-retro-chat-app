@@ -27,11 +27,20 @@ export const joinGroup = async (id, data) => {
     }
 };
 
-export const getInvitationUsers = async (groupId) => {
+export const getInvitationUsers = async (groupId, searchValue) => {
     try {
-        const res = await axios.get(`/groups/invitation-users/${groupId}`);
+        const res = await axios.get(`/groups/invitation-users/${groupId}?name=${searchValue}`);
         return res?.data;
     } catch (error) {
         throw new Error(error || 'Failed to fetch invitation users');
+    }
+};
+
+export const getMembersOfGroup = async (groupId, name) => {
+    try {
+        const res = await axios.get(`/groups/${groupId}/members?name=${name}`);
+        return res?.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to fetch members of group');
     }
 };

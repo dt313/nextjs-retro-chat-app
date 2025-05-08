@@ -39,3 +39,12 @@ export const forwardMessage = async (messageId, data) => {
         throw new Error(error || 'Failed to forward message');
     }
 };
+
+export const deleteMessage = async (messageType, messageId) => {
+    try {
+        const res = await axios.delete(`/messages/${messageType}/${messageId}`);
+        return res?.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to delete message');
+    }
+};

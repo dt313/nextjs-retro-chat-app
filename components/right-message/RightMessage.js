@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
@@ -32,9 +32,16 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
     const [isShowInvitation, setIsShowInvitation] = useState(false);
     const [simValue, setSimValue] = useState('');
     const [simList, setSimList] = useState([]);
+
     const breakpoint = useBreakpoint();
     const router = useRouter();
     const { user: me } = useSelector((state) => state.auth);
+
+    const meRole = useMemo(() => {
+        return data?.participants?.find((u) => u.user._id === me._id)?.role;
+    }, [data?.participants, me._id]);
+
+    console.log('merole ', meRole);
 
     const INFORMATION = [
         {
@@ -122,21 +129,25 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
                 )}
             </div>
 
-            <div className={cx('attachments')}>
+            <div className={cx('details')}>
                 {isGroup && (
                     <Details label="Members">
-                        <GroupMembers list={data?.participants} />
+                        <GroupMembers groupId={data?._id} meRole={meRole} />
                     </Details>
                 )}
+
                 <Details label="chat setting">
                     <ChatSetting isGroup={data?.isGroup} />
                 </Details>
+
                 <Details label="File, Attachment">
                     <AttachFile conversationId={data?._id} />
                 </Details>
                 <Details label="Images">
                     <AttachImages conversationId={data?._id} />
                 </Details>
+
+                <button className={cx('leave-btn')}>Rời nhóm</button>
             </div>
             {isShowSearch && (
                 <div className={cx('search-in-message')}>

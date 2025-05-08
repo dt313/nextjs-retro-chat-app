@@ -9,6 +9,9 @@ import { invitationService } from '@/services';
 import { IoSettings } from 'react-icons/io5';
 
 import {
+    NOTIFICATION_REMOVE_FROM_CONVERSATION,
+    NOTIFICATION_CHANGE_ADMIN_ROLE,
+    NOTIFICATION_CHANGE_MEMBER_ROLE,
     NOTIFICATION_FRIEND_REQUEST,
     NOTIFICATION_FRIEND_ACCEPTED,
     NOTIFICATION_GROUP_INVITATION,
@@ -216,7 +219,31 @@ function NotifyBox({ list = [] }) {
                         </p>
                     </div>
                 );
+            case NOTIFICATION_REMOVE_FROM_CONVERSATION:
+                return (
+                    <div className={cx('text-notify')}>
+                        <p className={cx('qb-content')}>
+                            Bạn bị kick khỏi nhóm <strong className={cx('name')}>{group.name}</strong>
+                        </p>
+                    </div>
+                );
 
+            case NOTIFICATION_CHANGE_ADMIN_ROLE:
+                return (
+                    <div className={cx('text-notify')}>
+                        <p className={cx('qb-content')}>
+                            Bạn được cấp quyền quản trị viên nhóm <strong className={cx('name')}>{group.name}</strong>
+                        </p>
+                    </div>
+                );
+            case NOTIFICATION_CHANGE_MEMBER_ROLE:
+                return (
+                    <div className={cx('text-notify')}>
+                        <p className={cx('qb-content')}>
+                            Bạn bị gỡ quyền quản trị viên nhóm <strong className={cx('name')}>{group.name}</strong>
+                        </p>
+                    </div>
+                );
             default:
                 return '';
         }
@@ -234,7 +261,11 @@ function NotifyBox({ list = [] }) {
                     return (
                         <NotificationItem
                             key={item._id}
-                            avatar={item?.sender?.avatar}
+                            avatar={
+                                item.type === NOTIFICATION_REMOVE_FROM_CONVERSATION
+                                    ? item.group.thumbnail
+                                    : item?.sender?.avatar
+                            }
                             render={() => renderNotificationContent(item)}
                             time={item?.createdAt}
                         />
