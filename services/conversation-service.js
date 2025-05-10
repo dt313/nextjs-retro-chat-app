@@ -93,3 +93,12 @@ export const changeUserRoleInConversation = async (groupId, data) => {
         throw new Error(error || 'Failed to search conversation');
     }
 };
+
+export const leaveGroup = async (groupId) => {
+    try {
+        const res = await axios.post(`/conversations/group/${groupId}/leave`);
+        return res?.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to search conversation');
+    }
+};

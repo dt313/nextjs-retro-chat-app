@@ -1,7 +1,10 @@
 import classNames from 'classnames/bind';
-import styles from './AttachFile.module.scss';
-import Icon from '../icon';
+
 import { FaFileLines } from 'react-icons/fa6';
+
+import Icon from '../icon';
+import styles from './AttachFile.module.scss';
+
 const cx = classNames.bind(styles);
 
 function File({ name, size, secondary, primary, className, onClick }) {

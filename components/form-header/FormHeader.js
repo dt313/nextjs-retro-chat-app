@@ -1,6 +1,8 @@
 import classNames from 'classnames/bind';
-import styles from './FormHeader.module.scss';
+
 import MessageIcon from '@/components/message-icon';
+
+import styles from './FormHeader.module.scss';
 
 const cx = classNames.bind(styles);
 

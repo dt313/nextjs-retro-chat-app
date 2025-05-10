@@ -1,4 +1,4 @@
-import { OPEN_IMG_PREVIEW, CLOSE_IMG_PREVIEW } from '../actions/img-preview-action';
+import { CLOSE_IMG_PREVIEW, OPEN_IMG_PREVIEW } from '../actions/img-preview-action';
 
 const initialState = {
     isOpen: false,

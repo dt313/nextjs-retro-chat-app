@@ -1,7 +1,10 @@
 import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
-import styles from './InputSearch.module.scss';
+
 import Icon from '../icon';
+import styles from './InputSearch.module.scss';
+
 const cx = classNames.bind(styles);
 
 function InputSearch({ value = '', placeholder = 'Type here', onChange, leftIcon, rightIcon, className }) {

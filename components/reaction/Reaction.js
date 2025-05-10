@@ -1,13 +1,7 @@
 import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
-import styles from './Reaction.module.scss';
-import Like from '@/assets/svg/emoji/like';
-import Haha from '@/assets/svg/emoji/haha';
-import Angry from '@/assets/svg/emoji/angry';
-import Love from '@/assets/svg/emoji/love';
-import Sad from '@/assets/svg/emoji/sad';
-import Wow from '@/assets/svg/emoji/wow';
-import Care from '@/assets/svg/emoji/care';
+
 import {
     REACTION_TYPE_ANGRY,
     REACTION_TYPE_CARE,
@@ -17,6 +11,17 @@ import {
     REACTION_TYPE_SAD,
     REACTION_TYPE_WOW,
 } from '@/config/types';
+
+import Angry from '@/assets/svg/emoji/angry';
+import Care from '@/assets/svg/emoji/care';
+import Haha from '@/assets/svg/emoji/haha';
+import Like from '@/assets/svg/emoji/like';
+import Love from '@/assets/svg/emoji/love';
+import Sad from '@/assets/svg/emoji/sad';
+import Wow from '@/assets/svg/emoji/wow';
+
+import styles from './Reaction.module.scss';
+
 const cx = classNames.bind(styles);
 function Reaction({ onClick, theme = 'dark' }) {
     return (

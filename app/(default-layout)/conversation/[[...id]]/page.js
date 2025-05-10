@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+
 import Conversation from './conversation';
 
 async function Page({ params }) {

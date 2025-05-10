@@ -1,4 +1,4 @@
-import { OPEN_REPLY_BOX, CLOSE_REPLY_BOX } from '../actions/reply-box-action';
+import { CLOSE_REPLY_BOX, OPEN_REPLY_BOX } from '../actions/reply-box-action';
 
 const initialState = {
     isOpenReplyBox: false,

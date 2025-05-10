@@ -1,10 +1,17 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
 import classNames from 'classnames/bind';
-import styles from './AttachImages.module.scss';
-import Image from '@/components/image';
-import { attachmentService } from '@/services';
+
 import { useDispatch } from 'react-redux';
+
+import Image from '@/components/image';
+
+import { attachmentService } from '@/services';
+
 import { openImgPreview } from '@/redux/actions/img-preview-action';
+
+import styles from './AttachImages.module.scss';
+
 const cx = classNames.bind(styles);
 
 function AttachImages({ conversationId }) {

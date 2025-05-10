@@ -1,17 +1,26 @@
 'use client';
+
+import { useEffect } from 'react';
+
 import classNames from 'classnames/bind';
-import styles from './AuthFormWrap.module.scss';
+
+import { initSocket } from '@/config/ws';
+import { useDispatch, useSelector } from 'react-redux';
+
 import AuthForm from '@/components/auth-form';
 import Overlay from '@/components/overlay';
-import { useSelector, useDispatch } from 'react-redux';
-import { closeAuthBox } from '@/redux/actions/auth-box-action';
-import { setOffline, setOnline } from '@/redux/actions/status-action';
-import CloseIcon from '../close-icon';
-import { useEffect } from 'react';
-import { getSocket, initSocket } from '@/config/ws';
-import { storageUtils } from '@/utils';
+
 import { notificationService } from '@/services';
-import { getAllNotifications } from '@/redux/actions/notification-action';
+
+import { storageUtils } from '@/utils';
+
+import { login } from '@/redux/actions/auth-action';
+import { closeAuthBox } from '@/redux/actions/auth-box-action';
+import { initNotifications } from '@/redux/actions/notification-action';
+import { setOffline, setOnline } from '@/redux/actions/status-action';
+
+import CloseIcon from '../close-icon';
+import styles from './AuthFormWrap.module.scss';
 
 const cx = classNames.bind(styles);
 
@@ -24,12 +33,14 @@ function AuthFormWrap() {
         if (!user) return;
         const res = await notificationService.getAllNotifications(user._id);
         if (!!res && Array.isArray(res)) {
-            dispatch(getAllNotifications(res));
+            dispatch(initNotifications(res));
         }
     };
+
     useEffect(() => {
         if (isAuthenticated) {
             const token = storageUtils.getAccessToken();
+
             initSocket(token);
             dispatch(setOnline());
             fetchNotifications();
@@ -37,6 +48,12 @@ function AuthFormWrap() {
             dispatch(setOffline());
         }
     }, [isAuthenticated, user]);
+
+    useEffect(() => {
+        const user = storageUtils.getUser();
+        const token = storageUtils.getAccessToken();
+        if (user) dispatch(login({ accessToken: token, user: user }));
+    }, []);
 
     if (!authBox.isOpen) return null;
 

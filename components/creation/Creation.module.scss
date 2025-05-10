@@ -54,6 +54,11 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
+    padding: 0 24px;
+
+    @include respond-to('mobile') {
+        padding: 0;
+    }
 }
 
 .image-input {

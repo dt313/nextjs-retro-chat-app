@@ -1,6 +1,5 @@
 @use '/app/scss/mixins.scss' as *;
 .wrapper {
-    max-width: 360px;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -20,13 +19,80 @@
     background-color: #ededed;
     border: 2px solid #d2d2d2;
     padding: 12px 20px;
-    font-size: 1.5rem;
+    font-size: 1.6rem;
+    font-weight: 400;
     font-family: var(--font-family);
     outline: none;
+    transition: border-color 0.2s ease-in-out;
+
+    &:focus {
+        border-color: #3db8a7;
+    }
 }
 
 .textarea {
     max-width: 100%;
     height: 100px;
     border-radius: 12px;
+    font-size: 1.5rem;
+
+    &:focus {
+        border-color: #3db8a7;
+    }
+}
+
+.code-input-wrapper {
+    width: 100%;
+    background-color: #ededed;
+    border: 2px solid #d2d2d2;
+    display: flex;
+    border-radius: 10rem;
+
+    .code-input {
+        flex: 1;
+        padding: 12px 20px;
+        font-size: 1.6rem;
+        font-weight: 400;
+        border-radius: 10rem;
+        border: none;
+        outline: none;
+        background-color: transparent;
+    }
+
+    .code-send-btn {
+        max-width: 120px;
+        min-width: 100px;
+        width: 100%;
+        border: none;
+        width: 100%;
+        background-image: linear-gradient(-60deg, #ff5858 0%, #f09819 100%);
+        border-radius: 10rem;
+        font-weight: 500;
+        font-size: 1.5rem;
+        font-family: var(--font-family);
+        cursor: pointer;
+    }
+
+    .code-send-btn:hover {
+        opacity: 0.8;
+    }
+}
+
+.focusBorder {
+    border-color: #3db8a7;
+}
+
+.disable {
+    background-color: #d2d2d2;
+    opacity: 0.8;
+
+    .code-send-btn {
+        background-image: unset;
+        background-color: #bebebe;
+        opacity: 0.8;
+    }
+
+    .code-send-btn {
+        cursor: no-drop;
+    }
 }

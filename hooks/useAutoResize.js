@@ -1,5 +1,6 @@
 'use client';
-import { useRef, useEffect } from 'react';
+
+import { useEffect, useRef } from 'react';
 
 function useAutoResize(value) {
     const ref = useRef();

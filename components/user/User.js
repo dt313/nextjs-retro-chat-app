@@ -1,13 +1,18 @@
+import { useState } from 'react';
+
 import classNames from 'classnames/bind';
-import styles from './User.module.scss';
-import Avatar from '@/components/avatar';
-import { FiUserPlus } from 'react-icons/fi';
-import { FaFacebookMessenger } from 'react-icons/fa';
-import { MdOutlineGroupAdd } from 'react-icons/md';
+
 import { BsSendCheckFill } from 'react-icons/bs';
 import { BsSend } from 'react-icons/bs';
+import { FaFacebookMessenger } from 'react-icons/fa';
+import { FiUserPlus } from 'react-icons/fi';
+import { MdOutlineGroupAdd } from 'react-icons/md';
+
+import Avatar from '@/components/avatar';
 import Icon from '@/components/icon';
-import { useState } from 'react';
+
+import styles from './User.module.scss';
+
 const cx = classNames.bind(styles);
 
 function User({

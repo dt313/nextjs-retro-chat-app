@@ -1,5 +1,7 @@
-import { INIT_CONVERSATION, NEW_CONVERSATION, READ_LAST_MESSAGE } from '../actions/conversations-action';
 import _ from 'lodash';
+
+import { INIT_CONVERSATION, NEW_CONVERSATION, READ_LAST_MESSAGE } from '../actions/conversations-action';
+
 const initialState = {
     list: [],
 };

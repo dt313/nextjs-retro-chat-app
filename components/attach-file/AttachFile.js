@@ -1,9 +1,14 @@
+import { useEffect, useState } from 'react';
+
 import classNames from 'classnames/bind';
+
+import axios from 'axios';
+
+import { attachmentService } from '@/services';
+
 import styles from './AttachFile.module.scss';
 import File from './File';
-import { attachmentService } from '@/services';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+
 const cx = classNames.bind(styles);
 
 function AttachFile({ conversationId }) {

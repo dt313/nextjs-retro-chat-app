@@ -3,7 +3,7 @@ export const ADD_NOTIFICATION = 'ADD_NOTIFICATION';
 export const READ_NOTIFICATION = 'READ_NOTIFICATION';
 export const CHANGE_TYPE_NOTIFICATION = 'CHANGE_TYPE_NOTIFICATION';
 
-export const getAllNotifications = (payload) => {
+export const initNotifications = (payload) => {
     return {
         type: GET_ALL_NOTIFICATION,
         payload: payload,

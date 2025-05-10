@@ -1,12 +1,19 @@
 'use client';
+
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+
 import classNames from 'classnames/bind';
-import styles from './LeftMessage.module.scss';
+
+import eventBus from '@/config/emit';
+import _ from 'lodash';
 import { FiSearch } from 'react-icons/fi';
-import InputSearch from '@/components/input-search';
+import { useDispatch, useSelector } from 'react-redux';
+
 import ConversationPreview from '@/components/conversation-preview';
+import InputSearch from '@/components/input-search';
+
 import { conversationService } from '@/services';
+
 import {
     calculateTime,
     checkIsRead,
@@ -14,9 +21,10 @@ import {
     getLastMessageContent,
     getNameFromConversation,
 } from '@/helpers';
-import eventBus from '@/config/emit';
+
 import { initConversation, newConversation } from '@/redux/actions/conversations-action';
-import _ from 'lodash';
+
+import styles from './LeftMessage.module.scss';
 
 const cx = classNames.bind(styles);
 

@@ -1,9 +1,10 @@
-import { LOGIN, LOGOUT } from '../actions/auth-action';
 import { storageUtils } from '@/utils';
 
+import { LOGIN, LOGOUT } from '../actions/auth-action';
+
 const initialState = {
-    isAuthenticated: !!storageUtils.getAccessToken() ? true : false,
-    user: storageUtils.getUser() || {},
+    isAuthenticated: false,
+    user: {},
 };
 
 const authBoxReducer = (state = initialState, action) => {

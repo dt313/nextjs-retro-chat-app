@@ -1,35 +1,41 @@
-import { Fragment, useState, useEffect, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import Tippy from '@tippyjs/react';
-import classNames from 'classnames/bind';
-import styles from './Message.module.scss';
+import { Fragment, useEffect, useState } from 'react';
 
-import Avatar from '../avatar';
-import File from '../attach-file/File';
-import AImage from '../image';
-import { RxFace } from 'react-icons/rx';
+import classNames from 'classnames/bind';
+
+import eventBus from '@/config/emit';
+import { images } from '@/config/ui-config';
+import Tippy from '@tippyjs/react';
+import HeadlessTippy from '@tippyjs/react/headless';
+import { useRouter } from 'next/navigation';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { ImArrowRight } from 'react-icons/im';
 import { IoArrowUndo } from 'react-icons/io5';
 import { RiReplyFill } from 'react-icons/ri';
-import { ImArrowRight } from 'react-icons/im';
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import Icon from '../icon';
-import { openReplyBox, closeReplyBox } from '@/redux/actions/reply-box-action';
-import HeadlessTippy from '@tippyjs/react/headless';
-import ReactionButton from '@/components/reaction-button';
-import Reaction from '@/components/reaction';
-import { images } from '@/config/ui-config';
-import { openImgPreview } from '@/redux/actions/img-preview-action';
-import { calculateTime } from '@/helpers';
-
+import { RxFace } from 'react-icons/rx';
+import { useDispatch, useSelector } from 'react-redux';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light.css';
-import { getReplyContent, getReplyLabelName, getReplyType } from '@/helpers/conversation-info';
+
+import File from '@/components/attach-file/File';
+import Avatar from '@/components/avatar';
+import Icon from '@/components/icon';
+import AImage from '@/components/image';
+import MessageForward from '@/components/message-forward';
+import Overlay from '@/components/overlay';
+import Reaction from '@/components/reaction';
+import ReactionButton from '@/components/reaction-button';
+import SettingBox from '@/components/setting-box';
+
 import { messageService } from '@/services';
-import eventBus from '@/config/emit';
-import MessageForward from '../message-forward';
-import SettingBox from '../setting-box';
-import Overlay from '../overlay';
-import { useRouter } from 'next/navigation';
+
+import { getReplyContent, getReplyLabelName, getReplyType } from '@/helpers/conversation-info';
+
+import { calculateTime } from '@/helpers';
+
+import { openImgPreview } from '@/redux/actions/img-preview-action';
+import { closeReplyBox, openReplyBox } from '@/redux/actions/reply-box-action';
+
+import styles from './Message.module.scss';
 
 const cx = classNames.bind(styles);
 
@@ -212,9 +218,9 @@ function Message({
         }
     };
 
-    const handleCancelReaction = async () => {
+    const handleCancelReaction = async (reactionId) => {
         try {
-            const res = await messageService.cancelReaction(id);
+            const res = await messageService.cancelReaction(reactionId);
             if (res) {
                 const newReactions = reactionsList.filter((r) => r.user._id !== me._id);
                 setReactionsList(newReactions);
@@ -304,6 +310,7 @@ function Message({
                             render={(attrs) => (
                                 <div className={cx('box')} tabIndex="-1" {...attrs}>
                                     <div className={cx('more-menu')}>
+                                        <span className={cx('more-item')}>Ghim</span>
                                         <span
                                             className={cx('more-item')}
                                             onClick={() => setVisibility((prev) => ({ ...prev, forward: true }))}

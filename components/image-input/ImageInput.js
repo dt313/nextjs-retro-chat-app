@@ -1,10 +1,12 @@
 import { useRef, useState } from 'react';
+
 import classNames from 'classnames/bind';
-import styles from './ImageInput.module.scss';
+
+import { IoMdCloudUpload } from 'react-icons/io';
 
 import Icon from '@/components/icon';
 
-import { IoMdCloudUpload } from 'react-icons/io';
+import styles from './ImageInput.module.scss';
 
 const cx = classNames.bind(styles);
 

@@ -1,16 +1,22 @@
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+
 import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
-import styles from './AuthWithPassword.module.scss';
+
+import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
 
 import Input from '@/components/input';
-import SubmitButton from './SubmitButton';
 
-import { REGISTER_AUTH_BOX, LOGIN_AUTH_BOX, openAuthBox, closeAuthBox } from '@/redux/actions/auth-box-action';
-import { login } from '@/redux/actions/auth-action';
 import { authService } from '@/services';
-import { useDispatch } from 'react-redux';
+
+import { login } from '@/redux/actions/auth-action';
+import { LOGIN_AUTH_BOX, REGISTER_AUTH_BOX, closeAuthBox, openAuthBox } from '@/redux/actions/auth-box-action';
+
+import CodeInput from '../input/CodeInput';
+import styles from './AuthWithPassword.module.scss';
+import SubmitButton from './SubmitButton';
 
 const cx = classNames.bind(styles);
 
@@ -20,6 +26,7 @@ function AuthWithPassword({ type }) {
         email: '',
         password: '',
         fullName: '',
+        code: '',
     });
 
     const dispatch = useDispatch();
@@ -82,11 +89,18 @@ function AuthWithPassword({ type }) {
             <Input
                 value={authData.password}
                 name="password"
+                type="password"
                 onChange={handleChangeAuthData}
                 placeholder="Nhập password"
             />
             {type === REGISTER_AUTH_BOX && (
-                <Input value={authData.password} onChange={handleChangeAuthData} placeholder="Mã xác nhận" />
+                <CodeInput
+                    placeholder="Nhập mã xác nhận"
+                    // disable
+                    name="code"
+                    value={authData.code}
+                    onChange={handleChangeAuthData}
+                />
             )}
             <SubmitButton className={cx('submit-btn')} onClick={handleSubmit}>
                 {type}

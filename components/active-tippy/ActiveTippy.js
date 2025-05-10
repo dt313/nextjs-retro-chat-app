@@ -1,10 +1,15 @@
-import PropTypes from 'prop-types';
-import Tippy from '@tippyjs/react/headless';
-import styles from './ActiveTippy.module.scss';
-import classNames from 'classnames/bind';
 import { useState } from 'react';
+
+import PropTypes from 'prop-types';
+
+import classNames from 'classnames/bind';
+
+import Tippy from '@tippyjs/react/headless';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light.css';
+
+import styles from './ActiveTippy.module.scss';
+
 const cx = classNames.bind(styles);
 function ActiveTippy({ children, tippy, ...props }) {
     const [visible, setVisible] = useState(false);

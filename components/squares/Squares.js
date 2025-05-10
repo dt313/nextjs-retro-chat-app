@@ -1,7 +1,9 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+
 import classNames from 'classnames/bind';
+
 import styles from './Square.module.scss';
 
 const cx = classNames.bind(styles);

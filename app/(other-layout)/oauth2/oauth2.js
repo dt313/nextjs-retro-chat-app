@@ -1,10 +1,15 @@
 'use client';
+
 import { Suspense, useEffect } from 'react';
-import { userService } from '@/services';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
+
 import axios from 'axios';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+
+import { userService } from '@/services';
+
 import { login } from '@/redux/actions/auth-action';
+
 function OAuth2() {
     const searchParams = useSearchParams();
     const router = useRouter();

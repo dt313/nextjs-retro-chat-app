@@ -1,16 +1,21 @@
 'use client';
+
 import { useEffect, useState } from 'react';
 
 import classNames from 'classnames/bind';
-import styles from './profile.module.scss';
+
+import { BsQrCode } from 'react-icons/bs';
+import { FaFacebookMessenger } from 'react-icons/fa';
+import { FiUserPlus } from 'react-icons/fi';
+import { MdOutlineGroupAdd } from 'react-icons/md';
+
 import Avatar from '@/components/avatar';
 import Icon from '@/components/icon';
-import { FiUserPlus } from 'react-icons/fi';
-import { FaFacebookMessenger } from 'react-icons/fa';
-import { MdOutlineGroupAdd } from 'react-icons/md';
-import { BsQrCode } from 'react-icons/bs';
 import Squares from '@/components/squares';
+
 import { groupService, userService } from '@/services';
+
+import styles from './profile.module.scss';
 
 const cx = classNames.bind(styles);
 

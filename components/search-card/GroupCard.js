@@ -1,22 +1,28 @@
-import PropTypes from 'prop-types';
-import { useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 
-import classNames from 'classnames/bind';
-import styles from './SearchCard.module.scss';
+import PropTypes from 'prop-types';
 
-import Image from '@/components/image';
+import classNames from 'classnames/bind';
+
+import { set } from 'lodash';
+import { useRouter } from 'next/navigation';
+import { FaFacebookMessenger, FaRegUserCircle } from 'react-icons/fa';
+import { useDispatch } from 'react-redux';
+
+import { GroupJoinIcon } from '@/assets/svg/icons/group-join';
+
 import Icon from '@/components/icon';
+import Image from '@/components/image';
 import Overlay from '@/components/overlay';
 import SettingBox from '@/components/setting-box';
+
+import { groupService } from '@/services';
+
 import { calculateTime } from '@/helpers';
 
-import { FaRegUserCircle, FaFacebookMessenger } from 'react-icons/fa';
-import { GroupJoinIcon } from '@/assets/svg/icons/group-join';
 import { addToast } from '@/redux/actions/toast-action';
-import { groupService } from '@/services';
-import { set } from 'lodash';
+
+import styles from './SearchCard.module.scss';
 
 const cx = classNames.bind(styles);
 

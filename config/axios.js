@@ -1,6 +1,9 @@
 import axios from 'axios';
-import { storageUtils } from '@/utils';
+
 import handleHttpError from '@/helpers/handle-http-error';
+
+import { storageUtils } from '@/utils';
+
 const instance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL,
     headers: {

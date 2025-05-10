@@ -1,4 +1,5 @@
 import Header from '@/app/layout/header';
+
 import '../scss/globals.scss';
 
 // const Header = dynamic(() => import('@/app/layout/header'), { ssr: false });

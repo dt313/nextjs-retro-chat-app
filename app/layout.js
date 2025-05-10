@@ -1,9 +1,10 @@
-import './scss/globals.scss';
-import StoreProvider from '@/components/store-provider';
-import ThemeWrapper from '@/components/theme-wrapper';
 import AuthFormWrap from '@/components/auth-form-wrap';
 import ImagePreviewWrap from '@/components/image-preview/ImagePreviewWrap';
+import StoreProvider from '@/components/store-provider';
+import ThemeWrapper from '@/components/theme-wrapper';
 import Toast from '@/components/toast/Toast';
+
+import './scss/globals.scss';
 
 export const metadata = {
     title: 'Retro',

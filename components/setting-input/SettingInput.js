@@ -1,9 +1,13 @@
 'use client';
+
 import { useState } from 'react';
+
 import classNames from 'classnames/bind';
-import styles from './SettingInput.module.scss';
-import Input from '@/components/input';
+
 import ImageInput from '@/components/image-input';
+import Input from '@/components/input';
+
+import styles from './SettingInput.module.scss';
 
 const cx = classNames.bind(styles);
 

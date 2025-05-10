@@ -1,4 +1,5 @@
 import eventBus from '@/config/emit';
+
 let socket = null;
 
 export const initSocket = (token) => {

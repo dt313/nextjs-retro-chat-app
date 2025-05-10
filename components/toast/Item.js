@@ -1,11 +1,16 @@
 'use client';
+
+import { useEffect } from 'react';
+
 import classNames from 'classnames/bind';
-import styles from './Toast.module.scss';
+
 import { IoClose } from 'react-icons/io5';
 import { MdError, MdInfo, MdWarning } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
+
 import { deleteToast } from '@/redux/actions/toast-action';
-import { useEffect } from 'react';
+
+import styles from './Toast.module.scss';
 
 const cx = classNames.bind(styles);
 function Item({ toast, duration }) {

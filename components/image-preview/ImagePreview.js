@@ -1,19 +1,49 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/jsx-no-comment-textnodes */
 'use client';
-import { useState, useEffect, useRef, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
-import classNames from 'classnames/bind';
-import styles from './ImagePreview.module.scss';
-import Slider from 'react-slick';
-import Icon from '@/components/icon';
-import CloseIcon from '@/components/close-icon';
 
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
+import classNames from 'classnames/bind';
+
 import { BsFillCaretLeftFill, BsFillCaretRightFill } from 'react-icons/bs';
-import { closeImgPreview } from '@/redux/actions/img-preview-action';
 import { LuImageDown } from 'react-icons/lu';
+import { useDispatch } from 'react-redux';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
+
+import CloseIcon from '@/components/close-icon';
+import Icon from '@/components/icon';
+
+import { closeImgPreview } from '@/redux/actions/img-preview-action';
+
+import styles from './ImagePreview.module.scss';
+
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react/jsx-no-comment-textnodes */
+
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react/jsx-no-comment-textnodes */
+
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react/jsx-no-comment-textnodes */
+
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react/jsx-no-comment-textnodes */
+
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react/jsx-no-comment-textnodes */
+
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react/jsx-no-comment-textnodes */
+
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react/jsx-no-comment-textnodes */
+
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react/jsx-no-comment-textnodes */
+
 const cx = classNames.bind(styles);
 
 function ImagePreview({ images }) {
@@ -77,14 +107,17 @@ function ImagePreview({ images }) {
                             {
                                 breakpoint: 1024,
                                 settings: { slidesToShow: 8 },
+                                centerMode: true,
                             },
                             {
                                 breakpoint: 768,
                                 settings: { slidesToShow: 5 },
+                                centerMode: true,
                             },
                             {
                                 breakpoint: 480,
                                 settings: { slidesToShow: 3 },
+                                centerMode: true,
                             },
                         ]}
                     >

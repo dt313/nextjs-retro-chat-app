@@ -1,11 +1,16 @@
 'use client';
+
 import { useEffect, useRef, useState } from 'react';
+
 import classNames from 'classnames/bind';
-import styles from './MessageBox.module.scss';
-import Message from '@/components/message/Message';
-import Avatar from '@/components/avatar';
+
 import eventBus from '@/config/emit';
+
+import Avatar from '@/components/avatar';
+import Message from '@/components/message/Message';
+
 import { SpinnerLoader, ThreeDotLoading } from '../loading';
+import styles from './MessageBox.module.scss';
 
 const cx = classNames.bind(styles);
 
@@ -81,6 +86,8 @@ function MessageBox({ list = [], conversationId, searchMessageId, onLoadMore, is
             const el = document.getElementById(`message-${searchMessageId}`);
             if (el) {
                 el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                //
             }
         }
     }, [searchMessageId]);

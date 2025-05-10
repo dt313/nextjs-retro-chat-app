@@ -1,9 +1,10 @@
 import { NOTIFICATION_FRIEND_REQUEST } from '@/config/types';
+
 import {
-    GET_ALL_NOTIFICATION,
     ADD_NOTIFICATION,
-    READ_NOTIFICATION,
     CHANGE_TYPE_NOTIFICATION,
+    GET_ALL_NOTIFICATION,
+    READ_NOTIFICATION,
 } from '@/redux/actions/notification-action';
 
 const initialState = {
@@ -15,7 +16,7 @@ const notificationReducer = (state = initialState, action) => {
         case GET_ALL_NOTIFICATION:
             return {
                 ...state,
-                notifications: [...state.notifications, ...action.payload],
+                notifications: action.payload,
             };
 
         case ADD_NOTIFICATION:

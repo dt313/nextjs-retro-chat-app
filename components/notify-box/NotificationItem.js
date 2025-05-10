@@ -1,7 +1,10 @@
 import classNames from 'classnames/bind';
-import styles from './NotifyBox.module.scss';
+
 import Avatar from '@/components/avatar/Avatar';
+
 import { calculateTime } from '@/helpers';
+
+import styles from './NotifyBox.module.scss';
 
 const cx = classNames.bind(styles);
 

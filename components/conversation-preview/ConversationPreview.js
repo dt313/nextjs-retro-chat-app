@@ -1,11 +1,18 @@
 import { useEffect, useState } from 'react';
+
 import classNames from 'classnames/bind';
-import styles from './ConversationPreview.module.scss';
-import Avatar from '../avatar/Avatar';
-import { conversationService } from '@/services';
+
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
+
+import Avatar from '@/components/avatar';
+
+import { conversationService } from '@/services';
+
 import { readLastMessage } from '@/redux/actions/conversations-action';
+
+import styles from './ConversationPreview.module.scss';
+
 const cx = classNames.bind(styles);
 function ConversationPreview({ className, slug, avatar, name, message, time, isReaded, active }) {
     const { user: me } = useSelector((state) => state.auth);

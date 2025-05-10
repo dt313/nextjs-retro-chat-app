@@ -1,22 +1,27 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+
+import { useEffect, useState } from 'react';
+
 import classNames from 'classnames/bind';
 
-import styles from './Creation.module.scss';
-import Input from '@/components/input';
+import { groups, types, users } from '@/config/ui-config';
+import { on } from 'events';
+import { useRouter } from 'next/navigation';
+
 import SubmitButton from '@/components/auth-with-password/SubmitButton';
 import CloseIcon from '@/components/close-icon';
-import InputWithList from '@/components/input-with-list';
-import User from '@/components/user';
 import Group from '@/components/group';
 import ImageInput from '@/components/image-input';
-import ToggleSwitch from '@/components/toggle-switch';
+import Input from '@/components/input';
+import InputWithList from '@/components/input-with-list';
 import Overlay from '@/components/overlay';
+import ToggleSwitch from '@/components/toggle-switch';
+import User from '@/components/user';
 
-import { types, users, groups } from '@/config/ui-config';
 import { conversationService } from '@/services';
-import { on } from 'events';
+
+import styles from './Creation.module.scss';
+
 const cx = classNames.bind(styles);
 
 function Creation({ onClose }) {

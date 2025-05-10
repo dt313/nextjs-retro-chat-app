@@ -1,6 +1,8 @@
+import { useEffect, useRef, useState } from 'react';
+
 import classNames from 'classnames/bind';
+
 import styles from './ExpandableText.module.scss';
-import { useRef, useState, useEffect } from 'react';
 
 const cx = classNames.bind(styles);
 function ExpandableText({ children, className, lineClamp = 5 }) {

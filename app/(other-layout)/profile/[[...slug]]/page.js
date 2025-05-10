@@ -1,5 +1,7 @@
 import { redirect } from 'next/navigation';
+
 import Profile from './profile';
+
 async function Page({ params }) {
     const { slug } = await params;
 

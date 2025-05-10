@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import classNames from 'classnames/bind';
-import styles from './SettingBox.module.scss';
 
+import classNames from 'classnames/bind';
+
+import SubmitButton from '@/components/auth-with-password/SubmitButton';
 import CloseIcon from '@/components/close-icon';
 import SettingInput from '@/components/setting-input';
-import SubmitButton from '@/components/auth-with-password/SubmitButton';
+
+import styles from './SettingBox.module.scss';
 
 const cx = classNames.bind(styles);
 

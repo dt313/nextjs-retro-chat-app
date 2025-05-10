@@ -1,15 +1,20 @@
 import { useEffect, useState } from 'react';
-import classNames from 'classnames/bind';
-import styles from './GroupInvitation.module.scss';
 
-import User from '@/components/user';
-import Overlay from '@/components/overlay';
-import CloseIcon from '../close-icon';
-import { groupService, invitationService } from '@/services';
-import Icon from '../icon';
+import classNames from 'classnames/bind';
+
 import { IoSearch } from 'react-icons/io5';
 import { useDispatch } from 'react-redux';
+
+import Overlay from '@/components/overlay';
+import User from '@/components/user';
+
+import { groupService, invitationService } from '@/services';
+
 import { addToast } from '@/redux/actions/toast-action';
+
+import CloseIcon from '../close-icon';
+import Icon from '../icon';
+import styles from './GroupInvitation.module.scss';
 
 const cx = classNames.bind(styles);
 

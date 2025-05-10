@@ -1,8 +1,11 @@
 import { useState } from 'react';
+
 import classNames from 'classnames/bind';
-import styles from './Details.module.scss';
+
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
+
 import Icon from '../icon';
+import styles from './Details.module.scss';
 
 const cx = classNames.bind(styles);
 

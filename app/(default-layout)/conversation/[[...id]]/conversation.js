@@ -1,29 +1,37 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { redirect, useSearchParams } from 'next/navigation';
-import { useSelector, useDispatch } from 'react-redux';
+
+import { useEffect, useState } from 'react';
+
 import classNames from 'classnames/bind';
-import styles from './conversation.module.scss';
-import LeftMessage from '@/components/left-message';
+
+import eventBus from '@/config/emit';
+import { redirect, useSearchParams } from 'next/navigation';
+import { BsThreeDots } from 'react-icons/bs';
+import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
+import { useDispatch, useSelector } from 'react-redux';
+
 import Avatar from '@/components/avatar';
+import CloseIcon from '@/components/close-icon';
+import Icon from '@/components/icon';
+import LeftMessage from '@/components/left-message';
+import MessageBox from '@/components/message-box/MessageBox';
 import MessageIcon from '@/components/message-icon';
 import MessageInput from '@/components/message-input';
-import MessageBox from '@/components/message-box/MessageBox';
-import Icon from '@/components/icon';
 import RightMessage from '@/components/right-message';
-import CloseIcon from '@/components/close-icon';
-
-import { RiArrowRightSLine, RiArrowLeftSLine } from 'react-icons/ri';
-import { BsThreeDots } from 'react-icons/bs';
 
 import useBreakpoint from '@/hooks/useBreakpoint';
-import { closeReplyBox } from '@/redux/actions/reply-box-action';
+
 import { conversationService, messageService } from '@/services';
-import eventBus from '@/config/emit';
+
 import { getAvatarFromConversation, getNameFromConversation } from '@/helpers';
-import { addToast } from '@/redux/actions/toast-action';
+
 import { readLastMessage } from '@/redux/actions/conversations-action';
-import { before } from 'lodash';
+import { closeReplyBox } from '@/redux/actions/reply-box-action';
+import { addToast } from '@/redux/actions/toast-action';
+
+import styles from './conversation.module.scss';
+
+const LIMIT = 30;
 
 const cx = classNames.bind(styles);
 
@@ -61,6 +69,7 @@ function Conversation({ id }) {
             const messages = await conversationService.getMessageOfConversationById(id);
             if (messages) {
                 setMessageList(messages.reverse());
+                setIsFinish(messages.length < LIMIT);
             }
         } catch (error) {
             dispatch(addToast({ type: 'error', content: error.message }));
@@ -177,10 +186,9 @@ function Conversation({ id }) {
         try {
             if (!isFinish && messagesList.length > 0) {
                 const oldestMessage = messagesList[0];
-                console.log('oldest ', oldestMessage);
                 const before = oldestMessage.createdAt;
                 const messages = await conversationService.getMessageOfConversationById(id, before);
-                if (messages.length === 0) {
+                if (messages.length < LIMIT) {
                     setIsFinish(true);
                 }
                 if (messages) {
@@ -206,7 +214,7 @@ function Conversation({ id }) {
                         <Icon
                             className={cx('c-close-btn')}
                             element={<RiArrowLeftSLine />}
-                            onClick={() => redirect('/message')}
+                            onClick={() => redirect('/conversation')}
                         />
                         <div className={cx('user-info')}>
                             <Avatar

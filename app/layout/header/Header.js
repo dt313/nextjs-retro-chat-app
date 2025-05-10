@@ -1,25 +1,28 @@
 'use client';
+
 import { useEffect, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-import { useDispatch, useSelector } from 'react-redux';
+
 import classNames from 'classnames/bind';
-import styles from './Header.module.scss';
 
-import { PiNotePencilFill } from 'react-icons/pi';
-import { IoNotifications } from 'react-icons/io5';
+import eventBus from '@/config/emit';
 import HeadlessTippy from '@tippyjs/react/headless';
-
-import Dropdown from '@/components/drop-down';
+import { usePathname, useRouter } from 'next/navigation';
+import { IoNotifications } from 'react-icons/io5';
+import { PiNotePencilFill } from 'react-icons/pi';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Avatar from '@/components/avatar/Avatar';
-import Icon from '@/components/icon/Icon';
-import { openAuthBox, LOGIN_AUTH_BOX } from '@/redux/actions/auth-box-action';
-import NotifyBox from '@/components/notify-box';
-import MessageIcon from '@/components/message-icon';
 import Creation from '@/components/creation';
-import eventBus from '@/config/emit';
-import { addNotification } from '@/redux/actions/notification-action';
+import Dropdown from '@/components/drop-down';
+import Icon from '@/components/icon/Icon';
+import MessageIcon from '@/components/message-icon';
+import NotifyBox from '@/components/notify-box';
+
 import { logout } from '@/redux/actions/auth-action';
+import { LOGIN_AUTH_BOX, openAuthBox } from '@/redux/actions/auth-box-action';
+import { addNotification } from '@/redux/actions/notification-action';
+
+import styles from './Header.module.scss';
 
 const cx = classNames.bind(styles);
 
@@ -56,23 +59,28 @@ function Header() {
                 Retro
             </h1>
             <div className={cx('header-menu')}>
-                {!pathname.startsWith('/conversation') && (
+                {!pathname.startsWith('/conversation') && isAuthenticated && (
                     <span className={cx('hmenu-item', 'message')} onClick={() => router.push('/conversation')}>
                         <span className={cx('message-count')}>1</span>
                         <MessageIcon small />
                     </span>
                 )}
 
-                <span className={cx('hmenu-item')} onClick={() => setIsOpenCreation(true)}>
-                    <Icon element={<PiNotePencilFill />} />
-                </span>
-
-                <Dropdown position="right" content={<NotifyBox list={notifications} />}>
-                    <span className={cx('hmenu-item')}>
-                        <Icon element={<IoNotifications />} className={cx({ active: isHasNotification })} />
-                        {isHasNotification && <span className={cx('notify-count')}>1</span>}
+                {isAuthenticated && (
+                    <span className={cx('hmenu-item')} onClick={() => setIsOpenCreation(true)}>
+                        <Icon element={<PiNotePencilFill />} />
                     </span>
-                </Dropdown>
+                )}
+
+                {isAuthenticated && (
+                    <Dropdown position="right" content={<NotifyBox list={notifications} />}>
+                        <span className={cx('hmenu-item')}>
+                            <Icon element={<IoNotifications />} className={cx({ active: isHasNotification })} />
+                            {isHasNotification && <span className={cx('notify-count')}>1</span>}
+                        </span>
+                    </Dropdown>
+                )}
+
                 <HeadlessTippy
                     visible={isShowMenu}
                     onClickOutside={() => setIsShowMenu(false)}
@@ -116,7 +124,7 @@ const UserMenu = () => {
     };
     return (
         <div className={cx('user-menu')}>
-            <span className={cx('um-item', 'separate', 'no-hover')}>{me.fullName}</span>
+            <span className={cx('um-item', 'separate', 'no-hover', 'name')}>{me.fullName}</span>
             <span className={cx('um-item')} onClick={() => router.push(`/profile/@${me._id}`)}>
                 Trang cá nhân
             </span>

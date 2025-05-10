@@ -1,8 +1,14 @@
-import PropTypes from 'prop-types';
+'use client';
+
 import { useState } from 'react';
+
+import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
-import styles from './Dropdown.module.scss';
+
 import { useClickOutside } from '@/hooks';
+
+import styles from './Dropdown.module.scss';
 
 const cx = classNames.bind(styles);
 

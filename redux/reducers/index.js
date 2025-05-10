@@ -1,13 +1,15 @@
 import { combineReducers } from 'redux';
-import themeReducer from './theme-reducer';
+
 import authBoxReducer from './auth-box-reducer';
-import replyBoxReducer from './reply-box-reducer';
-import imgPreviewReducer from './img-preview-reducer';
 import authReducer from './auth-reducer';
-import statusReducer from './status-reducer';
-import notificationReducer from './notification-reducer';
-import toastReducer from './toast-reducer';
 import conversationsReducer from './conversations-reducer';
+import imgPreviewReducer from './img-preview-reducer';
+import notificationReducer from './notification-reducer';
+import replyBoxReducer from './reply-box-reducer';
+import statusReducer from './status-reducer';
+import themeReducer from './theme-reducer';
+import toastReducer from './toast-reducer';
+
 const rootReducer = combineReducers({
     theme: themeReducer,
     authBox: authBoxReducer,

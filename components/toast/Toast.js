@@ -1,11 +1,15 @@
 'use client';
-import PropTypes from 'prop-types';
+
 import { memo } from 'react';
 
+import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
-import styles from './Toast.module.scss';
+
 import { useSelector } from 'react-redux';
+
 import Item from './Item';
+import styles from './Toast.module.scss';
 
 const cx = classNames.bind(styles);
 function Toast({ placement, duration }) {

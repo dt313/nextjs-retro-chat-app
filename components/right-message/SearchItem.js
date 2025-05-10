@@ -1,6 +1,9 @@
 import classNames from 'classnames/bind';
-import styles from './RightMessage.module.scss';
+
 import Avatar from '@/components/avatar';
+
+import styles from './RightMessage.module.scss';
+
 const cx = classNames.bind(styles);
 
 function SearchItem({ id, name, avatar, content, time = '', onClick }) {

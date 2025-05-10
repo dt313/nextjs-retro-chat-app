@@ -17,6 +17,8 @@
     position: relative;
     background-color: transparent;
     overscroll-behavior: none;
+    scroll-behavior: smooth;
+    border-radius: 16px;
     z-index: 1;
 }
 
@@ -131,6 +133,8 @@
 
 .password-auth {
     width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .forgot-password {

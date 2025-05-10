@@ -1,25 +1,31 @@
-import PropTypes from 'prop-types';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+
+import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
-import styles from './SearchCard.module.scss';
-import Image from '@/components/image';
-import Icon from '@/components/icon';
 
-import { FaRegUserCircle, FaFacebookMessenger } from 'react-icons/fa';
-import { FaUserPlus } from 'react-icons/fa6';
-import { RiUserReceivedLine, RiUserSharedLine } from 'react-icons/ri';
-
-import { conversationService, invitationService } from '@/services';
-import { calculateTime, getNotificationId } from '@/helpers';
 import {
     FRIEND_REQUEST_ACCEPTED,
-    TEMP_NOTIFICATION_FRIEND_ACCEPTED,
     NOTIFICATION_FRIEND_REQUEST,
+    TEMP_NOTIFICATION_FRIEND_ACCEPTED,
 } from '@/config/types';
+import { useRouter } from 'next/navigation';
+import { FaFacebookMessenger, FaRegUserCircle } from 'react-icons/fa';
+import { FaUserPlus } from 'react-icons/fa6';
+import { RiUserReceivedLine, RiUserSharedLine } from 'react-icons/ri';
+import { useDispatch, useSelector } from 'react-redux';
+
+import Icon from '@/components/icon';
+import Image from '@/components/image';
+
+import { conversationService, invitationService } from '@/services';
+
+import { calculateTime, getNotificationId } from '@/helpers';
+
 import { changeTypeNotification } from '@/redux/actions/notification-action';
 import { addToast } from '@/redux/actions/toast-action';
+
+import styles from './SearchCard.module.scss';
 
 const cx = classNames.bind(styles);
 

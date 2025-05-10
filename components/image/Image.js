@@ -1,10 +1,14 @@
 'use client';
 
 import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
-import styles from './Image.module.scss';
-import images from '@/assets/images';
+
 import Image from 'next/image';
+
+import images from '@/assets/images';
+
+import styles from './Image.module.scss';
 
 const cx = classNames.bind(styles);
 

@@ -1,9 +1,15 @@
+import { useEffect, useRef, useState } from 'react';
+
 import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
+
 import Input from '@/components/input';
-import styles from './InputWithList.module.scss';
-import { useState, useRef, useEffect } from 'react';
+
 import useClickOutside from '@/hooks/useClickOutside';
+
+import styles from './InputWithList.module.scss';
+
 const cx = classNames.bind(styles);
 
 function InputWithList({ className, label, value, placeholder, list = [], onChange, onSelect, ...props }) {

@@ -1,17 +1,24 @@
 'use client';
+
 import { useEffect, useState } from 'react';
+
 import classNames from 'classnames/bind';
-import styles from './ChatSetting.module.scss';
+
+import { IoIosImages } from 'react-icons/io';
+import { LuText } from 'react-icons/lu';
+import { MdDelete } from 'react-icons/md';
+import { RiLockPasswordFill } from 'react-icons/ri';
+import { TbAlphabetLatin } from 'react-icons/tb';
+
 import Icon from '@/components/icon';
 import Overlay from '@/components/overlay';
 import SettingBox from '@/components/setting-box';
 
-import { TbAlphabetLatin } from 'react-icons/tb';
-import { IoIosImages } from 'react-icons/io';
-import { MdDelete } from 'react-icons/md';
+import styles from './ChatSetting.module.scss';
+
 const cx = classNames.bind(styles);
 
-function ChatSetting({ isGroup }) {
+function ChatSetting({ isGroup, conversation }) {
     const [isShowSetting, setIsShowSetting] = useState(false);
     const [settingBox, setSettingBox] = useState({});
     const [settingValue, setSettingValue] = useState('');
@@ -56,7 +63,7 @@ function ChatSetting({ isGroup }) {
         {
             id: 2,
             name: 'Chỉnh sửa quy định',
-            icon: <TbAlphabetLatin />,
+            icon: <LuText />,
             type: 'textarea',
             description: 'Chỉnh sửa phần quy định của nhóm',
             label: 'Quy định',
@@ -70,15 +77,15 @@ function ChatSetting({ isGroup }) {
             description: 'Chỉnh sửa hình nền của đoạn chat của bạn',
         },
         {
-            id: 3,
+            id: 4,
             name: 'Cài đặt mật khẩu',
-            icon: <IoIosImages />,
+            icon: <RiLockPasswordFill />,
             type: 'text',
             description:
                 'Chỉnh sửa mật khẩu để tăng tính riêng tư của nhóm. Chỉ những người có mật khẩu mới có thể tham gia vào nhóm',
         },
         {
-            id: 4,
+            id: 5,
             name: 'Xóa cuộc trò chuyện',
             icon: <MdDelete />,
             type: 'delete',

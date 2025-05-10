@@ -40,9 +40,22 @@
     word-break: break-word;
 }
 
+@keyframes scaleOut {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
 .highlight {
     border: 2px solid var(--red) !important;
     box-shadow: var(--red) 3px 3px !important;
+    animation: scaleOut 0.7s cubic-bezier(0.785, 0.135, 0.15, 0.86);
 }
 
 .delete-message {

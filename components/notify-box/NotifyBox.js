@@ -1,33 +1,38 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import classNames from 'classnames/bind';
-import styles from './NotifyBox.module.scss';
-import Icon from '@/components/icon/Icon';
-import NotificationItem from './NotificationItem';
 
-import { invitationService } from '@/services';
-import { IoSettings } from 'react-icons/io5';
+import classNames from 'classnames/bind';
 
 import {
-    NOTIFICATION_REMOVE_FROM_CONVERSATION,
-    NOTIFICATION_CHANGE_ADMIN_ROLE,
-    NOTIFICATION_CHANGE_MEMBER_ROLE,
-    NOTIFICATION_FRIEND_REQUEST,
-    NOTIFICATION_FRIEND_ACCEPTED,
-    NOTIFICATION_GROUP_INVITATION,
-    NOTIFICATION_GROUP_JOINTED,
-    NOTIFICATION_REPLY_MESSAGE,
-    NOTIFICATION_MENTION,
     FRIEND_REQUEST_ACCEPTED,
-    TEMP_NOTIFICATION_FRIEND_ACCEPTED,
-    TEMP_NOTIFICATION_FRIEND_REJECTED,
     FRIEND_REQUEST_REJECTED,
     GROUP_INVITATION_ACCEPTED,
+    GROUP_INVITATION_REJECTED,
+    NOTIFICATION_CHANGE_ADMIN_ROLE,
+    NOTIFICATION_CHANGE_MEMBER_ROLE,
+    NOTIFICATION_FRIEND_ACCEPTED,
+    NOTIFICATION_FRIEND_REQUEST,
+    NOTIFICATION_GROUP_INVITATION,
+    NOTIFICATION_GROUP_JOINTED,
+    NOTIFICATION_MENTION,
+    NOTIFICATION_REMOVE_FROM_CONVERSATION,
+    NOTIFICATION_REPLY_MESSAGE,
+    TEMP_NOTIFICATION_FRIEND_ACCEPTED,
+    TEMP_NOTIFICATION_FRIEND_REJECTED,
     TEMP_NOTIFICATION_GROUP_INVITATION_ACCEPTED,
     TEMP_NOTIFICATION_GROUP_INVITATION_REJECTED,
-    GROUP_INVITATION_REJECTED,
 } from '@/config/types';
+import { IoSettings } from 'react-icons/io5';
+import { useDispatch } from 'react-redux';
+
+import Icon from '@/components/icon/Icon';
+
+import { invitationService } from '@/services';
+
 import { changeTypeNotification } from '@/redux/actions/notification-action';
+
+import NotificationItem from './NotificationItem';
+import styles from './NotifyBox.module.scss';
+
 const cx = classNames.bind(styles);
 
 function NotifyBox({ list = [] }) {
@@ -82,6 +87,7 @@ function NotifyBox({ list = [] }) {
 
     const renderNotificationContent = (notification = {}) => {
         const { type, sender, group } = notification;
+
         switch (type) {
             case NOTIFICATION_FRIEND_REQUEST:
                 console.log(type);

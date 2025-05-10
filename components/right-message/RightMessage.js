@@ -1,29 +1,35 @@
-import { useState, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
-import { useSelector } from 'react-redux';
+import { useMemo, useState } from 'react';
+
 import classNames from 'classnames/bind';
-import styles from './RightMessage.module.scss';
 
-import Avatar from '@/components/avatar';
-import Information from '@/components/information';
-import Details from '@/components/details';
-import AttachImages from '@/components/attach-images';
-import AttachFile from '@/components/attach-file';
-import CloseIcon from '@/components/close-icon';
-import Icon from '@/components/icon';
-import ChatSetting from '@/components/chat-setting';
-import ExpandableText from '@/components/expandable-text';
-import GroupMembers from '@/components/group-members';
-import GroupInvitation from '@/components/group-invitation';
-import SearchItem from './SearchItem';
-
-import { IoSearch } from 'react-icons/io5';
-import { FaRegUserCircle } from 'react-icons/fa';
-import { TiUserAdd } from 'react-icons/ti';
-import { calculateTime, getAvatarFromConversation, getNameFromConversation } from '@/helpers';
-import { getEmailFromConversation, getUsernameFromConversation } from '@/helpers/conversation-info';
-import { conversationService } from '@/services';
+import { CONVERSATION_PARTICIPANT_ROLE_CREATOR } from '@/config/types';
 import { useBreakpoint } from '@/hooks';
+import { useRouter } from 'next/navigation';
+import { FaRegUserCircle } from 'react-icons/fa';
+import { IoSearch } from 'react-icons/io5';
+import { TiUserAdd } from 'react-icons/ti';
+import { useSelector } from 'react-redux';
+
+import AttachFile from '@/components/attach-file';
+import AttachImages from '@/components/attach-images';
+import Avatar from '@/components/avatar';
+import ChatSetting from '@/components/chat-setting';
+import CloseIcon from '@/components/close-icon';
+import Details from '@/components/details';
+import ExpandableText from '@/components/expandable-text';
+import GroupInvitation from '@/components/group-invitation';
+import GroupMembers from '@/components/group-members';
+import Icon from '@/components/icon';
+import Information from '@/components/information';
+
+import { conversationService } from '@/services';
+
+import { getEmailFromConversation, getUsernameFromConversation } from '@/helpers/conversation-info';
+
+import { calculateTime, getAvatarFromConversation, getNameFromConversation } from '@/helpers';
+
+import styles from './RightMessage.module.scss';
+import SearchItem from './SearchItem';
 
 const cx = classNames.bind(styles);
 
@@ -77,6 +83,15 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
         if (breakpoint === 'lg' || breakpoint === 'md' || breakpoint === 'sm') {
             onClose();
         }
+    };
+
+    const handleLeaveGroup = async () => {
+        try {
+            const res = await conversationService.leaveGroup(data._id);
+            if (res) {
+                router.push('/conversation');
+            }
+        } catch (error) {}
     };
 
     return (
@@ -137,7 +152,7 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
                 )}
 
                 <Details label="chat setting">
-                    <ChatSetting isGroup={data?.isGroup} />
+                    <ChatSetting isGroup={data?.isGroup} conversation={data} />
                 </Details>
 
                 <Details label="File, Attachment">
@@ -147,7 +162,11 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
                     <AttachImages conversationId={data?._id} />
                 </Details>
 
-                <button className={cx('leave-btn')}>Rời nhóm</button>
+                {isGroup && meRole !== CONVERSATION_PARTICIPANT_ROLE_CREATOR && (
+                    <button className={cx('leave-btn')} onClick={handleLeaveGroup}>
+                        Rời nhóm
+                    </button>
+                )}
             </div>
             {isShowSearch && (
                 <div className={cx('search-in-message')}>

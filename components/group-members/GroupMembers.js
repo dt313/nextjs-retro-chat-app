@@ -1,17 +1,22 @@
-import classNames from 'classnames/bind';
-import styles from './GroupMembers.module.scss';
-import Icon from '../icon';
-import { IoSearch } from 'react-icons/io5';
-import GroupMember from './GroupMember';
-import { calculateTime } from '@/helpers';
-import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { conversationService, groupService } from '@/services';
+
+import classNames from 'classnames/bind';
+
 import {
     CONVERSATION_PARTICIPANT_ROLE_ADMIN,
     CONVERSATION_PARTICIPANT_ROLE_CREATOR,
     CONVERSATION_PARTICIPANT_ROLE_MEMBER,
 } from '@/config/types';
+import { IoSearch } from 'react-icons/io5';
+import { useSelector } from 'react-redux';
+
+import { conversationService, groupService } from '@/services';
+
+import { calculateTime } from '@/helpers';
+
+import Icon from '../icon';
+import GroupMember from './GroupMember';
+import styles from './GroupMembers.module.scss';
 
 const cx = classNames.bind(styles);
 

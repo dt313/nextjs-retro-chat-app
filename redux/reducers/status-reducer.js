@@ -1,5 +1,6 @@
-import { SET_ONLINE, SET_OFFLINE } from '@/redux/actions/status-action';
-import { ONLINE, OFFLINE } from '@/config/types';
+import { OFFLINE, ONLINE } from '@/config/types';
+
+import { SET_OFFLINE, SET_ONLINE } from '@/redux/actions/status-action';
 
 const initialState = {
     status: OFFLINE,

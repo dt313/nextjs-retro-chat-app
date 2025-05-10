@@ -1,18 +1,24 @@
 'use client';
-import { useState, useRef } from 'react';
+
+import { useRef, useState } from 'react';
+
 import classNames from 'classnames/bind';
-import styles from './MessageInput.module.scss';
+
+import { FILE_ACCEPT_LIST } from '@/config/ui-config';
+import { getSocket } from '@/config/ws';
+import { useAutoResize } from '@/hooks';
 import { BsImage } from 'react-icons/bs';
 import { CgAttachment } from 'react-icons/cg';
 import { FaArrowUp } from 'react-icons/fa6';
-import Image from '@/components/image';
-import Icon from '@/components/icon';
-import { useAutoResize } from '@/hooks';
-import CloseIcon from '@/components/close-icon';
-import { FILE_ACCEPT_LIST } from '@/config/ui-config';
-import { v4 as uuidv4 } from 'uuid';
-import { getSocket } from '@/config/ws';
 import { useSelector } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
+
+import CloseIcon from '@/components/close-icon';
+import Icon from '@/components/icon';
+import Image from '@/components/image';
+
+import styles from './MessageInput.module.scss';
+
 const cx = classNames.bind(styles);
 
 function MessageInput({ onSubmit, conversationId }) {

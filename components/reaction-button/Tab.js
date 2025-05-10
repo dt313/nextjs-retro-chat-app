@@ -1,7 +1,11 @@
+import { useEffect, useRef, useState } from 'react';
+
 import classNames from 'classnames/bind';
-import styles from './ReactionButton.module.scss';
-import { useRef, useState, useEffect } from 'react';
+
 import { FaCheck } from 'react-icons/fa6';
+
+import styles from './ReactionButton.module.scss';
+
 const cx = classNames.bind(styles);
 
 function Tab({ content, isActive, onClick, className, isMoreTab, hasCheck }) {

@@ -1,12 +1,19 @@
 'use client';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { useState, useEffect, Suspense } from 'react';
+
+import { Suspense, useEffect, useState } from 'react';
+
 import classNames from 'classnames/bind';
-import styles from './search.module.scss';
-import InputSearch from '@/components/input-search';
-import { UserCard, GroupCard } from '@/components/search-card';
-import { userService, groupService } from '@/services';
+
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useSelector } from 'react-redux';
+
+import InputSearch from '@/components/input-search';
+import { GroupCard, UserCard } from '@/components/search-card';
+
+import { groupService, userService } from '@/services';
+
+import styles from './search.module.scss';
+
 const cx = classNames.bind(styles);
 
 function SearchContent() {

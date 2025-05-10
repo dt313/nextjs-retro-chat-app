@@ -1,8 +1,12 @@
 'use client';
-import { useSelector } from 'react-redux';
+
 import { useMemo } from 'react';
-import ImagePreview from './ImagePreview';
+
+import { useSelector } from 'react-redux';
+
 import { reshapeImages } from '@/helpers';
+
+import ImagePreview from './ImagePreview';
 
 function ImagePreviewWrap() {
     const imgPreview = useSelector((state) => state.imgPreview);

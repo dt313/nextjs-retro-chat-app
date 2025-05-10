@@ -1,14 +1,20 @@
-import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
-import styles from './ReactionButton.module.scss';
 import { useEffect, useState } from 'react';
-import { getReactionIcon, getReactionTabs, getReactionIconList } from '@/helpers/reaction';
-import Overlay from '@/components/overlay';
-import CloseIcon from '@/components/close-icon';
-import Avatar from '@/components/avatar';
-import Tab from './Tab';
+
+import PropTypes from 'prop-types';
+
+import classNames from 'classnames/bind';
+
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
+
+import Avatar from '@/components/avatar';
+import CloseIcon from '@/components/close-icon';
+import Overlay from '@/components/overlay';
+
+import { getReactionIcon, getReactionIconList, getReactionTabs } from '@/helpers/reaction';
+
+import styles from './ReactionButton.module.scss';
+import Tab from './Tab';
 
 const cx = classNames.bind(styles);
 

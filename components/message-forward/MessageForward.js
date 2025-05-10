@@ -1,13 +1,17 @@
+import { useEffect, useState } from 'react';
+
 import classNames from 'classnames/bind';
-import styles from './MessageForward.module.scss';
+
+import { IoSearch } from 'react-icons/io5';
+import { useDispatch } from 'react-redux';
+
+import { messageService, userService } from '@/services';
+
 import CloseIcon from '../close-icon';
+import Icon from '../icon';
 import Overlay from '../overlay';
 import User from '../user';
-import Icon from '../icon';
-import { IoSearch } from 'react-icons/io5';
-import { useEffect, useState } from 'react';
-import { messageService, userService } from '@/services';
-import { useDispatch } from 'react-redux';
+import styles from './MessageForward.module.scss';
 
 const cx = classNames.bind(styles);
 

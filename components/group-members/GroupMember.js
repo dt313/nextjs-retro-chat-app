@@ -1,14 +1,17 @@
 import classNames from 'classnames/bind';
-import styles from './GroupMembers.module.scss';
+
+import { CONVERSATION_PARTICIPANT_ROLE_ADMIN, CONVERSATION_PARTICIPANT_ROLE_CREATOR } from '@/config/types';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { useSelector } from 'react-redux';
+
+import { getUserRole } from '@/helpers/conversation-info';
+
+import ActiveTippy from '../active-tippy';
+import Avatar from '../avatar';
 import Icon from '../icon';
+import styles from './GroupMembers.module.scss';
 
 const cx = classNames.bind(styles);
-import Avatar from '../avatar';
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import ActiveTippy from '../active-tippy';
-import { getUserRole } from '@/helpers/conversation-info';
-import { useSelector } from 'react-redux';
-import { CONVERSATION_PARTICIPANT_ROLE_ADMIN, CONVERSATION_PARTICIPANT_ROLE_CREATOR } from '@/config/types';
 
 function GroupMember({ id, name, date, avatar, role, meRole, onClickDeleteAction, onClickChangRoleAction }) {
     const { user: me } = useSelector((state) => state.auth);

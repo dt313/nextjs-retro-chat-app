@@ -1,13 +1,3 @@
-import { uniqBy } from 'lodash';
-import Angry from '@/assets/svg/emoji/angry';
-import Care from '@/assets/svg/emoji/care';
-import Haha from '@/assets/svg/emoji/haha';
-import Like from '@/assets/svg/emoji/like';
-import Love from '@/assets/svg/emoji/love';
-import Sad from '@/assets/svg/emoji/sad';
-import Wow from '@/assets/svg/emoji/wow';
-import { RiHeart3Line } from 'react-icons/ri';
-import { FaCaretDown } from 'react-icons/fa';
 import {
     REACTION_TYPE_ANGRY,
     REACTION_TYPE_CARE,
@@ -17,6 +7,17 @@ import {
     REACTION_TYPE_SAD,
     REACTION_TYPE_WOW,
 } from '@/config/types';
+import { uniqBy } from 'lodash';
+import { FaCaretDown } from 'react-icons/fa';
+import { RiHeart3Line } from 'react-icons/ri';
+
+import Angry from '@/assets/svg/emoji/angry';
+import Care from '@/assets/svg/emoji/care';
+import Haha from '@/assets/svg/emoji/haha';
+import Like from '@/assets/svg/emoji/like';
+import Love from '@/assets/svg/emoji/love';
+import Sad from '@/assets/svg/emoji/sad';
+import Wow from '@/assets/svg/emoji/wow';
 
 const getCountPerType = (list = [], type) => {
     return list.filter((r) => r.type === type).length;

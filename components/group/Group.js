@@ -1,9 +1,13 @@
 import classNames from 'classnames/bind';
-import styles from './Group.module.scss';
-import Avatar from '@/components/avatar';
-import { GoPlusCircle } from 'react-icons/go';
+
 import { FaFacebookMessenger } from 'react-icons/fa';
+import { GoPlusCircle } from 'react-icons/go';
+
+import Avatar from '@/components/avatar';
 import Icon from '@/components/icon';
+
+import styles from './Group.module.scss';
+
 const cx = classNames.bind(styles);
 
 function Group({ thumbnail, name, memberCount, id }) {

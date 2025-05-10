@@ -1,18 +1,25 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
-import styles from './AuthForm.module.scss';
-import { useDispatch } from 'react-redux';
-import { RiArrowLeftSLine } from 'react-icons/ri';
 
-import Image from '@/components/image';
+import PropTypes from 'prop-types';
+
+import classNames from 'classnames/bind';
+
+import { RiArrowLeftSLine } from 'react-icons/ri';
+import { useDispatch } from 'react-redux';
+
 import images from '@/assets/images';
-import Icon from '@/components/icon';
+
 import AuthWithPassword from '@/components/auth-with-password';
 import ForgotPassword from '@/components/forgot-password';
 import FormHeader from '@/components/form-header';
+import Icon from '@/components/icon';
+import Image from '@/components/image';
+
 import { authService } from '@/services';
-import { LOGIN_AUTH_BOX, REGISTER_AUTH_BOX, FORGET_PASSWORD_BOX, openAuthBox } from '@/redux/actions/auth-box-action';
+
+import { FORGET_PASSWORD_BOX, LOGIN_AUTH_BOX, REGISTER_AUTH_BOX, openAuthBox } from '@/redux/actions/auth-box-action';
+
+import styles from './AuthForm.module.scss';
 
 const cx = classNames.bind(styles);
 
