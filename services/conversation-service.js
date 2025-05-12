@@ -31,7 +31,7 @@ export const getConversationById = async (id) => {
     }
 };
 
-export const getMessageOfConversationById = async (id, before = '', after = '') => {
+export const getMessageOfConversationById = async ({ id, before = '', after = '' }) => {
     try {
         const res = await axios.get(`/conversations/message/${id}?before=${before}&after=${after}`);
         return res?.data;
@@ -100,5 +100,14 @@ export const leaveGroup = async (groupId) => {
         return res?.data;
     } catch (error) {
         throw new Error(error || 'Failed to search conversation');
+    }
+};
+
+export const findMessage = async (conversationId, messageId) => {
+    try {
+        const res = await axios.get(`conversations/message/${conversationId}/search/${messageId}`);
+        return res?.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to find message');
     }
 };

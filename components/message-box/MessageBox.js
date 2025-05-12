@@ -9,19 +9,23 @@ import eventBus from '@/config/emit';
 import Avatar from '@/components/avatar';
 import Message from '@/components/message/Message';
 
+import { conversationService } from '@/services';
+
 import { SpinnerLoader, ThreeDotLoading } from '../loading';
 import styles from './MessageBox.module.scss';
 
 const cx = classNames.bind(styles);
-
-function MessageBox({ list = [], conversationId, searchMessageId, onLoadMore, isFinish }) {
+const LIMIT = 30;
+function MessageBox({ list = [], conversationId, searchMessageId, onLoadMore, isBeforeFinish, setList }) {
     const messageEndRef = useRef(null);
     const scrollContainerRef = useRef(null);
+
     const [typingUsers, setTypingUsers] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isTopLoading, setIsTopLoading] = useState(false);
+    const [isBottomLoading, setIsBottomLoading] = useState(false);
+    const [isAfterFinish, setIsAfterFinish] = useState(true);
 
     const shouldScrollBottom = useRef(true);
-
     useEffect(() => {
         if (shouldScrollBottom.current) {
             messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -54,46 +58,114 @@ function MessageBox({ list = [], conversationId, searchMessageId, onLoadMore, is
         };
     }, [eventBus]);
 
-    const handleScroll = () => {
+    const handleLoadMoreAfterMessage = async () => {
+        try {
+            if (!isAfterFinish && list.length > 0) {
+                const latestMessage = list[list.length - 1];
+                const after = latestMessage.createdAt;
+                const messages = await conversationService.getMessageOfConversationById({ id: conversationId, after });
+                if (messages.length < LIMIT) {
+                    setIsAfterFinish(true);
+                    setIsBottomLoading(false);
+                }
+                if (messages) {
+                    setList((prev) => [...prev, ...messages]);
+                }
+            } else {
+                return;
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleScroll = async () => {
         const container = scrollContainerRef.current;
         if (!container) return;
 
-        if (container.scrollTop === 0 && !isFinish) {
+        if (container.scrollTop === 0 && !isBeforeFinish) {
             const prevScrollHeight = container.scrollHeight;
-            setIsLoading(true);
+            setIsTopLoading(true);
             shouldScrollBottom.current = false;
-            onLoadMore().then(() => {
-                const waitForRender = () => {
-                    requestAnimationFrame(() => {
-                        const newScrollHeight = container.scrollHeight;
+            if (!isTopLoading) {
+                onLoadMore().then(() => {
+                    const waitForRender = () => {
+                        requestAnimationFrame(() => {
+                            const newScrollHeight = container.scrollHeight;
 
-                        if (newScrollHeight === prevScrollHeight) {
-                            waitForRender();
-                        } else {
-                            container.scrollTop = newScrollHeight - prevScrollHeight;
-                            setIsLoading(false);
-                        }
-                    });
-                };
+                            if (newScrollHeight === prevScrollHeight) {
+                                waitForRender();
+                            } else {
+                                container.scrollTop = newScrollHeight - prevScrollHeight;
+                                setIsTopLoading(false);
+                            }
+                        });
+                    };
 
-                waitForRender();
+                    waitForRender();
+                });
+            }
+        }
+
+        if (
+            container.scrollTop + container.clientHeight >= container.scrollHeight - 5 &&
+            !isAfterFinish &&
+            !isBottomLoading
+        ) {
+            console.log('scroll down');
+            setIsBottomLoading(true);
+            shouldScrollBottom.current = false;
+            handleLoadMoreAfterMessage().then(() => {
+                requestAnimationFrame(() => {
+                    setIsBottomLoading(false);
+                });
             });
         }
     };
 
     useEffect(() => {
-        if (searchMessageId) {
-            const el = document.getElementById(`message-${searchMessageId}`);
+        if (!searchMessageId) return;
+
+        let timeoutId;
+
+        const scrollToMessage = (id) => {
+            const el = document.getElementById(`message-${id}`);
             if (el) {
                 el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } else {
-                //
             }
-        }
+        };
+
+        const handleLoadMessage = async () => {
+            const el = document.getElementById(`message-${searchMessageId}`);
+            if (el) {
+                scrollToMessage(searchMessageId);
+            } else {
+                console.log('get message');
+                const res = await conversationService.findMessage(conversationId, searchMessageId);
+                if (res && Array.isArray(res)) {
+                    setList(res);
+
+                    timeoutId = setTimeout(() => {
+                        scrollToMessage(searchMessageId);
+
+                        // wait for scroll
+                        setTimeout(() => {
+                            setIsAfterFinish(false);
+                        }, 600);
+                    }, 500); // wait for render
+                }
+            }
+        };
+
+        handleLoadMessage();
+
+        return () => {
+            clearTimeout(timeoutId); // cleanup nếu unmount
+        };
     }, [searchMessageId]);
     return (
         <div className={cx('wrapper')} ref={scrollContainerRef} onScroll={handleScroll}>
-            {isLoading && (
+            {isTopLoading && (
                 <div className={cx('loading-wrap')}>
                     <SpinnerLoader small />
                 </div>
@@ -179,6 +251,12 @@ function MessageBox({ list = [], conversationId, searchMessageId, onLoadMore, is
                         return <Avatar key={user._id} src={user.avatar} size={24} />;
                     })}
                     <ThreeDotLoading className={cx('typing-loading')} />
+                </div>
+            )}
+
+            {isBottomLoading && (
+                <div className={cx('loading-wrap')}>
+                    <SpinnerLoader small />
                 </div>
             )}
 

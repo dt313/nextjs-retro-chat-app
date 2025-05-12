@@ -47,8 +47,6 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
         return data?.participants?.find((u) => u.user._id === me._id)?.role;
     }, [data?.participants, me._id]);
 
-    console.log('merole ', meRole);
-
     const INFORMATION = [
         {
             name: 'email',

@@ -359,7 +359,7 @@ function Message({
                     </div>
                 )}
             </div>
-            {replyData && replyData?.replyType && !isDelete && (
+            {replyData && replyData?.replyType && !isDelete && !isForward && (
                 <div className={cx('reply-message')}>
                     <p className={cx('reply-label')}>
                         <Icon className={cx('reply-icon')} element={<RiReplyFill />} />

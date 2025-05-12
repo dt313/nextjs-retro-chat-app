@@ -40,7 +40,7 @@ function Conversation({ id }) {
     const [isShowLeft, setIsShowLeft] = useState(false);
     const [isShowContent, setIsShowContent] = useState(false);
 
-    const [isFinish, setIsFinish] = useState(false);
+    const [isBeforeFinish, setIsBeforeFinish] = useState(false);
 
     const [conversation, setConversation] = useState(null);
     const [messagesList, setMessageList] = useState([]);
@@ -66,10 +66,10 @@ function Conversation({ id }) {
                 setConversation(conversation);
             }
 
-            const messages = await conversationService.getMessageOfConversationById(id);
+            const messages = await conversationService.getMessageOfConversationById({ id });
             if (messages) {
                 setMessageList(messages.reverse());
-                setIsFinish(messages.length < LIMIT);
+                setIsBeforeFinish(messages.length < LIMIT);
             }
         } catch (error) {
             dispatch(addToast({ type: 'error', content: error.message }));
@@ -182,17 +182,18 @@ function Conversation({ id }) {
         setIsShowRight(false);
     };
 
-    const handleLoadMoreMessage = async () => {
+    const handleLoadMoreBeforeMessage = async () => {
         try {
-            if (!isFinish && messagesList.length > 0) {
+            if (!isBeforeFinish && messagesList.length > 0) {
                 const oldestMessage = messagesList[0];
                 const before = oldestMessage.createdAt;
-                const messages = await conversationService.getMessageOfConversationById(id, before);
+                const messages = await conversationService.getMessageOfConversationById({ id, before });
                 if (messages.length < LIMIT) {
-                    setIsFinish(true);
+                    setIsBeforeFinish(true);
                 }
                 if (messages) {
-                    setMessageList((prev) => [...messages.reverse(), ...prev]);
+                    const newMessage = messages.reverse();
+                    setMessageList((prev) => [...newMessage, ...prev]);
                 }
             } else {
                 return;
@@ -236,8 +237,9 @@ function Conversation({ id }) {
                             list={messagesList}
                             conversationId={id}
                             searchMessageId={searchMessageId}
-                            onLoadMore={handleLoadMoreMessage}
-                            isFinish={isFinish}
+                            onLoadMore={handleLoadMoreBeforeMessage}
+                            isBeforeFinish={isBeforeFinish}
+                            setList={setMessageList}
                         />
                         {isOpenReplyBox && (
                             <div className={cx('reply-box')}>
