@@ -8,6 +8,7 @@ import eventBus from '@/config/emit';
 import { redirect, useSearchParams } from 'next/navigation';
 import { BsThreeDots } from 'react-icons/bs';
 import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
+import { TbPinFilled } from 'react-icons/tb';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Avatar from '@/components/avatar';
@@ -232,7 +233,21 @@ function Conversation({ id }) {
                         </div>
                         <Icon className={cx('dots-icon')} element={<BsThreeDots />} onClick={toggleRightSide} />
                     </div>
+
                     <div className={cx('c-content')} onClick={handleReadLastMessage}>
+                        <div className={cx('pin')}>
+                            <Icon className={cx('pin-icon')} element={<TbPinFilled />} />
+                            <p className={cx('pin-text')}>
+                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
+                                has been the standard dummy text ever since the 1500s, when an unknown printer took a
+                                galley of type and scrambled it to make a type specimen book. It has survived not only
+                                five centuries, but also the leap into electronic typesetting, remaining essentially
+                                unchanged. It was popularised in the 1960s with the release of Letraset sheets
+                                containing Lorem Ipsum passages, and more recently with desktop publishing software like
+                                Aldus PageMaker including versions of Lorem Ipsum.
+                            </p>
+                            <CloseIcon small className={cx('pin-close')} />
+                        </div>
                         <MessageBox
                             list={messagesList}
                             conversationId={id}

@@ -321,3 +321,59 @@
         margin-left: 12px;
     }
 }
+
+// pin chat
+
+.pin {
+    position: absolute;
+    background-color: #00000090;
+    width: 100%;
+    height: 50px;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: flex-start;
+    backdrop-filter: blur(4px);
+    padding: 8px;
+    transition: all 0.3s ease-in-out;
+
+    &-icon {
+        margin-right: 12px;
+        margin-left: 4px;
+        background-color: #fff;
+        min-height: 24px;
+        min-width: 24px;
+        width: 24px;
+        height: 24px;
+        border-radius: 10rem;
+    }
+
+    &-text {
+        @include font-default;
+        color: #ffff;
+        word-spacing: 1px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        max-height: 100%;
+    }
+
+    &:hover {
+        height: 150px;
+
+        .pin-text {
+            display: block;
+            max-height: 150px;
+            overflow-y: scroll;
+            transition: max-height 0.3s ease-in-out;
+        }
+    }
+
+    &-close {
+        min-width: 20px;
+        margin-right: 4px;
+        margin-left: 4px;
+        background-color: #fff;
+    }
+}

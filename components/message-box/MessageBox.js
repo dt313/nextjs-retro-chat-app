@@ -11,6 +11,7 @@ import Message from '@/components/message/Message';
 
 import { conversationService } from '@/services';
 
+import Icon from '../icon';
 import { SpinnerLoader, ThreeDotLoading } from '../loading';
 import styles from './MessageBox.module.scss';
 
@@ -160,7 +161,7 @@ function MessageBox({ list = [], conversationId, searchMessageId, onLoadMore, is
         handleLoadMessage();
 
         return () => {
-            clearTimeout(timeoutId); // cleanup nếu unmount
+            clearTimeout(timeoutId);
         };
     }, [searchMessageId]);
     return (

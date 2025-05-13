@@ -97,7 +97,7 @@ export const getReplyLabelName = (data, sender, meId) => {
         if (data._id === meId) {
             return `${sender.fullName} đã trả lời bạn`;
         } else {
-            return `${sender.fullName} đã trả lời bạn ${data.firstName}`;
+            return `${sender.fullName} đã trả lời ${data._id === sender._id ? 'chính mình' : data.firstName}`;
         }
     }
 };
