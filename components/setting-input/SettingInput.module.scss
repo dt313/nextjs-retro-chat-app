@@ -1,6 +1,11 @@
 @use '/app/scss/mixins.scss' as *;
-.ii-wrapper {
+.wrapper {
     margin-top: 24px;
+    width: 100%;
+}
+
+.ii-wrapper {
     height: 300px;
+    margin-top: 24px;
     width: 100%;
 }

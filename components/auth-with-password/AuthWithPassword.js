@@ -102,7 +102,7 @@ function AuthWithPassword({ type }) {
                     onChange={handleChangeAuthData}
                 />
             )}
-            <SubmitButton className={cx('submit-btn')} onClick={handleSubmit}>
+            <SubmitButton disable className={cx('submit-btn')} onClick={handleSubmit}>
                 {type}
             </SubmitButton>
         </div>

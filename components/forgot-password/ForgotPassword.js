@@ -15,6 +15,8 @@ function ForgotPassword() {
     const [data, setData] = useState({
         email: '',
         code: '',
+        password: '',
+        cfPassword: '',
     });
 
     const handleChangeData = (e) => {
@@ -40,10 +42,28 @@ function ForgotPassword() {
                 />
                 <CodeInput
                     placeholder="Nhập mã xác nhận"
-                    // disable
+                    disable
                     name="code"
                     value={data.code}
                     onChange={handleChangeData}
+                />
+
+                <Input
+                    label="Mật khẩu mới"
+                    placeholder="Nhập mật khẩu mới"
+                    name="password"
+                    type="password"
+                    onChange={handleChangeData}
+                    value={data.password}
+                />
+
+                <Input
+                    label="Nhập lại mật khẩu"
+                    placeholder="Nhập lại mật khẩu mới"
+                    name="cfPassword"
+                    type="password"
+                    onChange={handleChangeData}
+                    value={data.cfPassword}
                 />
                 <SubmitButton>Gửi</SubmitButton>
             </div>

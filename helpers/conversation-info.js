@@ -13,7 +13,7 @@ export function getNameFromConversation(conversation, meId) {
     } else if (conversation && conversation.isGroup === false) {
         if (conversation?.participants) {
             const participant = conversation?.participants?.find((item) => item.user._id !== meId);
-            return participant ? participant.user.fullName : '';
+            return participant ? conversation.nickname || participant.user.fullName : '';
         }
     } else {
         return '';

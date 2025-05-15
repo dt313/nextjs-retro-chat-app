@@ -6,7 +6,7 @@ import styles from './Input.module.scss';
 
 const cx = classNames.bind(styles);
 
-function CodeInput({ className, disable, value, onChange, ...props }) {
+function CodeInput({ className, disable, value, onChange, buttonTitle = 'Gửi mã', ...props }) {
     const [focus, setFocus] = useState(false);
     const classes = cx('code-input-wrapper', className, { disable, focusBorder: focus });
     return (
@@ -20,7 +20,9 @@ function CodeInput({ className, disable, value, onChange, ...props }) {
                 onFocus={() => setFocus(true)}
                 onBlur={() => setFocus(false)}
             />
-            <button className={cx('code-send-btn')}>Gửi mã</button>
+            <button className={cx('code-send-btn')} disabled={disable}>
+                {buttonTitle}
+            </button>
         </div>
     );
 }

@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Avatar from '@/components/avatar';
 import CloseIcon from '@/components/close-icon';
 import Icon from '@/components/icon';
+import Image from '@/components/image';
 import LeftMessage from '@/components/left-message';
 import MessageBox from '@/components/message-box/MessageBox';
 import MessageIcon from '@/components/message-icon';
@@ -204,6 +205,7 @@ function Conversation({ id }) {
         }
     };
 
+    console.log(conversation?.backgroundUrl);
     return (
         <div className={cx('wrapper')}>
             <div className={cx('left-side', isShowLeft ? 'show' : 'hide')}>
@@ -233,7 +235,6 @@ function Conversation({ id }) {
                         </div>
                         <Icon className={cx('dots-icon')} element={<BsThreeDots />} onClick={toggleRightSide} />
                     </div>
-
                     <div className={cx('c-content')} onClick={handleReadLastMessage}>
                         <div className={cx('pin')}>
                             <Icon className={cx('pin-icon')} element={<TbPinFilled />} />

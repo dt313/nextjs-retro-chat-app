@@ -396,7 +396,7 @@ function Message({
                                 type: 'delete',
                                 description: 'Bạn có chắc chắn muốn xóa tin nhắn này không ?',
                             }}
-                            handleSubmit={handleDeleteMessage}
+                            onSubmit={handleDeleteMessage}
                         />
                     </div>
                 </Overlay>

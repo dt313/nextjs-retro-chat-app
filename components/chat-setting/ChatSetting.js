@@ -14,6 +14,8 @@ import Icon from '@/components/icon';
 import Overlay from '@/components/overlay';
 import SettingBox from '@/components/setting-box';
 
+import { conversationService } from '@/services';
+
 import styles from './ChatSetting.module.scss';
 
 const cx = classNames.bind(styles);
@@ -21,7 +23,6 @@ const cx = classNames.bind(styles);
 function ChatSetting({ isGroup, conversation }) {
     const [isShowSetting, setIsShowSetting] = useState(false);
     const [settingBox, setSettingBox] = useState({});
-    const [settingValue, setSettingValue] = useState('');
     const [settingMenu, setSettingMenu] = useState([]);
 
     const userChatSetting = [
@@ -33,6 +34,8 @@ function ChatSetting({ isGroup, conversation }) {
             description: 'Chỉnh sửa biệt danh của người bạn của bạn',
             label: 'Biệt danh',
             placeholder: 'Nhập biệt danh của người bạn này',
+            value: conversation?.nickname,
+            field: 'nickname',
         },
         {
             id: 2,
@@ -40,6 +43,8 @@ function ChatSetting({ isGroup, conversation }) {
             icon: <IoIosImages />,
             type: 'image',
             description: 'Chỉnh sửa hình nền của đoạn chat của bạn',
+            value: conversation?.backgroundUrl,
+            field: 'backgroundUrl',
         },
         {
             id: 3,
@@ -53,39 +58,66 @@ function ChatSetting({ isGroup, conversation }) {
     const groupChatSetting = [
         {
             id: 1,
+            name: 'Chỉnh sửa tên nhóm chat',
+            icon: <TbAlphabetLatin />,
+            type: 'text',
+            description: 'Chỉnh sửa tên nhóm chat',
+            label: 'Tên nhóm chat',
+            placeholder: 'Tên nhóm chat',
+            value: conversation?.name,
+            field: 'name',
+        },
+        {
+            id: 2,
             name: 'Chỉnh sửa phần giới thiệu',
             icon: <TbAlphabetLatin />,
             type: 'textarea',
             description: 'Chỉnh sửa phần giới thiệu của nhóm',
             label: 'Giới thiệu',
             placeholder: 'Viết phần giới thiệu ở đây',
+            value: conversation?.description,
+            field: 'description',
         },
         {
-            id: 2,
+            id: 3,
             name: 'Chỉnh sửa quy định',
             icon: <LuText />,
             type: 'textarea',
             description: 'Chỉnh sửa phần quy định của nhóm',
             label: 'Quy định',
             placeholder: 'Viết quy định ở đây',
+            value: conversation?.rules,
+            field: 'rules',
         },
         {
-            id: 3,
+            id: 4,
+            name: 'Chỉnh sửa ảnh đại diện',
+            icon: <IoIosImages />,
+            type: 'image',
+            description: 'Chỉnh sửa hình nền của đoạn chat của bạn',
+            value: conversation?.thumbnail,
+            field: 'thumbnail',
+        },
+        {
+            id: 5,
             name: 'Chỉnh sửa hình nền',
             icon: <IoIosImages />,
             type: 'image',
             description: 'Chỉnh sửa hình nền của đoạn chat của bạn',
+            value: conversation?.backgroundUrl,
+            field: 'backgroundUrl',
         },
         {
-            id: 4,
+            id: 6,
             name: 'Cài đặt mật khẩu',
             icon: <RiLockPasswordFill />,
             type: 'text',
             description:
                 'Chỉnh sửa mật khẩu để tăng tính riêng tư của nhóm. Chỉ những người có mật khẩu mới có thể tham gia vào nhóm',
+            field: 'password',
         },
         {
-            id: 5,
+            id: 7,
             name: 'Xóa cuộc trò chuyện',
             icon: <MdDelete />,
             type: 'delete',
@@ -100,6 +132,20 @@ function ChatSetting({ isGroup, conversation }) {
             setSettingMenu(groupChatSetting);
         }
     }, [isGroup]);
+
+    const handleSubmit = async (value) => {
+        try {
+            const formData = new FormData();
+            formData.append('type', settingBox?.field);
+            formData.append('value', value);
+            const res = await conversationService.updateConversation(conversation._id, formData);
+            if (res) {
+                console.log(res);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     return (
         <div className={cx('wrapper')}>
@@ -120,12 +166,13 @@ function ChatSetting({ isGroup, conversation }) {
             {isShowSetting && (
                 <Overlay>
                     <SettingBox
+                        conversationId={conversation._id}
                         onClose={() => {
                             setIsShowSetting(false);
-                            setSettingValue('');
                         }}
                         content={settingBox}
-                        submitText={settingBox.type === 'delete' ? 'Xoá' : 'Lưu'}
+                        onSubmit={handleSubmit}
+                        submitText={settingBox.type === 'delete' ? 'Xóa' : 'Lưu'}
                     />
                 </Overlay>
             )}

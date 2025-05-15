@@ -135,7 +135,7 @@ function GroupCard({
                         content={settingContent}
                         onClose={() => setIsShowPasswordBox(false)}
                         submitText="Tham gia"
-                        handleSubmit={handleSubmitPassword}
+                        onSubmit={handleSubmitPassword}
                     />
                 </Overlay>
             )}

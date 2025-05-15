@@ -111,3 +111,16 @@ export const findMessage = async (conversationId, messageId) => {
         throw new Error(error || 'Failed to find message');
     }
 };
+
+export const updateConversation = async (conversationId, data) => {
+    try {
+        const res = await axios.put(`conversations/${conversationId}`, data, {
+            headers: {
+                'Content-Type': undefined,
+            },
+        });
+        return res?.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to update conversation');
+    }
+};

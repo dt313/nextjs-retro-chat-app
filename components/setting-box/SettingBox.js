@@ -10,8 +10,8 @@ import styles from './SettingBox.module.scss';
 
 const cx = classNames.bind(styles);
 
-function SettingBox({ onClose, content, submitText = 'Lưu', handleSubmit }) {
-    const [value, setValue] = useState('');
+function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu' }) {
+    const [value, setValue] = useState(content?.value || '');
     const handleOnChange = (e) => {
         if (content.type === 'image') {
             setValue(e.target.files[0]);
@@ -19,11 +19,28 @@ function SettingBox({ onClose, content, submitText = 'Lưu', handleSubmit }) {
         }
         setValue(e.target.value);
     };
+
+    const handleSubmit = () => {
+        onSubmit(value).then(() => {
+            setValue('');
+            onClose();
+        });
+    };
+
+    console.log(value);
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('header')}>
                 <h3 className={cx('title')}>{content.name}</h3>
-                <CloseIcon className={cx('close-icon')} large onClick={onClose} />
+                <CloseIcon
+                    className={cx('close-icon')}
+                    large
+                    onClick={() => {
+                        setValue('');
+                        onClose();
+                    }}
+                />
             </div>
 
             <div className={cx('content')}>
@@ -37,10 +54,7 @@ function SettingBox({ onClose, content, submitText = 'Lưu', handleSubmit }) {
                         onChange={handleOnChange}
                     />
                 )}
-                <SubmitButton
-                    className={cx({ deleteBtn: content.type === 'delete' })}
-                    onClick={() => handleSubmit(value)}
-                >
+                <SubmitButton className={cx({ deleteBtn: content.type === 'delete' })} onClick={handleSubmit}>
                     {submitText}
                 </SubmitButton>
             </div>

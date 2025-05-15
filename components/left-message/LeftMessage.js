@@ -41,7 +41,6 @@ function LeftMessage({ className, activeId }) {
     const fetchConversations = async () => {
         const res = await conversationService.getByMe();
         if (res && Array.isArray(res)) {
-            // setConversations(res);
             dispatch(initConversation(res));
         }
     };
