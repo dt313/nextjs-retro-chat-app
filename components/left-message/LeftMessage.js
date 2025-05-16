@@ -71,6 +71,8 @@ function LeftMessage({ className, activeId }) {
         };
     }, [list]);
 
+    console.log('new List', list);
+
     useEffect(() => {
         fetchConversations();
     }, []);

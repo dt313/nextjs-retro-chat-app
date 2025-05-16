@@ -55,7 +55,7 @@
     flex-direction: column;
     overflow-x: hidden;
     position: relative;
-    z-index: 1;
+    // z-index: 1;
 }
 
 // left
@@ -358,9 +358,11 @@
     top: 0;
     z-index: 2;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     backdrop-filter: blur(4px);
     padding: 8px;
+    max-height: 150px;
+    overflow: hidden;
     transition: all 0.3s ease-in-out;
 
     &-icon {
@@ -374,32 +376,42 @@
         border-radius: 10rem;
     }
 
+    &-icon:hover {
+        background-color: #d4d4d4;
+        cursor: pointer;
+    }
+
     &-text {
+        flex: 1;
+        margin-right: 24px;
         @include font-default;
-        color: #ffff;
+        color: #ffffff;
         word-spacing: 1px;
         overflow: hidden;
+        font-style: italic;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         max-height: 100%;
+        transition: max-height 0.3s ease-in-out;
     }
 
     &:hover {
-        height: 150px;
-
+        max-height: 150px;
+        height: 100%;
+        background-color: #000;
         .pin-text {
             display: block;
-            max-height: 150px;
-            overflow-y: scroll;
-            transition: max-height 0.3s ease-in-out;
+            max-height: 120px;
+            overflow-y: auto;
         }
     }
 
     &-close {
+        position: absolute;
+        right: 4px;
+        top: 4px;
         min-width: 20px;
-        margin-right: 4px;
-        margin-left: 4px;
         background-color: #fff;
     }
 }

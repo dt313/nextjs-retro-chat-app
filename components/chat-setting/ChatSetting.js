@@ -4,17 +4,22 @@ import { useEffect, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
+import eventBus from '@/config/emit';
+import { useRouter } from 'next/navigation';
 import { IoIosImages } from 'react-icons/io';
 import { LuText } from 'react-icons/lu';
 import { MdDelete } from 'react-icons/md';
 import { RiLockPasswordFill } from 'react-icons/ri';
 import { TbAlphabetLatin } from 'react-icons/tb';
+import { useSelector } from 'react-redux';
 
 import Icon from '@/components/icon';
 import Overlay from '@/components/overlay';
 import SettingBox from '@/components/setting-box';
 
 import { conversationService } from '@/services';
+
+import { getNickNameFromConversation } from '@/helpers/conversation-info';
 
 import styles from './ChatSetting.module.scss';
 
@@ -25,6 +30,8 @@ function ChatSetting({ isGroup, conversation }) {
     const [settingBox, setSettingBox] = useState({});
     const [settingMenu, setSettingMenu] = useState([]);
 
+    const { user: me } = useSelector((state) => state.auth);
+    const router = useRouter();
     const userChatSetting = [
         {
             id: 1,
@@ -34,7 +41,7 @@ function ChatSetting({ isGroup, conversation }) {
             description: 'Chỉnh sửa biệt danh của người bạn của bạn',
             label: 'Biệt danh',
             placeholder: 'Nhập biệt danh của người bạn này',
-            value: conversation?.nickname,
+            value: getNickNameFromConversation(conversation, me._id),
             field: 'nickname',
         },
         {
@@ -140,10 +147,26 @@ function ChatSetting({ isGroup, conversation }) {
             formData.append('value', value);
             const res = await conversationService.updateConversation(conversation._id, formData);
             if (res) {
-                console.log(res);
+                eventBus.emit(`conversation-update-${res._id}`, res);
             }
         } catch (error) {
             console.log(error);
+        }
+    };
+
+    const handleDelete = async () => {
+        if (conversation.isGroup) {
+            // delete conversation
+            const res = await conversationService.deleteGroupConversation(conversation._id);
+            if (res) {
+                router.push('/conversation');
+            }
+        } else {
+            // leave conversation
+            const res = await conversationService.leaveConversation(conversation._id);
+            if (res) {
+                router.push('/conversation');
+            }
         }
     };
 
@@ -171,7 +194,7 @@ function ChatSetting({ isGroup, conversation }) {
                             setIsShowSetting(false);
                         }}
                         content={settingBox}
-                        onSubmit={handleSubmit}
+                        onSubmit={settingBox.type === 'delete' ? handleDelete : handleSubmit}
                         submitText={settingBox.type === 'delete' ? 'Xóa' : 'Lưu'}
                     />
                 </Overlay>

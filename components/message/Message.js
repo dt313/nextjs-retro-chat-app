@@ -6,7 +6,7 @@ import eventBus from '@/config/emit';
 import { images } from '@/config/ui-config';
 import Tippy from '@tippyjs/react';
 import HeadlessTippy from '@tippyjs/react/headless';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { ImArrowRight } from 'react-icons/im';
 import { IoArrowUndo } from 'react-icons/io5';
@@ -26,7 +26,7 @@ import Reaction from '@/components/reaction';
 import ReactionButton from '@/components/reaction-button';
 import SettingBox from '@/components/setting-box';
 
-import { messageService } from '@/services';
+import { conversationService, messageService } from '@/services';
 
 import { getReplyContent, getReplyLabelName, getReplyType } from '@/helpers/conversation-info';
 
@@ -41,6 +41,7 @@ const cx = classNames.bind(styles);
 
 function Message({
     type,
+    conversationId,
     id,
     className,
     sender,
@@ -246,6 +247,20 @@ function Message({
         }
     };
 
+    const handlePinnedMessage = async () => {
+        try {
+            const formData = new FormData();
+            formData.append('type', 'pinnedMessage');
+            formData.append('value', id);
+            const res = await conversationService.updateConversation(conversationId, formData);
+            if (res) {
+                eventBus.emit(`conversation-update-${res._id}`, res);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     const handleMouseEnter = () => {
         setVisibility((prev) => ({ ...prev, time: true }));
     };
@@ -310,7 +325,11 @@ function Message({
                             render={(attrs) => (
                                 <div className={cx('box')} tabIndex="-1" {...attrs}>
                                     <div className={cx('more-menu')}>
-                                        <span className={cx('more-item')}>Ghim</span>
+                                        {type === 'text' && (
+                                            <span className={cx('more-item')} onClick={handlePinnedMessage}>
+                                                Ghim
+                                            </span>
+                                        )}
                                         <span
                                             className={cx('more-item')}
                                             onClick={() => setVisibility((prev) => ({ ...prev, forward: true }))}

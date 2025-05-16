@@ -1,3 +1,4 @@
+@use '/app/scss/mixins.scss' as *;
 .wrapper {
     width: 100%;
     max-height: 100%;
@@ -27,4 +28,13 @@
     display: flex;
     padding: 24px 0;
     justify-content: center;
+}
+
+.mes-notification {
+    @include font-default;
+    width: 100%;
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin: 4px 0;
 }

@@ -5,19 +5,21 @@ import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
+import { useSelector } from 'react-redux';
 
 import Avatar from '@/components/avatar';
+import { SpinnerLoader, ThreeDotLoading } from '@/components/loading';
 import Message from '@/components/message/Message';
 
 import { conversationService } from '@/services';
 
-import Icon from '../icon';
-import { SpinnerLoader, ThreeDotLoading } from '../loading';
+import { getMessageNotification } from '@/helpers/conversation-info';
+
 import styles from './MessageBox.module.scss';
 
 const cx = classNames.bind(styles);
 const LIMIT = 30;
-function MessageBox({ list = [], conversationId, searchMessageId, onLoadMore, isBeforeFinish, setList }) {
+function MessageBox({ list = [], conversationId, targetName, searchMessageId, onLoadMore, isBeforeFinish, setList }) {
     const messageEndRef = useRef(null);
     const scrollContainerRef = useRef(null);
 
@@ -25,6 +27,7 @@ function MessageBox({ list = [], conversationId, searchMessageId, onLoadMore, is
     const [isTopLoading, setIsTopLoading] = useState(false);
     const [isBottomLoading, setIsBottomLoading] = useState(false);
     const [isAfterFinish, setIsAfterFinish] = useState(true);
+    const { user: me } = useSelector((state) => state.auth);
 
     const shouldScrollBottom = useRef(true);
     useEffect(() => {
@@ -164,6 +167,9 @@ function MessageBox({ list = [], conversationId, searchMessageId, onLoadMore, is
             clearTimeout(timeoutId);
         };
     }, [searchMessageId]);
+
+    console.log('target name', targetName);
+
     return (
         <div className={cx('wrapper')} ref={scrollContainerRef} onScroll={handleScroll}>
             {isTopLoading && (
@@ -176,9 +182,10 @@ function MessageBox({ list = [], conversationId, searchMessageId, onLoadMore, is
                 const images = mes.images || null;
                 return (
                     <div key={mes._id} className={cx('message-wrapper')}>
-                        {mes?.content && (
+                        {mes?.content && mes.messageType !== 'notification' && (
                             <Message
                                 type="text"
+                                conversationId={conversationId}
                                 id={mes._id}
                                 sender={mes.sender}
                                 content={mes.content}
@@ -196,12 +203,17 @@ function MessageBox({ list = [], conversationId, searchMessageId, onLoadMore, is
                             />
                         )}
 
+                        {mes.messageType === 'notification' && (
+                            <p className={cx('mes-notification')}>{getMessageNotification(mes, me._id, targetName)}</p>
+                        )}
+
                         {attachments?.length > 0 &&
                             attachments.map((at) => {
                                 if (at.type === 'file') {
                                     return (
                                         <Message
                                             key={at._id}
+                                            conversationId={conversationId}
                                             type={at.type}
                                             id={at._id}
                                             sender={mes.sender}
@@ -225,6 +237,7 @@ function MessageBox({ list = [], conversationId, searchMessageId, onLoadMore, is
                         {images && (
                             <Message
                                 key={images?._id}
+                                conversationId={conversationId}
                                 type="image"
                                 id={images._id}
                                 sender={mes.sender}

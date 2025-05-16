@@ -7,13 +7,15 @@ import {
     REPLY_MESSAGE,
 } from '@/config/types';
 
-export function getNameFromConversation(conversation, meId) {
+export function getNameFromConversation(conversation, meId, isFullName = false) {
     if (conversation && conversation.isGroup === true) {
         return conversation?.name;
     } else if (conversation && conversation.isGroup === false) {
         if (conversation?.participants) {
             const participant = conversation?.participants?.find((item) => item.user._id !== meId);
-            return participant ? conversation.nickname || participant.user.fullName : '';
+            if (isFullName) return participant ? participant.user.fullName : '';
+
+            return participant ? participant.nickname || participant.user.fullName : '';
         }
     } else {
         return '';
@@ -31,6 +33,17 @@ export function getEmailFromConversation(conversation, meId) {
     } else {
         return '';
     }
+}
+
+export function getRoleFromConversation(conversation, meId) {
+    const participant = conversation?.participants?.find((item) => item.user._id === meId);
+    return participant.role;
+}
+
+export function getNickNameFromConversation(conversation, meId) {
+    if (conversation.isGroup) return '';
+    const participant = conversation?.participants?.find((item) => item.user._id !== meId);
+    return participant.nickname || participant.user.fullName;
 }
 
 export function getUsernameFromConversation(conversation, meId) {
@@ -112,5 +125,39 @@ export const getUserRole = (role) => {
             return 'Thành viên';
         default:
             return 'Thành viên';
+    }
+};
+
+export const getMessageNotification = (mes, meId, target) => {
+    const isMe = mes.sender._id === meId;
+
+    const updatedName = isMe ? 'Bạn' : mes.sender.fullName;
+
+    switch (mes.content) {
+        case 'nickname-updated':
+            return `${updatedName} đã đặt biệt danh cho ${isMe ? target : 'bạn'}`;
+        case 'group-name-updated':
+            return `${updatedName} đã thay đổi tên nhóm`;
+        case 'background-url-updated':
+            return `${updatedName} đã thay đổi hình nền của cuộc hội thoại`;
+        case 'group-description-updated':
+            return `${updatedName} đã thay đổi đoạn giới thiệu của nhóm`;
+        case 'group-rules-updated':
+            return `${updatedName} đã thay đổi quy định của nhóm`;
+        case 'group-thumbnail-updated':
+            return `${updatedName} đã thay đổi ảnh đại diện của nhóm`;
+        case 'group-password-updated':
+            return `${updatedName} đã thay đổi mật khẩu của nhóm`;
+        case 'pinned-message-removed':
+            return `${updatedName} đã bỏ ghim tin nhắn`;
+        case 'pinned-message-added':
+            return `${updatedName} đã ghim tin nhắn`;
+        case 'group-joined':
+            return `${updatedName} đã tham gia nhóm`;
+        case 'group-left':
+            return `${updatedName} đã rời nhóm`;
+
+        default:
+            return '';
     }
 };

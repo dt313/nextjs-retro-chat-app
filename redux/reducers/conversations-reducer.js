@@ -14,8 +14,15 @@ const conversationsReducer = (state = initialState, action) => {
             };
         case NEW_CONVERSATION:
             const conversation = action.payload;
-            const updated = state.list.map((conv) => (conv._id === conversation._id ? conversation : conv));
-            const sorted = _.orderBy(updated, ['lastMessage.sentAt'], ['desc']);
+            const isExist = state.list.some((conv) => conv._id === conversation._id);
+            let sorted = state.list;
+            if (isExist) {
+                const updated = state.list.map((conv) => (conv._id === conversation._id ? conversation : conv));
+                sorted = _.orderBy(updated, ['lastMessage.sentAt'], ['desc']);
+            } else {
+                const newConversations = [...state.list, conversation];
+                sorted = _.orderBy(newConversations, ['lastMessage.sentAt'], ['desc']);
+            }
             return {
                 list: sorted,
             };

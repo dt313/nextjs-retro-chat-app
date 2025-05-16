@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
-import { redirect, useSearchParams } from 'next/navigation';
+import { redirect, useRouter, useSearchParams } from 'next/navigation';
 import { BsThreeDots } from 'react-icons/bs';
 import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
 import { TbPinFilled } from 'react-icons/tb';
@@ -24,6 +24,8 @@ import RightMessage from '@/components/right-message';
 import useBreakpoint from '@/hooks/useBreakpoint';
 
 import { conversationService, messageService } from '@/services';
+
+import { getRoleFromConversation } from '@/helpers/conversation-info';
 
 import { getAvatarFromConversation, getNameFromConversation } from '@/helpers';
 
@@ -49,12 +51,14 @@ function Conversation({ id }) {
 
     const searchParams = useSearchParams();
     const searchMessageId = searchParams.get('message');
+    const router = useRouter();
 
     const { user: me } = useSelector((state) => state.auth);
     const { list } = useSelector((state) => state.conversations);
+    const { isOpenReplyBox, replyData } = useSelector((state) => state.replyBox);
+
     const breakpoint = useBreakpoint();
     const dispatch = useDispatch();
-    const { isOpenReplyBox, replyData } = useSelector((state) => state.replyBox);
 
     const fetchConversation = async () => {
         try {
@@ -109,6 +113,22 @@ function Conversation({ id }) {
 
         return () => {
             eventBus.off(`message-${id}`, addMessageFromWS);
+        };
+    }, []);
+
+    useEffect(() => {
+        const updateConversation = (conversation) => {
+            console.log('emit');
+            if (conversation) {
+                console.log('emit', conversation);
+                setConversation(conversation);
+            }
+        };
+
+        eventBus.on(`conversation-update-${id}`, updateConversation);
+
+        return () => {
+            eventBus.off(`conversation-update-${id}`, updateConversation);
         };
     }, []);
 
@@ -205,7 +225,20 @@ function Conversation({ id }) {
         }
     };
 
-    console.log(conversation?.backgroundUrl);
+    const handleCancelPinnedMessage = async () => {
+        try {
+            const formData = new FormData();
+            formData.append('type', 'pinnedMessage');
+            formData.append('value', 'null');
+            const res = await conversationService.updateConversation(id, formData);
+            if (res) {
+                eventBus.emit(`conversation-update-${res._id}`, res);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('left-side', isShowLeft ? 'show' : 'hide')}>
@@ -236,19 +269,21 @@ function Conversation({ id }) {
                         <Icon className={cx('dots-icon')} element={<BsThreeDots />} onClick={toggleRightSide} />
                     </div>
                     <div className={cx('c-content')} onClick={handleReadLastMessage}>
-                        <div className={cx('pin')}>
-                            <Icon className={cx('pin-icon')} element={<TbPinFilled />} />
-                            <p className={cx('pin-text')}>
-                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
-                                has been the standard dummy text ever since the 1500s, when an unknown printer took a
-                                galley of type and scrambled it to make a type specimen book. It has survived not only
-                                five centuries, but also the leap into electronic typesetting, remaining essentially
-                                unchanged. It was popularised in the 1960s with the release of Letraset sheets
-                                containing Lorem Ipsum passages, and more recently with desktop publishing software like
-                                Aldus PageMaker including versions of Lorem Ipsum.
-                            </p>
-                            <CloseIcon small className={cx('pin-close')} />
-                        </div>
+                        {conversation?.pinnedMessage && (
+                            <div className={cx('pin')}>
+                                <Icon
+                                    className={cx('pin-icon')}
+                                    element={<TbPinFilled />}
+                                    onClick={() => router.push(`?message=${conversation?.pinnedMessage._id}`)}
+                                />
+                                <p className={cx('pin-text')}>{conversation?.pinnedMessage.content}</p>
+                                {((conversation.isGroup &&
+                                    getRoleFromConversation(conversation, me._id) === 'creator') ||
+                                    !conversation.isGroup) && (
+                                    <CloseIcon small className={cx('pin-close')} onClick={handleCancelPinnedMessage} />
+                                )}
+                            </div>
+                        )}
                         <MessageBox
                             list={messagesList}
                             conversationId={id}
@@ -256,6 +291,7 @@ function Conversation({ id }) {
                             onLoadMore={handleLoadMoreBeforeMessage}
                             isBeforeFinish={isBeforeFinish}
                             setList={setMessageList}
+                            targetName={getNameFromConversation(conversation, me._id, true)}
                         />
                         {isOpenReplyBox && (
                             <div className={cx('reply-box')}>

@@ -85,7 +85,7 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
 
     const handleLeaveGroup = async () => {
         try {
-            const res = await conversationService.leaveGroup(data._id);
+            const res = await conversationService.leaveConversation(data._id);
             if (res) {
                 router.push('/conversation');
             }
@@ -149,9 +149,11 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
                     </Details>
                 )}
 
-                <Details label="chat setting">
-                    <ChatSetting isGroup={data?.isGroup} conversation={data} />
-                </Details>
+                {((isGroup && meRole === CONVERSATION_PARTICIPANT_ROLE_CREATOR) || !isGroup) && (
+                    <Details label="chat setting">
+                        <ChatSetting isGroup={data?.isGroup} conversation={data} />
+                    </Details>
+                )}
 
                 <Details label="File, Attachment">
                     <AttachFile conversationId={data?._id} />

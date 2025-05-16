@@ -94,9 +94,9 @@ export const changeUserRoleInConversation = async (groupId, data) => {
     }
 };
 
-export const leaveGroup = async (groupId) => {
+export const leaveConversation = async (conversationId) => {
     try {
-        const res = await axios.post(`/conversations/group/${groupId}/leave`);
+        const res = await axios.post(`/conversations/${conversationId}/leave`);
         return res?.data;
     } catch (error) {
         throw new Error(error || 'Failed to search conversation');
@@ -122,5 +122,14 @@ export const updateConversation = async (conversationId, data) => {
         return res?.data;
     } catch (error) {
         throw new Error(error || 'Failed to update conversation');
+    }
+};
+
+export const deleteGroupConversation = async (conversationId, data) => {
+    try {
+        const res = await axios.delete(`conversations/group/${conversationId}`, data);
+        return res?.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to delete conversation');
     }
 };
