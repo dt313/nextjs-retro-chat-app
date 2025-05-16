@@ -35,6 +35,10 @@
     word-break: break-word;
 }
 
+.m-file {
+    max-width: 60%;
+}
+
 @keyframes scaleOut {
     0% {
         transform: scale(1);

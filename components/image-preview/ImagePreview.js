@@ -1,5 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable react/jsx-no-comment-textnodes */
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -20,35 +18,12 @@ import { closeImgPreview } from '@/redux/actions/img-preview-action';
 
 import styles from './ImagePreview.module.scss';
 
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable react/jsx-no-comment-textnodes */
-
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable react/jsx-no-comment-textnodes */
-
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable react/jsx-no-comment-textnodes */
-
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable react/jsx-no-comment-textnodes */
-
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable react/jsx-no-comment-textnodes */
-
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable react/jsx-no-comment-textnodes */
-
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable react/jsx-no-comment-textnodes */
-
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable react/jsx-no-comment-textnodes */
-
 const cx = classNames.bind(styles);
 
-function ImagePreview({ images }) {
+function ImagePreview({ images = [] }) {
     const dispatch = useDispatch();
     const sliderRef = useRef(null);
+    const [list, setList] = useState(images);
     const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {
@@ -56,6 +31,12 @@ function ImagePreview({ images }) {
             sliderRef.current.slickGoTo(currentIndex);
         }
     }, [currentIndex]);
+
+    useEffect(() => {
+        if (list.length === 1) {
+            setList([...list, ...list]);
+        }
+    }, [list]);
 
     const goToPrev = () => {
         if (currentIndex > 0) {
@@ -74,8 +55,11 @@ function ImagePreview({ images }) {
     };
 
     const handleClickImage = (index) => {
+        console.log(index);
         setCurrentIndex(index);
     };
+
+    console.log(list);
 
     return (
         <div className={cx('wrapper')}>
@@ -89,7 +73,7 @@ function ImagePreview({ images }) {
                     <Icon element={<BsFillCaretLeftFill />} className={cx('arrow', 'prev')} onClick={goToPrev} />
                     <div className={cx('image-slider')}>
                         <div className={cx('image-wrap')}>
-                            <img className={cx('img')} src={images[currentIndex].url} alt={images[currentIndex].name} />
+                            <img className={cx('img')} src={list[currentIndex].url} alt={list[currentIndex].name} />
                         </div>
                     </div>
                     <Icon element={<BsFillCaretRightFill />} className={cx('arrow', 'next')} onClick={goToNext} />
@@ -98,31 +82,31 @@ function ImagePreview({ images }) {
                     <Slider
                         ref={sliderRef}
                         className={cx('slider-container')}
-                        slidesToShow={12}
+                        slidesToShow={images.length > 12 ? 12 : images.length}
                         swipeToSlide={true}
+                        vertical={false}
                         focusOnSelect={true}
                         centerMode={true}
                         arrows={false}
                         responsive={[
                             {
                                 breakpoint: 1024,
-                                settings: { slidesToShow: 8 },
+                                settings: { slidesToShow: images.length > 8 ? 8 : images.length },
                                 centerMode: true,
                             },
                             {
                                 breakpoint: 768,
-                                settings: { slidesToShow: 5 },
+                                settings: { slidesToShow: images.length > 5 ? 5 : images.length },
                                 centerMode: true,
                             },
                             {
                                 breakpoint: 480,
-                                settings: { slidesToShow: 3 },
+                                settings: { slidesToShow: images.length > 3 ? 3 : images.length },
                                 centerMode: true,
                             },
                         ]}
                     >
-                        {images.map((image, index) => (
-                            // eslint-disable-next-line @next/next/no-img-element
+                        {list.map((image, index) => (
                             <div key={index} onClick={() => handleClickImage(index)}>
                                 <div className={cx('image-wrap', { active: currentIndex === index })}>
                                     <img className={cx('img')} src={image.url} alt={image.name} />

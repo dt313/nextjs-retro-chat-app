@@ -20,31 +20,31 @@ function SearchContent() {
     const searchParams = useSearchParams();
     const { user: me } = useSelector((state) => state.auth);
 
-    const [searchValue, setSearchValue] = useState('');
+    const [searchValue, setSearchValue] = useState(searchParams.get('q') || '');
     const [filterValue, setFilterValue] = useState(searchParams.get('filter') || 'user');
     const [list, setList] = useState([]);
     const router = useRouter();
 
     const fetchAPI = async (type) => {
         if (type === 'user') {
-            const res = await userService.getUsers();
+            const res = await userService.getUsers(searchValue);
             const users = res.filter((user) => user._id !== me._id);
             setList(users);
         } else if (type === 'group') {
-            const res = await groupService.getGroups();
+            const res = await groupService.getGroups(searchValue);
             setList(res);
         }
     };
 
     useEffect(() => {
         fetchAPI(filterValue);
-    }, [filterValue]);
+    }, [filterValue, searchValue]);
 
     function changeSearchParams(q, filter) {
         const params = new URLSearchParams();
 
         if (q) {
-            params.set('q', q.toString().trim());
+            params.set('q', q.toString().trim() || '');
         }
 
         if (filter) {
@@ -63,7 +63,7 @@ function SearchContent() {
     useEffect(() => {
         const queryValue = searchParams.get('q')?.toString().trim();
         const filterType = searchParams.get('filter')?.toString().trim() || 'user';
-        setSearchValue(queryValue);
+        setSearchValue(queryValue || '');
         setFilterValue(filterType);
         changeSearchParams(queryValue, filterType);
     }, []);

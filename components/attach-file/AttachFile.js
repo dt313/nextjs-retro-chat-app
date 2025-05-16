@@ -29,27 +29,21 @@ function AttachFile({ conversationId }) {
         fetchFiles();
     }, []);
 
-    const handleDownload = async (url) => {
+    const handleDownload = async (url, name) => {
         try {
-            console.log(url);
-            const response = await fetch(url, {
-                method: 'GET',
-                mode: 'cors', // quan trọng nếu file từ domain khác
-            });
-
-            if (!response.ok) {
-                throw new Error('Không thể tải file');
-            }
+            const response = await fetch(url, { mode: 'cors' }); // thêm mode: 'cors' nếu cần
+            if (!response.ok) throw new Error('Network response was not ok');
 
             const blob = await response.blob();
             const blobUrl = window.URL.createObjectURL(blob);
 
-            const a = document.createElement('a');
-            a.href = blobUrl;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = 'download.txt'; // fallback tên file nếu name undefined
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
             window.URL.revokeObjectURL(blobUrl);
         } catch (error) {
             console.error('Lỗi khi tải file:', error);
@@ -64,7 +58,7 @@ function AttachFile({ conversationId }) {
                     className={cx('attach-file')}
                     name={file.name}
                     size={file.size}
-                    onClick={() => handleDownload(file.url)}
+                    onClick={() => handleDownload(file.url, file.name)}
                 />
             ))}
 

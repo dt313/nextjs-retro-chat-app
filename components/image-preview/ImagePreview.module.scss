@@ -94,6 +94,7 @@
 }
 
 .slider {
+    max-height: 200px;
     background-color: #fff;
     border-radius: 10px;
     z-index: 2;
@@ -102,8 +103,6 @@
 .slider-container {
     height: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
     padding: 20px;
 
     .image-wrap {

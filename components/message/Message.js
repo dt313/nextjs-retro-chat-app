@@ -134,13 +134,13 @@ function Message({
 
         if (type === 'file') {
             return (
-                <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} id={`message-${id}`}>
-                    <File
-                        className={cx('m-file', { highlight: isHighlight })}
-                        primary
-                        name={content.name}
-                        size={content.size}
-                    />
+                <div
+                    className={cx('m-file')}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    id={`message-${id}`}
+                >
+                    <File className={cx({ highlight: isHighlight })} primary name={content.name} size={content.size} />
                 </div>
             );
         }
