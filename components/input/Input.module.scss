@@ -5,6 +5,8 @@
     flex-direction: column;
     gap: 8px;
     margin-bottom: 12px;
+
+    --valid-color: red;
 }
 
 .label {
@@ -17,9 +19,9 @@
     width: 100%;
     border-radius: 10rem;
     background-color: #ededed;
-    border: 2px solid #d2d2d2;
+    border: 1.7px solid #d2d2d2;
     padding: 12px 20px;
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     font-weight: 400;
     font-family: var(--font-family);
     outline: none;
@@ -28,6 +30,10 @@
     &:focus {
         border-color: #3db8a7;
     }
+}
+
+.input.error-input {
+    border-color: var(--valid-color);
 }
 
 .textarea {
@@ -43,11 +49,20 @@
 
 .code-input-wrapper {
     width: 100%;
-    background-color: #ededed;
-    border: 2px solid #d2d2d2;
-    display: flex;
-    border-radius: 10rem;
-    margin-bottom: 12px;
+    --valid-color: red;
+
+    .input-wrap {
+        width: 100%;
+        background-color: #ededed;
+        border: 1.7px solid #d2d2d2;
+        display: flex;
+        border-radius: 10rem;
+        margin-bottom: 12px;
+    }
+
+    .input-wrap.error-input {
+        border-color: var(--valid-color);
+    }
 
     .code-input {
         flex: 1;
@@ -60,16 +75,27 @@
         background-color: transparent;
     }
 
+    .code-input::-webkit-outer-spin-button,
+    .code-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .code-input[type='number'] {
+        -moz-appearance: textfield;
+    }
+
     .code-send-btn {
         max-width: 120px;
         min-width: 100px;
         width: 100%;
         border: none;
         width: 100%;
+        margin: 1px;
         background-image: linear-gradient(-60deg, #ff5858 0%, #f09819 100%);
         border-radius: 10rem;
         font-weight: 500;
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         font-family: var(--font-family);
         cursor: pointer;
     }
@@ -96,4 +122,11 @@
     .code-send-btn {
         cursor: no-drop;
     }
+}
+
+.error-message {
+    @include font-default;
+    color: var(--valid-color);
+    font-weight: 500;
+    margin-left: 8px;
 }

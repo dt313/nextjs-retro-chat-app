@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -10,6 +10,8 @@ import { useDispatch } from 'react-redux';
 import Input from '@/components/input';
 
 import { authService } from '@/services';
+
+import Validation from '@/utils/input-validation';
 
 import { login } from '@/redux/actions/auth-action';
 import { LOGIN_AUTH_BOX, REGISTER_AUTH_BOX, closeAuthBox, openAuthBox } from '@/redux/actions/auth-box-action';
@@ -29,12 +31,60 @@ function AuthWithPassword({ type }) {
         code: '',
     });
 
+    const [errors, setErrors] = useState({
+        email: '',
+        password: '',
+        fullName: '',
+        code: '',
+    });
+
+    const [disable, setDisable] = useState({
+        code: true,
+        submit: true,
+    });
+
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        let errorEmail = Validation({
+            value: authData.email,
+            rules: [Validation.isRequired(), Validation.isSocialLink('email')],
+        });
+        let errorPassword = Validation({
+            value: authData.password,
+            rules: [Validation.isRequired(), Validation.minLetter(8)],
+        });
+        let errorFullName = Validation({
+            value: authData.fullName,
+            rules: [Validation.isRequired(), Validation.minWord(2), Validation.minLetterEachWord(2)],
+        });
+        let errorCode = Validation({
+            value: authData.code,
+            rules: [Validation.isRequired(), Validation.minLetter(6), Validation.maxLength(6)],
+        });
+
+        if (type === LOGIN_AUTH_BOX) {
+            setDisable({
+                code: true,
+                submit: !!(errorEmail || errorPassword),
+            });
+        } else if (type === REGISTER_AUTH_BOX) {
+            setDisable({
+                code: !!(errorFullName || errorPassword || errorEmail),
+                submit: !!(errorEmail || errorPassword || errorFullName || errorCode),
+            });
+        }
+    }, [authData, type]);
 
     const handleChangeAuthData = (e) => {
         setAuthData({
             ...authData,
             [e.target.name]: e.target.value,
+        });
+
+        setErrors({
+            ...errors,
+            [e.target.name]: '',
         });
     };
 
@@ -68,6 +118,43 @@ function AuthWithPassword({ type }) {
         }
     };
 
+    const handleBlur = (e) => {
+        let errorMessage = '';
+        switch (e.target.name) {
+            case 'email':
+                errorMessage = Validation({
+                    value: e.target.value,
+                    rules: [Validation.isRequired(), Validation.isSocialLink('email')],
+                });
+                break;
+            case 'password':
+                errorMessage = Validation({
+                    value: e.target.value,
+                    rules: [Validation.isRequired(), Validation.minLetter(8)],
+                });
+                break;
+            case 'fullName':
+                errorMessage = Validation({
+                    value: e.target.value,
+                    rules: [Validation.isRequired(), Validation.minWord(2), Validation.minLetterEachWord(2)],
+                });
+                break;
+            case 'code':
+                errorMessage = Validation({
+                    value: e.target.value,
+                    rules: [Validation.isRequired(), Validation.minLetter(6), Validation.maxLength(6)],
+                });
+                break;
+        }
+
+        setErrors({
+            ...errors,
+            [e.target.name]: errorMessage,
+        });
+    };
+
+    console.log(disable.submit);
+
     return (
         <div className={cx('wrapper')}>
             {type === REGISTER_AUTH_BOX && (
@@ -77,14 +164,18 @@ function AuthWithPassword({ type }) {
                     name="fullName"
                     onChange={handleChangeAuthData}
                     placeholder="Họ và tên"
+                    onBlur={handleBlur}
+                    errorMessage={errors.fullName}
                 />
             )}
             <Input
-                label="Tên đăng nhập"
+                label="Email"
                 value={authData.email}
                 name="email"
                 onChange={handleChangeAuthData}
-                placeholder="Email or username"
+                placeholder="Nhập email"
+                onBlur={handleBlur}
+                errorMessage={errors.email}
             />
             <Input
                 value={authData.password}
@@ -92,17 +183,21 @@ function AuthWithPassword({ type }) {
                 type="password"
                 onChange={handleChangeAuthData}
                 placeholder="Nhập password"
+                onBlur={handleBlur}
+                errorMessage={errors.password}
             />
             {type === REGISTER_AUTH_BOX && (
                 <CodeInput
                     placeholder="Nhập mã xác nhận"
-                    // disable
                     name="code"
                     value={authData.code}
                     onChange={handleChangeAuthData}
+                    onBlur={handleBlur}
+                    disable={disable.code}
+                    errorMessage={errors.code}
                 />
             )}
-            <SubmitButton disable className={cx('submit-btn')} onClick={handleSubmit}>
+            <SubmitButton disable={disable.submit} className={cx('submit-btn')} onClick={handleSubmit}>
                 {type}
             </SubmitButton>
         </div>

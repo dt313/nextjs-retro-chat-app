@@ -4,13 +4,13 @@ import styles from './Input.module.scss';
 
 const cx = classNames.bind(styles);
 
-function Input({ inputType = 'text', label, value, onChange, placeholder, className, ...props }) {
+function Input({ inputType = 'text', label, value, onChange, placeholder, className, errorMessage = '', ...props }) {
     return (
         <div className={cx('wrapper', { [className]: className })}>
             {label && <span className={cx('label')}>{label}</span>}
             {inputType === 'text' && (
                 <input
-                    className={cx('input')}
+                    className={cx('input', errorMessage && 'error-input')}
                     value={value}
                     onChange={onChange}
                     placeholder={placeholder}
@@ -20,13 +20,15 @@ function Input({ inputType = 'text', label, value, onChange, placeholder, classN
             )}
             {inputType === 'textarea' && (
                 <textarea
-                    className={cx('input', 'textarea')}
+                    className={cx('input', 'textarea', errorMessage && 'error-input')}
                     value={value}
                     onChange={onChange}
                     placeholder={placeholder}
                     {...props}
                 />
             )}
+
+            {errorMessage && <p className={cx('error-message')}>{errorMessage}</p>}
         </div>
     );
 }

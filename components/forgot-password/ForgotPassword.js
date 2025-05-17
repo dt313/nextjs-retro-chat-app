@@ -19,12 +19,25 @@ function ForgotPassword() {
         cfPassword: '',
     });
 
+    const [errors, setErrors] = useState({
+        email: '',
+        code: '',
+        password: '',
+        cfPassword: '',
+    });
+
     const handleChangeData = (e) => {
         setData({
             ...data,
             [e.target.name]: e.target.value,
         });
+
+        setErrors({
+            ...errors,
+            [e.target.name]: '',
+        });
     };
+
     return (
         <div className={cx('wrapper')}>
             <FormHeader
