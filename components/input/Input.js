@@ -49,6 +49,7 @@ function Input({ inputType = 'text', label, value, onChange, placeholder, classN
                         type="button"
                         className={cx('toggle-password')}
                         onClick={() => setShowPassword(!showPassword)}
+                        tabIndex="-1"
                     >
                         {showPassword ? <FaEyeSlash /> : <FaEye />}
                     </button>

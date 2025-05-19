@@ -6,17 +6,25 @@ import styles from './Input.module.scss';
 
 const cx = classNames.bind(styles);
 
-function CodeInput({ className, disable, value, onChange, buttonTitle = 'Gửi mã', errorMessage, ...props }) {
+function CodeInput({
+    className,
+    disable,
+    value,
+    onChange,
+    buttonTitle = 'Gửi mã',
+    errorMessage,
+    onClickButton,
+    ...props
+}) {
     const [focus, setFocus] = useState(false);
     const classes = cx('code-input-wrapper', className, { focusBorder: focus });
-
     const handleSendCode = (e) => {
-        if (disable || value.length !== 6) {
+        if (disable) {
             e.preventDefault();
             return;
         }
 
-        console.log(value);
+        onClickButton();
     };
     return (
         <div className={classes}>
@@ -32,11 +40,7 @@ function CodeInput({ className, disable, value, onChange, buttonTitle = 'Gửi m
                     autoComplete="off"
                     {...props}
                 />
-                <button
-                    className={cx('code-send-btn')}
-                    disabled={disable || value.length !== 6}
-                    onClick={handleSendCode}
-                >
+                <button className={cx('code-send-btn')} disabled={disable} onClick={handleSendCode}>
                     {buttonTitle}
                 </button>
             </div>

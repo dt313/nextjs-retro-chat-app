@@ -59,12 +59,28 @@ function ImagePreview({ images = [] }) {
         setCurrentIndex(index);
     };
 
-    console.log(list);
+    const handleDownloadImage = async () => {
+        const imgUrl = list[currentIndex].url;
+
+        try {
+            const response = await fetch(imgUrl);
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'downloaded-image.jpg';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     return (
         <div className={cx('wrapper')}>
             <div className={cx('actions')}>
-                <Icon element={<LuImageDown />} className={cx('download')} />
+                <Icon element={<LuImageDown />} className={cx('download')} onClick={handleDownloadImage} />
                 <CloseIcon large onClick={() => dispatch(closeImgPreview())} />
             </div>
             <div className={cx('blur')}></div>

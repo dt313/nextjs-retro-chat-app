@@ -22,7 +22,7 @@ const notificationReducer = (state = initialState, action) => {
         case ADD_NOTIFICATION:
             return {
                 ...state,
-                notifications: [action.payload, ...state.notifications],
+                notifications: [...state.notifications, ...action.payload],
             };
 
         case CHANGE_TYPE_NOTIFICATION:

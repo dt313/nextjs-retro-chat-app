@@ -27,6 +27,15 @@ export const cancelFriendRequest = async (id) => {
     }
 };
 
+export const unFriend = async (toUserId) => {
+    try {
+        const res = await axios.post(`/invitation/user/unfriend/${toUserId}`);
+        return res?.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to unfriend');
+    }
+};
+
 export const createGroupInvitation = async (groupId, toUserId) => {
     try {
         const res = await axios.post(`invitation/group/${groupId}/to/${toUserId}`);

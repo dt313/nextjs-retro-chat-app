@@ -15,6 +15,7 @@ import { RxFace } from 'react-icons/rx';
 import { useDispatch, useSelector } from 'react-redux';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light.css';
+import { validate } from 'uuid';
 
 import File from '@/components/attach-file/File';
 import Avatar from '@/components/avatar';
@@ -448,6 +449,7 @@ function Message({
                                 name: 'Xóa tin nhắn',
                                 type: 'delete',
                                 description: 'Bạn có chắc chắn muốn xóa tin nhắn này không ?',
+                                validate: () => {},
                             }}
                             onSubmit={handleDeleteMessage}
                         />

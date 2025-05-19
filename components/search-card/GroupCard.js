@@ -8,6 +8,7 @@ import { set } from 'lodash';
 import { useRouter } from 'next/navigation';
 import { FaFacebookMessenger, FaRegUserCircle } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
+import { validate } from 'uuid';
 
 import { GroupJoinIcon } from '@/assets/svg/icons/group-join';
 
@@ -64,6 +65,7 @@ function GroupCard({
         description: 'Nhóm chat yêu cầu nhập mật khẩu để tham gia nhóm chat này',
         label: 'Mật khẩu',
         placeholder: 'Nhập mật khẩu',
+        validate: () => {},
     };
 
     const handleSubmitPassword = async (password) => {

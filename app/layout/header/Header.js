@@ -125,7 +125,7 @@ const UserMenu = () => {
     return (
         <div className={cx('user-menu')}>
             <span className={cx('um-item', 'separate', 'no-hover', 'name')}>{me.fullName}</span>
-            <span className={cx('um-item')} onClick={() => router.push(`/profile/@${me._id}`)}>
+            <span className={cx('um-item')} onClick={() => router.push(`/profile/@${me.username}`)}>
                 Trang cá nhân
             </span>
             <span className={cx('um-item')} onClick={handleLogout}>

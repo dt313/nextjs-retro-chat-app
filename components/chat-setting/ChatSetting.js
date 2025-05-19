@@ -27,6 +27,7 @@ import styles from './ChatSetting.module.scss';
 
 const cx = classNames.bind(styles);
 
+const defaultFn = () => {};
 function ChatSetting({ isGroup, data }) {
     const [isShowSetting, setIsShowSetting] = useState(false);
     const [settingBox, setSettingBox] = useState({});
@@ -51,12 +52,7 @@ function ChatSetting({ isGroup, data }) {
             placeholder: 'Nhập biệt danh của người bạn này',
             value: getNickNameFromConversation(conversation, me._id),
             field: 'nickname',
-            validate: (value) => {
-                return Validation({
-                    value: value,
-                    rules: [],
-                });
-            },
+            validate: defaultFn,
         },
         {
             id: 2,
@@ -66,12 +62,7 @@ function ChatSetting({ isGroup, data }) {
             description: 'Chỉnh sửa hình nền của đoạn chat của bạn',
             value: conversation?.backgroundUrl,
             field: 'backgroundUrl',
-            validate: (value) => {
-                return Validation({
-                    value: value,
-                    rules: [],
-                });
-            },
+            validate: defaultFn,
         },
         {
             id: 3,
@@ -79,12 +70,7 @@ function ChatSetting({ isGroup, data }) {
             icon: <MdDelete />,
             type: 'delete',
             description: 'Bạn có chắc chắn muốn xóa cuộc trò chuyện này không?',
-            validate: (value) => {
-                return Validation({
-                    value: value,
-                    rules: [],
-                });
-            },
+            validate: defaultFn,
         },
     ];
 
@@ -148,12 +134,7 @@ function ChatSetting({ isGroup, data }) {
             description: 'Chỉnh sửa hình nền của đoạn chat của bạn',
             value: conversation?.thumbnail,
             field: 'thumbnail',
-            validate: (value) => {
-                return Validation({
-                    value: value,
-                    rules: [],
-                });
-            },
+            validate: defaultFn,
         },
         {
             id: 5,
@@ -163,12 +144,7 @@ function ChatSetting({ isGroup, data }) {
             description: 'Chỉnh sửa hình nền của đoạn chat của bạn',
             value: conversation?.backgroundUrl,
             field: 'backgroundUrl',
-            validate: (value) => {
-                return Validation({
-                    value: value,
-                    rules: [],
-                });
-            },
+            validate: defaultFn,
         },
         {
             id: 6,
@@ -191,12 +167,7 @@ function ChatSetting({ isGroup, data }) {
             icon: <MdDelete />,
             type: 'delete',
             description: 'Bạn có chắc chắn muốn xóa cuộc trò chuyện này không?',
-            validate: (value) => {
-                return Validation({
-                    value: value,
-                    rules: [],
-                });
-            },
+            validate: defaultFn,
         },
     ];
 

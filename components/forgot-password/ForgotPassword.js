@@ -2,11 +2,17 @@ import { useEffect, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
+import { useDispatch } from 'react-redux';
+
 import SubmitButton from '@/components/auth-with-password/SubmitButton';
 import FormHeader from '@/components/form-header';
 import Input from '@/components/input';
 
+import { mailService, userService } from '@/services';
+
 import Validation from '@/utils/input-validation';
+
+import { LOGIN_AUTH_BOX, openAuthBox } from '@/redux/actions/auth-box-action';
 
 import CodeInput from '../input/CodeInput';
 import styles from './ForgotPassWord.module.scss';
@@ -28,8 +34,13 @@ function ForgotPassword() {
         cfPassword: '',
     });
 
+    const [error, setError] = useState('');
+    const [info, setInfo] = useState('');
+
     const [disable, setDisable] = useState({ code: '', submit: '' });
     const [isResetPassword, setIsResetPassword] = useState(false);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         let errorEmail = Validation({
@@ -116,11 +127,48 @@ function ForgotPassword() {
         });
     };
 
+    const handleSendCode = async () => {
+        try {
+            const res = await mailService.sendResetPasswordCode(data.email);
+            if (res) {
+                setError('');
+                setInfo('Hãy kiểm tra email của bạn để lấy mã xác nhận');
+            }
+        } catch (error) {
+            setError(error.message);
+        }
+    };
+
     const handleSubmit = async () => {
         if (isResetPassword) {
-            console.log(data.cfPassword);
+            try {
+                const res = await userService.resetPassword(data.email, data.cfPassword);
+                if (res) {
+                    setError('');
+                    setInfo('Đổi mật khẩu thành công');
+                    setData({
+                        email: '',
+                        code: '',
+                        password: '',
+                        cfPassword: '',
+                    });
+
+                    dispatch(openAuthBox(LOGIN_AUTH_BOX));
+                }
+            } catch (error) {
+                setError(error.message);
+            }
         } else {
-            setIsResetPassword(true);
+            try {
+                const res = await mailService.verifyResetPasswordCode(data.email, data.code);
+                if (res) {
+                    setError('');
+                    setInfo('');
+                    setIsResetPassword(true);
+                }
+            } catch (error) {
+                setError(error.message);
+            }
         }
     };
     return (
@@ -150,6 +198,7 @@ function ForgotPassword() {
                             onChange={handleChangeData}
                             onBlur={handleBlur}
                             errorMessage={errors.code}
+                            onClickButton={handleSendCode}
                         />
                     </div>
                 ) : (
@@ -177,6 +226,8 @@ function ForgotPassword() {
                         />
                     </div>
                 )}
+                <p className={cx('error-message')}>{error}</p>
+                {info && <p className={cx('info-message')}>{info}</p>}
                 <SubmitButton disable={disable.submit} onClick={handleSubmit}>
                     Đặt lại mật khẩu
                 </SubmitButton>

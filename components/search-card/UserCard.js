@@ -69,7 +69,7 @@ function UserCard({
     const handleAcceptFriendRequest = async () => {
         try {
             const res = await invitationService.replyFriendRequest({
-                sender: id,
+                senderId: id,
                 status: FRIEND_REQUEST_ACCEPTED,
             });
 
@@ -101,8 +101,6 @@ function UserCard({
                     content: error.message,
                 }),
             );
-        } finally {
-            setFriendRequestByMe(false);
         }
     };
 

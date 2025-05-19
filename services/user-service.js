@@ -35,3 +35,12 @@ export const getFriends = async (name) => {
         throw new Error(error || 'Failed to fetch user');
     }
 };
+
+export const resetPassword = async (email, password) => {
+    try {
+        const res = await axios.post(`/users/reset-password`, { email, password });
+        return res.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to reset password');
+    }
+};

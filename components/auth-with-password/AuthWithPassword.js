@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 
 import Input from '@/components/input';
 
-import { authService } from '@/services';
+import { authService, mailService } from '@/services';
 
 import Validation from '@/utils/input-validation';
 
@@ -42,6 +42,10 @@ function AuthWithPassword({ type }) {
         code: true,
         submit: true,
     });
+
+    const [error, setError] = useState('');
+
+    const [buttonText, setButtonText] = useState('Gửi mã');
 
     const dispatch = useDispatch();
 
@@ -89,14 +93,14 @@ function AuthWithPassword({ type }) {
     };
 
     const handleSubmit = async () => {
-        console.log(process.env.NODE_ENV, process.env.NEXT_PUBLIC_API_URL);
         switch (type) {
             case REGISTER_AUTH_BOX:
                 try {
                     const res = await authService.register(authData);
                     if (res) dispatch(openAuthBox(LOGIN_AUTH_BOX));
+                    setError('');
                 } catch (error) {
-                    console.log(error);
+                    setError(error.message);
                 } finally {
                     return;
                 }
@@ -109,7 +113,7 @@ function AuthWithPassword({ type }) {
                     router.push('/');
                     dispatch(closeAuthBox());
                 } catch (error) {
-                    console.log(error);
+                    setError(error.message);
                 } finally {
                     return;
                 }
@@ -153,7 +157,16 @@ function AuthWithPassword({ type }) {
         });
     };
 
-    console.log(disable.submit);
+    const handleSendCode = async () => {
+        try {
+            const res = await mailService.sendRegisterCode(authData.email);
+            if (res) {
+                setButtonText('Đã gửi');
+            }
+        } catch (error) {
+            setError(error.message);
+        }
+    };
 
     return (
         <div className={cx('wrapper')}>
@@ -195,8 +208,12 @@ function AuthWithPassword({ type }) {
                     onBlur={handleBlur}
                     disable={disable.code}
                     errorMessage={errors.code}
+                    buttonTitle={buttonText}
+                    onClickButton={handleSendCode}
                 />
             )}
+
+            {error && <p className={cx('error')}>{error}</p>}
             <SubmitButton disable={disable.submit} className={cx('submit-btn')} onClick={handleSubmit}>
                 {type}
             </SubmitButton>

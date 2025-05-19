@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
@@ -21,22 +21,33 @@ import {
     TEMP_NOTIFICATION_GROUP_INVITATION_ACCEPTED,
     TEMP_NOTIFICATION_GROUP_INVITATION_REJECTED,
 } from '@/config/types';
+import { before } from 'lodash';
 import { IoSettings } from 'react-icons/io5';
 import { useDispatch } from 'react-redux';
 
 import Icon from '@/components/icon/Icon';
 
-import { invitationService } from '@/services';
+import { invitationService, notificationService } from '@/services';
 
-import { changeTypeNotification } from '@/redux/actions/notification-action';
+import { addNotification, changeTypeNotification } from '@/redux/actions/notification-action';
 
+import { SpinnerLoader } from '../loading';
 import NotificationItem from './NotificationItem';
 import styles from './NotifyBox.module.scss';
 
 const cx = classNames.bind(styles);
 
+const LIMIT = 10;
+
 function NotifyBox({ list = [] }) {
     const dispatch = useDispatch();
+
+    const scrollContainerRef = useRef();
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [isFinish, setIsFinish] = useState(list.length < LIMIT);
+
+    console.log(isFinish);
 
     const handleReplyFriendRequest = async (senderId, status, notificationId) => {
         try {
@@ -255,6 +266,42 @@ function NotifyBox({ list = [] }) {
         }
     };
 
+    const loadMoreNotification = async () => {
+        try {
+            const latestNotification = list[list.length - 1];
+            console.log(latestNotification);
+            const res = await notificationService.getAllNotifications(latestNotification?.createdAt);
+            if (res && Array.isArray(res)) {
+                dispatch(addNotification(res));
+                if (res.length < LIMIT) {
+                    setIsFinish(true);
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleScroll = () => {
+        const container = scrollContainerRef.current;
+        if (!container) return;
+
+        const { scrollTop, scrollHeight, clientHeight } = container;
+
+        if (scrollTop + clientHeight >= scrollHeight - 5 && !isFinish) {
+            setIsLoading(true);
+            loadMoreNotification().then(() => {
+                const waitForRender = () => {
+                    requestAnimationFrame(() => {
+                        setIsLoading(false);
+                    });
+                };
+
+                waitForRender();
+            });
+        }
+    };
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('header')}>
@@ -262,7 +309,7 @@ function NotifyBox({ list = [] }) {
                 <Icon className={cx('setting-icon')} medium element={<IoSettings />} />
             </div>
 
-            <div className={cx('notify-list')}>
+            <div className={cx('notify-list')} ref={scrollContainerRef} onScroll={handleScroll}>
                 {list.map((item) => {
                     return (
                         <NotificationItem
@@ -277,6 +324,8 @@ function NotifyBox({ list = [] }) {
                         />
                     );
                 })}
+
+                {isLoading && <SpinnerLoader />}
             </div>
         </div>
     );
