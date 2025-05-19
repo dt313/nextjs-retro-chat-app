@@ -15,8 +15,8 @@
     min-height: 44px;
     background-color: #fff;
     border-radius: 8px;
-    font-size: 1.6rem;
-    margin-right: 12px;
+    font-size: 1.8rem;
+    margin-right: 8px;
 }
 
 .attach-file {
@@ -44,6 +44,7 @@
 .file-name {
     @include font-default;
     max-width: calc(100%);
+    font-weight: 500;
     width: 100%;
     overflow: hidden;
     text-wrap: nowrap;
@@ -67,6 +68,10 @@
         display: flex;
         flex-direction: column;
         gap: 4px;
+    }
+
+    .file-name {
+        font-weight: bold;
     }
 
     background-color: #fff;

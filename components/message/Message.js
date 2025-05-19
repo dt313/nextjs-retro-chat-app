@@ -26,7 +26,7 @@ import Reaction from '@/components/reaction';
 import ReactionButton from '@/components/reaction-button';
 import SettingBox from '@/components/setting-box';
 
-import { conversationService, messageService } from '@/services';
+import { attachmentService, conversationService, messageService } from '@/services';
 
 import { getReplyContent, getReplyLabelName, getReplyType } from '@/helpers/conversation-info';
 
@@ -101,8 +101,41 @@ function Message({
         isSender: sender._id === me._id,
     });
 
-    const handleOpenImagePreview = () => {
-        dispatch(openImgPreview({ currentIndex: 3, listImages: images }));
+    const handleOpenImagePreview = async (id) => {
+        try {
+            const images = await attachmentService.getImagesOfConversation(conversationId);
+            console.log(images);
+            if (images.length > 0) {
+                const index = images.findIndex((img) => img._id === id);
+                if (index !== -1) {
+                    dispatch(openImgPreview({ currentIndex: index, listImages: images }));
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleDownloadFile = async (url, name) => {
+        try {
+            const response = await fetch(url, { mode: 'cors' }); // thêm mode: 'cors' nếu cần
+            if (!response.ok) throw new Error('Network response was not ok');
+
+            const blob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = 'download.txt'; // fallback tên file nếu name undefined
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            window.URL.revokeObjectURL(blobUrl);
+        } catch (error) {
+            console.error('Lỗi khi tải file:', error);
+            alert(url);
+        }
     };
 
     const renderMessage = () => {
@@ -139,6 +172,7 @@ function Message({
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                     id={`message-${id}`}
+                    onClick={() => handleDownloadFile(content.url, content.name)}
                 >
                     <File className={cx({ highlight: isHighlight })} primary name={content.name} size={content.size} />
                 </div>
@@ -169,7 +203,7 @@ function Message({
                                     alt={im.name}
                                     width={200}
                                     height={200}
-                                    onClick={handleOpenImagePreview}
+                                    onClick={() => handleOpenImagePreview(im._id)}
                                 />
                             );
                         })}

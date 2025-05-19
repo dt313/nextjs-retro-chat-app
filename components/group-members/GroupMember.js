@@ -27,7 +27,10 @@ function GroupMember({ id, name, date, avatar, role, meRole, onClickDeleteAction
             <Avatar size={40} src={avatar} alt={name} />
             <div className={cx('info')}>
                 <span className={cx('name')}>
-                    {name} <span className={cx('role')}>( {getUserRole(role)} )</span>
+                    {name}{' '}
+                    <span className={cx('role')}>
+                        ( {getUserRole(role)} {me._id === id && ' - Bạn'} )
+                    </span>
                 </span>
                 <span className={cx('date')}>{date}</span>
             </div>

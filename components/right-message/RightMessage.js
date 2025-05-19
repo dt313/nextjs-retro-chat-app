@@ -44,7 +44,7 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
     const { user: me } = useSelector((state) => state.auth);
 
     const meRole = useMemo(() => {
-        return data?.participants?.find((u) => u.user._id === me._id)?.role;
+        return data?.participants?.find((u) => u.user._id === me._id).role;
     }, [data?.participants, me._id]);
 
     const INFORMATION = [
@@ -104,7 +104,9 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
                     className={cx('action-icon')}
                     element={<FaRegUserCircle />}
                     medium
-                    onClick={() => router.push('/profile')}
+                    onClick={() =>
+                        router.push(`/profile/${isGroup ? data._id : `@${getUsernameFromConversation(data, me._id)}`}`)
+                    }
                 />
                 <Icon
                     className={cx('action-icon')}
