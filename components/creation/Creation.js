@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
-import { groups, types, users } from '@/config/ui-config';
-import { on } from 'events';
+import { types } from '@/config/ui-config';
 import { useRouter } from 'next/navigation';
 
 import SubmitButton from '@/components/auth-with-password/SubmitButton';
@@ -19,6 +18,8 @@ import ToggleSwitch from '@/components/toggle-switch';
 import User from '@/components/user';
 
 import { conversationService } from '@/services';
+
+import Validation from '@/utils/input-validation';
 
 import styles from './Creation.module.scss';
 
@@ -35,14 +36,25 @@ function Creation({ onClose }) {
         password: '',
     });
 
-    const [activeTab, setActiveTab] = useState('user');
-    const [list, setList] = useState([]);
+    const [errors, setErrors] = useState({
+        name: '',
+        thumbnail: '',
+        type: '',
+        description: '',
+        rules: '',
+        password: '',
+    });
+
+    const [buttonDisable, setButtonDisable] = useState(true);
+
+    // const [activeTab, setActiveTab] = useState('user');
+    // const [list, setList] = useState([]);
 
     const router = useRouter();
 
-    useEffect(() => {
-        setList(activeTab === 'user' ? users : groups);
-    }, [activeTab]);
+    // useEffect(() => {
+    //     setList(activeTab === 'user' ? users : groups);
+    // }, [activeTab]);
 
     const handleChange = (e) => {
         if (e.target.name === 'thumbnail') {
@@ -52,10 +64,12 @@ function Creation({ onClose }) {
             return;
         }
         setGroup({ ...group, [e.target.name]: e.target.value });
+        setErrors({ ...errors, [e.target.name]: '' });
     };
 
     const handleSelectType = (item) => {
         setGroup({ ...group, type: item.name });
+        setErrors({ ...errors, type: '' });
     };
 
     const handleCreate = async () => {
@@ -77,6 +91,87 @@ function Creation({ onClose }) {
         }
     };
 
+    const handleBlur = (e) => {
+        const { name, value } = e.target;
+        let errorMessage = '';
+
+        switch (name) {
+            case 'name':
+                errorMessage = Validation({
+                    value,
+                    rules: [Validation.isRequired(), Validation.minLetter(4)],
+                });
+                break;
+
+            case 'type':
+                errorMessage = Validation({
+                    value,
+                    rules: [Validation.isRequired(), Validation.minLetter(2), Validation.minLetterEachWord(2)],
+                });
+                break;
+
+            case 'description':
+                errorMessage = Validation({
+                    value,
+                    rules: [Validation.maxLength(150)],
+                });
+                break;
+
+            case 'rules':
+                errorMessage = Validation({
+                    value,
+                    rules: [Validation.maxLength(1000)],
+                });
+                break;
+            case 'password':
+                errorMessage = Validation({
+                    value,
+                    rules: [Validation.isRequired(), Validation.minLetter(4), Validation.maxLength(4)],
+                });
+                break;
+            default:
+                break;
+        }
+
+        setErrors({
+            ...errors,
+            [name]: errorMessage,
+        });
+    };
+
+    useEffect(() => {
+        const errorName = Validation({
+            value: group.name,
+            rules: [Validation.isRequired(), Validation.minLetter(4)],
+        });
+
+        const errorType = Validation({
+            value: group.type,
+            rules: [Validation.isRequired(), Validation.minLetter(2), Validation.minLetterEachWord(2)],
+        });
+
+        const errorDescription = Validation({
+            value: group.description,
+            rules: [Validation.maxLength(150)],
+        });
+
+        const errorRule = Validation({
+            value: group.rules,
+            rules: [Validation.maxLength(1000)],
+        });
+
+        const errorPassword = Validation({
+            value: group.password,
+            rules: [Validation.isRequired(), Validation.minLetter(4), Validation.maxLength(4)],
+        });
+
+        if (isPasswordVisible) {
+            setButtonDisable(!!(errorName || errorDescription || errorType || errorRule || errorPassword));
+        } else {
+            setButtonDisable(!!(errorName || errorDescription || errorType || errorRule));
+        }
+    }, [group]);
+
     return (
         <Overlay>
             <div className={cx('wrapper')} onClick={(e) => e.stopPropagation()}>
@@ -94,14 +189,18 @@ function Creation({ onClose }) {
                             name="name"
                             value={group.name}
                             onChange={handleChange}
-                            label="Group name"
+                            label="Tên nhóm *"
                             placeholder="Group name"
+                            onBlur={handleBlur}
+                            errorMessage={errors.name}
                         />
                         <InputWithList
                             className={cx('ls-input')}
-                            label="Type"
+                            label="Chủ đề *"
                             name="type"
                             placeholder="Type of group"
+                            onBlur={handleBlur}
+                            errorMessage={errors.type}
                             list={types}
                             value={group.type}
                             onChange={handleChange}
@@ -115,6 +214,8 @@ function Creation({ onClose }) {
                             onChange={handleChange}
                             label="Giới thiệu"
                             placeholder="Giới thiệu về nhóm"
+                            onBlur={handleBlur}
+                            errorMessage={errors.description}
                         />
                         <Input
                             inputType="textarea"
@@ -124,13 +225,19 @@ function Creation({ onClose }) {
                             onChange={handleChange}
                             label="Nội quy"
                             placeholder="Nội quy của nhóm"
+                            onBlur={handleBlur}
+                            errorMessage={errors.rules}
                         />
                         <div className={cx('password-option')}>
                             <ToggleSwitch
                                 small
                                 id="toggleSwitch"
                                 checked={isPasswordVisible}
-                                onChange={() => setIsPasswordVisible(!isPasswordVisible)}
+                                onChange={() => {
+                                    setIsPasswordVisible(!isPasswordVisible);
+                                    setGroup({ ...group, password: '' });
+                                    setErrors({ ...errors, password: '' });
+                                }}
                             />
                             <span className={cx('toggle-label')}>Thiết lập mật khẩu</span>
                         </div>
@@ -143,9 +250,13 @@ function Creation({ onClose }) {
                                 label="Password"
                                 placeholder="Password"
                                 type="password"
+                                onBlur={handleBlur}
+                                errorMessage={errors.password}
                             />
                         )}
-                        <SubmitButton onClick={handleCreate}>Create</SubmitButton>
+                        <SubmitButton onClick={handleCreate} disable={buttonDisable}>
+                            Create
+                        </SubmitButton>
                     </div>
                 </div>
                 {/* 

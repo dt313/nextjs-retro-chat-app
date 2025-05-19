@@ -12,7 +12,17 @@ import styles from './InputWithList.module.scss';
 
 const cx = classNames.bind(styles);
 
-function InputWithList({ className, label, value, placeholder, list = [], onChange, onSelect, ...props }) {
+function InputWithList({
+    className,
+    label,
+    value,
+    placeholder,
+    errorMessage,
+    list = [],
+    onChange,
+    onSelect,
+    ...props
+}) {
     const [isOpen, setIsOpen] = useState(false);
     const [filteredList, setFilteredList] = useState([]);
     const wrapperRef = useRef(null);
@@ -30,6 +40,7 @@ function InputWithList({ className, label, value, placeholder, list = [], onChan
         onChange(e);
     };
 
+    console.log(errorMessage);
     return (
         <div className={cx('wrapper', className)} ref={wrapperRef}>
             <Input
@@ -38,6 +49,7 @@ function InputWithList({ className, label, value, placeholder, list = [], onChan
                 placeholder={placeholder}
                 onChange={handleChange}
                 onFocus={() => setIsOpen(true)}
+                errorMessage={errorMessage}
                 {...props}
             />
             {isOpen && filteredList.length > 0 && (

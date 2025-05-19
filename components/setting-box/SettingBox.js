@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
@@ -12,12 +12,17 @@ const cx = classNames.bind(styles);
 
 function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu' }) {
     const [value, setValue] = useState(content?.value || '');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [buttonDisable, setButtonDisable] = useState(true);
+
     const handleOnChange = (e) => {
         if (content.type === 'image') {
             setValue(e.target.files[0]);
             return;
         }
         setValue(e.target.value);
+        const error = content?.validate(e.target.value);
+        setErrorMessage(error);
     };
 
     const handleSubmit = () => {
@@ -27,7 +32,10 @@ function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu' }) {
         });
     };
 
-    console.log(value);
+    useEffect(() => {
+        const error = content?.validate(value);
+        setButtonDisable(!!error);
+    }, [value]);
 
     return (
         <div className={cx('wrapper')}>
@@ -52,9 +60,14 @@ function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu' }) {
                         placeholder={content.placeholder}
                         value={value}
                         onChange={handleOnChange}
+                        errorMessage={errorMessage}
                     />
                 )}
-                <SubmitButton className={cx({ deleteBtn: content.type === 'delete' })} onClick={handleSubmit}>
+                <SubmitButton
+                    className={cx({ deleteBtn: content.type === 'delete' })}
+                    onClick={handleSubmit}
+                    disable={buttonDisable}
+                >
                     {submitText}
                 </SubmitButton>
             </div>

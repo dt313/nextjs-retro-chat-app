@@ -11,14 +11,11 @@ import styles from './SettingInput.module.scss';
 
 const cx = classNames.bind(styles);
 
-function SettingInput({ type, label, placeholder, value, onChange }) {
+function SettingInput({ type, label, placeholder, value, onChange, errorMessage }) {
     const [image, setImage] = useState(value || null);
-
     const handleOnChange = (e) => {
         onChange(e);
     };
-
-    console.log(type);
 
     if (type === 'text' || type === 'textarea' || type === 'password') {
         return (
@@ -27,9 +24,9 @@ function SettingInput({ type, label, placeholder, value, onChange }) {
                     label={label}
                     placeholder={placeholder}
                     value={value}
-                    // type={type === 'password' ? 'password' : 'text'}
                     onChange={handleOnChange}
                     inputType={type}
+                    errorMessage={errorMessage}
                 />
             </div>
         );

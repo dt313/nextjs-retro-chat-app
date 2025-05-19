@@ -27,7 +27,6 @@ const cx = classNames.bind(styles);
 function AuthFormWrap() {
     const authBox = useSelector((state) => state.authBox);
     const { isAuthenticated, user } = useSelector((state) => state.auth);
-    const { status } = useSelector((state) => state.status);
     const dispatch = useDispatch();
     const fetchNotifications = async () => {
         if (!user) return;
@@ -58,7 +57,7 @@ function AuthFormWrap() {
     if (!authBox.isOpen) return null;
 
     return (
-        <Overlay className={cx('wrapper')} onClick={() => dispatch(closeAuthBox())}>
+        <Overlay className={cx('wrapper')}>
             <div className={cx('container')} onClick={(e) => e.stopPropagation()}>
                 <CloseIcon large className={cx('close-icon')} onClick={() => dispatch(closeAuthBox())} />
                 <AuthForm type={authBox.type} />

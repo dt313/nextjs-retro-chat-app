@@ -94,7 +94,7 @@ function AuthWithPassword({ type }) {
             case REGISTER_AUTH_BOX:
                 try {
                     const res = await authService.register(authData);
-                    dispatch(openAuthBox(LOGIN_AUTH_BOX));
+                    if (res) dispatch(openAuthBox(LOGIN_AUTH_BOX));
                 } catch (error) {
                     console.log(error);
                 } finally {
@@ -180,7 +180,7 @@ function AuthWithPassword({ type }) {
             <Input
                 value={authData.password}
                 name="password"
-                type="password"
+                inputType="password"
                 onChange={handleChangeAuthData}
                 placeholder="Nhập password"
                 onBlur={handleBlur}

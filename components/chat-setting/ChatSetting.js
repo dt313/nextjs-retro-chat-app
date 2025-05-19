@@ -21,14 +21,22 @@ import { conversationService } from '@/services';
 
 import { getNickNameFromConversation } from '@/helpers/conversation-info';
 
+import Validation from '@/utils/input-validation';
+
 import styles from './ChatSetting.module.scss';
 
 const cx = classNames.bind(styles);
 
-function ChatSetting({ isGroup, conversation }) {
+function ChatSetting({ isGroup, data }) {
     const [isShowSetting, setIsShowSetting] = useState(false);
     const [settingBox, setSettingBox] = useState({});
     const [settingMenu, setSettingMenu] = useState([]);
+    const [conversation, setConversation] = useState(data);
+
+    useEffect(() => {
+        console.log('data', data);
+        setConversation(data);
+    }, [data]);
 
     const { user: me } = useSelector((state) => state.auth);
     const router = useRouter();
@@ -43,6 +51,12 @@ function ChatSetting({ isGroup, conversation }) {
             placeholder: 'Nhập biệt danh của người bạn này',
             value: getNickNameFromConversation(conversation, me._id),
             field: 'nickname',
+            validate: (value) => {
+                return Validation({
+                    value: value,
+                    rules: [],
+                });
+            },
         },
         {
             id: 2,
@@ -52,6 +66,12 @@ function ChatSetting({ isGroup, conversation }) {
             description: 'Chỉnh sửa hình nền của đoạn chat của bạn',
             value: conversation?.backgroundUrl,
             field: 'backgroundUrl',
+            validate: (value) => {
+                return Validation({
+                    value: value,
+                    rules: [],
+                });
+            },
         },
         {
             id: 3,
@@ -59,6 +79,12 @@ function ChatSetting({ isGroup, conversation }) {
             icon: <MdDelete />,
             type: 'delete',
             description: 'Bạn có chắc chắn muốn xóa cuộc trò chuyện này không?',
+            validate: (value) => {
+                return Validation({
+                    value: value,
+                    rules: [],
+                });
+            },
         },
     ];
 
@@ -73,6 +99,12 @@ function ChatSetting({ isGroup, conversation }) {
             placeholder: 'Tên nhóm chat',
             value: conversation?.name,
             field: 'name',
+            validate: (value) => {
+                return Validation({
+                    value: value,
+                    rules: [Validation.isRequired(), Validation.minLetter(4)],
+                });
+            },
         },
         {
             id: 2,
@@ -84,6 +116,12 @@ function ChatSetting({ isGroup, conversation }) {
             placeholder: 'Viết phần giới thiệu ở đây',
             value: conversation?.description,
             field: 'description',
+            validate: (value) => {
+                return Validation({
+                    value: value,
+                    rules: [Validation.maxLength(150)],
+                });
+            },
         },
         {
             id: 3,
@@ -95,6 +133,12 @@ function ChatSetting({ isGroup, conversation }) {
             placeholder: 'Viết quy định ở đây',
             value: conversation?.rules,
             field: 'rules',
+            validate: (value) => {
+                return Validation({
+                    value: value,
+                    rules: [Validation.maxLength(1000)],
+                });
+            },
         },
         {
             id: 4,
@@ -104,6 +148,12 @@ function ChatSetting({ isGroup, conversation }) {
             description: 'Chỉnh sửa hình nền của đoạn chat của bạn',
             value: conversation?.thumbnail,
             field: 'thumbnail',
+            validate: (value) => {
+                return Validation({
+                    value: value,
+                    rules: [],
+                });
+            },
         },
         {
             id: 5,
@@ -113,6 +163,12 @@ function ChatSetting({ isGroup, conversation }) {
             description: 'Chỉnh sửa hình nền của đoạn chat của bạn',
             value: conversation?.backgroundUrl,
             field: 'backgroundUrl',
+            validate: (value) => {
+                return Validation({
+                    value: value,
+                    rules: [],
+                });
+            },
         },
         {
             id: 6,
@@ -122,6 +178,12 @@ function ChatSetting({ isGroup, conversation }) {
             description:
                 'Chỉnh sửa mật khẩu để tăng tính riêng tư của nhóm. Chỉ những người có mật khẩu mới có thể tham gia vào nhóm',
             field: 'password',
+            validate: (value) => {
+                return Validation({
+                    value: value,
+                    rules: [Validation.minLetter(4), Validation.maxLength(4)],
+                });
+            },
         },
         {
             id: 7,
@@ -129,6 +191,12 @@ function ChatSetting({ isGroup, conversation }) {
             icon: <MdDelete />,
             type: 'delete',
             description: 'Bạn có chắc chắn muốn xóa cuộc trò chuyện này không?',
+            validate: (value) => {
+                return Validation({
+                    value: value,
+                    rules: [],
+                });
+            },
         },
     ];
 
@@ -138,7 +206,7 @@ function ChatSetting({ isGroup, conversation }) {
         } else {
             setSettingMenu(groupChatSetting);
         }
-    }, [isGroup]);
+    }, [isGroup, conversation]);
 
     const handleSubmit = async (value) => {
         try {

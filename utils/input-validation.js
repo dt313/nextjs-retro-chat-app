@@ -14,7 +14,7 @@ export default function Validation({ value, rules = [] }) {
 Validation.isRequired = function (message) {
     return {
         test: function (value) {
-            return value.trim() ? undefined : message || 'Vui lòng nhập khung này .';
+            return value.trim() ? undefined : message || 'Vui lòng nhập khung này.';
         },
     };
 };
@@ -23,7 +23,7 @@ Validation.minWord = function (count, message) {
     return {
         test: function (value) {
             const cOW = value.trim().split(' ').length;
-            return cOW >= count ? undefined : message || `Cần ít nhất ${count} từ trong khung này .`;
+            return cOW >= count ? undefined : message || `Cần ít nhất ${count} từ trong khung này.`;
         },
     };
 };
@@ -60,7 +60,7 @@ Validation.nonSpecialLetter = function (message) {
 Validation.maxLength = function (max, message) {
     return {
         test: function (value) {
-            return value.length <= max ? undefined : message || `Vui lòng không nhập quá ${max} kí tự trong khung này`;
+            return value.length <= max ? undefined : message || `Vui lòng không nhập quá ${max} kí tự trong khung này.`;
         },
     };
 };
@@ -95,6 +95,20 @@ Validation.isSocialLink = function (social = '', message) {
                     `^(https?:\\/\\/)?(www\\.)?${social}\\.com\\/[A-Za-z0-9_-]+(\\/[A-Za-z0-9_-]+)*\\/?$`,
                 );
                 return regex.test(value.trim()) ? undefined : message || `Vui lòng nhập một liên kết ${social} hợp lệ.`;
+            }
+        },
+    };
+};
+
+Validation.isConfirmPassWord = function (password, message) {
+    return {
+        test: function (value) {
+            console.log('password ', password);
+
+            console.log(value !== password);
+
+            if (value !== password) {
+                return message || 'Mật khẩu không khớp.';
             }
         },
     };

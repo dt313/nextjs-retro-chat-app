@@ -43,7 +43,7 @@
 
 .file-name {
     @include font-default;
-    max-width: calc(100% - 56px);
+    max-width: calc(100%);
     width: 100%;
     overflow: hidden;
     text-wrap: nowrap;

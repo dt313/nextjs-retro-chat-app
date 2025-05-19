@@ -151,7 +151,7 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
 
                 {((isGroup && meRole === CONVERSATION_PARTICIPANT_ROLE_CREATOR) || !isGroup) && (
                     <Details label="chat setting">
-                        <ChatSetting isGroup={data?.isGroup} conversation={data} />
+                        <ChatSetting isGroup={data?.isGroup} data={data} />
                     </Details>
                 )}
 
