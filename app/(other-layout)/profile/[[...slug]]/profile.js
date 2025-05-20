@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
@@ -9,6 +9,7 @@ import {
     NOTIFICATION_FRIEND_REQUEST,
     TEMP_NOTIFICATION_FRIEND_ACCEPTED,
 } from '@/config/types';
+import html2canvas from 'html2canvas-pro';
 import { useRouter } from 'next/navigation';
 import { BsQrCode } from 'react-icons/bs';
 import { FaFacebookMessenger, FaUserCheck } from 'react-icons/fa';
@@ -16,10 +17,16 @@ import { FaUserXmark } from 'react-icons/fa6';
 import { FiUserPlus } from 'react-icons/fi';
 import { MdOutlineGroupAdd } from 'react-icons/md';
 import { RiUserReceivedLine, RiUserSharedLine } from 'react-icons/ri';
+import QRCode from 'react-qr-code';
 import { useDispatch, useSelector } from 'react-redux';
 
+import images from '@/assets/images';
+
+import SubmitButton from '@/components/auth-with-password/SubmitButton';
 import Avatar from '@/components/avatar';
 import Icon from '@/components/icon';
+import Image from '@/components/image';
+import MessageIcon from '@/components/message-icon';
 import Overlay from '@/components/overlay';
 import SettingBox from '@/components/setting-box';
 import Squares from '@/components/squares';
@@ -40,6 +47,10 @@ function Profile({ slug }) {
     const [requestType, setRequestType] = useState('friend');
     const [isMember, setIsMember] = useState(false);
     const [isShowPasswordBox, setIsShowPasswordBox] = useState(false);
+    const [isOpenQRCode, setIsOpenQRCode] = useState(false);
+
+    const qrContainer = useRef();
+    const downloadBtn = useRef();
 
     const { user: me } = useSelector((state) => state.auth);
     const { notifications } = useSelector((state) => state.notification);
@@ -214,6 +225,36 @@ function Profile({ slug }) {
             );
         }
     };
+
+    const handleDownloadQR = async () => {
+        const qrElement = qrContainer.current;
+        const downloadElement = downloadBtn.current;
+
+        downloadElement.style.display = 'none';
+        await document.fonts.ready;
+        qrElement.style.boxShadow = 'none';
+
+        html2canvas(qrElement, {
+            useCORS: true,
+            allowTaint: false,
+            scale: 1,
+        })
+            .then((canvas) => {
+                downloadElement.style.display = 'block';
+
+                const link = document.createElement('a');
+                link.download = `${type === 'user' ? basicInfo.username : basicInfo.name}-qr-code.jpg`;
+                link.href = canvas.toDataURL('image/jpg');
+                link.click();
+                qrElement.style.boxShadow = `rgba(0, 0, 0, 0.19) 0px 10px 20px,rgba(0, 0, 0, 0.23) 0px 6px 6px;`;
+                document.body.removeChild(link);
+            })
+            .catch((error) => {
+                console.log(error);
+                downloadElement.style.display = 'block';
+                qrElement.style.boxShadow = `rgba(0, 0, 0, 0.19) 0px 10px 20px,rgba(0, 0, 0, 0.23) 0px 6px 6px;`;
+            });
+    };
     return (
         <div className={cx('wrapper')}>
             <Squares
@@ -311,7 +352,13 @@ function Profile({ slug }) {
                                     <span className={cx('button-text')}>Messenger</span>
                                 </button>
                             )}
-                            <button className={cx('action-button')}>
+                            <button
+                                className={cx('action-button')}
+                                onClick={() => {
+                                    console.log('qr');
+                                    setIsOpenQRCode(true);
+                                }}
+                            >
                                 <Icon element={<BsQrCode />} />
                                 <span className={cx('button-text')}>QR</span>
                             </button>
@@ -332,7 +379,13 @@ function Profile({ slug }) {
                                     <span className={cx('button-text')}>Chat</span>
                                 </button>
                             )}
-                            <button className={cx('action-button')}>
+                            <button
+                                className={cx('action-button')}
+                                onClick={() => {
+                                    console.log('qr');
+                                    setIsOpenQRCode(true);
+                                }}
+                            >
                                 <Icon element={<BsQrCode />} />
                                 <span className={cx('button-text')}>QR</span>
                             </button>
@@ -349,6 +402,25 @@ function Profile({ slug }) {
                         submitText="Tham gia"
                         onSubmit={handleSubmitPassword}
                     />
+                </Overlay>
+            )}
+
+            {isOpenQRCode && (
+                <Overlay onClick={() => setIsOpenQRCode(false)}>
+                    <div className="qr-container" onClick={(e) => e.stopPropagation()} ref={qrContainer}>
+                        <h2 className="qr-title">Retro Chat</h2>
+                        <Image className="logo-img" src={images.largeLogo} />
+                        <QRCode
+                            className="qr-code"
+                            size={256}
+                            value={`http://macbook.com:3000/profile/${type === 'group' ? basicInfo._id : `@${basicInfo.username}`}`}
+                            viewBox={`0 0 256 256`}
+                        />
+
+                        <button className="download-btn" onClick={handleDownloadQR} ref={downloadBtn}>
+                            Tải xuống
+                        </button>
+                    </div>
                 </Overlay>
             )}
         </div>

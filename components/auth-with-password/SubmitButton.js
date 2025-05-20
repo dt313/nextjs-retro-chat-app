@@ -1,10 +1,12 @@
+import { forwardRef, useRef } from 'react';
+
 import classNames from 'classnames/bind';
 
 import styles from './AuthWithPassword.module.scss';
 
 const cx = classNames.bind(styles);
 
-function SubmitButton({ children, onClick, className, disable }) {
+function SubmitButton({ children, onClick, className, disable }, ref) {
     const classes = cx('submit-btn', {
         [className]: className,
         disable,
@@ -19,10 +21,10 @@ function SubmitButton({ children, onClick, className, disable }) {
     };
 
     return (
-        <button className={cx(classes)} onClick={handleClick} disabled={disable}>
+        <button className={cx(classes)} onClick={handleClick} disabled={disable} ref={ref}>
             {children}
         </button>
     );
 }
 
-export default SubmitButton;
+export default forwardRef(SubmitButton);
