@@ -61,6 +61,14 @@ export const initSocket = (token) => {
                 const { conversation: lastConversation } = data;
                 if (lastConversation) {
                     eventBus.emit(`last-conversation`, lastConversation);
+                    eventBus.emit(`conversation-update-${lastConversation._id}`, lastConversation);
+                }
+                break;
+
+            case 'conversation-update':
+                const { conversation: updateConversation, conversationId: updateConversationId } = data;
+                if (updateConversation) {
+                    eventBus.emit(`conversation-update-${updateConversationId}`, updateConversation);
                 }
                 break;
 

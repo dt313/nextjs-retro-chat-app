@@ -91,6 +91,7 @@ function Conversation({ id }) {
             const alreadyRead = conv.lastMessage.readedBy.includes(me._id);
             if (!alreadyRead) {
                 const res = await conversationService.readLastMessage(id);
+
                 if (res) {
                     dispatch(readLastMessage({ conversationId: id, meId: me._id }));
                 }
@@ -117,7 +118,6 @@ function Conversation({ id }) {
     useEffect(() => {
         const updateConversation = (conversation) => {
             if (conversation) {
-                console.log('emit', conversation);
                 setConversation(conversation);
             }
         };
@@ -143,7 +143,6 @@ function Conversation({ id }) {
         }
         formData.append('isGroup', conversation.isGroup);
         formData.append('content', message.content);
-        console.log('formData', formData);
 
         const res = await messageService.create(id, formData);
 
@@ -289,6 +288,7 @@ function Conversation({ id }) {
                             isBeforeFinish={isBeforeFinish}
                             setList={setMessageList}
                             targetName={getNameFromConversation(conversation, me._id, true)}
+                            participants={conversation?.participants}
                         />
                         {isOpenReplyBox && (
                             <div className={cx('reply-box')}>

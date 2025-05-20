@@ -3,10 +3,9 @@ import { Fragment, useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
-import { images } from '@/config/ui-config';
 import Tippy from '@tippyjs/react';
 import HeadlessTippy from '@tippyjs/react/headless';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { ImArrowRight } from 'react-icons/im';
 import { IoArrowUndo } from 'react-icons/io5';
@@ -15,7 +14,6 @@ import { RxFace } from 'react-icons/rx';
 import { useDispatch, useSelector } from 'react-redux';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light.css';
-import { validate } from 'uuid';
 
 import File from '@/components/attach-file/File';
 import Avatar from '@/components/avatar';
@@ -31,7 +29,7 @@ import { attachmentService, conversationService, messageService } from '@/servic
 
 import { getReplyContent, getReplyLabelName, getReplyType } from '@/helpers/conversation-info';
 
-import { calculateTime } from '@/helpers';
+import { calculateTime, getTime, isLessThan1D } from '@/helpers';
 
 import { openImgPreview } from '@/redux/actions/img-preview-action';
 import { closeReplyBox, openReplyBox } from '@/redux/actions/reply-box-action';
@@ -53,6 +51,7 @@ function Message({
     isForward = true,
     isDeleted = false,
     isHighlight = false,
+    getReadUser,
 }) {
     const [visibility, setVisibility] = useState({
         time: false,
@@ -65,6 +64,7 @@ function Message({
 
     const [isDelete, setIsDelete] = useState(isDeleted);
     const [reactionsList, setReactionsList] = useState(reactions);
+    const [readUsers, setReadUsers] = useState([]);
     const { user: me } = useSelector((state) => state.auth);
     const router = useRouter();
 
@@ -73,6 +73,10 @@ function Message({
     useEffect(() => {
         dispatch(closeReplyBox());
     }, []);
+
+    useEffect(() => {
+        setReadUsers(getReadUser(id));
+    }, [id, getReadUser]);
 
     useEffect(() => {
         const reactionFromWS = (reaction) => {
@@ -105,7 +109,6 @@ function Message({
     const handleOpenImagePreview = async (id) => {
         try {
             const images = await attachmentService.getImagesOfConversation(conversationId);
-            console.log(images);
             if (images.length > 0) {
                 const index = images.findIndex((img) => img._id === id);
                 if (index !== -1) {
@@ -315,6 +318,24 @@ function Message({
 
     return (
         <div className={classes}>
+            {readUsers?.length > 0 && (
+                <div className={cx('read-users')}>
+                    {readUsers.map((p) => (
+                        <Tippy
+                            key={p._id}
+                            content={
+                                isLessThan1D(p.lastMessageReadAt)
+                                    ? `${p.user.fullName} đã xem vào lúc ${getTime(p.lastMessageReadAt)}`
+                                    : `${p.user.fullName} đã xem`
+                            }
+                            placement="top"
+                            theme="light"
+                        >
+                            <Avatar src={p.user.avatar} size={24} />
+                        </Tippy>
+                    ))}
+                </div>
+            )}
             <div
                 className={cx('message', { hasReply: replyData?.replyType })}
                 onMouseEnter={handleMouseEnterMessage}

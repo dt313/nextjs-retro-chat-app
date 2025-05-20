@@ -340,3 +340,12 @@
         font-size: 1.4rem;
     }
 }
+
+// read user
+
+.read-users {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    gap: 4px;
+}

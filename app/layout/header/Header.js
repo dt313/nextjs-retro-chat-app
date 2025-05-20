@@ -34,8 +34,6 @@ function Header() {
     const { unRead: unReadConversation } = useSelector((state) => state.conversations);
     const { isAuthenticated, user: me } = useSelector((state) => state.auth);
 
-    console.log(unReadConversation);
-
     const pathname = usePathname();
     const router = useRouter();
     const dispatch = useDispatch();

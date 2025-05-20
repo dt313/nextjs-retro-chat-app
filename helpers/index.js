@@ -4,8 +4,10 @@ import { getAvatarFromConversation, getNameFromConversation } from './conversati
 import { default as getNotificationId } from './find-notification-id';
 import { default as getLastMessageContent } from './get-last-message-content';
 import { default as getReactionIconList } from './get-reaction-list';
+import { default as getTime } from './get-time';
 import { default as handleHttpError } from './handle-http-error';
 import { default as reshapeImages } from './image-reshape';
+import { default as isLessThan1D } from './is-less-than-1d';
 
 export {
     getReactionIconList,
@@ -17,4 +19,6 @@ export {
     handleHttpError,
     getLastMessageContent,
     checkIsRead,
+    getTime,
+    isLessThan1D,
 };

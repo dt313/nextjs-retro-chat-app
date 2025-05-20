@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
@@ -19,7 +19,16 @@ import styles from './MessageBox.module.scss';
 
 const cx = classNames.bind(styles);
 const LIMIT = 30;
-function MessageBox({ list = [], conversationId, targetName, searchMessageId, onLoadMore, isBeforeFinish, setList }) {
+function MessageBox({
+    list = [],
+    conversationId,
+    targetName,
+    searchMessageId,
+    onLoadMore,
+    isBeforeFinish,
+    setList,
+    participants,
+}) {
     const messageEndRef = useRef(null);
     const scrollContainerRef = useRef(null);
 
@@ -61,6 +70,8 @@ function MessageBox({ list = [], conversationId, targetName, searchMessageId, on
             eventBus.off(`no-typing-${conversationId}`, handleNoTyping);
         };
     }, [eventBus]);
+
+    console.log('participant', participants);
 
     const handleLoadMoreAfterMessage = async () => {
         try {
@@ -116,7 +127,6 @@ function MessageBox({ list = [], conversationId, targetName, searchMessageId, on
             !isAfterFinish &&
             !isBottomLoading
         ) {
-            console.log('scroll down');
             setIsBottomLoading(true);
             shouldScrollBottom.current = false;
             handleLoadMoreAfterMessage().then(() => {
@@ -168,7 +178,12 @@ function MessageBox({ list = [], conversationId, targetName, searchMessageId, on
         };
     }, [searchMessageId]);
 
-    console.log('target name', targetName);
+    const getReadUser = useCallback(
+        (messageId) => {
+            return participants.filter((p) => p.lastMessage === messageId && p.user._id !== me._id);
+        },
+        [participants],
+    );
 
     return (
         <div className={cx('wrapper')} ref={scrollContainerRef} onScroll={handleScroll}>
@@ -182,27 +197,6 @@ function MessageBox({ list = [], conversationId, targetName, searchMessageId, on
                 const images = mes.images || null;
                 return (
                     <div key={mes._id} className={cx('message-wrapper')}>
-                        {mes?.content && mes.messageType !== 'notification' && (
-                            <Message
-                                type="text"
-                                conversationId={conversationId}
-                                id={mes._id}
-                                sender={mes.sender}
-                                content={mes.content}
-                                replyData={{
-                                    replyTo: mes.replyTo,
-                                    replyType: mes.replyType,
-                                    sender: mes.sender,
-                                    id: mes.replyTo?._id,
-                                }}
-                                reactions={mes.reactions}
-                                timestamp={mes.createdAt}
-                                isForward={mes.isForwarded}
-                                isDeleted={mes.isDeleted}
-                                isHighlight={mes._id === searchMessageId}
-                            />
-                        )}
-
                         {mes.messageType === 'notification' && (
                             <p className={cx('mes-notification')}>{getMessageNotification(mes, me._id, targetName)}</p>
                         )}
@@ -229,6 +223,7 @@ function MessageBox({ list = [], conversationId, targetName, searchMessageId, on
                                             isForward={mes.isForwarded}
                                             isDeleted={at.isDeleted}
                                             isHighlight={at._id === searchMessageId}
+                                            getReadUser={getReadUser}
                                         />
                                     );
                                 }
@@ -253,6 +248,29 @@ function MessageBox({ list = [], conversationId, targetName, searchMessageId, on
                                 isForward={mes.isForwarded}
                                 isDeleted={images.isDeleted}
                                 isHighlight={images._id === searchMessageId}
+                                getReadUser={getReadUser}
+                            />
+                        )}
+
+                        {mes?.content && mes.messageType !== 'notification' && (
+                            <Message
+                                type="text"
+                                conversationId={conversationId}
+                                id={mes._id}
+                                sender={mes.sender}
+                                content={mes.content}
+                                replyData={{
+                                    replyTo: mes.replyTo,
+                                    replyType: mes.replyType,
+                                    sender: mes.sender,
+                                    id: mes.replyTo?._id,
+                                }}
+                                reactions={mes.reactions}
+                                timestamp={mes.createdAt}
+                                isForward={mes.isForwarded}
+                                isDeleted={mes.isDeleted}
+                                isHighlight={mes._id === searchMessageId}
+                                getReadUser={getReadUser}
                             />
                         )}
                     </div>
