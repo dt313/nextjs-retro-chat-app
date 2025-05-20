@@ -55,10 +55,15 @@
     justify-content: center;
     align-items: center;
     padding: 8px 12px;
+    margin-bottom: 2px;
     cursor: pointer;
     &:hover {
         background-color: var(--background);
     }
+}
+
+.notify-item.unread {
+    background-color: #d8d8d8;
 }
 
 .avatar {

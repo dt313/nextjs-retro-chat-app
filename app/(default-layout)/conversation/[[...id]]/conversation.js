@@ -14,7 +14,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import Avatar from '@/components/avatar';
 import CloseIcon from '@/components/close-icon';
 import Icon from '@/components/icon';
-import Image from '@/components/image';
 import LeftMessage from '@/components/left-message';
 import MessageBox from '@/components/message-box/MessageBox';
 import MessageIcon from '@/components/message-icon';
@@ -64,7 +63,6 @@ function Conversation({ id }) {
         try {
             if (!id) {
                 setConversation({});
-                setMessageList([]);
                 return;
             }
             const conversation = await conversationService.getConversationById(id);
@@ -118,7 +116,6 @@ function Conversation({ id }) {
 
     useEffect(() => {
         const updateConversation = (conversation) => {
-            console.log('emit');
             if (conversation) {
                 console.log('emit', conversation);
                 setConversation(conversation);

@@ -64,8 +64,8 @@ export function getAvatarFromConversation(conversation, meId) {
         return conversation?.thumbnail;
     } else if (conversation && conversation.isGroup === false) {
         if (conversation?.participants) {
-            const participant = conversation?.participants?.find((item) => item.user._id !== meId);
-            return participant ? participant.user.avatar : '';
+            const participant = conversation?.participants?.find((item) => item.user?._id !== meId);
+            return participant ? participant.user?.avatar : '';
         }
     } else {
         return '';

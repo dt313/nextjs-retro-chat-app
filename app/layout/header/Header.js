@@ -30,12 +30,15 @@ function Header() {
     const [isOpenCreation, setIsOpenCreation] = useState(false);
     const [isHasNotification, setIsHasNotification] = useState(false);
     const [isShowMenu, setIsShowMenu] = useState(false);
-    const { notifications } = useSelector((state) => state.notification);
+    const { notifications, unRead: unReadNotification } = useSelector((state) => state.notification);
+    const { unRead: unReadConversation } = useSelector((state) => state.conversations);
+    const { isAuthenticated, user: me } = useSelector((state) => state.auth);
+
+    console.log(unReadConversation);
+
     const pathname = usePathname();
     const router = useRouter();
     const dispatch = useDispatch();
-
-    const { isAuthenticated, user: me } = useSelector((state) => state.auth);
 
     useEffect(() => {
         const handleNotification = (data) => {
@@ -61,7 +64,7 @@ function Header() {
             <div className={cx('header-menu')}>
                 {!pathname.startsWith('/conversation') && isAuthenticated && (
                     <span className={cx('hmenu-item', 'message')} onClick={() => router.push('/conversation')}>
-                        <span className={cx('message-count')}>1</span>
+                        {unReadConversation > 0 && <span className={cx('message-count')}>{unReadConversation}</span>}
                         <MessageIcon small />
                     </span>
                 )}
@@ -75,8 +78,13 @@ function Header() {
                 {isAuthenticated && (
                     <Dropdown position="right" content={<NotifyBox list={notifications} />}>
                         <span className={cx('hmenu-item')}>
-                            <Icon element={<IoNotifications />} className={cx({ active: isHasNotification })} />
-                            {isHasNotification && <span className={cx('notify-count')}>1</span>}
+                            <Icon
+                                element={<IoNotifications />}
+                                className={cx({ active: isHasNotification || unReadNotification > 0 })}
+                            />
+                            {(isHasNotification || unReadNotification > 0) && (
+                                <span className={cx('notify-count')}>{unReadNotification}</span>
+                            )}
                         </span>
                     </Dropdown>
                 )}

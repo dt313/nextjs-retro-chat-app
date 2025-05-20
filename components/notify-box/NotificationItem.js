@@ -8,9 +8,9 @@ import styles from './NotifyBox.module.scss';
 
 const cx = classNames.bind(styles);
 
-function NotificationItem({ avatar, render, time, content, hideAvatar = false }) {
+function NotificationItem({ avatar, render, time, content, hideAvatar = false, isRead, onClick }) {
     return (
-        <div className={cx('notify-item')}>
+        <div className={cx('notify-item', !isRead && 'unread')} onClick={onClick}>
             {!hideAvatar && (
                 <div className={cx('avatar')}>
                     <Avatar src={avatar} className={cx('img')} size={40} />

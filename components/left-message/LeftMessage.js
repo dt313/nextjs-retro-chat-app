@@ -22,7 +22,7 @@ import {
     getNameFromConversation,
 } from '@/helpers';
 
-import { initConversation, newConversation } from '@/redux/actions/conversations-action';
+import { findConversation, initConversation, newConversation } from '@/redux/actions/conversations-action';
 
 import styles from './LeftMessage.module.scss';
 
@@ -41,16 +41,18 @@ function LeftMessage({ className, activeId }) {
     const fetchConversations = async () => {
         const res = await conversationService.getByMe();
         if (res && Array.isArray(res)) {
-            dispatch(initConversation(res));
+            dispatch(initConversation({ conversations: res, meId: me._id }));
         }
     };
 
     useEffect(() => {
         const fetchConversationsByName = async () => {
             try {
-                const res = await conversationService.getConversationByName(searchValue);
-                if (res) {
-                    dispatch(initConversation(res));
+                if (searchValue !== '') {
+                    const res = await conversationService.getConversationByName(searchValue);
+                    if (res) {
+                        dispatch(findConversation(res));
+                    }
                 }
             } catch (error) {
                 console.log(error);
@@ -62,7 +64,7 @@ function LeftMessage({ className, activeId }) {
     useEffect(() => {
         const handleSortConversation = (conversation) => {
             console.log('new conversation ', conversation);
-            dispatch(newConversation(conversation));
+            dispatch(newConversation({ conversation, meId: me._id }));
         };
 
         eventBus.on('last-conversation', handleSortConversation);
@@ -74,8 +76,8 @@ function LeftMessage({ className, activeId }) {
     console.log('new List', list);
 
     useEffect(() => {
-        fetchConversations();
-    }, []);
+        if (searchValue === '') fetchConversations();
+    }, [searchValue]);
 
     return (
         <div className={cx('wrapper', className)}>

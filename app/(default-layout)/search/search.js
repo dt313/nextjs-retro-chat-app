@@ -4,13 +4,16 @@ import { Suspense, useEffect, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
+import eventBus from '@/config/emit';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import InputSearch from '@/components/input-search';
 import { GroupCard, UserCard } from '@/components/search-card';
 
 import { groupService, userService } from '@/services';
+
+import { newConversation } from '@/redux/actions/conversations-action';
 
 import styles from './search.module.scss';
 
@@ -24,6 +27,18 @@ function SearchContent() {
     const [filterValue, setFilterValue] = useState(searchParams.get('filter') || 'user');
     const [list, setList] = useState([]);
     const router = useRouter();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const handleSortConversation = (conversation) => {
+            dispatch(newConversation({ conversation, meId: me._id }));
+        };
+
+        eventBus.on('last-conversation', handleSortConversation);
+        return () => {
+            eventBus.off('last-conversation', handleSortConversation);
+        };
+    }, [list]);
 
     const fetchAPI = async (type) => {
         if (type === 'user') {

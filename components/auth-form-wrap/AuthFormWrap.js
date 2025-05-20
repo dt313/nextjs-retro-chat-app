@@ -10,12 +10,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import AuthForm from '@/components/auth-form';
 import Overlay from '@/components/overlay';
 
-import { notificationService } from '@/services';
+import { conversationService, notificationService } from '@/services';
 
 import { storageUtils } from '@/utils';
 
 import { login } from '@/redux/actions/auth-action';
 import { closeAuthBox } from '@/redux/actions/auth-box-action';
+import { initConversation } from '@/redux/actions/conversations-action';
 import { initNotifications } from '@/redux/actions/notification-action';
 import { setOffline, setOnline } from '@/redux/actions/status-action';
 
@@ -33,6 +34,11 @@ function AuthFormWrap() {
         const res = await notificationService.getAllNotifications();
         if (!!res && Array.isArray(res)) {
             dispatch(initNotifications(res));
+        }
+
+        const conversations = await conversationService.getByMe();
+        if (!!res && Array.isArray(res)) {
+            dispatch(initConversation({ conversations, meId: user._id }));
         }
     };
 

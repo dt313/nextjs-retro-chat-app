@@ -19,6 +19,7 @@ export const initSocket = (token) => {
 
         switch (type) {
             case 'notification':
+                console.log('notification ', data);
                 eventBus.emit('notification', data.notification);
                 break;
 
@@ -58,7 +59,6 @@ export const initSocket = (token) => {
 
             case 'last-conversation':
                 const { conversation: lastConversation } = data;
-                console.log('last-conversation', lastConversation);
                 if (lastConversation) {
                     eventBus.emit(`last-conversation`, lastConversation);
                 }

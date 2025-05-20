@@ -14,7 +14,7 @@ import { readLastMessage } from '@/redux/actions/conversations-action';
 import styles from './ConversationPreview.module.scss';
 
 const cx = classNames.bind(styles);
-function ConversationPreview({ className, slug, avatar, name, message, time, isReaded, active }) {
+function ConversationPreview({ className, slug, avatar = '', name, message, time, isReaded, active }) {
     const { user: me } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
 

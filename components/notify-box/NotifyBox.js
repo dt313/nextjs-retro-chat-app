@@ -22,6 +22,7 @@ import {
     TEMP_NOTIFICATION_GROUP_INVITATION_REJECTED,
 } from '@/config/types';
 import { before } from 'lodash';
+import { useRouter } from 'next/navigation';
 import { IoSettings } from 'react-icons/io5';
 import { useDispatch } from 'react-redux';
 
@@ -29,7 +30,7 @@ import Icon from '@/components/icon/Icon';
 
 import { invitationService, notificationService } from '@/services';
 
-import { addNotification, changeTypeNotification } from '@/redux/actions/notification-action';
+import { addNotification, changeTypeNotification, readNotification } from '@/redux/actions/notification-action';
 
 import { SpinnerLoader } from '../loading';
 import NotificationItem from './NotificationItem';
@@ -46,8 +47,15 @@ function NotifyBox({ list = [] }) {
 
     const [isLoading, setIsLoading] = useState(false);
     const [isFinish, setIsFinish] = useState(list.length < LIMIT);
+    const router = useRouter();
 
-    console.log(isFinish);
+    const handleClickUser = (username) => {
+        router.push(`/profile/@${username}`);
+    };
+
+    const handleClickGroup = (id) => {
+        router.push(`/profile/${id}`);
+    };
 
     const handleReplyFriendRequest = async (senderId, status, notificationId) => {
         try {
@@ -105,7 +113,10 @@ function NotifyBox({ list = [] }) {
                 return (
                     <div className={cx('question-box')}>
                         <p className={cx('qb-content')}>
-                            <strong className={cx('name')}>{sender?.fullName}</strong> đã gửi lời mời kết bạn
+                            <strong className={cx('name')} onClick={() => handleClickUser(sender.username)}>
+                                {sender?.fullName}
+                            </strong>{' '}
+                            đã gửi lời mời kết bạn
                         </p>
                         <div className={cx('reply-box')}>
                             <button
@@ -131,7 +142,10 @@ function NotifyBox({ list = [] }) {
                 return (
                     <div className={cx('text-notify')}>
                         <p className={cx('qb-content')}>
-                            <strong className={cx('name')}>{sender?.fullName}</strong> đã chấp nhận lời mời kết bạn
+                            <strong className={cx('name')} onClick={() => handleClickUser(sender.username)}>
+                                {sender?.fullName}
+                            </strong>{' '}
+                            đã chấp nhận lời mời kết bạn
                         </p>
                     </div>
                 );
@@ -139,8 +153,13 @@ function NotifyBox({ list = [] }) {
                 return (
                     <div className={cx('question-box')}>
                         <p className={cx('qb-content')}>
-                            <strong className={cx('name')}>{sender?.fullName}</strong> đã mời kết bạn vào nhóm{' '}
-                            <strong className={cx('name')}>{group?.name}</strong>
+                            <strong className={cx('name')} onClick={() => handleClickUser(sender.username)}>
+                                {sender?.fullName}
+                            </strong>{' '}
+                            đã mời kết bạn vào nhóm{' '}
+                            <strong className={cx('name')} onClick={() => handleClickGroup(group._id)}>
+                                {group?.name}
+                            </strong>
                         </p>
                         <div className={cx('reply-box')}>
                             <button
@@ -176,8 +195,14 @@ function NotifyBox({ list = [] }) {
                 return (
                     <div className={cx('text-notify')}>
                         <p className={cx('qb-content')}>
-                            <strong className={cx('name')}>{sender?.fullName}</strong> đã tham gia nhóm{' '}
-                            <strong className={cx('name')}>{group?.name}</strong> của bạn
+                            <strong className={cx('name')} onClick={() => handleClickUser(sender.username)}>
+                                {sender?.fullName}
+                            </strong>{' '}
+                            đã tham gia nhóm{' '}
+                            <strong className={cx('name')} onClick={() => handleClickGroup(group._id)}>
+                                {group?.name}
+                            </strong>{' '}
+                            của bạn
                         </p>
                     </div>
                 );
@@ -185,7 +210,10 @@ function NotifyBox({ list = [] }) {
                 return (
                     <div className={cx('text-notify')}>
                         <p className={cx('qb-content')}>
-                            <strong className={cx('name')}>{sender?.fullName}</strong> đã trả lời tin nhắn của bạn
+                            <strong className={cx('name')} onClick={() => handleClickUser(sender.username)}>
+                                {sender?.fullName}
+                            </strong>{' '}
+                            đã trả lời tin nhắn của bạn
                         </p>
                     </div>
                 );
@@ -193,7 +221,10 @@ function NotifyBox({ list = [] }) {
                 return (
                     <div className={cx('text-notify')}>
                         <p className={cx('qb-content')}>
-                            <strong className={cx('name')}>{sender?.fullName}</strong> đã nhắc tới bạn trong tin nhắn
+                            <strong className={cx('name')} onClick={() => handleClickUser(sender.username)}>
+                                {sender?.fullName}
+                            </strong>{' '}
+                            đã nhắc tới bạn trong tin nhắn
                         </p>
                     </div>
                 );
@@ -202,7 +233,9 @@ function NotifyBox({ list = [] }) {
                     <div className={cx('text-notify')}>
                         <p className={cx('qb-content')}>
                             Bạn đã chấp nhận lời mời kết bạn của{' '}
-                            <strong className={cx('name')}>{sender?.fullName}</strong>
+                            <strong className={cx('name')} onClick={() => handleClickUser(sender.username)}>
+                                {sender?.fullName}
+                            </strong>
                         </p>
                     </div>
                 );
@@ -212,7 +245,9 @@ function NotifyBox({ list = [] }) {
                     <div className={cx('text-notify')}>
                         <p className={cx('qb-content')}>
                             Bạn đã từ chối lời mời kết bạn của{' '}
-                            <strong className={cx('name')}>{sender?.fullName}</strong>
+                            <strong className={cx('name')} onClick={() => handleClickUser(sender.username)}>
+                                {sender?.fullName}
+                            </strong>
                         </p>
                     </div>
                 );
@@ -221,8 +256,14 @@ function NotifyBox({ list = [] }) {
                 return (
                     <div className={cx('text-notify')}>
                         <p className={cx('qb-content')}>
-                            Bạn đã chấp nhận lời mời vào nhóm <strong className={cx('name')}>{group.name}</strong> của{' '}
-                            <strong className={cx('name')}>{sender?.fullName}</strong>
+                            Bạn đã chấp nhận lời mời vào nhóm{' '}
+                            <strong className={cx('name')} onClick={() => handleClickGroup(group._id)}>
+                                {group.name}
+                            </strong>{' '}
+                            của{' '}
+                            <strong className={cx('name')} onClick={() => handleClickUser(sender.username)}>
+                                {sender?.fullName}
+                            </strong>
                         </p>
                     </div>
                 );
@@ -231,8 +272,14 @@ function NotifyBox({ list = [] }) {
                 return (
                     <div className={cx('text-notify')}>
                         <p className={cx('qb-content')}>
-                            Bạn đã từ chối lời mời vào nhóm <strong className={cx('name')}>{group.name}</strong> của{' '}
-                            <strong className={cx('name')}>{sender?.fullName}</strong>
+                            Bạn đã từ chối lời mời vào nhóm{' '}
+                            <strong className={cx('name')} onClick={() => handleClickGroup(group._id)}>
+                                {group.name}
+                            </strong>{' '}
+                            của{' '}
+                            <strong className={cx('name')} onClick={() => handleClickUser(sender.username)}>
+                                {sender?.fullName}
+                            </strong>
                         </p>
                     </div>
                 );
@@ -240,7 +287,10 @@ function NotifyBox({ list = [] }) {
                 return (
                     <div className={cx('text-notify')}>
                         <p className={cx('qb-content')}>
-                            Bạn bị kick khỏi nhóm <strong className={cx('name')}>{group.name}</strong>
+                            Bạn bị kick khỏi nhóm{' '}
+                            <strong className={cx('name')} onClick={() => handleClickGroup(group._id)}>
+                                {group.name}
+                            </strong>
                         </p>
                     </div>
                 );
@@ -249,7 +299,10 @@ function NotifyBox({ list = [] }) {
                 return (
                     <div className={cx('text-notify')}>
                         <p className={cx('qb-content')}>
-                            Bạn được cấp quyền quản trị viên nhóm <strong className={cx('name')}>{group.name}</strong>
+                            Bạn được cấp quyền quản trị viên nhóm{' '}
+                            <strong className={cx('name')} onClick={() => handleClickGroup(group._id)}>
+                                {group.name}
+                            </strong>
                         </p>
                     </div>
                 );
@@ -257,7 +310,10 @@ function NotifyBox({ list = [] }) {
                 return (
                     <div className={cx('text-notify')}>
                         <p className={cx('qb-content')}>
-                            Bạn bị gỡ quyền quản trị viên nhóm <strong className={cx('name')}>{group.name}</strong>
+                            Bạn bị gỡ quyền quản trị viên nhóm{' '}
+                            <strong className={cx('name')} onClick={() => handleClickGroup(group._id)}>
+                                {group.name}
+                            </strong>
                         </p>
                     </div>
                 );
@@ -302,6 +358,15 @@ function NotifyBox({ list = [] }) {
         }
     };
 
+    const handleReadNotification = async (id) => {
+        try {
+            const res = notificationService.readNotification(id);
+            if (res) dispatch(readNotification(id));
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('header')}>
@@ -321,6 +386,8 @@ function NotifyBox({ list = [] }) {
                             }
                             render={() => renderNotificationContent(item)}
                             time={item?.createdAt}
+                            isRead={item.isRead}
+                            onClick={() => !item.isRead && handleReadNotification(item._id)}
                         />
                     );
                 })}
