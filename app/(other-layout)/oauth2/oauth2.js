@@ -6,8 +6,6 @@ import axios from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 
-import { userService } from '@/services';
-
 import { login } from '@/redux/actions/auth-action';
 
 function OAuth2() {

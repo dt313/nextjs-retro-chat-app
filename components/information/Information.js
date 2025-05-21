@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
 
 import styles from './Information.module.scss';
@@ -12,5 +14,10 @@ function Information({ label, content }) {
         </div>
     );
 }
+
+Information.propTypes = {
+    label: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
+};
 
 export default Information;

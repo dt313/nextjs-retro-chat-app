@@ -4,7 +4,7 @@ let socket = null;
 
 export const initSocket = (token) => {
     if (socket) return socket;
-    socket = new WebSocket('ws://macbook.com:3333');
+    socket = new WebSocket(`ws://${process.env.NEXT_PUBLIC_API_DOMAIN}:${process.env.NEXT_PUBLIC_API_PORT}`);
 
     socket.addEventListener('open', (event) => {
         socket.send(JSON.stringify({ type: 'AUTH', token }));

@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
 
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
@@ -31,5 +33,11 @@ function Details({ label, children, className }) {
         </div>
     );
 }
+
+Details.propTypes = {
+    label: PropTypes.string.isRequired,
+    children: PropTypes.node.isRequired,
+    className: PropTypes.string,
+};
 
 export default Details;

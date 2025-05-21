@@ -28,7 +28,6 @@ const cx = classNames.bind(styles);
 
 function Header() {
     const [isOpenCreation, setIsOpenCreation] = useState(false);
-    const [isHasNotification, setIsHasNotification] = useState(false);
     const [isShowMenu, setIsShowMenu] = useState(false);
     const { notifications, unRead: unReadNotification } = useSelector((state) => state.notification);
     const { unRead: unReadConversation } = useSelector((state) => state.conversations);
@@ -40,10 +39,8 @@ function Header() {
 
     useEffect(() => {
         const handleNotification = (data) => {
-            console.log(data);
             if (data) {
                 dispatch(addNotification(data));
-                setIsHasNotification(true);
             }
         };
 
@@ -76,13 +73,8 @@ function Header() {
                 {isAuthenticated && (
                     <Dropdown position="right" content={<NotifyBox list={notifications} />}>
                         <span className={cx('hmenu-item')}>
-                            <Icon
-                                element={<IoNotifications />}
-                                className={cx({ active: isHasNotification || unReadNotification > 0 })}
-                            />
-                            {(isHasNotification || unReadNotification > 0) && (
-                                <span className={cx('notify-count')}>{unReadNotification}</span>
-                            )}
+                            <Icon element={<IoNotifications />} className={cx({ active: unReadNotification > 0 })} />
+                            {unReadNotification > 0 && <span className={cx('notify-count')}>{unReadNotification}</span>}
                         </span>
                     </Dropdown>
                 )}

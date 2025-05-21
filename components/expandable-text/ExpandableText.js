@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
+import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
 
 import styles from './ExpandableText.module.scss';
@@ -41,5 +43,15 @@ function ExpandableText({ children, className, lineClamp = 5 }) {
         </div>
     );
 }
+
+ExpandableText.propTypes = {
+    children: PropTypes.node.isRequired,
+    className: PropTypes.string,
+    lineClamp: PropTypes.number,
+};
+
+ExpandableText.defaultProps = {
+    lineClamp: 5,
+};
 
 export default ExpandableText;

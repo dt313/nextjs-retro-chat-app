@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
 
 import { BsSendCheckFill } from 'react-icons/bs';
@@ -98,5 +100,17 @@ function User({
         </div>
     );
 }
+
+User.propTypes = {
+    avatar: PropTypes.string,
+    name: PropTypes.string.isRequired,
+    isOnline: PropTypes.bool.isRequired,
+    id: PropTypes.string,
+    type: PropTypes.string,
+    onClickInvitation: PropTypes.func,
+    onClickForward: PropTypes.func,
+    onCancelInvitation: PropTypes.func,
+    isSent: PropTypes.bool,
+};
 
 export default User;

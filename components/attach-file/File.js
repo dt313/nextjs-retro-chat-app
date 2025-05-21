@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
 
 import { FaFileLines } from 'react-icons/fa6';
@@ -23,5 +25,14 @@ function File({ name, size, secondary, primary, className, onClick }) {
         </div>
     );
 }
+
+File.propTypes = {
+    name: PropTypes.string.isRequired,
+    size: PropTypes.string.isRequired,
+    secondary: PropTypes.bool,
+    primary: PropTypes.bool,
+    className: PropTypes.string,
+    onClick: PropTypes.func,
+};
 
 export default File;

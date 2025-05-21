@@ -4,11 +4,9 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
-import { set } from 'lodash';
 import { useRouter } from 'next/navigation';
 import { FaFacebookMessenger, FaRegUserCircle } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
-import { validate } from 'uuid';
 
 import { GroupJoinIcon } from '@/assets/svg/icons/group-join';
 
@@ -146,10 +144,12 @@ function GroupCard({
 }
 
 GroupCard.propTypes = {
-    name: PropTypes.string,
-    createdAt: PropTypes.string,
-    members: PropTypes.number,
+    name: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
+    members: PropTypes.number.isRequired,
     thumbnail: PropTypes.string,
+    isJoined: PropTypes.bool.isRequired,
+    isPrivate: PropTypes.bool.isRequired,
 };
 
 export default GroupCard;

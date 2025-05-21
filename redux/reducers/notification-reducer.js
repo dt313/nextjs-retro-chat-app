@@ -48,7 +48,7 @@ const notificationReducer = (state = initialState, action) => {
                         ? { ...notification, type: action.payload.type, isRead: true }
                         : notification,
                 ),
-                unRead: state.unRead - 1,
+                unRead: state.unRead > 0 ? state.unRead - 1 : 0,
             };
 
         case READ_NOTIFICATION:
@@ -59,7 +59,7 @@ const notificationReducer = (state = initialState, action) => {
                 notifications: state.notifications.map((notification) =>
                     notification._id === id ? { ...notification, isRead: true } : notification,
                 ),
-                unRead: state.unRead - 1,
+                unRead: state.unRead > 0 ? state.unRead - 1 : 0,
             };
 
         default:

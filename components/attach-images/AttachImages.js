@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
+import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
 
 import { useDispatch } from 'react-redux';
@@ -77,5 +79,9 @@ function AttachImages({ conversationId }) {
         </div>
     );
 }
+
+AttachImages.propTypes = {
+    conversationId: PropTypes.string.isRequired,
+};
 
 export default AttachImages;

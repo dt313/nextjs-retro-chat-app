@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from 'react';
 
+import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
 
 import styles from './Square.module.scss';
@@ -142,6 +144,24 @@ const Squares = ({
     }, [direction, speed, borderColor, hoverFillColor, squareSize]);
 
     return <canvas ref={canvasRef} className={cx('squares-canvas', className)}></canvas>;
+};
+
+Squares.propTypes = {
+    direction: PropTypes.string.isRequired,
+    speed: PropTypes.number.isRequired,
+    borderColor: PropTypes.string.isRequired,
+    squareSize: PropTypes.number.isRequired,
+    hoverFillColor: PropTypes.string.isRequired,
+    className: PropTypes.string,
+};
+
+Squares.defaultProps = {
+    direction: 'right',
+    speed: 1,
+    borderColor: '#999',
+    squareSize: 40,
+    hoverFillColor: '#222',
+    className: '',
 };
 
 export default Squares;

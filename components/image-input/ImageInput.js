@@ -1,5 +1,7 @@
 import { useRef, useState } from 'react';
 
+import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
 
 import { IoMdCloudUpload } from 'react-icons/io';
@@ -43,5 +45,12 @@ function ImageInput({ className, value, name, onChange }) {
         </div>
     );
 }
+
+ImageInput.propTypes = {
+    className: PropTypes.string,
+    value: PropTypes.string,
+    name: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+};
 
 export default ImageInput;

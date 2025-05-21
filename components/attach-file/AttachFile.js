@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
-import classNames from 'classnames/bind';
+import PropTypes from 'prop-types';
 
-import axios from 'axios';
+import classNames from 'classnames/bind';
 
 import { attachmentService } from '@/services';
 
@@ -66,5 +66,9 @@ function AttachFile({ conversationId }) {
         </div>
     );
 }
+
+AttachFile.propTypes = {
+    conversationId: PropTypes.string.isRequired,
+};
 
 export default AttachFile;

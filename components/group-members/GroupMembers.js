@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react';
 
+import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
 
-import {
-    CONVERSATION_PARTICIPANT_ROLE_ADMIN,
-    CONVERSATION_PARTICIPANT_ROLE_CREATOR,
-    CONVERSATION_PARTICIPANT_ROLE_MEMBER,
-} from '@/config/types';
+import { CONVERSATION_PARTICIPANT_ROLE_ADMIN, CONVERSATION_PARTICIPANT_ROLE_MEMBER } from '@/config/types';
 import { IoSearch } from 'react-icons/io5';
-import { useSelector } from 'react-redux';
 
 import { conversationService, groupService } from '@/services';
 
@@ -117,5 +114,10 @@ function GroupMembers({ groupId, meRole }) {
         </div>
     );
 }
+
+GroupMembers.propTypes = {
+    groupId: PropTypes.string.isRequired,
+    meRole: PropTypes.string.isRequired,
+};
 
 export default GroupMembers;

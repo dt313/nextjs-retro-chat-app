@@ -1,6 +1,6 @@
-import classNames from 'classnames/bind';
+import PropTypes from 'prop-types';
 
-import { RiCloseLine } from 'react-icons/ri';
+import classNames from 'classnames/bind';
 
 import Close from '@/assets/svg/emoji/close';
 
@@ -19,5 +19,21 @@ function CloseIcon({ onClick, className, theme = 'light', small, large, medium }
     });
     return <Icon className={classes} element={<Close className={cx('icon')} />} onClick={onClick} />;
 }
+
+CloseIcon.propTypes = {
+    onClick: PropTypes.func,
+    className: PropTypes.string,
+    theme: PropTypes.string,
+    small: PropTypes.bool,
+    large: PropTypes.bool,
+    medium: PropTypes.bool,
+};
+
+CloseIcon.defaultProps = {
+    theme: 'light',
+    small: false,
+    large: false,
+    medium: false,
+};
 
 export default CloseIcon;

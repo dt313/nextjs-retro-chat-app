@@ -34,5 +34,6 @@ Avatar.propTypes = {
     src: PropTypes.string.isRequired,
     className: PropTypes.string,
     fallback: PropTypes.string,
+    size: PropTypes.number,
 };
 export default Avatar;

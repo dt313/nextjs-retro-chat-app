@@ -37,4 +37,8 @@ Dropdown.propTypes = {
     position: PropTypes.string,
 };
 
+Dropdown.defaultProps = {
+    position: 'center',
+};
+
 export default Dropdown;

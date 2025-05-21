@@ -8,13 +8,6 @@ import styles from './ToggleSwitch.module.scss';
 
 const cx = classNames.bind(styles);
 
-/*
-Toggle Switch Component
-Note: id, checked and onChange are required for ToggleSwitch component to function.
-The props name, small, disabled and optionLabels are optional.
-Usage: <ToggleSwitch id="id" checked={value} onChange={checked => setValue(checked)}} />
-*/
-
 const ToggleSwitch = ({ id, name, checked, onChange, optionLabels = ['Yes', 'No'], small, disabled }) => {
     return (
         <div className={cx('toggle-switch', small && ' small-switch')}>

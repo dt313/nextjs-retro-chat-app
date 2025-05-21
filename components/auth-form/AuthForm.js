@@ -34,6 +34,13 @@ const AuthItem = ({ type, image, text, onClick }) => {
     );
 };
 
+AuthItem.propTypes = {
+    type: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
+    text: PropTypes.string.isRequired,
+    onClick: PropTypes.func.isRequired,
+};
+
 function AuthForm({ type = LOGIN_AUTH_BOX }) {
     const [isShowPasswordAuth, setIsShowPasswordAuth] = useState(false);
 

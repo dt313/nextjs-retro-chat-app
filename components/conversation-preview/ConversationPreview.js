@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
@@ -60,5 +60,24 @@ function ConversationPreview({ className, slug, avatar = '', name, message, time
         </div>
     );
 }
+
+ConversationPreview.propTypes = {
+    className: PropTypes.string,
+    slug: PropTypes.string.isRequired,
+    avatar: PropTypes.string,
+    name: PropTypes.string.isRequired,
+    message: PropTypes.string,
+    time: PropTypes.string.isRequired,
+    isReaded: PropTypes.bool.isRequired,
+    active: PropTypes.bool,
+};
+
+ConversationPreview.defaultProps = {
+    avatar: '',
+    message: '',
+    time: '',
+    isReaded: false,
+    active: false,
+};
 
 export default ConversationPreview;

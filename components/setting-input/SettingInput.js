@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
 
 import ImageInput from '@/components/image-input';
@@ -42,5 +44,14 @@ function SettingInput({ type, label, placeholder, value, onChange, errorMessage 
 
     return null;
 }
+
+SettingInput.propTypes = {
+    type: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    placeholder: PropTypes.string,
+    value: PropTypes.string,
+    onChange: PropTypes.func.isRequired,
+    errorMessage: PropTypes.string,
+};
 
 export default SettingInput;

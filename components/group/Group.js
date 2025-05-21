@@ -1,6 +1,7 @@
+import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
 
-import { FaFacebookMessenger } from 'react-icons/fa';
 import { GoPlusCircle } from 'react-icons/go';
 
 import Avatar from '@/components/avatar';
@@ -26,5 +27,12 @@ function Group({ thumbnail, name, memberCount, id }) {
         </div>
     );
 }
+
+Group.propTypes = {
+    thumbnail: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    memberCount: PropTypes.number.isRequired,
+    id: PropTypes.string,
+};
 
 export default Group;

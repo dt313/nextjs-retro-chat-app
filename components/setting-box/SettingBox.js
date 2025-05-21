@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
 
 import SubmitButton from '@/components/auth-with-password/SubmitButton';
@@ -74,5 +76,16 @@ function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu' }) {
         </div>
     );
 }
+
+SettingBox.propTypes = {
+    onClose: PropTypes.func.isRequired,
+    content: PropTypes.object.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+    submitText: PropTypes.string,
+};
+
+SettingBox.defaultProps = {
+    submitText: 'Lưu',
+};
 
 export default SettingBox;

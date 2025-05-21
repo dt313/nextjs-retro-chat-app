@@ -1,4 +1,6 @@
-import { forwardRef, useRef } from 'react';
+import { forwardRef } from 'react';
+
+import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
@@ -27,4 +29,10 @@ function SubmitButton({ children, onClick, className, disable }, ref) {
     );
 }
 
+SubmitButton.propTypes = {
+    children: PropTypes.node.isRequired,
+    onClick: PropTypes.func,
+    className: PropTypes.string,
+    disable: PropTypes.bool,
+};
 export default forwardRef(SubmitButton);

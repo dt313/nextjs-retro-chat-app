@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
 
 import { CONVERSATION_PARTICIPANT_ROLE_ADMIN, CONVERSATION_PARTICIPANT_ROLE_CREATOR } from '@/config/types';
@@ -58,5 +60,16 @@ function GroupMember({ id, name, date, avatar, role, meRole, onClickDeleteAction
         </div>
     );
 }
+
+GroupMember.propTypes = {
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
+    avatar: PropTypes.string.isRequired,
+    role: PropTypes.string.isRequired,
+    meRole: PropTypes.string.isRequired,
+    onClickDeleteAction: PropTypes.func.isRequired,
+    onClickChangRoleAction: PropTypes.func.isRequired,
+};
 
 export default GroupMember;

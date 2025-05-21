@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
 
 import MessageIcon from '@/components/message-icon';
@@ -15,5 +17,14 @@ function FormHeader({ title, description }) {
         </div>
     );
 }
+
+FormHeader.propTypes = {
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string,
+};
+
+FormHeader.defaultProps = {
+    description: '',
+};
 
 export default FormHeader;

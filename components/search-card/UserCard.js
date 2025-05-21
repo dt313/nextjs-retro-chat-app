@@ -186,9 +186,13 @@ function UserCard({
 }
 
 UserCard.propTypes = {
-    name: PropTypes.string,
-    email: PropTypes.string,
-    createdAt: PropTypes.string,
+    name: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
+    avatar: PropTypes.string,
+    isFriendRequestByMe: PropTypes.bool.isRequired,
+    isFriendRequestByOther: PropTypes.bool.isRequired,
+    isFriend: PropTypes.bool.isRequired,
 };
 
 export default UserCard;

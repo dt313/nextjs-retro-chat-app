@@ -1,6 +1,8 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
@@ -135,5 +137,9 @@ function ImagePreview({ images = [] }) {
         </div>
     );
 }
+
+ImagePreview.propTypes = {
+    images: PropTypes.array.isRequired,
+};
 
 export default ImagePreview;

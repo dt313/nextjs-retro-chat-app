@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
+import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
 
 import { types } from '@/config/ui-config';
@@ -9,13 +11,11 @@ import { useRouter } from 'next/navigation';
 
 import SubmitButton from '@/components/auth-with-password/SubmitButton';
 import CloseIcon from '@/components/close-icon';
-import Group from '@/components/group';
 import ImageInput from '@/components/image-input';
 import Input from '@/components/input';
 import InputWithList from '@/components/input-with-list';
 import Overlay from '@/components/overlay';
 import ToggleSwitch from '@/components/toggle-switch';
-import User from '@/components/user';
 
 import { conversationService } from '@/services';
 
@@ -290,5 +290,9 @@ function Creation({ onClose }) {
         </Overlay>
     );
 }
+
+Creation.propTypes = {
+    onClose: PropTypes.func.isRequired,
+};
 
 export default Creation;

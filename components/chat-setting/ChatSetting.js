@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
+import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
@@ -241,5 +243,10 @@ function ChatSetting({ isGroup, data }) {
         </div>
     );
 }
+
+ChatSetting.propTypes = {
+    isGroup: PropTypes.bool.isRequired,
+    data: PropTypes.object.isRequired,
+};
 
 export default ChatSetting;

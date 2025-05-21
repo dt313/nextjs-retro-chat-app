@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import PropTypes from 'prop-types';
+
 import classNames from 'classnames/bind';
 
 import { IoSearch } from 'react-icons/io5';
@@ -105,5 +107,10 @@ function GroupInvitation({ onClose, id }) {
         </Overlay>
     );
 }
+
+GroupInvitation.propTypes = {
+    onClose: PropTypes.func.isRequired,
+    id: PropTypes.string.isRequired,
+};
 
 export default GroupInvitation;

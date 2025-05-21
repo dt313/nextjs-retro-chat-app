@@ -413,7 +413,7 @@ function Profile({ slug }) {
                         <QRCode
                             className="qr-code"
                             size={256}
-                            value={`http://macbook.com:3000/profile/${type === 'group' ? basicInfo._id : `@${basicInfo.username}`}`}
+                            value={`${process.env.NEXT_PUBLIC_URL}/profile/${type === 'group' ? basicInfo._id : `@${basicInfo.username}`}`}
                             viewBox={`0 0 256 256`}
                         />
 
