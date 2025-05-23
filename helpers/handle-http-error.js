@@ -5,7 +5,6 @@ import { storageUtils } from '@/utils';
 const refreshToken = async () => {
     try {
         const res = await authService.refreshToken();
-        console.log('refresh token ', res);
 
         const { accessToken } = res;
         if (accessToken) {

@@ -58,7 +58,6 @@ function Creation({ onClose }) {
 
     const handleChange = (e) => {
         if (e.target.name === 'thumbnail') {
-            console.log('image change');
             const file = e.target.files[0];
             setGroup({ ...group, thumbnail: file });
             return;
@@ -81,7 +80,6 @@ function Creation({ onClose }) {
         formData.append('rules', group.rules);
         formData.append('password', group.password);
 
-        console.log('formData', formData);
         const res = await conversationService.createGroupConversation(formData);
         const { _id } = res;
 

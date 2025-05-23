@@ -355,7 +355,6 @@ function Profile({ slug }) {
                             <button
                                 className={cx('action-button')}
                                 onClick={() => {
-                                    console.log('qr');
                                     setIsOpenQRCode(true);
                                 }}
                             >
@@ -382,7 +381,6 @@ function Profile({ slug }) {
                             <button
                                 className={cx('action-button')}
                                 onClick={() => {
-                                    console.log('qr');
                                     setIsOpenQRCode(true);
                                 }}
                             >

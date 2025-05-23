@@ -71,8 +71,6 @@ function MessageBox({
         };
     }, [eventBus]);
 
-    console.log('participant', participants);
-
     const handleLoadMoreAfterMessage = async () => {
         try {
             if (!isAfterFinish && list.length > 0) {
@@ -154,7 +152,6 @@ function MessageBox({
             if (el) {
                 scrollToMessage(searchMessageId);
             } else {
-                console.log('get message');
                 const res = await conversationService.findMessage(conversationId, searchMessageId);
                 if (res && Array.isArray(res)) {
                     setList(res);

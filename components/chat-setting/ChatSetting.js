@@ -37,7 +37,6 @@ function ChatSetting({ isGroup, data }) {
     const [conversation, setConversation] = useState(data);
 
     useEffect(() => {
-        console.log('data', data);
         setConversation(data);
     }, [data]);
 

@@ -57,7 +57,6 @@ function ImagePreview({ images = [] }) {
     };
 
     const handleClickImage = (index) => {
-        console.log(index);
         setCurrentIndex(index);
     };
 

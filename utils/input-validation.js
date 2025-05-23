@@ -103,10 +103,6 @@ Validation.isSocialLink = function (social = '', message) {
 Validation.isConfirmPassWord = function (password, message) {
     return {
         test: function (value) {
-            console.log('password ', password);
-
-            console.log(value !== password);
-
             if (value !== password) {
                 return message || 'Mật khẩu không khớp.';
             }

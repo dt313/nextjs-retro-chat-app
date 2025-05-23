@@ -77,7 +77,6 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
 
     const handleClickSimItem = (id) => {
         router.push(`?message=${id}`);
-        console.log(breakpoint);
         if (breakpoint === 'lg' || breakpoint === 'md' || breakpoint === 'sm') {
             onClose();
         }

@@ -56,7 +56,6 @@ function UserCard({
                 setFriendRequestByMe(true);
             }
         } catch (error) {
-            console.log('Toast : ', error.message);
             dispatch(
                 addToast({
                     content: error.message,
@@ -76,7 +75,7 @@ function UserCard({
             if (!!res) {
                 setFriend(true);
                 const notificationId = getNotificationId(notifications, id, NOTIFICATION_FRIEND_REQUEST);
-                console.log('notificationId', notificationId);
+
                 dispatch(
                     changeTypeNotification({ notificationId: notificationId, type: TEMP_NOTIFICATION_FRIEND_ACCEPTED }),
                 );
@@ -91,7 +90,6 @@ function UserCard({
             const res = await invitationService.cancelFriendRequest(id);
 
             if (!!res) {
-                console.log('Cancel ', res);
                 setFriendRequestByMe(false);
             }
         } catch (error) {
@@ -107,7 +105,6 @@ function UserCard({
     const handleClickMessenger = async () => {
         try {
             const res = await conversationService.getOrCreateConversation({ withUserId: id });
-            console.log('res', res);
             if (res) {
                 router.push(`/conversation/${res._id}`);
             }

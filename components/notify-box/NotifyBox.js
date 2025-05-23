@@ -325,7 +325,7 @@ function NotifyBox({ list = [] }) {
     const loadMoreNotification = async () => {
         try {
             const latestNotification = list[list.length - 1];
-            console.log(latestNotification);
+            latestNotification;
             const res = await notificationService.getAllNotifications(latestNotification?.createdAt);
             if (res && Array.isArray(res)) {
                 dispatch(addNotification(res));

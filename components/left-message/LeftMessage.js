@@ -63,7 +63,6 @@ function LeftMessage({ className, activeId }) {
 
     useEffect(() => {
         const handleSortConversation = (conversation) => {
-            console.log('new conversation ', conversation);
             dispatch(newConversation({ conversation, meId: me._id }));
         };
 
@@ -72,8 +71,6 @@ function LeftMessage({ className, activeId }) {
             eventBus.off('last-conversation', handleSortConversation);
         };
     }, [list]);
-
-    console.log('new List', list);
 
     useEffect(() => {
         if (searchValue === '') fetchConversations();

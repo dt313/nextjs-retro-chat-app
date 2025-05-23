@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
+import { useTypingStatus } from '@/hooks';
 import { redirect, useRouter, useSearchParams } from 'next/navigation';
 import { BsThreeDots } from 'react-icons/bs';
 import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
@@ -47,6 +48,7 @@ function Conversation({ id }) {
 
     const [conversation, setConversation] = useState(null);
     const [messagesList, setMessageList] = useState([]);
+    const [isTyping, setIsTyping] = useState(false);
 
     const searchParams = useSearchParams();
     const searchMessageId = searchParams.get('message');
@@ -58,6 +60,12 @@ function Conversation({ id }) {
 
     const breakpoint = useBreakpoint();
     const dispatch = useDispatch();
+
+    useTypingStatus({
+        conversationId: id,
+        userId: me._id,
+        isTyping,
+    });
 
     const fetchConversation = async () => {
         try {
@@ -289,6 +297,7 @@ function Conversation({ id }) {
                             setList={setMessageList}
                             targetName={getNameFromConversation(conversation, me._id, true)}
                             participants={conversation?.participants}
+                            isTyping={isTyping}
                         />
                         {isOpenReplyBox && (
                             <div className={cx('reply-box')}>
@@ -315,7 +324,7 @@ function Conversation({ id }) {
                         )}
                     </div>
                     <div className={cx('c-footer')} onClick={handleReadLastMessage}>
-                        <MessageInput onSubmit={handleAddMessage} conversationId={id} />
+                        <MessageInput onSubmit={handleAddMessage} conversationId={id} setIsTyping={setIsTyping} />
                     </div>
                 </div>
             ) : (

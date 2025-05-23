@@ -1,25 +1,25 @@
 import eventBus from '@/config/emit';
 
+let reconnectTimeout = null;
 let socket = null;
 
 export const initSocket = (token) => {
-    if (socket) return socket;
+    if (socket && socket.readyState === WebSocket.OPEN) return socket;
+
     socket = new WebSocket(`ws://${process.env.NEXT_PUBLIC_API_DOMAIN}:${process.env.NEXT_PUBLIC_API_PORT}`);
 
     socket.addEventListener('open', (event) => {
+        console.log('WS connected');
         socket.send(JSON.stringify({ type: 'AUTH', token }));
     });
 
     socket.addEventListener('message', (event) => {
         const message = JSON.parse(event.data);
-        console.log('message from server ws ');
 
         const { type, data } = message;
-        console.log('Message Type ', type);
 
         switch (type) {
             case 'notification':
-                console.log('notification ', data);
                 eventBus.emit('notification', data.notification);
                 break;
 
@@ -51,7 +51,7 @@ export const initSocket = (token) => {
                 break;
             case 'no-typing':
                 const { conversationId: noTypingConversationId, typingUser: noTypingUser } = data;
-                console.log('no - typing', noTypingUser, noTypingConversationId);
+
                 if (noTypingConversationId && noTypingUser) {
                     eventBus.emit(`no-typing-${noTypingConversationId}`, noTypingUser);
                 }
@@ -79,13 +79,23 @@ export const initSocket = (token) => {
 
     socket.addEventListener('close', (event) => {
         console.log('WS server closed');
+        reconnect(token);
     });
 
     socket.addEventListener('error', (event) => {
         console.log('Websocket Error: ', event);
+        socket.close();
     });
 
     return socket;
 };
+
+function reconnect(token) {
+    console.log('reconnect ws');
+    if (reconnectTimeout) clearTimeout(reconnectTimeout);
+    reconnectTimeout = setTimeout(() => {
+        initSocket(token);
+    }, 3000);
+}
 
 export const getSocket = () => socket;

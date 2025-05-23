@@ -40,7 +40,6 @@ function InputWithList({
         onChange(e);
     };
 
-    console.log(errorMessage);
     return (
         <div className={cx('wrapper', className)} ref={wrapperRef}>
             <Input

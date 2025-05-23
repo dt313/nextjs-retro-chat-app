@@ -21,7 +21,7 @@ import styles from './MessageInput.module.scss';
 
 const cx = classNames.bind(styles);
 
-function MessageInput({ onSubmit, conversationId }) {
+function MessageInput({ onSubmit, conversationId, setIsTyping }) {
     const [value, setValue] = useState('');
     const textRef = useAutoResize(value);
     const fileInputRef = useRef(null);
@@ -35,7 +35,7 @@ function MessageInput({ onSubmit, conversationId }) {
 
     const handleFocus = () => {
         const socket = getSocket();
-        console.log(socket);
+
         if (socket && socket.readyState === WebSocket.OPEN) {
             socket.send(
                 JSON.stringify({
@@ -46,6 +46,7 @@ function MessageInput({ onSubmit, conversationId }) {
                     },
                 }),
             );
+            setIsTyping(true);
         } else {
             console.error('WebSocket is null or undefined');
         }
@@ -53,7 +54,7 @@ function MessageInput({ onSubmit, conversationId }) {
 
     const handleBlur = () => {
         const socket = getSocket();
-        console.log(socket);
+
         if (socket && socket.readyState === WebSocket.OPEN) {
             socket.send(
                 JSON.stringify({
@@ -64,6 +65,8 @@ function MessageInput({ onSubmit, conversationId }) {
                     },
                 }),
             );
+
+            setIsTyping(false);
         } else {
             console.error('WebSocket is null or undefined');
         }
@@ -84,7 +87,6 @@ function MessageInput({ onSubmit, conversationId }) {
     const handleKeyDown = (e) => {
         if (e.isComposing || e.keyCode === 229) return;
         if (e.key === 'Enter' && !e.shiftKey) {
-            console.log(e.key);
             e.preventDefault();
             handleSubmit();
         }
@@ -101,9 +103,7 @@ function MessageInput({ onSubmit, conversationId }) {
         if (inputFiles.length > 0) {
             for (const file of inputFiles) {
                 const isExist = files.some((f) => f.name === file.name && f.size === file.size);
-                console.log(isExist);
                 if (isExist) {
-                    console.log('isExisted ');
                     alert(`${file.name} is attached`);
                     continue;
                 }
