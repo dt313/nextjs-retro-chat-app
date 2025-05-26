@@ -86,6 +86,10 @@
     margin-right: 4px;
 }
 
+.time.no-before::before {
+    content: '';
+}
+
 .isReaded {
     .name {
         font-weight: 100;

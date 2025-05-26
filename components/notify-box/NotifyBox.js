@@ -370,7 +370,7 @@ function NotifyBox({ list = [] }) {
     return (
         <div className={cx('wrapper')}>
             <div className={cx('header')}>
-                <h3 className={cx('title')}>Notifications</h3>
+                <h3 className={cx('title')}>Thông báo</h3>
                 <Icon className={cx('setting-icon')} medium element={<IoSettings />} />
             </div>
 

@@ -17,11 +17,12 @@ import CloseIcon from '@/components/close-icon';
 import Icon from '@/components/icon';
 import Image from '@/components/image';
 
+import { SpinnerLoader } from '../loading';
 import styles from './MessageInput.module.scss';
 
 const cx = classNames.bind(styles);
 
-function MessageInput({ onSubmit, conversationId, setIsTyping }) {
+function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
     const [value, setValue] = useState('');
     const textRef = useAutoResize(value);
     const fileInputRef = useRef(null);
@@ -171,7 +172,7 @@ function MessageInput({ onSubmit, conversationId, setIsTyping }) {
                 ref={textRef}
                 className={cx('input')}
                 type="text"
-                placeholder="Type a message..."
+                placeholder="Nhập tin nhắn..."
                 value={value}
                 onFocus={handleFocus}
                 onChange={handleChange}
@@ -197,7 +198,11 @@ function MessageInput({ onSubmit, conversationId, setIsTyping }) {
                     />
                 </div>
                 <div className={'submit'}>
-                    <Icon className={cx('submit-icon')} element={<FaArrowUp />} medium onClick={handleSubmit} />
+                    {!isLoading ? (
+                        <Icon className={cx('submit-icon')} element={<FaArrowUp />} medium onClick={handleSubmit} />
+                    ) : (
+                        <SpinnerLoader small />
+                    )}
                 </div>
             </div>
         </div>

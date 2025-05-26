@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
+import { set } from 'lodash';
 import { useRouter } from 'next/navigation';
 import { IoIosImages } from 'react-icons/io';
 import { LuText } from 'react-icons/lu';
@@ -35,6 +36,7 @@ function ChatSetting({ isGroup, data }) {
     const [settingBox, setSettingBox] = useState({});
     const [settingMenu, setSettingMenu] = useState([]);
     const [conversation, setConversation] = useState(data);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         setConversation(data);
@@ -182,6 +184,7 @@ function ChatSetting({ isGroup, data }) {
 
     const handleSubmit = async (value) => {
         try {
+            setIsLoading(true);
             const formData = new FormData();
             formData.append('type', settingBox?.field);
             formData.append('value', value);
@@ -191,22 +194,32 @@ function ChatSetting({ isGroup, data }) {
             }
         } catch (error) {
             console.log(error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const handleDelete = async () => {
-        if (conversation.isGroup) {
-            // delete conversation
-            const res = await conversationService.deleteGroupConversation(conversation._id);
-            if (res) {
-                router.push('/conversation');
+        try {
+            setIsLoading(true);
+
+            if (conversation.isGroup) {
+                // delete conversation
+                const res = await conversationService.deleteGroupConversation(conversation._id);
+                if (res) {
+                    router.push('/conversation');
+                }
+            } else {
+                // leave conversation
+                const res = await conversationService.leaveConversation(conversation._id);
+                if (res) {
+                    router.push('/conversation');
+                }
             }
-        } else {
-            // leave conversation
-            const res = await conversationService.leaveConversation(conversation._id);
-            if (res) {
-                router.push('/conversation');
-            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -236,6 +249,7 @@ function ChatSetting({ isGroup, data }) {
                         content={settingBox}
                         onSubmit={settingBox.type === 'delete' ? handleDelete : handleSubmit}
                         submitText={settingBox.type === 'delete' ? 'Xóa' : 'Lưu'}
+                        isLoading={isLoading}
                     />
                 </Overlay>
             )}

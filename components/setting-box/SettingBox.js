@@ -8,11 +8,12 @@ import SubmitButton from '@/components/auth-with-password/SubmitButton';
 import CloseIcon from '@/components/close-icon';
 import SettingInput from '@/components/setting-input';
 
+import { SpinnerLoader } from '../loading';
 import styles from './SettingBox.module.scss';
 
 const cx = classNames.bind(styles);
 
-function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu' }) {
+function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu', isLoading }) {
     const [value, setValue] = useState(content?.value || '');
     const [errorMessage, setErrorMessage] = useState('');
     const [buttonDisable, setButtonDisable] = useState(true);
@@ -70,7 +71,7 @@ function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu' }) {
                     onClick={handleSubmit}
                     disable={buttonDisable}
                 >
-                    {submitText}
+                    {isLoading ? <SpinnerLoader small className={cx('loading')} /> : submitText}
                 </SubmitButton>
             </div>
         </div>
@@ -82,6 +83,7 @@ SettingBox.propTypes = {
     content: PropTypes.object.isRequired,
     onSubmit: PropTypes.func.isRequired,
     submitText: PropTypes.string,
+    isLoading: PropTypes.bool,
 };
 
 SettingBox.defaultProps = {

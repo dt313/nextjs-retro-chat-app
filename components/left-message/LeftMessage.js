@@ -5,7 +5,8 @@ import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
-import _ from 'lodash';
+import { useDebounce } from '@/hooks';
+import _, { set } from 'lodash';
 import { FiSearch } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -34,6 +35,9 @@ const cx = classNames.bind(styles);
 function LeftMessage({ className, activeId }) {
     const [searchValue, setSearchValue] = useState('');
 
+    const debounceValue = useDebounce(searchValue, 1300);
+    const [isLoading, setIsLoading] = useState(false);
+
     const { user: me } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const { list } = useSelector((state) => state.conversations);
@@ -43,14 +47,23 @@ function LeftMessage({ className, activeId }) {
     };
 
     const fetchConversations = async () => {
-        const res = await conversationService.getByMe();
-        if (res && Array.isArray(res)) {
-            dispatch(initConversation({ conversations: res, meId: me._id }));
+        try {
+            setIsLoading(true);
+
+            const res = await conversationService.getByMe();
+            if (res && Array.isArray(res)) {
+                dispatch(initConversation({ conversations: res, meId: me._id }));
+            }
+        } catch (error) {
+            console.error('Error fetching conversations:', error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     useEffect(() => {
         const fetchConversationsByName = async () => {
+            setIsLoading(true);
             try {
                 if (searchValue !== '') {
                     const res = await conversationService.getConversationByName(searchValue);
@@ -60,10 +73,12 @@ function LeftMessage({ className, activeId }) {
                 }
             } catch (error) {
                 console.log(error);
+            } finally {
+                setIsLoading(false);
             }
         };
         fetchConversationsByName();
-    }, [searchValue]);
+    }, [debounceValue]);
 
     useEffect(() => {
         const handleSortConversation = (conversation) => {
@@ -78,7 +93,7 @@ function LeftMessage({ className, activeId }) {
 
     useEffect(() => {
         if (searchValue === '') fetchConversations();
-    }, [searchValue]);
+    }, [debounceValue]);
 
     const checkOnline = (conv) => {
         if (!conv) return false;
@@ -91,28 +106,32 @@ function LeftMessage({ className, activeId }) {
         <div className={cx('wrapper', className)}>
             <div className={cx('search-wrapper')}>
                 <InputSearch
-                    placeholder="Search"
+                    placeholder="Tìm kiếm cuộc trò chuyện"
                     value={searchValue}
                     onChange={handleChangeSearchValue}
                     leftIcon={<FiSearch />}
                 />
             </div>
             <div className={cx('message-list')}>
-                {list.map((conv, index) => (
-                    <ConversationPreview
-                        className={cx('message-preview')}
-                        key={conv._id}
-                        slug={conv._id}
-                        avatar={getAvatarFromConversation(conv, me._id)}
-                        name={getNameFromConversation(conv, me._id)}
-                        message={getLastMessageContent(conv.lastMessage, me._id)}
-                        time={calculateTime(conv.lastMessage?.sentAt)}
-                        isReaded={checkIsRead(conv.lastMessage.readedBy, me._id)}
-                        active={activeId === conv._id}
-                        isOnline={checkOnline(conv)}
-                        isGroup={conv.isGroup}
-                    />
-                ))}
+                {list.map((conv, index) =>
+                    !isLoading ? (
+                        <ConversationPreview
+                            className={cx('message-preview')}
+                            key={conv._id}
+                            slug={conv._id}
+                            avatar={getAvatarFromConversation(conv, me._id)}
+                            name={getNameFromConversation(conv, me._id)}
+                            message={getLastMessageContent(conv.lastMessage, me._id)}
+                            time={calculateTime(conv.lastMessage?.sentAt)}
+                            isReaded={checkIsRead(conv.lastMessage.readedBy, me._id)}
+                            active={activeId === conv._id}
+                            isOnline={checkOnline(conv)}
+                            isGroup={conv.isGroup}
+                        />
+                    ) : (
+                        <ConversationPreview.Skeleton key={index} />
+                    ),
+                )}
             </div>
         </div>
     );

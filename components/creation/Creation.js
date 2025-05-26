@@ -174,7 +174,7 @@ function Creation({ onClose }) {
         <Overlay>
             <div className={cx('wrapper')} onClick={(e) => e.stopPropagation()}>
                 <div className={cx('l-side')}>
-                    <h3 className={cx('ls-title')}>Create a new group</h3>
+                    <h3 className={cx('ls-title')}>Tạo nhóm</h3>
                     <div className={cx('ls-content')}>
                         <ImageInput
                             className={cx('image-input')}
@@ -188,7 +188,7 @@ function Creation({ onClose }) {
                             value={group.name}
                             onChange={handleChange}
                             label="Tên nhóm *"
-                            placeholder="Group name"
+                            placeholder="Tên nhóm"
                             onBlur={handleBlur}
                             errorMessage={errors.name}
                         />
@@ -196,7 +196,7 @@ function Creation({ onClose }) {
                             className={cx('ls-input')}
                             label="Chủ đề *"
                             name="type"
-                            placeholder="Type of group"
+                            placeholder="Chủ đề của nhóm"
                             onBlur={handleBlur}
                             errorMessage={errors.type}
                             list={types}
@@ -245,15 +245,15 @@ function Creation({ onClose }) {
                                 name="password"
                                 value={group.password}
                                 onChange={handleChange}
-                                label="Password"
-                                placeholder="Password"
+                                label="Mật khẩu *"
+                                placeholder="Nhập mật khẩu"
                                 type="password"
                                 onBlur={handleBlur}
                                 errorMessage={errors.password}
                             />
                         )}
                         <SubmitButton onClick={handleCreate} disable={buttonDisable}>
-                            Create
+                            Tạo
                         </SubmitButton>
                     </div>
                 </div>

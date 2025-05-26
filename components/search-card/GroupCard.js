@@ -107,7 +107,7 @@ function GroupCard({
                     <div className={cx('info-item')}>
                         <span className={cx('label')}> MEMBERS</span>
                         <p className={cx('info-content')}>
-                            {members} {onlineCount > 0 && `(${onlineCount} online)`}
+                            {members} {onlineCount > 0 && `(${onlineCount} đang trực tuyến)`}
                         </p>
                     </div>
                     <div className={cx('info-item')}>

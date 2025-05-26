@@ -1,9 +1,9 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
 import { CONVERSATION_PARTICIPANT_ROLE_CREATOR } from '@/config/types';
-import { useBreakpoint } from '@/hooks';
+import { useBreakpoint, useDebounce } from '@/hooks';
 import { useRouter } from 'next/navigation';
 import { FaRegUserCircle } from 'react-icons/fa';
 import { IoSearch } from 'react-icons/io5';
@@ -28,6 +28,7 @@ import { getEmailFromConversation, getUsernameFromConversation } from '@/helpers
 
 import { calculateTime, getAvatarFromConversation, getNameFromConversation } from '@/helpers';
 
+import { SpinnerLoader } from '../loading';
 import styles from './RightMessage.module.scss';
 import SearchItem from './SearchItem';
 
@@ -38,6 +39,9 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
     const [isShowInvitation, setIsShowInvitation] = useState(false);
     const [simValue, setSimValue] = useState('');
     const [simList, setSimList] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const debounceValue = useDebounce(simValue, 1300);
 
     const breakpoint = useBreakpoint();
     const router = useRouter();
@@ -62,18 +66,33 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
         try {
             const value = e.target.value;
             setSimValue(value);
-            if (value === '') {
-                setSimList([]);
-                return;
-            }
-            const res = await conversationService.searchMessageOfConversation(data?._id, e.target.value);
-            if (res) {
-                setSimList(res);
-            }
         } catch (error) {
             console.log(error);
         }
     };
+    const fetchAPI = async () => {
+        try {
+            setIsLoading(true);
+            const res = await conversationService.searchMessageOfConversation(data?._id, debounceValue);
+
+            if (res) {
+                setSimList(res);
+            }
+        } catch (error) {
+            console.error('Error fetching search results:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (debounceValue === '') {
+            setSimList([]);
+            return;
+        } else {
+            fetchAPI();
+        }
+    }, [debounceValue]);
 
     const handleClickSimItem = (id) => {
         router.push(`?message=${id}`);
@@ -145,21 +164,21 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
 
             <div className={cx('details')}>
                 {isGroup && (
-                    <Details label="Members">
+                    <Details label="Thành viên">
                         <GroupMembers groupId={data?._id} meRole={meRole} />
                     </Details>
                 )}
 
                 {((isGroup && meRole === CONVERSATION_PARTICIPANT_ROLE_CREATOR) || !isGroup) && (
-                    <Details label="chat setting">
+                    <Details label="Cài đặt trò chuyện">
                         <ChatSetting isGroup={data?.isGroup} data={data} />
                     </Details>
                 )}
 
-                <Details label="File, Attachment">
+                <Details label="Tệp đính kèm">
                     <AttachFile conversationId={data?._id} />
                 </Details>
-                <Details label="Images">
+                <Details label="Hình ảnh">
                     <AttachImages conversationId={data?._id} />
                 </Details>
 
@@ -185,26 +204,32 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
                         <Icon className={cx('search-icon')} element={<IoSearch />} medium />
                         <input
                             className={cx('search-input')}
-                            placeholder="Search in message"
+                            placeholder="Tìm kiếm tin nhắn"
                             value={simValue}
                             onChange={handleChangeSimValue}
                         />
                     </div>
 
                     <div className={cx('sim-content')}>
-                        {simList.map((mes) => {
-                            return (
-                                <SearchItem
-                                    key={mes._id}
-                                    id={mes._id}
-                                    name={mes.sender.fullName}
-                                    content={mes.content}
-                                    avatar={mes.sender.avatar}
-                                    time={calculateTime(mes.createdAt)}
-                                    onClick={handleClickSimItem}
-                                />
-                            );
-                        })}
+                        {!isLoading ? (
+                            simList.map((mes, index) => {
+                                return (
+                                    <SearchItem
+                                        key={mes._id}
+                                        id={mes._id}
+                                        name={mes.sender.fullName}
+                                        content={mes.content}
+                                        avatar={mes.sender.avatar}
+                                        time={calculateTime(mes.createdAt)}
+                                        onClick={handleClickSimItem}
+                                    />
+                                );
+                            })
+                        ) : (
+                            <div className={cx('sim-loader-wrapper')}>
+                                <SpinnerLoader className={cx('sim-loader')} small />
+                            </div>
+                        )}
                     </div>
                 </div>
             )}

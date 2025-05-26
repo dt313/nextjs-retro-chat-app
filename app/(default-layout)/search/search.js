@@ -5,6 +5,8 @@ import { Suspense, useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
+import { useDebounce } from '@/hooks';
+import { set } from 'lodash';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -25,7 +27,10 @@ function SearchContent() {
 
     const [searchValue, setSearchValue] = useState(searchParams.get('q') || '');
     const [filterValue, setFilterValue] = useState(searchParams.get('filter') || 'user');
+    const [isLoading, setIsLoading] = useState(false);
     const [list, setList] = useState([]);
+
+    const debounceValue = useDebounce(searchValue, 1300);
     const router = useRouter();
     const dispatch = useDispatch();
 
@@ -41,19 +46,26 @@ function SearchContent() {
     }, [list]);
 
     const fetchAPI = async (type) => {
-        if (type === 'user') {
-            const res = await userService.getUsers(searchValue);
-            const users = res.filter((user) => user._id !== me._id);
-            setList(users);
-        } else if (type === 'group') {
-            const res = await groupService.getGroups(searchValue);
-            setList(res);
+        try {
+            setIsLoading(true);
+            if (type === 'user') {
+                const res = await userService.getUsers(searchValue);
+                const users = res.filter((user) => user._id !== me._id);
+                setList(users);
+            } else if (type === 'group') {
+                const res = await groupService.getGroups(searchValue);
+                setList(res);
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     useEffect(() => {
         fetchAPI(filterValue);
-    }, [filterValue, searchValue]);
+    }, [filterValue, debounceValue]);
 
     function changeSearchParams(q, filter) {
         const params = new URLSearchParams();
@@ -93,8 +105,7 @@ function SearchContent() {
             <div className={cx('container')}>
                 <div className={cx('header')}>
                     <h1 className={cx('title')}>
-                        Search for person, group chat or channel in{' '}
-                        <strong className={cx('title-strong')}>Retro</strong>
+                        Tìm kiếm bạn bè, nhóm chat trong <strong className={cx('title-strong')}>Retro</strong>
                     </h1>
                     <div className={cx('search-input')}>
                         <InputSearch placeholder="Search" value={searchValue} onChange={handleChangeSearchValue} />
@@ -105,20 +116,20 @@ function SearchContent() {
                         className={cx('filter-item', filterValue === 'user' && 'active')}
                         onClick={() => handleChangeFilterValue('user')}
                     >
-                        USER
+                        Cá nhân
                     </span>
                     <span
                         className={cx('filter-item', filterValue === 'group' && 'active')}
                         onClick={() => handleChangeFilterValue('group')}
                     >
-                        GROUP
+                        Nhóm chat
                     </span>
                 </div>
 
                 <div className={cx('list')}>
-                    {list.map((item) => {
+                    {list.map((item, index) => {
                         if (filterValue === 'user') {
-                            return (
+                            return !isLoading ? (
                                 <UserCard
                                     key={item._id}
                                     id={item._id}
@@ -131,10 +142,12 @@ function SearchContent() {
                                     isFriend={item.isFriend}
                                     createdAt={item.createdAt}
                                 />
+                            ) : (
+                                <UserCard.Skeleton key={index} />
                             );
                         }
                         if (filterValue === 'group') {
-                            return (
+                            return !isLoading ? (
                                 <GroupCard
                                     key={item._id}
                                     id={item._id}
@@ -146,6 +159,8 @@ function SearchContent() {
                                     isPrivate={item.isPrivate}
                                     participants={item.participants}
                                 />
+                            ) : (
+                                <UserCard.Skeleton key={index} />
                             );
                         }
                     })}

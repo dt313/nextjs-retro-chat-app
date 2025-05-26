@@ -2,10 +2,13 @@ import { useEffect, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
+import { useDebounce } from '@/hooks';
 import { IoSearch } from 'react-icons/io5';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { messageService, userService } from '@/services';
+
+import { checkStatus } from '@/helpers';
 
 import CloseIcon from '../close-icon';
 import Icon from '../icon';
@@ -18,19 +21,27 @@ const cx = classNames.bind(styles);
 function MessageForward({ messageId, messageType, onClose }) {
     const [list, setList] = useState([]);
     const [value, setValue] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const debounceValue = useDebounce(value, 1300);
+
+    const { list: onlineUserList } = useSelector((state) => state.onlineUsers);
 
     const dispatch = useDispatch();
     const fetchFriends = async (value) => {
         try {
+            setIsLoading(true);
             const res = await userService.getFriends(value);
             if (res) setList(res);
         } catch (error) {
             console.log(error);
+        } finally {
+            setIsLoading(false);
         }
     };
     useEffect(() => {
-        fetchFriends(value);
-    }, [value]);
+        fetchFriends(debounceValue);
+    }, [debounceValue]);
 
     const handleForwardMessage = async (userId) => {
         try {
@@ -66,22 +77,27 @@ function MessageForward({ messageId, messageType, onClose }) {
                     <Icon className={cx('search-icon')} element={<IoSearch />} medium />
                     <input
                         className={cx('search-input')}
-                        placeholder="Search member"
+                        placeholder="Tìm kiếm bạn bè"
                         value={value}
                         onChange={handleOnChange}
                     />
                 </div>
 
                 <div className={cx('list')}>
-                    {list.map((item) => (
-                        <User
-                            key={item._id}
-                            type="forward"
-                            name={item.fullName}
-                            avatar={item.avatar}
-                            onClickForward={() => handleForwardMessage(item._id)}
-                        />
-                    ))}
+                    {list.map((item, index) =>
+                        !isLoading ? (
+                            <User
+                                key={item._id}
+                                type="forward"
+                                name={item.fullName}
+                                avatar={item.avatar}
+                                onClickForward={() => handleForwardMessage(item._id)}
+                                isOnline={checkStatus(item._id, onlineUserList)}
+                            />
+                        ) : (
+                            <User.Skeleton key={index} />
+                        ),
+                    )}
                 </div>
             </div>
         </Overlay>

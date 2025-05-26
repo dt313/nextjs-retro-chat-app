@@ -127,7 +127,7 @@ const UserMenu = () => {
                 Trang cá nhân
             </span>
             <span className={cx('um-item')} onClick={handleLogout}>
-                Logout
+                Đăng xuất
             </span>
         </div>
     );

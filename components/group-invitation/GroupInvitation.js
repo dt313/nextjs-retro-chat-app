@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
+import { useDebounce } from '@/hooks';
+import { set } from 'lodash';
 import { IoSearch } from 'react-icons/io5';
 import { useDispatch } from 'react-redux';
 
@@ -23,19 +25,24 @@ const cx = classNames.bind(styles);
 function GroupInvitation({ onClose, id }) {
     const [list, setList] = useState([]);
     const [value, setValue] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const debounceValue = useDebounce(value, 1300);
     const dispatch = useDispatch();
     const fetchUser = async (value) => {
         try {
+            setIsLoading(true);
             const res = await groupService.getInvitationUsers(id, value);
             if (res) setList(res);
         } catch (error) {
             console.log(error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchUser(value);
-    }, [value]);
+        fetchUser(debounceValue);
+    }, [debounceValue]);
 
     const handleInvitation = async (userId) => {
         try {
@@ -84,24 +91,28 @@ function GroupInvitation({ onClose, id }) {
                     <Icon className={cx('search-icon')} element={<IoSearch />} medium />
                     <input
                         className={cx('search-input')}
-                        placeholder="Search member"
+                        placeholder="Tìm kiếm người dùng"
                         value={value}
                         onChange={handleOnChange}
                     />
                 </div>
 
                 <div className={cx('list')}>
-                    {list.map((item) => (
-                        <User
-                            key={item._id}
-                            type="invitation"
-                            avatar={item.avatar}
-                            name={item.fullName}
-                            onClickInvitation={() => handleInvitation(item._id)}
-                            onCancelInvitation={() => handleCancelInvitation(item._id)}
-                            isSent={item.isRequested}
-                        />
-                    ))}
+                    {list.map((item, index) =>
+                        !isLoading ? (
+                            <User
+                                key={item._id}
+                                type="invitation"
+                                avatar={item.avatar}
+                                name={item.fullName}
+                                onClickInvitation={() => handleInvitation(item._id)}
+                                onCancelInvitation={() => handleCancelInvitation(item._id)}
+                                isSent={item.isRequested}
+                            />
+                        ) : (
+                            <User.Skeleton key={index} />
+                        ),
+                    )}
                 </div>
             </div>
         </Overlay>

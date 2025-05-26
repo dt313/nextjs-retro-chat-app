@@ -4,8 +4,11 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
+import { set } from 'lodash';
+
 import { attachmentService } from '@/services';
 
+import { SpinnerLoader } from '../loading';
 import styles from './AttachFile.module.scss';
 import File from './File';
 
@@ -13,8 +16,10 @@ const cx = classNames.bind(styles);
 
 function AttachFile({ conversationId }) {
     const [files, setFiles] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const fetchFiles = async () => {
         try {
+            setIsLoading(true);
             const res = await attachmentService.getFilesOfConversation(conversationId);
             console.log(res);
             if (res && Array.isArray(res)) {
@@ -22,6 +27,8 @@ function AttachFile({ conversationId }) {
             }
         } catch (error) {
             console.log(error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -52,15 +59,21 @@ function AttachFile({ conversationId }) {
     };
     return (
         <div className={cx('wrapper')}>
-            {files.map((file, index) => (
-                <File
-                    key={index}
-                    className={cx('attach-file')}
-                    name={file.name}
-                    size={file.size}
-                    onClick={() => handleDownload(file.url, file.name)}
-                />
-            ))}
+            {!isLoading ? (
+                files.map((file, index) => (
+                    <File
+                        key={index}
+                        className={cx('attach-file')}
+                        name={file.name}
+                        size={file.size}
+                        onClick={() => handleDownload(file.url, file.name)}
+                    />
+                ))
+            ) : (
+                <div className={cx('loading')}>
+                    <SpinnerLoader small />
+                </div>
+            )}
 
             {files.length === 0 && <p className={cx('no-content')}>Không có file nào</p>}
         </div>

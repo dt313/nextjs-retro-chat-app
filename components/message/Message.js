@@ -341,7 +341,16 @@ function Message({
                 onMouseEnter={handleMouseEnterMessage}
                 onMouseLeave={handleMouseLeaveMessage}
             >
-                {!(sender._id === me._id) && <Avatar src={sender?.avatar} className={cx('avatar')} size={36} />}
+                {!(sender._id === me._id) && (
+                    <Tippy content={`${sender.fullName}`} placement="top" theme="light">
+                        <Avatar
+                            src={sender?.avatar}
+                            className={cx('avatar')}
+                            size={36}
+                            onClick={() => router.push(`/profile/@${sender.username}`)}
+                        />
+                    </Tippy>
+                )}
                 {renderMessage()}
 
                 {visibility.tools && !isDelete ? (
@@ -365,7 +374,7 @@ function Message({
                             </div>
                         </HeadlessTippy>
 
-                        <Tippy content="Reply" placement="top" theme="light">
+                        <Tippy content="Trả lời" placement="top" theme="light">
                             <div className={cx('icon-wrapper')}>
                                 <Icon
                                     className={cx('tool-icon')}

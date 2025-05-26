@@ -13,6 +13,8 @@ import { useRouter } from 'next/navigation';
 import { FaFacebookMessenger, FaRegUserCircle } from 'react-icons/fa';
 import { FaUserPlus } from 'react-icons/fa6';
 import { RiUserReceivedLine, RiUserSharedLine } from 'react-icons/ri';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Icon from '@/components/icon';
@@ -193,6 +195,46 @@ UserCard.propTypes = {
     isFriendRequestByMe: PropTypes.bool.isRequired,
     isFriendRequestByOther: PropTypes.bool.isRequired,
     isFriend: PropTypes.bool.isRequired,
+};
+
+UserCard.Skeleton = function UserCardSkeleton() {
+    return (
+        <div
+            className={cx('wrapper')}
+            style={{
+                width: '100%',
+                height: '100%',
+                padding: '20px',
+                borderRadius: '10px',
+            }}
+        >
+            <SkeletonTheme baseColor="#e0d4c4" highlightColor="#f5f1ec">
+                <div className={cx('header')}>
+                    <Skeleton width={200} height={30} />
+                    <Skeleton width={150} height={30} />
+                </div>
+                <div className={cx('content')}>
+                    <div
+                        style={{
+                            marginRight: '20px',
+                        }}
+                    >
+                        <Skeleton width={100} height={100} />
+                    </div>
+
+                    <div className={cx('info')}>
+                        <Skeleton width={150} height={20} />
+                        <Skeleton width={200} height={20} />
+                        <Skeleton width={100} height={20} />
+                    </div>
+                </div>
+                <div className={cx('action')}>
+                    <Skeleton width={120} height={40} />
+                    <Skeleton width={120} height={40} />
+                </div>
+            </SkeletonTheme>
+        </div>
+    );
 };
 
 export default UserCard;

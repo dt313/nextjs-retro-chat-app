@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 
 import { CONVERSATION_PARTICIPANT_ROLE_ADMIN, CONVERSATION_PARTICIPANT_ROLE_MEMBER } from '@/config/types';
+import { useDebounce } from '@/hooks';
+import { set } from 'lodash';
 import { IoSearch } from 'react-icons/io5';
 
 import { conversationService, groupService } from '@/services';
@@ -20,21 +22,27 @@ const cx = classNames.bind(styles);
 function GroupMembers({ groupId, meRole }) {
     const [members, setMembers] = useState([]);
     const [value, setValue] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const debounceValue = useDebounce(value, 1300);
 
     const fetchMembersOfGroup = async (value) => {
         try {
+            setIsLoading(true);
             const res = await groupService.getMembersOfGroup(groupId, value);
             if (res) {
                 setMembers(res);
             }
         } catch (error) {
             console.log(error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchMembersOfGroup(value);
-    }, [groupId, value]);
+        fetchMembersOfGroup(debounceValue);
+    }, [debounceValue]);
 
     const handleDeleteUserFromConversation = async (conversationId, userId) => {
         try {
@@ -85,31 +93,35 @@ function GroupMembers({ groupId, meRole }) {
                 <Icon className={cx('search-icon')} element={<IoSearch />} medium />
                 <input
                     className={cx('search-input')}
-                    placeholder="Search member"
+                    placeholder="Tìm kiếm thành viên"
                     value={value}
                     onChange={handleOnChange}
                 />
             </div>
             <div className={cx('members')}>
                 {members?.length > 0 &&
-                    members.map((member) => (
-                        <GroupMember
-                            key={member._id}
-                            id={member.user._id}
-                            name={member?.user?.fullName}
-                            avatar={member.user.avatar}
-                            date={calculateTime(member.jointAt)}
-                            role={member.role}
-                            meRole={meRole}
-                            conversationId={member.conversationId}
-                            onClickDeleteAction={() =>
-                                handleDeleteUserFromConversation(member.conversationId, member.user._id)
-                            }
-                            onClickChangRoleAction={() =>
-                                handleChangeRole(member.conversationId, member.user._id, member.role)
-                            }
-                        />
-                    ))}
+                    members.map((member, index) =>
+                        !isLoading ? (
+                            <GroupMember
+                                key={member._id}
+                                id={member.user._id}
+                                name={member?.user?.fullName}
+                                avatar={member.user.avatar}
+                                date={calculateTime(member.jointAt)}
+                                role={member.role}
+                                meRole={meRole}
+                                conversationId={member.conversationId}
+                                onClickDeleteAction={() =>
+                                    handleDeleteUserFromConversation(member.conversationId, member.user._id)
+                                }
+                                onClickChangRoleAction={() =>
+                                    handleChangeRole(member.conversationId, member.user._id, member.role)
+                                }
+                            />
+                        ) : (
+                            <GroupMember.Skeleton key={index} />
+                        ),
+                    )}
             </div>
         </div>
     );

@@ -9,6 +9,8 @@ import { BsSend } from 'react-icons/bs';
 import { FaFacebookMessenger } from 'react-icons/fa';
 import { FiUserPlus } from 'react-icons/fi';
 import { MdOutlineGroupAdd } from 'react-icons/md';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 import Avatar from '@/components/avatar';
 import Icon from '@/components/icon';
@@ -111,6 +113,28 @@ User.propTypes = {
     onClickForward: PropTypes.func,
     onCancelInvitation: PropTypes.func,
     isSent: PropTypes.bool,
+};
+
+User.Skeleton = function UserSkeleton() {
+    return (
+        <div className={cx('wrapper')}>
+            <div className={cx('avatar-wrapper')}>
+                <SkeletonTheme baseColor="#e0d4c4" highlightColor="#f5f1ec">
+                    <Skeleton circle width={36} height={36} />
+                </SkeletonTheme>
+            </div>
+            <div className={cx('info')}>
+                <SkeletonTheme baseColor="#e0d4c4" highlightColor="#f5f1ec">
+                    <Skeleton width={100} height={20} />
+                </SkeletonTheme>
+            </div>
+            <div className={cx('action')}>
+                <SkeletonTheme baseColor="#e0d4c4" highlightColor="#f5f1ec">
+                    <Skeleton circle width={20} height={20} />
+                </SkeletonTheme>
+            </div>
+        </div>
+    );
 };
 
 export default User;

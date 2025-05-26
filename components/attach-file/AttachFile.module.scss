@@ -84,3 +84,9 @@
 .no-content {
     @include font-default;
 }
+
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

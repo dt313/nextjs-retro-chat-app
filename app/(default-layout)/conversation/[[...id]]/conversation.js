@@ -50,6 +50,8 @@ function Conversation({ id }) {
     const [messagesList, setMessageList] = useState([]);
     const [isTyping, setIsTyping] = useState(false);
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const searchParams = useSearchParams();
     const searchMessageId = searchParams.get('message');
     const router = useRouter();
@@ -139,24 +141,31 @@ function Conversation({ id }) {
     }, []);
 
     const handleAddMessage = async (message) => {
-        const formData = new FormData();
-        if (message.attachments) {
-            for (const file of message.attachments) {
-                formData.append('attachments', file);
+        try {
+            setIsLoading(true);
+            const formData = new FormData();
+            if (message.attachments) {
+                for (const file of message.attachments) {
+                    formData.append('attachments', file);
+                }
             }
-        }
 
-        if (isOpenReplyBox) {
-            formData.append('replyTo', replyData.message.id);
-            formData.append('replyType', replyData.message.type);
-        }
-        formData.append('isGroup', conversation.isGroup);
-        formData.append('content', message.content);
+            if (isOpenReplyBox) {
+                formData.append('replyTo', replyData.message.id);
+                formData.append('replyType', replyData.message.type);
+            }
+            formData.append('isGroup', conversation.isGroup);
+            formData.append('content', message.content);
 
-        const res = await messageService.create(id, formData);
+            const res = await messageService.create(id, formData);
 
-        if (res) {
-            setMessageList((prev) => [...prev, res]);
+            if (res) {
+                setMessageList((prev) => [...prev, res]);
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -251,6 +260,8 @@ function Conversation({ id }) {
         return checkStatus(id, onlineUserList);
     };
 
+    const onlineCount = getOnlineUsers(onlineUserList, conversation?.participants);
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('left-side', isShowLeft ? 'show' : 'hide')}>
@@ -276,13 +287,17 @@ function Conversation({ id }) {
                                     {getNameFromConversation(conversation, me._id)}
                                 </strong>
 
-                                <div className={cx('user-status', { online: checkOnline(conversation) })}>
+                                <div
+                                    className={cx('user-status', {
+                                        online: !conversation?.isGroup ? checkOnline(conversation) : onlineCount > 0,
+                                    })}
+                                >
                                     {!conversation?.isGroup
                                         ? checkOnline(conversation)
                                             ? 'Đang hoạt động'
                                             : 'Không hoạt động'
-                                        : getOnlineUsers(onlineUserList, conversation?.participants) > 0
-                                          ? `${getOnlineUsers(onlineUserList, conversation?.participants)} người đang hoạt động`
+                                        : onlineCount > 0
+                                          ? `${onlineCount} người đang hoạt động`
                                           : 'Không có ai hoạt động'}
                                 </div>
                             </div>
@@ -341,7 +356,12 @@ function Conversation({ id }) {
                         )}
                     </div>
                     <div className={cx('c-footer')} onClick={handleReadLastMessage}>
-                        <MessageInput onSubmit={handleAddMessage} conversationId={id} setIsTyping={setIsTyping} />
+                        <MessageInput
+                            onSubmit={handleAddMessage}
+                            conversationId={id}
+                            setIsTyping={setIsTyping}
+                            isLoading={isLoading}
+                        />
                     </div>
                 </div>
             ) : (

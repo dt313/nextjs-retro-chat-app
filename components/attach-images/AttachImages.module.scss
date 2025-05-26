@@ -34,3 +34,10 @@
 .no-content {
     @include font-default;
 }
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}

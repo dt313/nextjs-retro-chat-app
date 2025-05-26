@@ -4,13 +4,17 @@ import classNames from 'classnames/bind';
 
 import { CONVERSATION_PARTICIPANT_ROLE_ADMIN, CONVERSATION_PARTICIPANT_ROLE_CREATOR } from '@/config/types';
 import { BsThreeDotsVertical } from 'react-icons/bs';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import { useSelector } from 'react-redux';
+
+import ActiveTippy from '@/components/active-tippy';
+import Avatar from '@/components/avatar';
+import Icon from '@/components/icon';
 
 import { getUserRole } from '@/helpers/conversation-info';
 
-import ActiveTippy from '../active-tippy';
-import Avatar from '../avatar';
-import Icon from '../icon';
+import Group from '../group/Group';
 import styles from './GroupMembers.module.scss';
 
 const cx = classNames.bind(styles);
@@ -72,4 +76,21 @@ GroupMember.propTypes = {
     onClickChangRoleAction: PropTypes.func.isRequired,
 };
 
+GroupMember.Skeleton = function GroupMemberSkeleton() {
+    return (
+        <div className={cx('member')}>
+            <SkeletonTheme baseColor="#e0d4c4" highlightColor="#f5f1ec">
+                <Skeleton circle width={40} height={40} />
+                <div className={cx('info')}>
+                    <span className={cx('name')}>
+                        <Skeleton width={100} />
+                    </span>
+                    <span className={cx('date')}>
+                        <Skeleton width={80} />
+                    </span>
+                </div>
+            </SkeletonTheme>
+        </div>
+    );
+};
 export default GroupMember;

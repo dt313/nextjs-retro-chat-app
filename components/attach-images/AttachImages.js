@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
+import { set } from 'lodash';
 import { useDispatch } from 'react-redux';
 
 import Image from '@/components/image';
@@ -12,6 +13,7 @@ import { attachmentService } from '@/services';
 
 import { openImgPreview } from '@/redux/actions/img-preview-action';
 
+import { SpinnerLoader } from '../loading';
 import styles from './AttachImages.module.scss';
 
 const cx = classNames.bind(styles);
@@ -20,6 +22,7 @@ function AttachImages({ conversationId }) {
     const wrapperRef = useRef(null);
     const [images, setImages] = useState([]);
     const [wrapperWidth, setWrapperWidth] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
 
     const dispatch = useDispatch();
     useEffect(() => {
@@ -40,6 +43,7 @@ function AttachImages({ conversationId }) {
 
     const fetchImages = async () => {
         try {
+            setIsLoading(true);
             const res = await attachmentService.getImagesOfConversation(conversationId);
             console.log(res);
             if (res && Array.isArray(res)) {
@@ -47,6 +51,8 @@ function AttachImages({ conversationId }) {
             }
         } catch (error) {
             console.log(error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -64,15 +70,21 @@ function AttachImages({ conversationId }) {
     return (
         <div className={cx('wrapper')} ref={wrapperRef}>
             <div className={cx('container')}>
-                {images.map((image) => (
-                    // eslint-disable-next-line jsx-a11y/alt-text
-                    <Image
-                        className={cx('image', { sm: wrapperWidth < 300, lg: wrapperWidth > 500 })}
-                        key={image?._id}
-                        src={image?.url}
-                        onClick={() => handleOpenImagePreview(image?._id)}
-                    ></Image>
-                ))}
+                {!isLoading ? (
+                    images.map((image) => (
+                        // eslint-disable-next-line jsx-a11y/alt-text
+                        <Image
+                            className={cx('image', { sm: wrapperWidth < 300, lg: wrapperWidth > 500 })}
+                            key={image?._id}
+                            src={image?.url}
+                            onClick={() => handleOpenImagePreview(image?._id)}
+                        ></Image>
+                    ))
+                ) : (
+                    <div className={cx('loading')}>
+                        <SpinnerLoader small />
+                    </div>
+                )}
             </div>
 
             {images.length === 0 && <p className={cx('no-content')}>Không có hình ảnh nào</p>}
