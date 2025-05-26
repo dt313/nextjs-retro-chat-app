@@ -9,12 +9,25 @@ import Avatar from '@/components/avatar';
 
 import { conversationService } from '@/services';
 
+import { checkStatus } from '@/helpers';
+
 import { readLastMessage } from '@/redux/actions/conversations-action';
 
 import styles from './ConversationPreview.module.scss';
 
 const cx = classNames.bind(styles);
-function ConversationPreview({ className, slug, avatar = '', name, message, time, isReaded, active }) {
+function ConversationPreview({
+    className,
+    slug,
+    avatar = '',
+    name,
+    message,
+    time,
+    isReaded,
+    active,
+    isGroup = false,
+    isOnline = false,
+}) {
     const { user: me } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
 
@@ -47,7 +60,10 @@ function ConversationPreview({ className, slug, avatar = '', name, message, time
 
     return (
         <div className={classes} onClick={handleClickMessagePreview}>
-            <Avatar className={cx('avatar')} src={avatar} size={44} />
+            <div className={cx('avatar-wrapper')}>
+                <Avatar className={cx('avatar')} src={avatar} size={44} />
+                {!isGroup && <span className={cx('status', { online: isOnline })} />}
+            </div>
             <div className={cx('content')}>
                 <strong className={cx('name')}>{name}</strong>
                 {message && (
@@ -70,6 +86,8 @@ ConversationPreview.propTypes = {
     time: PropTypes.string.isRequired,
     isReaded: PropTypes.bool.isRequired,
     active: PropTypes.bool,
+    isGroup: PropTypes.bool,
+    isOnline: PropTypes.bool,
 };
 
 ConversationPreview.defaultProps = {

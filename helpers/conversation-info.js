@@ -72,6 +72,15 @@ export function getAvatarFromConversation(conversation, meId) {
     }
 }
 
+export function getTargetIdFromConversation(conversation, meId) {
+    if (conversation.isGroup === true) {
+        return null;
+    } else {
+        const participant = conversation?.participants?.find((item) => item.user._id !== meId);
+        return participant ? participant.user._id : null;
+    }
+}
+
 export const getReplyType = (type) => {
     switch (type) {
         case 'text':

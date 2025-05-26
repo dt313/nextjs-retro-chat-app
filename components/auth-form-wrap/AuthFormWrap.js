@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
+import { use, useEffect } from 'react';
 
 import classNames from 'classnames/bind';
 
+import eventBus from '@/config/emit';
 import { initSocket } from '@/config/ws';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -18,7 +19,7 @@ import { login } from '@/redux/actions/auth-action';
 import { closeAuthBox } from '@/redux/actions/auth-box-action';
 import { initConversation } from '@/redux/actions/conversations-action';
 import { initNotifications } from '@/redux/actions/notification-action';
-import { setOffline, setOnline } from '@/redux/actions/status-action';
+import { addOnlineUser, deleteUser, initOnlineUsers } from '@/redux/actions/online-users-action';
 
 import CloseIcon from '../close-icon';
 import styles from './AuthFormWrap.module.scss';
@@ -28,6 +29,8 @@ const cx = classNames.bind(styles);
 function AuthFormWrap() {
     const authBox = useSelector((state) => state.authBox);
     const { isAuthenticated, user } = useSelector((state) => state.auth);
+    const { list: onlineUsers } = useSelector((state) => state.onlineUsers);
+
     const dispatch = useDispatch();
     const fetchNotifications = async () => {
         if (!user) return;
@@ -45,14 +48,43 @@ function AuthFormWrap() {
     useEffect(() => {
         if (isAuthenticated) {
             const token = storageUtils.getAccessToken();
-
             initSocket(token);
-            dispatch(setOnline());
             fetchNotifications();
         } else {
-            dispatch(setOffline());
+            initSocket();
         }
     }, [isAuthenticated, user]);
+
+    useEffect(() => {
+        const handleOnlineUserList = (data) => {
+            if (!data || !Array.isArray(data)) return;
+            dispatch(initOnlineUsers(data));
+        };
+
+        eventBus.on('online-users', handleOnlineUserList);
+
+        return () => {
+            eventBus.off('online-users', handleOnlineUserList);
+        };
+    }, []);
+
+    useEffect(() => {
+        const handleAddOnlineUser = (onlineUser) => {
+            dispatch(addOnlineUser(onlineUser));
+        };
+
+        const handleOfflineUser = (offlineUser) => {
+            dispatch(deleteUser(offlineUser));
+        };
+
+        eventBus.on('new_online_user', handleAddOnlineUser);
+        eventBus.on('offline_user', handleOfflineUser);
+
+        return () => {
+            eventBus.off('new_online_user', handleAddOnlineUser);
+            eventBus.off('offline_user', handleOfflineUser);
+        };
+    }, []);
 
     useEffect(() => {
         const user = storageUtils.getUser();

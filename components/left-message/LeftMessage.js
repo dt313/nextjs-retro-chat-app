@@ -14,9 +14,12 @@ import InputSearch from '@/components/input-search';
 
 import { conversationService } from '@/services';
 
+import { getTargetIdFromConversation } from '@/helpers/conversation-info';
+
 import {
     calculateTime,
     checkIsRead,
+    checkStatus,
     getAvatarFromConversation,
     getLastMessageContent,
     getNameFromConversation,
@@ -34,6 +37,7 @@ function LeftMessage({ className, activeId }) {
     const { user: me } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const { list } = useSelector((state) => state.conversations);
+    const { list: onlineUserList } = useSelector((state) => state.onlineUsers);
     const handleChangeSearchValue = (e) => {
         setSearchValue(e.target.value);
     };
@@ -76,6 +80,13 @@ function LeftMessage({ className, activeId }) {
         if (searchValue === '') fetchConversations();
     }, [searchValue]);
 
+    const checkOnline = (conv) => {
+        if (!conv) return false;
+        if (conv.isGroup) return false;
+        const id = getTargetIdFromConversation(conv, me._id);
+        return checkStatus(id, onlineUserList);
+    };
+
     return (
         <div className={cx('wrapper', className)}>
             <div className={cx('search-wrapper')}>
@@ -98,6 +109,8 @@ function LeftMessage({ className, activeId }) {
                         time={calculateTime(conv.lastMessage?.sentAt)}
                         isReaded={checkIsRead(conv.lastMessage.readedBy, me._id)}
                         active={activeId === conv._id}
+                        isOnline={checkOnline(conv)}
+                        isGroup={conv.isGroup}
                     />
                 ))}
             </div>

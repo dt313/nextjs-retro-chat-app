@@ -3,14 +3,15 @@ import eventBus from '@/config/emit';
 let reconnectTimeout = null;
 let socket = null;
 
-export const initSocket = (token) => {
+export const initSocket = (token = null) => {
     if (socket && socket.readyState === WebSocket.OPEN) return socket;
 
     socket = new WebSocket(`ws://${process.env.NEXT_PUBLIC_API_DOMAIN}:${process.env.NEXT_PUBLIC_API_PORT}`);
 
     socket.addEventListener('open', (event) => {
         console.log('WS connected');
-        socket.send(JSON.stringify({ type: 'AUTH', token }));
+
+        if (token) socket.send(JSON.stringify({ type: 'AUTH', token }));
     });
 
     socket.addEventListener('message', (event) => {
@@ -19,6 +20,24 @@ export const initSocket = (token) => {
         const { type, data } = message;
 
         switch (type) {
+            case 'online_users':
+                const { onlineUsers } = data;
+                if (onlineUsers) {
+                    eventBus.emit('online-users', onlineUsers);
+                }
+                break;
+            case 'new_online_user':
+                const { onlineUser } = data;
+                if (onlineUser) {
+                    eventBus.emit('new_online_user', onlineUser);
+                }
+                break;
+            case 'offline_user':
+                const { offlineUser } = data;
+                if (offlineUser) {
+                    eventBus.emit('offline_user', offlineUser);
+                }
+                break;
             case 'notification':
                 eventBus.emit('notification', data.notification);
                 break;

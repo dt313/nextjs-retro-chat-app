@@ -25,9 +25,9 @@ import useBreakpoint from '@/hooks/useBreakpoint';
 
 import { conversationService, messageService } from '@/services';
 
-import { getRoleFromConversation } from '@/helpers/conversation-info';
+import { getRoleFromConversation, getTargetIdFromConversation } from '@/helpers/conversation-info';
 
-import { getAvatarFromConversation, getNameFromConversation } from '@/helpers';
+import { checkStatus, getAvatarFromConversation, getNameFromConversation, getOnlineUsers } from '@/helpers';
 
 import { readLastMessage } from '@/redux/actions/conversations-action';
 import { closeReplyBox } from '@/redux/actions/reply-box-action';
@@ -57,6 +57,7 @@ function Conversation({ id }) {
     const { user: me } = useSelector((state) => state.auth);
     const { list } = useSelector((state) => state.conversations);
     const { isOpenReplyBox, replyData } = useSelector((state) => state.replyBox);
+    const { list: onlineUserList } = useSelector((state) => state.onlineUsers);
 
     const breakpoint = useBreakpoint();
     const dispatch = useDispatch();
@@ -243,6 +244,13 @@ function Conversation({ id }) {
         }
     };
 
+    const checkOnline = (conv) => {
+        if (!conv) return false;
+        if (conv.isGroup) return false;
+        const id = getTargetIdFromConversation(conv, me._id);
+        return checkStatus(id, onlineUserList);
+    };
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('left-side', isShowLeft ? 'show' : 'hide')}>
@@ -267,7 +275,16 @@ function Conversation({ id }) {
                                 <strong className={cx('user-name')}>
                                     {getNameFromConversation(conversation, me._id)}
                                 </strong>
-                                <div className={cx('user-status', 'online')}>Online</div>
+
+                                <div className={cx('user-status', { online: checkOnline(conversation) })}>
+                                    {!conversation?.isGroup
+                                        ? checkOnline(conversation)
+                                            ? 'Đang hoạt động'
+                                            : 'Không hoạt động'
+                                        : getOnlineUsers(onlineUserList, conversation?.participants) > 0
+                                          ? `${getOnlineUsers(onlineUserList, conversation?.participants)} người đang hoạt động`
+                                          : 'Không có ai hoạt động'}
+                                </div>
                             </div>
                         </div>
                         <Icon className={cx('dots-icon')} element={<BsThreeDots />} onClick={toggleRightSide} />

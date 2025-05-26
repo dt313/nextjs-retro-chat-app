@@ -144,6 +144,7 @@ function SearchContent() {
                                     thumbnail={item.thumbnail}
                                     isJoined={item.isJoined}
                                     isPrivate={item.isPrivate}
+                                    participants={item.participants}
                                 />
                             );
                         }

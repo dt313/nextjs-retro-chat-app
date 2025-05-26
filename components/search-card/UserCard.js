@@ -20,7 +20,7 @@ import Image from '@/components/image';
 
 import { conversationService, invitationService } from '@/services';
 
-import { calculateTime, getNotificationId } from '@/helpers';
+import { calculateTime, checkStatus, getNotificationId } from '@/helpers';
 
 import { changeTypeNotification } from '@/redux/actions/notification-action';
 import { addToast } from '@/redux/actions/toast-action';
@@ -45,6 +45,7 @@ function UserCard({
     const router = useRouter();
     const dispatch = useDispatch();
     const { notifications } = useSelector((state) => state.notification);
+    const { list: onlineUserList } = useSelector((state) => state.onlineUsers);
 
     const handleFriendRequest = async () => {
         try {
@@ -133,7 +134,9 @@ function UserCard({
                 <div className={cx('info')}>
                     <div className={cx('info-item')}>
                         <span className={cx('label')}>NAME</span>
-                        <p className={cx('info-content')}>{name}</p>
+                        <p className={cx('info-content')}>
+                            {name} {<span className={cx('status', { online: checkStatus(id, onlineUserList) })}></span>}
+                        </p>
                     </div>
                     <div className={cx('info-item')}>
                         <span className={cx('label')}>Email</span>

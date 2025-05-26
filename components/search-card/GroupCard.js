@@ -6,7 +6,7 @@ import classNames from 'classnames/bind';
 
 import { useRouter } from 'next/navigation';
 import { FaFacebookMessenger, FaRegUserCircle } from 'react-icons/fa';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { GroupJoinIcon } from '@/assets/svg/icons/group-join';
 
@@ -17,7 +17,7 @@ import SettingBox from '@/components/setting-box';
 
 import { groupService } from '@/services';
 
-import { calculateTime } from '@/helpers';
+import { calculateTime, getOnlineUsers } from '@/helpers';
 
 import { addToast } from '@/redux/actions/toast-action';
 
@@ -33,9 +33,11 @@ function GroupCard({
     thumbnail,
     isJoined = false,
     isPrivate = false,
+    participants = [],
 }) {
     const [isShowPasswordBox, setIsShowPasswordBox] = useState(false);
     const [joined, setJoined] = useState(isJoined);
+    const { list: onlineUsers } = useSelector((state) => state.onlineUsers);
     const router = useRouter();
     const dispatch = useDispatch();
 
@@ -79,6 +81,9 @@ function GroupCard({
             );
         }
     };
+
+    const onlineCount = getOnlineUsers(onlineUsers, participants);
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('header')}>
@@ -94,11 +99,16 @@ function GroupCard({
                 <div className={cx('info')}>
                     <div className={cx('info-item')}>
                         <span className={cx('label')}>NAME</span>
-                        <p className={cx('info-content')}>{name}</p>
+                        <p className={cx('info-content')}>
+                            {name}
+                            {<span className={cx('status', { online: onlineCount > 0 })}></span>}
+                        </p>
                     </div>
                     <div className={cx('info-item')}>
                         <span className={cx('label')}> MEMBERS</span>
-                        <p className={cx('info-content')}>{members}</p>
+                        <p className={cx('info-content')}>
+                            {members} {onlineCount > 0 && `(${onlineCount} online)`}
+                        </p>
                     </div>
                     <div className={cx('info-item')}>
                         <span className={cx('label')}>CREATED AT</span>
@@ -150,6 +160,7 @@ GroupCard.propTypes = {
     thumbnail: PropTypes.string,
     isJoined: PropTypes.bool.isRequired,
     isPrivate: PropTypes.bool.isRequired,
+    participants: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default GroupCard;

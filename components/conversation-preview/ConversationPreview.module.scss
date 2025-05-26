@@ -16,6 +16,11 @@
     background-color: #7a7a7a77;
 }
 
+.avatar-wrapper {
+    position: relative;
+    width: fit-content;
+}
+
 .avatar {
     margin-right: 8px;
 }
@@ -34,6 +39,21 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     margin-bottom: 2px;
+}
+
+.status {
+    position: absolute;
+    bottom: 4px;
+    right: 12px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: red;
+    border: 1px solid #fff;
+}
+
+.status.online {
+    background-color: green;
 }
 
 .message {
