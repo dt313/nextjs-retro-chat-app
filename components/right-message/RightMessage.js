@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+
+import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
@@ -8,7 +10,9 @@ import { useRouter } from 'next/navigation';
 import { FaRegUserCircle } from 'react-icons/fa';
 import { IoSearch } from 'react-icons/io5';
 import { TiUserAdd } from 'react-icons/ti';
-import { useSelector } from 'react-redux';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+import { useDispatch, useSelector } from 'react-redux';
 
 import AttachFile from '@/components/attach-file';
 import AttachImages from '@/components/attach-images';
@@ -28,6 +32,8 @@ import { getEmailFromConversation, getUsernameFromConversation } from '@/helpers
 
 import { calculateTime, getAvatarFromConversation, getNameFromConversation } from '@/helpers';
 
+import { addToast } from '@/redux/actions/toast-action';
+
 import { SpinnerLoader } from '../loading';
 import styles from './RightMessage.module.scss';
 import SearchItem from './SearchItem';
@@ -46,6 +52,7 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
     const breakpoint = useBreakpoint();
     const router = useRouter();
     const { user: me } = useSelector((state) => state.auth);
+    const dispatch = useDispatch();
 
     const meRole = useMemo(() => {
         return data?.participants?.find((u) => u.user._id === me._id).role;
@@ -67,7 +74,7 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
             const value = e.target.value;
             setSimValue(value);
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         }
     };
     const fetchAPI = async () => {
@@ -79,7 +86,7 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
                 setSimList(res);
             }
         } catch (error) {
-            console.error('Error fetching search results:', error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         } finally {
             setIsLoading(false);
         }
@@ -94,12 +101,12 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
         }
     }, [debounceValue]);
 
-    const handleClickSimItem = (id) => {
+    const handleClickSimItem = useCallback((id) => {
         router.push(`?message=${id}`);
         if (breakpoint === 'lg' || breakpoint === 'md' || breakpoint === 'sm') {
             onClose();
         }
-    };
+    }, []);
 
     const handleLeaveGroup = async () => {
         try {
@@ -107,8 +114,18 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
             if (res) {
                 router.push('/conversation');
             }
-        } catch (error) {}
+        } catch (error) {
+            dispatch(addToast({ type: 'error', content: error.message }));
+        }
     };
+
+    const handleCloseSIM = useCallback(() => {
+        setIsShowSearch(false);
+    }, []);
+
+    const handleCloseGroupInvitation = useCallback(() => {
+        setIsShowInvitation(false);
+    }, []);
 
     return (
         <div className={cx('wrapper', hide && 'hide')}>
@@ -191,13 +208,7 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
             {isShowSearch && (
                 <div className={cx('search-in-message')}>
                     <div className={cx('sim-header')}>
-                        <CloseIcon
-                            theme="dark"
-                            small
-                            className={cx('sim-close')}
-                            medium
-                            onClick={() => setIsShowSearch(false)}
-                        />
+                        <CloseIcon theme="dark" small className={cx('sim-close')} medium onClick={handleCloseSIM} />
                         <h4 className={cx('sim-title')}>Tìm kiếm</h4>
                     </div>
                     <div className={cx('sim-search')}>
@@ -212,7 +223,7 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
 
                     <div className={cx('sim-content')}>
                         {!isLoading ? (
-                            simList.map((mes, index) => {
+                            simList.map((mes) => {
                                 return (
                                     <SearchItem
                                         key={mes._id}
@@ -234,9 +245,57 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
                 </div>
             )}
 
-            {isShowInvitation && <GroupInvitation onClose={() => setIsShowInvitation(false)} id={data._id} />}
+            {isShowInvitation && <GroupInvitation onClose={handleCloseGroupInvitation} id={data._id} />}
         </div>
     );
 }
 
-export default RightMessage;
+RightMessage.propTypes = {
+    hide: PropTypes.bool,
+    isGroup: PropTypes.bool,
+    data: PropTypes.object,
+    onClose: PropTypes.func,
+};
+RightMessage.defaultProps = {
+    hide: false,
+    isGroup: true,
+    data: {},
+    onClose: () => {},
+};
+
+RightMessage.Skeleton = function RightMessageSkeleton() {
+    return (
+        <div className={cx('wrapper')}>
+            <div className={cx('header')}>
+                <SkeletonTheme baseColor="#e0d4c4" highlightColor="#f5f1ec">
+                    <Skeleton circle width={96} height={96} />
+                    <Skeleton width={150} height={24} />
+                </SkeletonTheme>
+            </div>
+
+            <div className={cx('action')}>
+                <SkeletonTheme baseColor="#e0d4c4" highlightColor="#f5f1ec">
+                    <Skeleton width={32} height={32} circle />
+                    <Skeleton width={32} height={32} circle />
+                    <Skeleton width={32} height={32} circle />
+                </SkeletonTheme>
+            </div>
+
+            <div className={cx('information')}>
+                <SkeletonTheme baseColor="#e0d4c4" highlightColor="#f5f1ec">
+                    <Skeleton count={3} width="100%" height={30} />
+                </SkeletonTheme>
+            </div>
+
+            <div className={cx('details')} style={{ marginTop: '20px' }}>
+                <SkeletonTheme baseColor="#e0d4c4" highlightColor="#f5f1ec">
+                    <Skeleton count={4} width="100%" height={20} />
+                </SkeletonTheme>
+            </div>
+        </div>
+    );
+};
+
+const MemorizedRightMessage = memo(RightMessage);
+MemorizedRightMessage.Skeleton = RightMessage.Skeleton;
+export default MemorizedRightMessage;

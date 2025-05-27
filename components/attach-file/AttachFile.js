@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
-import { set } from 'lodash';
+import { useDispatch } from 'react-redux';
 
 import { attachmentService } from '@/services';
+
+import { addToast } from '@/redux/actions/toast-action';
 
 import { SpinnerLoader } from '../loading';
 import styles from './AttachFile.module.scss';
@@ -17,6 +19,8 @@ const cx = classNames.bind(styles);
 function AttachFile({ conversationId }) {
     const [files, setFiles] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const dispatch = useDispatch();
+
     const fetchFiles = async () => {
         try {
             setIsLoading(true);
@@ -26,7 +30,7 @@ function AttachFile({ conversationId }) {
                 setFiles(res);
             }
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         } finally {
             setIsLoading(false);
         }
@@ -36,27 +40,30 @@ function AttachFile({ conversationId }) {
         fetchFiles();
     }, []);
 
-    const handleDownload = async (url, name) => {
-        try {
-            const response = await fetch(url, { mode: 'cors' }); // thêm mode: 'cors' nếu cần
-            if (!response.ok) throw new Error('Network response was not ok');
+    const handleDownload = useCallback(
+        async (url, name) => {
+            try {
+                const response = await fetch(url, { mode: 'cors' }); // thêm mode: 'cors' nếu cần
+                if (!response.ok) throw new Error('Network response was not ok');
 
-            const blob = await response.blob();
-            const blobUrl = window.URL.createObjectURL(blob);
+                const blob = await response.blob();
+                const blobUrl = window.URL.createObjectURL(blob);
 
-            const link = document.createElement('a');
-            link.href = blobUrl;
-            link.download = 'download.txt'; // fallback tên file nếu name undefined
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = 'download.txt'; // fallback tên file nếu name undefined
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
 
-            window.URL.revokeObjectURL(blobUrl);
-        } catch (error) {
-            console.error('Lỗi khi tải file:', error);
-            alert(url);
-        }
-    };
+                window.URL.revokeObjectURL(blobUrl);
+            } catch (error) {
+                dispatch(addToast({ type: 'error', content: error.message }));
+                alert(url);
+            }
+        },
+        [conversationId],
+    );
     return (
         <div className={cx('wrapper')}>
             {!isLoading ? (
@@ -66,7 +73,8 @@ function AttachFile({ conversationId }) {
                         className={cx('attach-file')}
                         name={file.name}
                         size={file.size}
-                        onClick={() => handleDownload(file.url, file.name)}
+                        url={file.url}
+                        onClick={handleDownload}
                     />
                 ))
             ) : (
@@ -75,7 +83,7 @@ function AttachFile({ conversationId }) {
                 </div>
             )}
 
-            {files.length === 0 && <p className={cx('no-content')}>Không có file nào</p>}
+            {files.length === 0 && !isLoading && <p className={cx('no-content')}>Không có file nào</p>}
         </div>
     );
 }
@@ -84,4 +92,4 @@ AttachFile.propTypes = {
     conversationId: PropTypes.string.isRequired,
 };
 
-export default AttachFile;
+export default memo(AttachFile);

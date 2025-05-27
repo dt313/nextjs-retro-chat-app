@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -32,26 +32,26 @@ function User({
 }) {
     const [isSend, setIsSend] = useState(isSent);
 
-    const handleInvitation = async () => {
-        const isSent = await onClickInvitation();
+    const handleInvitation = useCallback(async () => {
+        const isSent = await onClickInvitation(id);
         if (isSent) {
             setIsSend(true);
         }
-    };
+    }, [id]);
 
-    const handleCancelInvitation = async () => {
-        const isSent = await onCancelInvitation();
+    const handleCancelInvitation = useCallback(async () => {
+        const isSent = await onCancelInvitation(id);
         if (isSent) {
             setIsSend(false);
         }
-    };
+    }, [id]);
 
-    const handleForwardMessage = async () => {
-        const isSent = await onClickForward();
+    const handleForwardMessage = useCallback(async () => {
+        const isSent = await onClickForward(id);
         if (isSent) {
             setIsSend(true);
         }
-    };
+    }, [id]);
 
     return (
         <div className={cx('wrapper')}>
@@ -137,4 +137,7 @@ User.Skeleton = function UserSkeleton() {
     );
 };
 
-export default User;
+const MemorizedUser = memo(User);
+MemorizedUser.Skeleton = User.Skeleton;
+
+export default MemorizedUser;

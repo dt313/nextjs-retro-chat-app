@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -6,12 +6,14 @@ import classNames from 'classnames/bind';
 
 import { CONVERSATION_PARTICIPANT_ROLE_ADMIN, CONVERSATION_PARTICIPANT_ROLE_MEMBER } from '@/config/types';
 import { useDebounce } from '@/hooks';
-import { set } from 'lodash';
 import { IoSearch } from 'react-icons/io5';
+import { useDispatch } from 'react-redux';
 
 import { conversationService, groupService } from '@/services';
 
 import { calculateTime } from '@/helpers';
+
+import { addToast } from '@/redux/actions/toast-action';
 
 import Icon from '../icon';
 import GroupMember from './GroupMember';
@@ -26,6 +28,8 @@ function GroupMembers({ groupId, meRole }) {
 
     const debounceValue = useDebounce(value, 1300);
 
+    const dispatch = useDispatch();
+
     const fetchMembersOfGroup = async (value) => {
         try {
             setIsLoading(true);
@@ -34,7 +38,7 @@ function GroupMembers({ groupId, meRole }) {
                 setMembers(res);
             }
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         } finally {
             setIsLoading(false);
         }
@@ -52,7 +56,7 @@ function GroupMembers({ groupId, meRole }) {
                 setMembers(newMembers);
             }
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         }
     };
 
@@ -80,7 +84,7 @@ function GroupMembers({ groupId, meRole }) {
                 setMembers(newMembers);
             }
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         }
     };
 
@@ -132,4 +136,4 @@ GroupMembers.propTypes = {
     meRole: PropTypes.string.isRequired,
 };
 
-export default GroupMembers;
+export default memo(GroupMembers);

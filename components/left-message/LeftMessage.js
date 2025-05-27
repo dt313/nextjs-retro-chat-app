@@ -1,14 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
 import { useDebounce } from '@/hooks';
-import _, { set } from 'lodash';
-import { FiSearch } from 'react-icons/fi';
-import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'next/navigation';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 
 import ConversationPreview from '@/components/conversation-preview';
 import InputSearch from '@/components/input-search';
@@ -27,37 +26,37 @@ import {
 } from '@/helpers';
 
 import { findConversation, initConversation, newConversation } from '@/redux/actions/conversations-action';
+import { addToast } from '@/redux/actions/toast-action';
 
 import styles from './LeftMessage.module.scss';
 
 const cx = classNames.bind(styles);
 
-function LeftMessage({ className, activeId }) {
+function LeftMessage({ className }) {
     const [searchValue, setSearchValue] = useState('');
-
     const debounceValue = useDebounce(searchValue, 1300);
     const [isLoading, setIsLoading] = useState(false);
-
     const { user: me } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
-    const { list } = useSelector((state) => state.conversations);
-    const { list: onlineUserList } = useSelector((state) => state.onlineUsers);
-    const handleChangeSearchValue = (e) => {
+    const { list } = useSelector((state) => state.conversations, shallowEqual);
+
+    const { id } = useParams();
+    const { list: onlineUserList } = useSelector((state) => state.onlineUsers, shallowEqual);
+
+    const activeId = id ? id[0] : '';
+    const handleChangeSearchValue = useCallback((e) => {
         setSearchValue(e.target.value);
-    };
+    }, []);
 
     const fetchConversations = async () => {
         try {
-            setIsLoading(true);
-
             const res = await conversationService.getByMe();
             if (res && Array.isArray(res)) {
                 dispatch(initConversation({ conversations: res, meId: me._id }));
             }
         } catch (error) {
-            console.error('Error fetching conversations:', error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         } finally {
-            setIsLoading(false);
         }
     };
 
@@ -72,7 +71,7 @@ function LeftMessage({ className, activeId }) {
                     }
                 }
             } catch (error) {
-                console.log(error);
+                dispatch(addToast({ type: 'error', content: error.message }));
             } finally {
                 setIsLoading(false);
             }
@@ -92,15 +91,17 @@ function LeftMessage({ className, activeId }) {
     }, [list]);
 
     useEffect(() => {
-        if (searchValue === '') fetchConversations();
-    }, [debounceValue]);
+        if (searchValue === '') {
+            fetchConversations();
+        }
+    }, [searchValue]);
 
-    const checkOnline = (conv) => {
+    const checkOnline = useCallback((conv) => {
         if (!conv) return false;
         if (conv.isGroup) return false;
         const id = getTargetIdFromConversation(conv, me._id);
         return checkStatus(id, onlineUserList);
-    };
+    }, []);
 
     return (
         <div className={cx('wrapper', className)}>
@@ -109,7 +110,6 @@ function LeftMessage({ className, activeId }) {
                     placeholder="Tìm kiếm cuộc trò chuyện"
                     value={searchValue}
                     onChange={handleChangeSearchValue}
-                    leftIcon={<FiSearch />}
                 />
             </div>
             <div className={cx('message-list')}>
@@ -137,4 +137,4 @@ function LeftMessage({ className, activeId }) {
     );
 }
 
-export default LeftMessage;
+export default memo(LeftMessage);

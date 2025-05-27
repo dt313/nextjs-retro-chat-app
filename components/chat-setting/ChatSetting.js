@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -14,7 +14,7 @@ import { LuText } from 'react-icons/lu';
 import { MdDelete } from 'react-icons/md';
 import { RiLockPasswordFill } from 'react-icons/ri';
 import { TbAlphabetLatin } from 'react-icons/tb';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Icon from '@/components/icon';
 import Overlay from '@/components/overlay';
@@ -25,6 +25,8 @@ import { conversationService } from '@/services';
 import { getNickNameFromConversation } from '@/helpers/conversation-info';
 
 import Validation from '@/utils/input-validation';
+
+import { addToast } from '@/redux/actions/toast-action';
 
 import styles from './ChatSetting.module.scss';
 
@@ -37,6 +39,8 @@ function ChatSetting({ isGroup, data }) {
     const [settingMenu, setSettingMenu] = useState([]);
     const [conversation, setConversation] = useState(data);
     const [isLoading, setIsLoading] = useState(false);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setConversation(data);
@@ -182,24 +186,27 @@ function ChatSetting({ isGroup, data }) {
         }
     }, [isGroup, conversation]);
 
-    const handleSubmit = async (value) => {
-        try {
-            setIsLoading(true);
-            const formData = new FormData();
-            formData.append('type', settingBox?.field);
-            formData.append('value', value);
-            const res = await conversationService.updateConversation(conversation._id, formData);
-            if (res) {
-                eventBus.emit(`conversation-update-${res._id}`, res);
+    const handleSubmit = useCallback(
+        async (value) => {
+            try {
+                setIsLoading(true);
+                const formData = new FormData();
+                formData.append('type', settingBox?.field);
+                formData.append('value', value);
+                const res = await conversationService.updateConversation(conversation._id, formData);
+                if (res) {
+                    eventBus.emit(`conversation-update-${res._id}`, res);
+                }
+            } catch (error) {
+                dispatch(addToast({ type: 'error', content: error.message }));
+            } finally {
+                setIsLoading(false);
             }
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+        },
+        [conversation, settingBox],
+    );
 
-    const handleDelete = async () => {
+    const handleDelete = useCallback(async () => {
         try {
             setIsLoading(true);
 
@@ -217,11 +224,16 @@ function ChatSetting({ isGroup, data }) {
                 }
             }
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [conversation]);
+
+    const handleCloseSetting = useCallback(() => {
+        setIsShowSetting(false);
+        setSettingBox({});
+    }, []);
 
     return (
         <div className={cx('wrapper')}>
@@ -243,9 +255,7 @@ function ChatSetting({ isGroup, data }) {
                 <Overlay>
                     <SettingBox
                         conversationId={conversation._id}
-                        onClose={() => {
-                            setIsShowSetting(false);
-                        }}
+                        onClose={handleCloseSetting}
                         content={settingBox}
                         onSubmit={settingBox.type === 'delete' ? handleDelete : handleSubmit}
                         submitText={settingBox.type === 'delete' ? 'Xóa' : 'Lưu'}
@@ -262,4 +272,4 @@ ChatSetting.propTypes = {
     data: PropTypes.object.isRequired,
 };
 
-export default ChatSetting;
+export default memo(ChatSetting);

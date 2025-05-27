@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
+
+import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
@@ -49,4 +51,13 @@ function CodeInput({
     );
 }
 
-export default CodeInput;
+CodeInput.propTypes = {
+    className: PropTypes.string,
+    disable: PropTypes.bool,
+    value: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+    buttonTitle: PropTypes.string,
+    errorMessage: PropTypes.string,
+    onClickButton: PropTypes.func.isRequired,
+};
+export default memo(CodeInput);

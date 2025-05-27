@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -53,4 +53,4 @@ ToggleSwitch.propTypes = {
     disabled: PropTypes.bool,
 };
 
-export default ToggleSwitch;
+export default memo(ToggleSwitch);

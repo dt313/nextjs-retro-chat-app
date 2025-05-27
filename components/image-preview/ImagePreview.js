@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -17,6 +17,7 @@ import CloseIcon from '@/components/close-icon';
 import Icon from '@/components/icon';
 
 import { closeImgPreview } from '@/redux/actions/img-preview-action';
+import { addToast } from '@/redux/actions/toast-action';
 
 import styles from './ImagePreview.module.scss';
 
@@ -74,7 +75,7 @@ function ImagePreview({ images = [] }) {
             a.click();
             a.remove();
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         }
     };
 
@@ -141,4 +142,4 @@ ImagePreview.propTypes = {
     images: PropTypes.array.isRequired,
 };
 
-export default ImagePreview;
+export default memo(ImagePreview);

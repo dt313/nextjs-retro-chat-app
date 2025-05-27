@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -40,4 +40,4 @@ Details.propTypes = {
     className: PropTypes.string,
 };
 
-export default Details;
+export default memo(Details);

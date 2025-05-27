@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -54,4 +54,4 @@ ExpandableText.defaultProps = {
     lineClamp: 5,
 };
 
-export default ExpandableText;
+export default memo(ExpandableText);

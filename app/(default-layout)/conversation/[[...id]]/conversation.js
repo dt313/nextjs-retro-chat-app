@@ -1,11 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
+import withAuth from '@/hoc/with-auth';
 import { useTypingStatus } from '@/hooks';
+import dynamic from 'next/dynamic';
 import { redirect, useRouter, useSearchParams } from 'next/navigation';
 import { BsThreeDots } from 'react-icons/bs';
 import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
@@ -15,8 +17,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import Avatar from '@/components/avatar';
 import CloseIcon from '@/components/close-icon';
 import Icon from '@/components/icon';
-import LeftMessage from '@/components/left-message';
-import MessageBox from '@/components/message-box/MessageBox';
+import { SpinnerLoader } from '@/components/loading';
+import MessageBox from '@/components/message-box';
 import MessageIcon from '@/components/message-icon';
 import MessageInput from '@/components/message-input';
 import RightMessage from '@/components/right-message';
@@ -35,6 +37,10 @@ import { addToast } from '@/redux/actions/toast-action';
 
 import styles from './conversation.module.scss';
 
+const LeftMessage = dynamic(() => import('../../../../components/left-message'), {
+    loading: () => <SpinnerLoader small />,
+});
+
 const LIMIT = 30;
 
 const cx = classNames.bind(styles);
@@ -49,8 +55,10 @@ function Conversation({ id }) {
     const [conversation, setConversation] = useState(null);
     const [messagesList, setMessageList] = useState([]);
     const [isTyping, setIsTyping] = useState(false);
+    const [transition, setTransition] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingRight, setIsLoadingRight] = useState(false);
 
     const searchParams = useSearchParams();
     const searchMessageId = searchParams.get('message');
@@ -108,7 +116,7 @@ function Conversation({ id }) {
                 }
             }
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         }
     };
 
@@ -140,47 +148,52 @@ function Conversation({ id }) {
         };
     }, []);
 
-    const handleAddMessage = async (message) => {
-        try {
-            setIsLoading(true);
-            const formData = new FormData();
-            if (message.attachments) {
-                for (const file of message.attachments) {
-                    formData.append('attachments', file);
+    const handleAddMessage = useCallback(
+        async (message) => {
+            try {
+                setIsLoading(true);
+                const formData = new FormData();
+                if (message.attachments) {
+                    for (const file of message.attachments) {
+                        formData.append('attachments', file);
+                    }
                 }
+
+                if (isOpenReplyBox) {
+                    formData.append('replyTo', replyData.message.id);
+                    formData.append('replyType', replyData.message.type);
+                }
+                formData.append('isGroup', conversation.isGroup);
+                formData.append('content', message.content);
+
+                const res = await messageService.create(id, formData);
+
+                if (res) {
+                    setMessageList((prev) => [...prev, res]);
+                }
+            } catch (error) {
+                dispatch(addToast({ type: 'error', content: error.message }));
+            } finally {
+                setIsLoading(false);
             }
+        },
+        [id, conversation, isOpenReplyBox, replyData, dispatch],
+    );
 
-            if (isOpenReplyBox) {
-                formData.append('replyTo', replyData.message.id);
-                formData.append('replyType', replyData.message.type);
-            }
-            formData.append('isGroup', conversation.isGroup);
-            formData.append('content', message.content);
-
-            const res = await messageService.create(id, formData);
-
-            if (res) {
-                setMessageList((prev) => [...prev, res]);
-            }
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const toggleRightSide = () => {
+    const toggleRightSide = useCallback(() => {
         if (breakpoint === 'lg' || breakpoint === 'xl') {
             setIsShowRight(!isShowRight);
         } else {
             setIsShowRight(!isShowRight);
             setIsShowContent(isShowRight);
         }
-    };
+        setTransition(true);
+    }, [breakpoint, isShowRight, isShowContent]);
 
-    const toggleLeftSide = () => {
+    const toggleLeftSide = useCallback(() => {
         setIsShowLeft(!isShowLeft);
-    };
+        setTransition(true);
+    }, [isShowLeft]);
 
     // Set initial layout based on breakpoint
     useEffect(() => {
@@ -214,11 +227,11 @@ function Conversation({ id }) {
         }
     }, [id, breakpoint]);
 
-    const handleCloseRightSide = () => {
+    const handleCloseRightSide = useCallback(() => {
         setIsShowRight(false);
-    };
+    }, []);
 
-    const handleLoadMoreBeforeMessage = async () => {
+    const handleLoadMoreBeforeMessage = useCallback(async () => {
         try {
             if (!isBeforeFinish && messagesList.length > 0) {
                 const oldestMessage = messagesList[0];
@@ -235,9 +248,9 @@ function Conversation({ id }) {
                 return;
             }
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         }
-    };
+    }, [id, isBeforeFinish, messagesList, dispatch]);
 
     const handleCancelPinnedMessage = async () => {
         try {
@@ -249,7 +262,7 @@ function Conversation({ id }) {
                 eventBus.emit(`conversation-update-${res._id}`, res);
             }
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         }
     };
 
@@ -262,10 +275,28 @@ function Conversation({ id }) {
 
     const onlineCount = getOnlineUsers(onlineUserList, conversation?.participants);
 
+    // Show loading when conversation id changes for RightMessage
+    useEffect(() => {
+        setIsLoadingRight(true);
+        const timeout = setTimeout(() => setIsLoadingRight(false), 500); // Simulate loading, adjust as needed
+        return () => clearTimeout(timeout);
+    }, [id]);
+
+    const handleRedirectToConversations = useCallback(() => {
+        redirect('/conversation');
+    }, []);
+
+    const handleCloseReplyBox = useCallback(() => {
+        dispatch(closeReplyBox());
+    }, []);
+
+    const handleIsTyping = useCallback((isTyping) => {
+        setIsTyping(isTyping);
+    }, []);
     return (
         <div className={cx('wrapper')}>
-            <div className={cx('left-side', isShowLeft ? 'show' : 'hide')}>
-                <LeftMessage className={cx('left-wrap')} activeId={id} />
+            <div className={cx('left-side', isShowLeft ? 'show' : 'hide', { transition: transition })}>
+                <LeftMessage className={cx('left-wrap')} />
                 <span className={cx('toggle-btn')} onClick={toggleLeftSide}></span>
             </div>
             {id ? (
@@ -274,7 +305,7 @@ function Conversation({ id }) {
                         <Icon
                             className={cx('c-close-btn')}
                             element={<RiArrowLeftSLine />}
-                            onClick={() => redirect('/conversation')}
+                            onClick={handleRedirectToConversations}
                         />
                         <div className={cx('user-info')}>
                             <Avatar
@@ -329,7 +360,7 @@ function Conversation({ id }) {
                             setList={setMessageList}
                             targetName={getNameFromConversation(conversation, me._id, true)}
                             participants={conversation?.participants}
-                            isTyping={isTyping}
+                            isGroup={conversation?.isGroup}
                         />
                         {isOpenReplyBox && (
                             <div className={cx('reply-box')}>
@@ -350,7 +381,7 @@ function Conversation({ id }) {
                                     theme="dark"
                                     small
                                     className={cx('reply-close')}
-                                    onClick={() => dispatch(closeReplyBox())}
+                                    onClick={handleCloseReplyBox}
                                 />
                             </div>
                         )}
@@ -359,7 +390,7 @@ function Conversation({ id }) {
                         <MessageInput
                             onSubmit={handleAddMessage}
                             conversationId={id}
-                            setIsTyping={setIsTyping}
+                            setIsTyping={handleIsTyping}
                             isLoading={isLoading}
                         />
                     </div>
@@ -370,19 +401,29 @@ function Conversation({ id }) {
                 </div>
             )}
 
-            <div className={cx('right-side', isShowRight ? 'show' : 'hide', { 'left-visible': isShowLeft })}>
-                <Icon className={cx('r-close-btn')} element={<RiArrowRightSLine />} onClick={toggleRightSide} />
-                {id && (
-                    <RightMessage
-                        hide={!isShowRight}
-                        data={conversation}
-                        isGroup={conversation?.isGroup}
-                        onClose={handleCloseRightSide}
-                    />
+            <div
+                className={cx(
+                    'right-side',
+                    isShowRight ? 'show' : 'hide',
+                    { 'left-visible': isShowLeft },
+                    { transition: transition },
                 )}
+            >
+                <Icon className={cx('r-close-btn')} element={<RiArrowRightSLine />} onClick={toggleRightSide} />
+                {id &&
+                    (isLoadingRight ? (
+                        <RightMessage.Skeleton></RightMessage.Skeleton>
+                    ) : (
+                        <RightMessage
+                            hide={!isShowRight}
+                            data={conversation}
+                            isGroup={conversation?.isGroup}
+                            onClose={handleCloseRightSide}
+                        />
+                    ))}
             </div>
         </div>
     );
 }
 
-export default Conversation;
+export default withAuth(Conversation);

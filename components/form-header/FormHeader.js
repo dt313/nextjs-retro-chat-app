@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
@@ -27,4 +29,4 @@ FormHeader.defaultProps = {
     description: '',
 };
 
-export default FormHeader;
+export default memo(FormHeader);

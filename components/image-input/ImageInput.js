@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { memo, useCallback, useRef, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -16,12 +16,15 @@ function ImageInput({ className, value, name, onChange }) {
     const [image, setImage] = useState(value);
     const imageRef = useRef(null);
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        const blob = URL.createObjectURL(file);
-        setImage(blob);
-        onChange(e); // Call the onChange prop to notify parent component
-    };
+    const handleImageChange = useCallback(
+        (e) => {
+            const file = e.target.files[0];
+            const blob = URL.createObjectURL(file);
+            setImage(blob);
+            onChange(e); // Call the onChange prop to notify parent component
+        },
+        [onChange, image],
+    );
 
     return (
         <div className={cx('wrapper', className)}>
@@ -53,4 +56,4 @@ ImageInput.propTypes = {
     onChange: PropTypes.func.isRequired,
 };
 
-export default ImageInput;
+export default memo(ImageInput);

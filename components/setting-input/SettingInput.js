@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -54,4 +54,4 @@ SettingInput.propTypes = {
     errorMessage: PropTypes.string,
 };
 
-export default SettingInput;
+export default memo(SettingInput);

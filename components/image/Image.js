@@ -1,5 +1,7 @@
 'use client';
 
+import { memo } from 'react';
+
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
@@ -44,4 +46,4 @@ AImage.propTypes = {
     fallback: PropTypes.string,
 };
 
-export default AImage;
+export default memo(AImage);

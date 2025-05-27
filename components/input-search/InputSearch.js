@@ -1,22 +1,25 @@
+import { memo } from 'react';
+
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
+
+import { FiSearch } from 'react-icons/fi';
 
 import Icon from '../icon';
 import styles from './InputSearch.module.scss';
 
 const cx = classNames.bind(styles);
 
-function InputSearch({ value = '', placeholder = 'Type here', onChange, leftIcon, rightIcon, className }) {
+function InputSearch({ value = '', placeholder = 'Type here', onChange, searchIcon, className }) {
     const classes = cx('wrapper', {
         [className]: className,
     });
 
     return (
         <div className={classes}>
-            {leftIcon && <Icon className={cx('left-icon')} element={leftIcon} medium />}
+            {searchIcon && <Icon className={cx('left-icon')} element={<FiSearch />} medium />}
             <input className={cx('input')} placeholder={placeholder} value={value} onChange={onChange} />
-            {rightIcon && <Icon className={cx('right-icon')} element={rightIcon} medium />}
         </div>
     );
 }
@@ -29,4 +32,4 @@ InputSearch.propTypes = {
     rightIcon: PropTypes.node,
 };
 
-export default InputSearch;
+export default memo(InputSearch);

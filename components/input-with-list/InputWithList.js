@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -83,4 +83,4 @@ InputWithList.propTypes = {
     id: PropTypes.string.isRequired,
 };
 
-export default InputWithList;
+export default memo(InputWithList);

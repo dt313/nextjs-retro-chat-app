@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
@@ -20,4 +22,4 @@ Information.propTypes = {
     content: PropTypes.string.isRequired,
 };
 
-export default Information;
+export default memo(Information);

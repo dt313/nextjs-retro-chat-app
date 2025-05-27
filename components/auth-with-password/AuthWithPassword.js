@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -80,17 +80,20 @@ function AuthWithPassword({ type }) {
         }
     }, [authData, type]);
 
-    const handleChangeAuthData = (e) => {
-        setAuthData({
-            ...authData,
-            [e.target.name]: e.target.value,
-        });
+    const handleChangeAuthData = useCallback(
+        (e) => {
+            setAuthData({
+                ...authData,
+                [e.target.name]: e.target.value,
+            });
 
-        setErrors({
-            ...errors,
-            [e.target.name]: '',
-        });
-    };
+            setErrors({
+                ...errors,
+                [e.target.name]: '',
+            });
+        },
+        [authData],
+    );
 
     const handleSubmit = async () => {
         switch (type) {
@@ -122,42 +125,45 @@ function AuthWithPassword({ type }) {
         }
     };
 
-    const handleBlur = (e) => {
-        let errorMessage = '';
-        switch (e.target.name) {
-            case 'email':
-                errorMessage = Validation({
-                    value: e.target.value,
-                    rules: [Validation.isRequired(), Validation.isSocialLink('email')],
-                });
-                break;
-            case 'password':
-                errorMessage = Validation({
-                    value: e.target.value,
-                    rules: [Validation.isRequired(), Validation.minLetter(8)],
-                });
-                break;
-            case 'fullName':
-                errorMessage = Validation({
-                    value: e.target.value,
-                    rules: [Validation.isRequired(), Validation.minWord(2), Validation.minLetterEachWord(2)],
-                });
-                break;
-            case 'code':
-                errorMessage = Validation({
-                    value: e.target.value,
-                    rules: [Validation.isRequired(), Validation.minLetter(6), Validation.maxLength(6)],
-                });
-                break;
-        }
+    const handleBlur = useCallback(
+        (e) => {
+            let errorMessage = '';
+            switch (e.target.name) {
+                case 'email':
+                    errorMessage = Validation({
+                        value: e.target.value,
+                        rules: [Validation.isRequired(), Validation.isSocialLink('email')],
+                    });
+                    break;
+                case 'password':
+                    errorMessage = Validation({
+                        value: e.target.value,
+                        rules: [Validation.isRequired(), Validation.minLetter(8)],
+                    });
+                    break;
+                case 'fullName':
+                    errorMessage = Validation({
+                        value: e.target.value,
+                        rules: [Validation.isRequired(), Validation.minWord(2), Validation.minLetterEachWord(2)],
+                    });
+                    break;
+                case 'code':
+                    errorMessage = Validation({
+                        value: e.target.value,
+                        rules: [Validation.isRequired(), Validation.minLetter(6), Validation.maxLength(6)],
+                    });
+                    break;
+            }
 
-        setErrors({
-            ...errors,
-            [e.target.name]: errorMessage,
-        });
-    };
+            setErrors({
+                ...errors,
+                [e.target.name]: errorMessage,
+            });
+        },
+        [authData, errors, type],
+    );
 
-    const handleSendCode = async () => {
+    const handleSendCode = useCallback(async () => {
         try {
             const res = await mailService.sendRegisterCode(authData.email);
             if (res) {
@@ -166,7 +172,7 @@ function AuthWithPassword({ type }) {
         } catch (error) {
             setError(error.message);
         }
-    };
+    }, [authData.email]);
 
     return (
         <div className={cx('wrapper')}>
@@ -225,4 +231,4 @@ AuthWithPassword.propTypes = {
     type: PropTypes.string.isRequired,
 };
 
-export default AuthWithPassword;
+export default memo(AuthWithPassword);

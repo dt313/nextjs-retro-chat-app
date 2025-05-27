@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
@@ -209,4 +209,4 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
     );
 }
 
-export default MessageInput;
+export default memo(MessageInput);

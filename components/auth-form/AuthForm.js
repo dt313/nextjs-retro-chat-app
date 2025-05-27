@@ -15,8 +15,6 @@ import FormHeader from '@/components/form-header';
 import Icon from '@/components/icon';
 import Image from '@/components/image';
 
-import { authService } from '@/services';
-
 import { FORGET_PASSWORD_BOX, LOGIN_AUTH_BOX, REGISTER_AUTH_BOX, openAuthBox } from '@/redux/actions/auth-box-action';
 
 import styles from './AuthForm.module.scss';

@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import classNames from 'classnames/bind';
 
 import Avatar from '@/components/avatar/Avatar';
@@ -26,4 +28,4 @@ function NotificationItem({ avatar, render, time, content, hideAvatar = false, i
     );
 }
 
-export default NotificationItem;
+export default memo(NotificationItem);

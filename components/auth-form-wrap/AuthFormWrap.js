@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import classNames from 'classnames/bind';
 
@@ -29,7 +29,6 @@ const cx = classNames.bind(styles);
 function AuthFormWrap() {
     const authBox = useSelector((state) => state.authBox);
     const { isAuthenticated, user } = useSelector((state) => state.auth);
-    const { list: onlineUsers } = useSelector((state) => state.onlineUsers);
 
     const dispatch = useDispatch();
     const fetchNotifications = async () => {
@@ -66,7 +65,7 @@ function AuthFormWrap() {
         return () => {
             eventBus.off('online-users', handleOnlineUserList);
         };
-    }, []);
+    }, [isAuthenticated]);
 
     useEffect(() => {
         const handleAddOnlineUser = (onlineUser) => {
@@ -84,7 +83,7 @@ function AuthFormWrap() {
             eventBus.off('new_online_user', handleAddOnlineUser);
             eventBus.off('offline_user', handleOfflineUser);
         };
-    }, []);
+    }, [isAuthenticated]);
 
     useEffect(() => {
         const user = storageUtils.getUser();
@@ -92,12 +91,16 @@ function AuthFormWrap() {
         if (user) dispatch(login({ accessToken: token, user: user }));
     }, []);
 
+    const handleClose = useCallback(() => {
+        dispatch(closeAuthBox());
+    }, []);
+
     if (!authBox.isOpen) return null;
 
     return (
         <Overlay className={cx('wrapper')}>
             <div className={cx('container')} onClick={(e) => e.stopPropagation()}>
-                <CloseIcon large className={cx('close-icon')} onClick={() => dispatch(closeAuthBox())} />
+                <CloseIcon large className={cx('close-icon')} onClick={handleClose} />
                 <AuthForm type={authBox.type} />
             </div>
         </Overlay>

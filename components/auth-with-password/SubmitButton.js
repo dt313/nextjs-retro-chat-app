@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef, memo } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -35,4 +35,4 @@ SubmitButton.propTypes = {
     className: PropTypes.string,
     disable: PropTypes.bool,
 };
-export default forwardRef(SubmitButton);
+export default memo(forwardRef(SubmitButton));

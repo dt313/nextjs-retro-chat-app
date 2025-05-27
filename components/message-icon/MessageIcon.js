@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
@@ -37,4 +37,4 @@ function MessageIcon({ className, small, medium, large, superLarge }) {
     );
 }
 
-export default MessageIcon;
+export default memo(MessageIcon);

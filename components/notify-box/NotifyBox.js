@@ -1,4 +1,6 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
@@ -21,7 +23,6 @@ import {
     TEMP_NOTIFICATION_GROUP_INVITATION_ACCEPTED,
     TEMP_NOTIFICATION_GROUP_INVITATION_REJECTED,
 } from '@/config/types';
-import { before } from 'lodash';
 import { useRouter } from 'next/navigation';
 import { IoSettings } from 'react-icons/io5';
 import { useDispatch } from 'react-redux';
@@ -30,7 +31,8 @@ import Icon from '@/components/icon/Icon';
 
 import { invitationService, notificationService } from '@/services';
 
-import { addNotification, changeTypeNotification, readNotification } from '@/redux/actions/notification-action';
+import { changeTypeNotification, loadNotification, readNotification } from '@/redux/actions/notification-action';
+import { addToast } from '@/redux/actions/toast-action';
 
 import { SpinnerLoader } from '../loading';
 import NotificationItem from './NotificationItem';
@@ -40,14 +42,23 @@ const cx = classNames.bind(styles);
 
 const LIMIT = 10;
 
-function NotifyBox({ list = [] }) {
+function NotifyBox({ list }) {
     const dispatch = useDispatch();
 
     const scrollContainerRef = useRef();
 
     const [isLoading, setIsLoading] = useState(false);
-    const [isFinish, setIsFinish] = useState(list.length < LIMIT);
+    const [isFinish, setIsFinish] = useState(false);
+
     const router = useRouter();
+
+    useEffect(() => {
+        if (list.length < LIMIT) {
+            setIsFinish(true);
+        } else if (list.length === LIMIT) {
+            setIsFinish(false);
+        }
+    }, [list]);
 
     const handleClickUser = (username) => {
         router.push(`/profile/@${username}`);
@@ -76,7 +87,7 @@ function NotifyBox({ list = [] }) {
                 );
             }
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         }
     };
 
@@ -100,7 +111,7 @@ function NotifyBox({ list = [] }) {
                 );
             }
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         }
     };
 
@@ -325,16 +336,15 @@ function NotifyBox({ list = [] }) {
     const loadMoreNotification = async () => {
         try {
             const latestNotification = list[list.length - 1];
-            latestNotification;
             const res = await notificationService.getAllNotifications(latestNotification?.createdAt);
             if (res && Array.isArray(res)) {
-                dispatch(addNotification(res));
+                dispatch(loadNotification(res));
                 if (res.length < LIMIT) {
                     setIsFinish(true);
                 }
             }
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         }
     };
 
@@ -344,7 +354,9 @@ function NotifyBox({ list = [] }) {
 
         const { scrollTop, scrollHeight, clientHeight } = container;
 
+        console.log('scrollTop:', scrollTop + clientHeight >= scrollHeight - 5, isFinish);
         if (scrollTop + clientHeight >= scrollHeight - 5 && !isFinish) {
+            console.log('Loading more notifications...');
             setIsLoading(true);
             loadMoreNotification().then(() => {
                 const waitForRender = () => {
@@ -363,7 +375,7 @@ function NotifyBox({ list = [] }) {
             const res = notificationService.readNotification(id);
             if (res) dispatch(readNotification(id));
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         }
     };
 
@@ -397,5 +409,9 @@ function NotifyBox({ list = [] }) {
         </div>
     );
 }
+
+NotifyBox.propTypes = {
+    list: PropTypes.array.isRequired,
+};
 
 export default NotifyBox;

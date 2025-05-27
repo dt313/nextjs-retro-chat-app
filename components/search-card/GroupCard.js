@@ -19,6 +19,8 @@ import { groupService } from '@/services';
 
 import { calculateTime, getOnlineUsers } from '@/helpers';
 
+import AuthFunctionWrap from '@/utils/auth-function-wrap';
+
 import { addToast } from '@/redux/actions/toast-action';
 
 import styles from './SearchCard.module.scss';
@@ -38,25 +40,31 @@ function GroupCard({
     const [isShowPasswordBox, setIsShowPasswordBox] = useState(false);
     const [joined, setJoined] = useState(isJoined);
     const { list: onlineUsers } = useSelector((state) => state.onlineUsers);
+    const { isAuthenticated } = useSelector((state) => state.auth);
     const router = useRouter();
     const dispatch = useDispatch();
 
-    const handleJoinGroup = async () => {
-        if (isPrivate) {
-            setIsShowPasswordBox(true);
-        } else {
-            const data = await groupService.joinGroup(id);
-            if (data) {
-                setJoined(true);
-                dispatch(
-                    addToast({
-                        content: 'You have successfully joined the group.',
-                        type: 'success',
-                    }),
-                );
-            }
-        }
-    };
+    const handleJoinGroup = () =>
+        AuthFunctionWrap(
+            isAuthenticated,
+            async () => {
+                if (isPrivate) {
+                    setIsShowPasswordBox(true);
+                } else {
+                    const data = await groupService.joinGroup(id);
+                    if (data) {
+                        setJoined(true);
+                        dispatch(
+                            addToast({
+                                content: 'You have successfully joined the group.',
+                                type: 'success',
+                            }),
+                        );
+                    }
+                }
+            },
+            dispatch,
+        );
 
     const settingContent = {
         id: 1,

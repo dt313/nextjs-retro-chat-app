@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import PropsType from 'prop-types';
 
 import classNames from 'classnames/bind';
@@ -29,4 +31,4 @@ Icon.propTypes = {
     onClick: PropsType.func,
 };
 
-export default Icon;
+export default memo(Icon);

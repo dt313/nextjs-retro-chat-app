@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
@@ -37,20 +39,4 @@ PropTypes.propTypes = {
     onClick: PropTypes.func.isRequired,
 };
 
-SearchItem.Skeleton = function SearchItemSkeleton() {
-    return (
-        <div className={cx('search-item')}>
-            <SkeletonTheme baseColor="#e0d4c4" highlightColor="#f5f1ec">
-                <Skeleton circle width={36} height={36} />
-                <div className={cx('search-item-info')}>
-                    <SkeletonTheme baseColor="#e0d4c4" highlightColor="#f5f1ec">
-                        <Skeleton width={150} height={20} />
-                        <Skeleton width={200} height={15} />
-                    </SkeletonTheme>
-                </div>
-            </SkeletonTheme>
-        </div>
-    );
-};
-
-export default SearchItem;
+export default memo(SearchItem);

@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
+
+import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
@@ -61,4 +63,14 @@ function Input({ inputType = 'text', label, value, onChange, placeholder, classN
     );
 }
 
-export default Input;
+Input.propTypes = {
+    inputType: PropTypes.oneOf(['text', 'password', 'textarea']),
+    label: PropTypes.string,
+    value: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+    placeholder: PropTypes.string,
+    className: PropTypes.string,
+    errorMessage: PropTypes.string,
+};
+
+export default memo(Input);

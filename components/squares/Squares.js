@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { memo, useEffect, useRef } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -164,4 +164,4 @@ Squares.defaultProps = {
     className: '',
 };
 
-export default Squares;
+export default memo(Squares);

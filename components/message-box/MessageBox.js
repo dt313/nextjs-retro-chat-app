@@ -1,21 +1,28 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
+
+import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
-import { useSelector } from 'react-redux';
+import dynamic from 'next/dynamic';
+import { check } from 'prettier';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Avatar from '@/components/avatar';
 import { SpinnerLoader, ThreeDotLoading } from '@/components/loading';
-import Message from '@/components/message/Message';
 
 import { conversationService } from '@/services';
 
 import { getMessageNotification } from '@/helpers/conversation-info';
 
+import { addToast } from '@/redux/actions/toast-action';
+
 import styles from './MessageBox.module.scss';
+
+const Message = dynamic(() => import('../message'), {});
 
 const cx = classNames.bind(styles);
 const LIMIT = 30;
@@ -28,6 +35,7 @@ function MessageBox({
     isBeforeFinish,
     setList,
     participants,
+    isGroup = false,
 }) {
     const messageEndRef = useRef(null);
     const scrollContainerRef = useRef(null);
@@ -38,6 +46,7 @@ function MessageBox({
     const [isAfterFinish, setIsAfterFinish] = useState(true);
     const { user: me } = useSelector((state) => state.auth);
 
+    const dispatch = useDispatch();
     const shouldScrollBottom = useRef(true);
     useEffect(() => {
         if (shouldScrollBottom.current) {
@@ -88,7 +97,7 @@ function MessageBox({
                 return;
             }
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         }
     };
 
@@ -182,6 +191,13 @@ function MessageBox({
         [participants],
     );
 
+    const checkIsCreator = useCallback(() => {
+        if (!isGroup) return true;
+        const isCreator = participants.some((p) => p.user._id === me._id && p.role === 'creator');
+
+        return isCreator;
+    }, [conversationId, participants, isGroup, me._id]);
+
     return (
         <div className={cx('wrapper')} ref={scrollContainerRef} onScroll={handleScroll}>
             {isTopLoading && (
@@ -268,6 +284,7 @@ function MessageBox({
                                 isDeleted={mes.isDeleted}
                                 isHighlight={mes._id === searchMessageId}
                                 getReadUser={getReadUser}
+                                isCreator={checkIsCreator()}
                             />
                         )}
                     </div>
@@ -294,4 +311,16 @@ function MessageBox({
     );
 }
 
-export default MessageBox;
+MessageBox.propTypes = {
+    list: PropTypes.array.isRequired,
+    conversationId: PropTypes.string.isRequired,
+    targetName: PropTypes.string,
+    searchMessageId: PropTypes.string,
+    onLoadMore: PropTypes.func.isRequired,
+    isBeforeFinish: PropTypes.bool.isRequired,
+    setList: PropTypes.func.isRequired,
+    participants: PropTypes.array.isRequired,
+    isGroup: PropTypes.bool,
+};
+
+export default memo(MessageBox);

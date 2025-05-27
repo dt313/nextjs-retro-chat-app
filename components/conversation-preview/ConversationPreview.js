@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
@@ -12,6 +14,7 @@ import Avatar from '@/components/avatar';
 import { conversationService } from '@/services';
 
 import { readLastMessage } from '@/redux/actions/conversations-action';
+import { addToast } from '@/redux/actions/toast-action';
 
 import styles from './ConversationPreview.module.scss';
 
@@ -37,7 +40,6 @@ function ConversationPreview({
         try {
             if (isReaded) {
                 router.push(`/conversation/${slug}`);
-                0;
                 return;
             } else {
                 const res = await conversationService.readLastMessage(slug);
@@ -47,7 +49,7 @@ function ConversationPreview({
                 }
             }
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         }
     };
 
@@ -128,4 +130,7 @@ ConversationPreview.Skeleton = function ConversationPreviewSkeleton({ className 
     );
 };
 
-export default ConversationPreview;
+const MemoizedConversationPreview = memo(ConversationPreview);
+MemoizedConversationPreview.Skeleton = ConversationPreview.Skeleton;
+
+export default MemoizedConversationPreview;

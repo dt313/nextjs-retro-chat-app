@@ -10,6 +10,7 @@ import {
     TEMP_NOTIFICATION_FRIEND_ACCEPTED,
 } from '@/config/types';
 import html2canvas from 'html2canvas-pro';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { BsQrCode } from 'react-icons/bs';
 import { FaFacebookMessenger, FaUserCheck } from 'react-icons/fa';
@@ -22,23 +23,23 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import images from '@/assets/images';
 
-import SubmitButton from '@/components/auth-with-password/SubmitButton';
 import Avatar from '@/components/avatar';
 import Icon from '@/components/icon';
 import Image from '@/components/image';
-import MessageIcon from '@/components/message-icon';
 import Overlay from '@/components/overlay';
 import SettingBox from '@/components/setting-box';
-import Squares from '@/components/squares';
 
 import { conversationService, groupService, invitationService, userService } from '@/services';
 
 import { getNotificationId } from '@/helpers';
 
+import AuthFunctionWrap from '@/utils/auth-function-wrap';
+
 import { addToast } from '@/redux/actions/toast-action';
 
 import styles from './profile.module.scss';
 
+const Squares = dynamic(() => import('../../../../components/squares'));
 const cx = classNames.bind(styles);
 
 function Profile({ slug }) {
@@ -52,7 +53,7 @@ function Profile({ slug }) {
     const qrContainer = useRef();
     const downloadBtn = useRef();
 
-    const { user: me } = useSelector((state) => state.auth);
+    const { isAuthenticated, user: me } = useSelector((state) => state.auth);
     const { notifications } = useSelector((state) => state.notification);
 
     const dispatch = useDispatch();
@@ -76,7 +77,7 @@ function Profile({ slug }) {
                     }
                 }
             } catch (error) {
-            } finally {
+                dispatch(addToast({ type: 'error', content: error.message }));
             }
         };
         fetchAPI();
@@ -101,41 +102,40 @@ function Profile({ slug }) {
         }
     }, [basicInfo]);
 
-    const handleClickMessenger = async () => {
-        try {
-            const res = await conversationService.getOrCreateConversation({ withUserId: basicInfo._id });
-            if (res) {
-                router.push(`/conversation/${res._id}`);
-            }
-        } catch (error) {
-            console.log(error);
-            // dispatch(
-            //     addToast({
-            //         type: 'error',
-            //         content: error.message,
-            //     }),
-            // );
-        }
-    };
+    const handleClickMessenger = () =>
+        AuthFunctionWrap(
+            isAuthenticated,
+            async () => {
+                try {
+                    const res = await conversationService.getOrCreateConversation({ withUserId: basicInfo._id });
+                    if (res) {
+                        router.push(`/conversation/${res._id}`);
+                    }
+                } catch (error) {
+                    dispatch(addToast({ type: 'error', content: error.message }));
+                }
+            },
+            dispatch,
+        );
 
-    const handleFriendRequest = async () => {
-        try {
-            const res = await invitationService.createFriendRequest({
-                id: basicInfo._id,
-            });
+    const handleFriendRequest = () =>
+        AuthFunctionWrap(
+            isAuthenticated,
+            async () => {
+                try {
+                    const res = await invitationService.createFriendRequest({
+                        id: basicInfo._id,
+                    });
 
-            if (!!res) {
-                setRequestType('friend-request-by-me');
-            }
-        } catch (error) {
-            // dispatch(
-            //     addToast({
-            //         content: error.message,
-            //         type: 'error',
-            //     }),
-            // );
-        }
-    };
+                    if (!!res) {
+                        setRequestType('friend-request-by-me');
+                    }
+                } catch (error) {
+                    dispatch(addToast({ type: 'error', content: error.message }));
+                }
+            },
+            dispatch,
+        );
 
     const handleCancelRequest = async () => {
         try {
@@ -145,12 +145,7 @@ function Profile({ slug }) {
                 setRequestType('no-action');
             }
         } catch (error) {
-            // dispatch(
-            //     addToast({
-            //         type: 'error',
-            //         content: error.message,
-            //     }),
-            // );
+            dispatch(addToast({ type: 'error', content: error.message }));
         }
     };
 
@@ -170,7 +165,7 @@ function Profile({ slug }) {
                 );
             }
         } catch (error) {
-            console.log('Error accepting friend request', error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         }
     };
 
@@ -181,26 +176,31 @@ function Profile({ slug }) {
                 setRequestType('no-action');
             }
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         }
     };
 
-    const handleJoinGroup = async () => {
-        if (basicInfo?.isPrivate) {
-            setIsShowPasswordBox(true);
-        } else {
-            const data = await groupService.joinGroup(basicInfo._id);
-            if (data) {
-                setIsMember(true);
-                dispatch(
-                    addToast({
-                        content: 'You have successfully joined the group.',
-                        type: 'success',
-                    }),
-                );
-            }
-        }
-    };
+    const handleJoinGroup = () =>
+        AuthFunctionWrap(
+            isAuthenticated,
+            async () => {
+                if (basicInfo?.isPrivate) {
+                    setIsShowPasswordBox(true);
+                } else {
+                    const data = await groupService.joinGroup(basicInfo._id);
+                    if (data) {
+                        setIsMember(true);
+                        dispatch(
+                            addToast({
+                                content: 'You have successfully joined the group.',
+                                type: 'success',
+                            }),
+                        );
+                    }
+                }
+            },
+            dispatch,
+        );
 
     const settingContent = {
         id: 1,
@@ -250,7 +250,8 @@ function Profile({ slug }) {
                 document.body.removeChild(link);
             })
             .catch((error) => {
-                console.log(error);
+                dispatch(addToast({ type: 'error', content: error.message }));
+
                 downloadElement.style.display = 'block';
                 qrElement.style.boxShadow = `rgba(0, 0, 0, 0.19) 0px 10px 20px,rgba(0, 0, 0, 0.23) 0px 6px 6px;`;
             });

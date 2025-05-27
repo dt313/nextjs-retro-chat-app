@@ -2,12 +2,20 @@
 
 import { Suspense, useEffect } from 'react';
 
+import classNames from 'classnames/bind';
+
 import axios from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 
-import { login } from '@/redux/actions/auth-action';
+import { SpinnerLoader } from '@/components/loading';
 
+import { login } from '@/redux/actions/auth-action';
+import { addToast } from '@/redux/actions/toast-action';
+
+import styles from './oauth2.module.scss';
+
+const cx = classNames.bind(styles);
 function OAuth2() {
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -32,19 +40,29 @@ function OAuth2() {
 
                 fetchAPI();
             } catch (error) {
-                console.log(error);
+                dispatch(addToast({ type: 'error', content: error.message }));
             }
         } else {
             router.push('/');
         }
     }, [token]);
 
-    return <></>;
+    return (
+        <div className={cx('loader')}>
+            <SpinnerLoader />
+        </div>
+    );
 }
 
 function OAuth2Wrap() {
     return (
-        <Suspense fallback={<div>Đang tải...</div>}>
+        <Suspense
+            fallback={
+                <div className={cx('loader')}>
+                    <SpinnerLoader />
+                </div>
+            }
+        >
             <OAuth2 />
         </Suspense>
     );

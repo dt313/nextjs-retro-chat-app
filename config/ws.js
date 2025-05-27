@@ -4,7 +4,7 @@ let reconnectTimeout = null;
 let socket = null;
 
 export const initSocket = (token = null) => {
-    if (socket && socket.readyState === WebSocket.OPEN) return socket;
+    if (socket && socket.readyState === WebSocket.OPEN && !token) return socket;
 
     socket = new WebSocket(`ws://${process.env.NEXT_PUBLIC_API_DOMAIN}:${process.env.NEXT_PUBLIC_API_PORT}`);
 

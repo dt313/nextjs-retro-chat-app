@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, memo, useEffect, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
@@ -33,6 +33,7 @@ import { calculateTime, getTime, isLessThan1D } from '@/helpers';
 
 import { openImgPreview } from '@/redux/actions/img-preview-action';
 import { closeReplyBox, openReplyBox } from '@/redux/actions/reply-box-action';
+import { addToast } from '@/redux/actions/toast-action';
 
 import styles from './Message.module.scss';
 
@@ -51,6 +52,7 @@ function Message({
     isForward = true,
     isDeleted = false,
     isHighlight = false,
+    isCreator = false,
     getReadUser,
 }) {
     const [visibility, setVisibility] = useState({
@@ -116,7 +118,7 @@ function Message({
                 }
             }
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         }
     };
 
@@ -137,8 +139,7 @@ function Message({
 
             window.URL.revokeObjectURL(blobUrl);
         } catch (error) {
-            console.error('Lỗi khi tải file:', error);
-            alert(url);
+            dispatch(addToast({ type: 'error', content: error.message }));
         }
     };
 
@@ -251,7 +252,7 @@ function Message({
                 addOrChangeReaction(res);
             }
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         } finally {
             setVisibility((prev) => ({ ...prev, reaction: false }));
         }
@@ -269,7 +270,7 @@ function Message({
                 addOrChangeReaction(res);
             }
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         }
     };
 
@@ -281,7 +282,7 @@ function Message({
                 setVisibility((prev) => ({ ...prev, delete: false }));
             }
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         }
     };
 
@@ -295,7 +296,7 @@ function Message({
                 eventBus.emit(`conversation-update-${res._id}`, res);
             }
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         }
     };
 
@@ -390,7 +391,7 @@ function Message({
                             render={(attrs) => (
                                 <div className={cx('box')} tabIndex="-1" {...attrs}>
                                     <div className={cx('more-menu')}>
-                                        {type === 'text' && (
+                                        {type === 'text' && isCreator && (
                                             <span className={cx('more-item')} onClick={handlePinnedMessage}>
                                                 Ghim
                                             </span>
@@ -490,4 +491,4 @@ function Message({
     );
 }
 
-export default Message;
+export default memo(Message);

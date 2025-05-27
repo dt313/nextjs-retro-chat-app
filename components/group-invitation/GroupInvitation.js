@@ -34,7 +34,7 @@ function GroupInvitation({ onClose, id }) {
             const res = await groupService.getInvitationUsers(id, value);
             if (res) setList(res);
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         } finally {
             setIsLoading(false);
         }
@@ -52,12 +52,7 @@ function GroupInvitation({ onClose, id }) {
             }
             return false;
         } catch (error) {
-            dispatch(
-                addToast({
-                    type: 'error',
-                    content: error.message,
-                }),
-            );
+            dispatch(addToast({ type: 'error', content: error.message }));
             return false;
         }
     };
@@ -70,7 +65,7 @@ function GroupInvitation({ onClose, id }) {
             }
             return false;
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
             return false;
         }
     };
@@ -103,10 +98,11 @@ function GroupInvitation({ onClose, id }) {
                             <User
                                 key={item._id}
                                 type="invitation"
+                                id={item._id}
                                 avatar={item.avatar}
                                 name={item.fullName}
-                                onClickInvitation={() => handleInvitation(item._id)}
-                                onCancelInvitation={() => handleCancelInvitation(item._id)}
+                                onClickInvitation={handleInvitation}
+                                onCancelInvitation={handleCancelInvitation}
                                 isSent={item.isRequested}
                             />
                         ) : (

@@ -24,6 +24,8 @@ import { conversationService, invitationService } from '@/services';
 
 import { calculateTime, checkStatus, getNotificationId } from '@/helpers';
 
+import AuthFunctionWrap from '@/utils/auth-function-wrap';
+
 import { changeTypeNotification } from '@/redux/actions/notification-action';
 import { addToast } from '@/redux/actions/toast-action';
 
@@ -47,26 +49,27 @@ function UserCard({
     const router = useRouter();
     const dispatch = useDispatch();
     const { notifications } = useSelector((state) => state.notification);
+    const { isAuthenticated } = useSelector((state) => state.auth);
     const { list: onlineUserList } = useSelector((state) => state.onlineUsers);
 
-    const handleFriendRequest = async () => {
-        try {
-            const res = await invitationService.createFriendRequest({
-                id,
-            });
+    const handleFriendRequest = () =>
+        AuthFunctionWrap(
+            isAuthenticated,
+            async () => {
+                try {
+                    const res = await invitationService.createFriendRequest({
+                        id,
+                    });
 
-            if (!!res) {
-                setFriendRequestByMe(true);
-            }
-        } catch (error) {
-            dispatch(
-                addToast({
-                    content: error.message,
-                    type: 'error',
-                }),
-            );
-        }
-    };
+                    if (!!res) {
+                        setFriendRequestByMe(true);
+                    }
+                } catch (error) {
+                    dispatch(addToast({ content: error.message, type: 'error' }));
+                }
+            },
+            dispatch,
+        );
 
     const handleAcceptFriendRequest = async () => {
         try {
@@ -84,7 +87,7 @@ function UserCard({
                 );
             }
         } catch (error) {
-            console.log('Error accepting friend request', error);
+            dispatch(addToast({ content: error.message, type: 'error' }));
         }
     };
 
@@ -105,21 +108,26 @@ function UserCard({
         }
     };
 
-    const handleClickMessenger = async () => {
-        try {
-            const res = await conversationService.getOrCreateConversation({ withUserId: id });
-            if (res) {
-                router.push(`/conversation/${res._id}`);
-            }
-        } catch (error) {
-            dispatch(
-                addToast({
-                    type: 'error',
-                    content: error.message,
-                }),
-            );
-        }
-    };
+    const handleClickMessenger = () =>
+        AuthFunctionWrap(
+            isAuthenticated,
+            async () => {
+                try {
+                    const res = await conversationService.getOrCreateConversation({ withUserId: id });
+                    if (res) {
+                        router.push(`/conversation/${res._id}`);
+                    }
+                } catch (error) {
+                    dispatch(
+                        addToast({
+                            type: 'error',
+                            content: error.message,
+                        }),
+                    );
+                }
+            },
+            dispatch,
+        );
 
     return (
         <div className={cx('wrapper')}>

@@ -19,7 +19,7 @@ import MessageIcon from '@/components/message-icon';
 import NotifyBox from '@/components/notify-box';
 
 import { logout } from '@/redux/actions/auth-action';
-import { LOGIN_AUTH_BOX, openAuthBox } from '@/redux/actions/auth-box-action';
+import { LOGIN_AUTH_BOX, REGISTER_AUTH_BOX, openAuthBox } from '@/redux/actions/auth-box-action';
 import { addNotification } from '@/redux/actions/notification-action';
 
 import styles from './Header.module.scss';
@@ -56,54 +56,63 @@ function Header() {
             <h1 className={cx('logo')} onClick={() => router.push('/')}>
                 Retro
             </h1>
-            <div className={cx('header-menu')}>
-                {!pathname.startsWith('/conversation') && isAuthenticated && (
-                    <span className={cx('hmenu-item', 'message')} onClick={() => router.push('/conversation')}>
-                        {unReadConversation > 0 && <span className={cx('message-count')}>{unReadConversation}</span>}
-                        <MessageIcon small />
-                    </span>
-                )}
+            {isAuthenticated ? (
+                <div className={cx('header-menu')}>
+                    {!pathname.startsWith('/conversation') && (
+                        <span className={cx('hmenu-item', 'message')} onClick={() => router.push('/conversation')}>
+                            {unReadConversation > 0 && (
+                                <span className={cx('message-count')}>{unReadConversation}</span>
+                            )}
+                            <MessageIcon small />
+                        </span>
+                    )}
 
-                {isAuthenticated && (
                     <span className={cx('hmenu-item')} onClick={() => setIsOpenCreation(true)}>
                         <Icon element={<PiNotePencilFill />} />
                     </span>
-                )}
 
-                {isAuthenticated && (
                     <Dropdown position="right" content={<NotifyBox list={notifications} />}>
                         <span className={cx('hmenu-item')}>
                             <Icon element={<IoNotifications />} className={cx({ active: unReadNotification > 0 })} />
                             {unReadNotification > 0 && <span className={cx('notify-count')}>{unReadNotification}</span>}
                         </span>
                     </Dropdown>
-                )}
 
-                <HeadlessTippy
-                    visible={isShowMenu}
-                    onClickOutside={() => setIsShowMenu(false)}
-                    render={(attrs) => (
-                        <div className={cx('box')} tabIndex="-1" {...attrs}>
-                            <UserMenu />
-                        </div>
-                    )}
-                    theme="light"
-                    interactive
-                >
-                    <span
-                        className={cx('hmenu-item')}
-                        onClick={() => {
-                            if (isAuthenticated) {
-                                setIsShowMenu(true);
-                            } else {
-                                dispatch(openAuthBox(LOGIN_AUTH_BOX));
-                            }
-                        }}
+                    <HeadlessTippy
+                        visible={isShowMenu}
+                        onClickOutside={() => setIsShowMenu(false)}
+                        render={(attrs) => (
+                            <div className={cx('box')} tabIndex="-1" {...attrs}>
+                                <UserMenu />
+                            </div>
+                        )}
+                        theme="light"
+                        interactive
                     >
-                        <Avatar src={me?.avatar} size={40} className={cx('avatar')} />
-                    </span>
-                </HeadlessTippy>
-            </div>
+                        <span
+                            className={cx('hmenu-item')}
+                            onClick={() => {
+                                if (isAuthenticated) {
+                                    setIsShowMenu(true);
+                                } else {
+                                    dispatch(openAuthBox(LOGIN_AUTH_BOX));
+                                }
+                            }}
+                        >
+                            <Avatar src={me?.avatar} size={40} className={cx('avatar')} />
+                        </span>
+                    </HeadlessTippy>
+                </div>
+            ) : (
+                <div className={cx('header-menu')}>
+                    <button className={cx('auth-btn', 'text')} onClick={() => dispatch(openAuthBox(REGISTER_AUTH_BOX))}>
+                        Đăng kí
+                    </button>
+                    <button className={cx('auth-btn')} onClick={() => dispatch(openAuthBox(LOGIN_AUTH_BOX))}>
+                        Đăng nhập
+                    </button>
+                </div>
+            )}
 
             {isOpenCreation && <Creation onClose={() => setIsOpenCreation(false)} />}
         </header>

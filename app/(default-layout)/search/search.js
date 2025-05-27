@@ -11,11 +11,13 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 
 import InputSearch from '@/components/input-search';
+import { SpinnerLoader } from '@/components/loading';
 import { GroupCard, UserCard } from '@/components/search-card';
 
 import { groupService, userService } from '@/services';
 
 import { newConversation } from '@/redux/actions/conversations-action';
+import { addToast } from '@/redux/actions/toast-action';
 
 import styles from './search.module.scss';
 
@@ -57,7 +59,7 @@ function SearchContent() {
                 setList(res);
             }
         } catch (error) {
-            console.error('Error fetching data:', error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         } finally {
             setIsLoading(false);
         }
@@ -172,7 +174,13 @@ function SearchContent() {
 
 export default function Search() {
     return (
-        <Suspense fallback={<div>Đang tải...</div>}>
+        <Suspense
+            fallback={
+                <div className={cx('loader')}>
+                    <SpinnerLoader />
+                </div>
+            }
+        >
             <SearchContent />
         </Suspense>
     );

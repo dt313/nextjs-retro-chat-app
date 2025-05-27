@@ -1,5 +1,7 @@
 'use client';
 
+import { memo } from 'react';
+
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
@@ -36,4 +38,4 @@ Avatar.propTypes = {
     fallback: PropTypes.string,
     size: PropTypes.number,
 };
-export default Avatar;
+export default memo(Avatar);

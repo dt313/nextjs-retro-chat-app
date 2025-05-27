@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -12,6 +12,7 @@ import Image from '@/components/image';
 import { attachmentService } from '@/services';
 
 import { openImgPreview } from '@/redux/actions/img-preview-action';
+import { addToast } from '@/redux/actions/toast-action';
 
 import { SpinnerLoader } from '../loading';
 import styles from './AttachImages.module.scss';
@@ -50,7 +51,7 @@ function AttachImages({ conversationId }) {
                 setImages(res);
             }
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         } finally {
             setIsLoading(false);
         }
@@ -87,7 +88,7 @@ function AttachImages({ conversationId }) {
                 )}
             </div>
 
-            {images.length === 0 && <p className={cx('no-content')}>Không có hình ảnh nào</p>}
+            {images.length === 0 && !isLoading && <p className={cx('no-content')}>Không có hình ảnh nào</p>}
         </div>
     );
 }
@@ -96,4 +97,4 @@ AttachImages.propTypes = {
     conversationId: PropTypes.string.isRequired,
 };
 
-export default AttachImages;
+export default memo(AttachImages);

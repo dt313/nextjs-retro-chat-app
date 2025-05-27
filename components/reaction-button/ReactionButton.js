@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -160,4 +160,4 @@ ReactionButton.propTypes = {
     list: PropTypes.array.isRequired,
     total: PropTypes.number,
 };
-export default ReactionButton;
+export default memo(ReactionButton);

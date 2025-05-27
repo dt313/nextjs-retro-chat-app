@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
@@ -76,17 +76,20 @@ function ForgotPassword() {
         }
     }, [data]);
 
-    const handleChangeData = (e) => {
-        setData({
-            ...data,
-            [e.target.name]: e.target.value,
-        });
+    const handleChangeData = useCallback(
+        (e) => {
+            setData({
+                ...data,
+                [e.target.name]: e.target.value,
+            });
 
-        setErrors({
-            ...errors,
-            [e.target.name]: '',
-        });
-    };
+            setErrors({
+                ...errors,
+                [e.target.name]: '',
+            });
+        },
+        [data],
+    );
 
     const handleBlur = (e) => {
         let errorMessage = '';

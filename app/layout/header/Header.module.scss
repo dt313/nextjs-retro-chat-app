@@ -120,3 +120,34 @@
         cursor: default;
     }
 }
+
+.auth-btn {
+    padding: 9px 20px;
+    margin: 0 8px;
+    border-radius: 30px;
+    background-color: var(--red);
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 1.4rem;
+    font-weight: 600;
+
+    &:hover {
+        opacity: 0.9;
+        cursor: pointer;
+    }
+}
+
+.auth-btn.text {
+    background-color: transparent;
+    color: #333;
+    font-weight: 600;
+
+    &:hover {
+        text-decoration: underline;
+    }
+
+    @include respond-to('mobile') {
+        display: none;
+    }
+}

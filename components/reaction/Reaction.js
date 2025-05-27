@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
@@ -91,4 +93,4 @@ Reaction.propTypes = {
     theme: PropTypes.string,
 };
 
-export default Reaction;
+export default memo(Reaction);

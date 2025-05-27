@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
@@ -25,4 +27,4 @@ Overlay.propTypes = {
     nonBackdrop: PropTypes.bool,
     className: PropTypes.string,
 };
-export default Overlay;
+export default memo(Overlay);

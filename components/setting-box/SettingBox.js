@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -18,22 +18,25 @@ function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu', isLoading
     const [errorMessage, setErrorMessage] = useState('');
     const [buttonDisable, setButtonDisable] = useState(true);
 
-    const handleOnChange = (e) => {
-        if (content.type === 'image') {
-            setValue(e.target.files[0]);
-            return;
-        }
-        setValue(e.target.value);
-        const error = content?.validate(e.target.value);
-        setErrorMessage(error);
-    };
+    const handleOnChange = useCallback(
+        (e) => {
+            if (content.type === 'image') {
+                setValue(e.target.files[0]);
+                return;
+            }
+            setValue(e.target.value);
+            const error = content?.validate(e.target.value);
+            setErrorMessage(error);
+        },
+        [content, value],
+    );
 
-    const handleSubmit = () => {
+    const handleSubmit = useCallback(() => {
         onSubmit(value).then(() => {
             setValue('');
             onClose();
         });
-    };
+    }, [onSubmit, value, onClose]);
 
     useEffect(() => {
         const error = content?.validate(value);

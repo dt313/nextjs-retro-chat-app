@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+
+import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
@@ -9,6 +11,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { messageService, userService } from '@/services';
 
 import { checkStatus } from '@/helpers';
+
+import { addToast } from '@/redux/actions/toast-action';
 
 import CloseIcon from '../close-icon';
 import Icon from '../icon';
@@ -34,7 +38,7 @@ function MessageForward({ messageId, messageType, onClose }) {
             const res = await userService.getFriends(value);
             if (res) setList(res);
         } catch (error) {
-            console.log(error);
+            dispatch(addToast({ type: 'error', content: error.message }));
         } finally {
             setIsLoading(false);
         }
@@ -43,23 +47,26 @@ function MessageForward({ messageId, messageType, onClose }) {
         fetchFriends(debounceValue);
     }, [debounceValue]);
 
-    const handleForwardMessage = async (userId) => {
-        try {
-            const res = await messageService.forwardMessage(messageId, { friendId: userId, messageType });
-            if (res) {
-                return true;
+    const handleForwardMessage = useCallback(
+        async (userId) => {
+            try {
+                const res = await messageService.forwardMessage(messageId, { friendId: userId, messageType });
+                if (res) {
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                dispatch(
+                    addToast({
+                        type: 'error',
+                        content: error.message,
+                    }),
+                );
+                return false;
             }
-            return false;
-        } catch (error) {
-            dispatch(
-                addToast({
-                    type: 'error',
-                    content: error.message,
-                }),
-            );
-            return false;
-        }
-    };
+        },
+        [messageId],
+    );
 
     const handleOnChange = (e) => {
         setValue(e.target.value);
@@ -69,7 +76,7 @@ function MessageForward({ messageId, messageType, onClose }) {
         <Overlay className={cx('wrapper')} onClick={onClose}>
             <div className={cx('container')} onClick={(e) => e.stopPropagation()}>
                 <div className={cx('header')}>
-                    <h4 className={cx('title')}>Send to</h4>
+                    <h4 className={cx('title')}>Chuyển tiếp</h4>
                     <CloseIcon className={cx('close-icon')} large onClick={onClose} />
                 </div>
 
@@ -90,8 +97,9 @@ function MessageForward({ messageId, messageType, onClose }) {
                                 key={item._id}
                                 type="forward"
                                 name={item.fullName}
+                                id={item._id}
                                 avatar={item.avatar}
-                                onClickForward={() => handleForwardMessage(item._id)}
+                                onClickForward={handleForwardMessage}
                                 isOnline={checkStatus(item._id, onlineUserList)}
                             />
                         ) : (
@@ -103,5 +111,11 @@ function MessageForward({ messageId, messageType, onClose }) {
         </Overlay>
     );
 }
+
+MessageForward.propTypes = {
+    messageId: PropTypes.string.isRequired,
+    messageType: PropTypes.string.isRequired,
+    onClose: PropTypes.func.isRequired,
+};
 
 export default MessageForward;
