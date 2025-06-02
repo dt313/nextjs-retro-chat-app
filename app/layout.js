@@ -18,13 +18,13 @@ export const metadata = {
     openGraph: {
         title: 'Retro',
         description: 'Chat application for retro design enthusiasts',
-        images: [images.largeLogo], // ảnh này đặt trong thư mục public
+        images: ['https://res.cloudinary.com/dfnxyv25l/image/upload/v1748870007/logo.png'],
     },
     twitter: {
         card: 'summary_large_image',
         title: 'Retro',
         description: 'Chat application for retro design enthusiasts',
-        images: [images.largeLogo], // nên dùng cùng ảnh với openGraph
+        images: ['https://res.cloudinary.com/dfnxyv25l/image/upload/v1748870007/logo.png'],
     },
 };
 
