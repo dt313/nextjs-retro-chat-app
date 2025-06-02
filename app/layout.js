@@ -9,6 +9,9 @@ import './scss/globals.scss';
 export const metadata = {
     title: 'Retro',
     description: 'Chat application for retro design enthusiasts',
+    icons: {
+        icon: '/favicon.ico',
+    },
 };
 
 export default function RootLayout({ children }) {

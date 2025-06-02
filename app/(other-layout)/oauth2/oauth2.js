@@ -21,7 +21,6 @@ function OAuth2() {
     const router = useRouter();
     const dispatch = useDispatch();
     const token = searchParams.get('token');
-    console.log(token);
 
     useEffect(() => {
         if (token) {
@@ -33,7 +32,6 @@ function OAuth2() {
                             'Content-Type': 'application/json',
                         },
                     });
-                    console.log(res.data);
                     dispatch(login({ accessToken: token, user: res.data }));
                     router.push('/conversation');
                 };

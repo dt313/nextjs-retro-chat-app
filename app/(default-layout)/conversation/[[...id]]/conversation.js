@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { use, useCallback, useEffect, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
@@ -8,6 +8,7 @@ import eventBus from '@/config/emit';
 import withAuth from '@/hoc/with-auth';
 import { useTypingStatus } from '@/hooks';
 import dynamic from 'next/dynamic';
+import Head from 'next/head';
 import { redirect, useRouter, useSearchParams } from 'next/navigation';
 import { BsThreeDots } from 'react-icons/bs';
 import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
@@ -294,8 +295,21 @@ function Conversation({ id }) {
     const handleIsTyping = useCallback((isTyping) => {
         setIsTyping(isTyping);
     }, []);
+
+    useEffect(() => {
+        if (!id) {
+            document.title = 'Cuộc trò chuyện';
+            return;
+        }
+        document.title = getNameFromConversation(conversation, me._id, true);
+    }, [id, conversation]);
+
     return (
         <div className={cx('wrapper')}>
+            <Head>
+                <title>{document.title}</title>
+                <meta name="description" content="Cùng nói chuyện nào !!" />
+            </Head>
             <div className={cx('left-side', isShowLeft ? 'show' : 'hide', { transition: transition })}>
                 <LeftMessage className={cx('left-wrap')} />
                 <span className={cx('toggle-btn')} onClick={toggleLeftSide}></span>

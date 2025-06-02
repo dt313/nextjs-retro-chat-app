@@ -11,6 +11,7 @@ import {
 } from '@/config/types';
 import html2canvas from 'html2canvas-pro';
 import dynamic from 'next/dynamic';
+import Head from 'next/head';
 import { useRouter } from 'next/navigation';
 import { BsQrCode } from 'react-icons/bs';
 import { FaFacebookMessenger, FaUserCheck } from 'react-icons/fa';
@@ -256,8 +257,17 @@ function Profile({ slug }) {
                 qrElement.style.boxShadow = `rgba(0, 0, 0, 0.19) 0px 10px 20px,rgba(0, 0, 0, 0.23) 0px 6px 6px;`;
             });
     };
+
+    useEffect(() => {
+        document.title = type === 'user' ? basicInfo?.fullName : basicInfo?.name;
+    }, [type, basicInfo]);
+
     return (
         <div className={cx('wrapper')}>
+            <Head>
+                <title>{document.title}</title>
+                <meta name="description" content="Profile" />
+            </Head>
             <Squares
                 className={cx('squares-br')}
                 speed={0}
