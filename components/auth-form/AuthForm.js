@@ -67,6 +67,9 @@ function AuthForm({ type = LOGIN_AUTH_BOX }) {
         {
             image: images.fbIcon,
             text: 'Facebook',
+            onClick: () => {
+                alert('Chức năng này đang được phát triển');
+            },
         },
     ];
 

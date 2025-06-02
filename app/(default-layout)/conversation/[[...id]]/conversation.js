@@ -108,6 +108,7 @@ function Conversation({ id }) {
         try {
             const [conv] = list.filter((c) => c._id === id);
             const alreadyRead = conv.lastMessage.readedBy.includes(me._id);
+
             if (!alreadyRead) {
                 const res = await conversationService.readLastMessage(id);
 

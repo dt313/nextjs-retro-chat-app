@@ -18,9 +18,12 @@ import Icon from '@/components/icon/Icon';
 import MessageIcon from '@/components/message-icon';
 import NotifyBox from '@/components/notify-box';
 
+import { authService } from '@/services';
+
 import { logout } from '@/redux/actions/auth-action';
 import { LOGIN_AUTH_BOX, REGISTER_AUTH_BOX, openAuthBox } from '@/redux/actions/auth-box-action';
 import { addNotification } from '@/redux/actions/notification-action';
+import { addToast } from '@/redux/actions/toast-action';
 
 import styles from './Header.module.scss';
 
@@ -124,10 +127,16 @@ const UserMenu = () => {
     const dispatch = useDispatch();
     const { user: me } = useSelector((state) => state.auth);
 
-    const handleLogout = () => {
-        dispatch(logout());
-
-        window.location.href = '/';
+    const handleLogout = async () => {
+        try {
+            const res = await authService.logout();
+            if (res) {
+                dispatch(logout());
+                window.location.href = '/';
+            }
+        } catch (error) {
+            dispatch(addToast({ type: 'error', content: error.message }));
+        }
     };
     return (
         <div className={cx('user-menu')}>

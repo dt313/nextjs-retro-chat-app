@@ -24,6 +24,7 @@ const cx = classNames.bind(styles);
 
 function AuthWithPassword({ type }) {
     const router = useRouter();
+    const [info, setInfo] = useState('');
     const [authData, setAuthData] = useState({
         email: '',
         password: '',
@@ -168,6 +169,7 @@ function AuthWithPassword({ type }) {
             const res = await mailService.sendRegisterCode(authData.email);
             if (res) {
                 setButtonText('Đã gửi');
+                setInfo('Hãy kiểm tra email của bạn để lấy mã code');
             }
         } catch (error) {
             setError(error.message);
@@ -220,6 +222,7 @@ function AuthWithPassword({ type }) {
             )}
 
             {error && <p className={cx('error')}>{error}</p>}
+            {info && <p className={cx('info-message')}>{info}</p>}
             <SubmitButton disable={disable.submit} className={cx('submit-btn')} onClick={handleSubmit}>
                 {type}
             </SubmitButton>

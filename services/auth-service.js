@@ -20,7 +20,7 @@ export const register = async (data) => {
 
 export const logout = async (data) => {
     try {
-        const res = await axios.post('/auth/logout', data);
+        const res = await axios.get('/auth/logout', data);
         return res?.data;
     } catch (error) {
         throw new Error(error || 'Failed to login');
