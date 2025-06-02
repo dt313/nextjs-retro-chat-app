@@ -171,11 +171,11 @@ const types = [
     },
     {
         id: 6,
-        name: 'Other',
+        name: 'Web',
     },
     {
         id: 7,
-        name: 'Other',
+        name: 'App',
     },
     {
         id: 8,
