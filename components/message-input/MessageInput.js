@@ -89,6 +89,8 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
         setValue('');
         setFiles([]);
         setPreviewFiles([]);
+
+        handleCloseReplyBox();
     };
 
     const handleKeyDown = (e) => {

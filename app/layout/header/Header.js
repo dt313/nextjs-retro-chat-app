@@ -61,14 +61,14 @@ function Header() {
             </h1>
             {isAuthenticated ? (
                 <div className={cx('header-menu')}>
-                    {!pathname.startsWith('/conversation') && (
+                    {
                         <span className={cx('hmenu-item', 'message')} onClick={() => router.push('/conversation')}>
                             {unReadConversation > 0 && (
                                 <span className={cx('message-count')}>{unReadConversation}</span>
                             )}
                             <MessageIcon small />
                         </span>
-                    )}
+                    }
 
                     <span className={cx('hmenu-item')} onClick={() => setIsOpenCreation(true)}>
                         <Icon element={<PiNotePencilFill />} />
