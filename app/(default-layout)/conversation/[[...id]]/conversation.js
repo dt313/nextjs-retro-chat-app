@@ -123,7 +123,7 @@ function Conversation({ id }) {
                 }
             }
         } catch (error) {
-            dispatch(addToast({ type: 'error', content: error.message }));
+            // dispatch(addToast({ type: 'error', content: error.message }));
         }
     };
 
