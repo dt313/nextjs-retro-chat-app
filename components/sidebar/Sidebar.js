@@ -28,7 +28,7 @@ import {
 import { findConversation, initConversation, newConversation } from '@/redux/actions/conversations-action';
 import { addToast } from '@/redux/actions/toast-action';
 
-import styles from './LeftMessage.module.scss';
+import styles from './Sidebar.module.scss';
 
 const cx = classNames.bind(styles);
 

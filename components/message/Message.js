@@ -73,10 +73,6 @@ function Message({
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(closeReplyBox());
-    }, []);
-
-    useEffect(() => {
         setReadUsers(getReadUser(id));
     }, [id, getReadUser]);
 

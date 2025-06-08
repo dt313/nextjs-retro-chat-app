@@ -38,3 +38,31 @@
     font-weight: 500;
     margin: 4px 0;
 }
+
+@keyframes slideUp {
+    0% {
+        bottom: 0px;
+    }
+    100% {
+        bottom: 12px;
+    }
+}
+
+// scroll btn
+.scroll-btn {
+    position: absolute;
+    bottom: 12px;
+    right: 50%;
+    display: block;
+    @include center-align;
+    width: 36px;
+    height: 36px;
+    background-color: var(--red);
+    border-radius: 10rem;
+    animation: slideUp 0.4s cubic-bezier(0.39, 0.575, 0.565, 1);
+
+    &:hover {
+        background-color: #924434;
+        cursor: pointer;
+    }
+}

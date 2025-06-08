@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
@@ -10,19 +10,18 @@ import { useTypingStatus } from '@/hooks';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { redirect, useRouter, useSearchParams } from 'next/navigation';
-import { BsThreeDots } from 'react-icons/bs';
-import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
+import { RiArrowRightSLine } from 'react-icons/ri';
 import { TbPinFilled } from 'react-icons/tb';
 import { useDispatch, useSelector } from 'react-redux';
 
-import Avatar from '@/components/avatar';
 import CloseIcon from '@/components/close-icon';
+import ConversationHeaderLoading from '@/components/conversation-header/ConversationHeaderLoading';
+import ConversationInformationLoading from '@/components/conversation-information/ConversationInformationLoading';
 import Icon from '@/components/icon';
 import { SpinnerLoader } from '@/components/loading';
 import MessageBox from '@/components/message-box';
 import MessageIcon from '@/components/message-icon';
 import MessageInput from '@/components/message-input';
-import RightMessage from '@/components/right-message';
 
 import useBreakpoint from '@/hooks/useBreakpoint';
 
@@ -33,13 +32,20 @@ import { getRoleFromConversation, getTargetIdFromConversation } from '@/helpers/
 import { checkStatus, getAvatarFromConversation, getNameFromConversation, getOnlineUsers } from '@/helpers';
 
 import { readLastMessage } from '@/redux/actions/conversations-action';
-import { closeReplyBox } from '@/redux/actions/reply-box-action';
 import { addToast } from '@/redux/actions/toast-action';
 
 import styles from './conversation.module.scss';
 
-const LeftMessage = dynamic(() => import('../../../../components/left-message'), {
+const SideBar = dynamic(() => import('../../../../components/sidebar'), {
     loading: () => <SpinnerLoader small />,
+});
+
+const ConversationInformation = dynamic(() => import('../../../../components/conversation-information'), {
+    loading: () => <ConversationInformationLoading />,
+});
+
+const ConversationHeader = dynamic(() => import('../../../../components/conversation-header'), {
+    loading: () => <ConversationHeaderLoading />,
 });
 
 const LIMIT = 30;
@@ -59,7 +65,7 @@ function Conversation({ id }) {
     const [transition, setTransition] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
-    const [isLoadingRight, setIsLoadingRight] = useState(false);
+    const [isLoadConversation, setIsLoadConversation] = useState(false);
 
     const searchParams = useSearchParams();
     const searchMessageId = searchParams.get('message');
@@ -67,7 +73,6 @@ function Conversation({ id }) {
 
     const { user: me } = useSelector((state) => state.auth);
     const { list } = useSelector((state) => state.conversations);
-    const { isOpenReplyBox, replyData } = useSelector((state) => state.replyBox);
     const { list: onlineUserList } = useSelector((state) => state.onlineUsers);
 
     const breakpoint = useBreakpoint();
@@ -161,9 +166,9 @@ function Conversation({ id }) {
                     }
                 }
 
-                if (isOpenReplyBox) {
-                    formData.append('replyTo', replyData.message.id);
-                    formData.append('replyType', replyData.message.type);
+                if (message.replyData) {
+                    formData.append('replyTo', message.replyData.message.id);
+                    formData.append('replyType', message.replyData.message.type);
                 }
                 formData.append('isGroup', conversation.isGroup);
                 formData.append('content', message.content);
@@ -179,7 +184,7 @@ function Conversation({ id }) {
                 setIsLoading(false);
             }
         },
-        [id, conversation, isOpenReplyBox, replyData, dispatch],
+        [id, conversation, dispatch],
     );
 
     const toggleRightSide = useCallback(() => {
@@ -279,18 +284,10 @@ function Conversation({ id }) {
 
     // Show loading when conversation id changes for RightMessage
     useEffect(() => {
-        setIsLoadingRight(true);
-        const timeout = setTimeout(() => setIsLoadingRight(false), 500); // Simulate loading, adjust as needed
+        setIsLoadConversation(true);
+        const timeout = setTimeout(() => setIsLoadConversation(false), 500); // Simulate loading, adjust as needed
         return () => clearTimeout(timeout);
     }, [id]);
-
-    const handleRedirectToConversations = useCallback(() => {
-        redirect('/conversation');
-    }, []);
-
-    const handleCloseReplyBox = useCallback(() => {
-        dispatch(closeReplyBox());
-    }, []);
 
     const handleIsTyping = useCallback((isTyping) => {
         setIsTyping(isTyping);
@@ -311,45 +308,23 @@ function Conversation({ id }) {
                 <meta name="description" content="Cùng nói chuyện nào !!" />
             </Head>
             <div className={cx('left-side', isShowLeft ? 'show' : 'hide', { transition: transition })}>
-                <LeftMessage className={cx('left-wrap')} />
+                <SideBar className={cx('left-wrap')} />
                 <span className={cx('toggle-btn')} onClick={toggleLeftSide}></span>
             </div>
             {id ? (
                 <div className={cx('content', isShowContent ? 'show' : 'hide')}>
-                    <div className={cx('c-header')}>
-                        <Icon
-                            className={cx('c-close-btn')}
-                            element={<RiArrowLeftSLine />}
-                            onClick={handleRedirectToConversations}
+                    {isLoadConversation ? (
+                        <ConversationHeaderLoading />
+                    ) : (
+                        <ConversationHeader
+                            isGroup={conversation?.isGroup}
+                            thumbnail={getAvatarFromConversation(conversation, me._id)}
+                            name={getNameFromConversation(conversation, me._id)}
+                            status={checkOnline(conversation)}
+                            onlineCount={onlineCount}
+                            onClickDotIcon={toggleRightSide}
                         />
-                        <div className={cx('user-info')}>
-                            <Avatar
-                                src={getAvatarFromConversation(conversation, me._id)}
-                                className={cx('h-avatar')}
-                                size={44}
-                            />
-                            <div className={cx('user-info-text')}>
-                                <strong className={cx('user-name')}>
-                                    {getNameFromConversation(conversation, me._id)}
-                                </strong>
-
-                                <div
-                                    className={cx('user-status', {
-                                        online: !conversation?.isGroup ? checkOnline(conversation) : onlineCount > 0,
-                                    })}
-                                >
-                                    {!conversation?.isGroup
-                                        ? checkOnline(conversation)
-                                            ? 'Đang hoạt động'
-                                            : 'Không hoạt động'
-                                        : onlineCount > 0
-                                          ? `${onlineCount} người đang hoạt động`
-                                          : 'Không có ai hoạt động'}
-                                </div>
-                            </div>
-                        </div>
-                        <Icon className={cx('dots-icon')} element={<BsThreeDots />} onClick={toggleRightSide} />
-                    </div>
+                    )}
                     <div className={cx('c-content')} onClick={handleReadLastMessage}>
                         {conversation?.pinnedMessage && (
                             <div className={cx('pin')}>
@@ -377,29 +352,6 @@ function Conversation({ id }) {
                             participants={conversation?.participants}
                             isGroup={conversation?.isGroup}
                         />
-                        {isOpenReplyBox && (
-                            <div className={cx('reply-box')}>
-                                <div className={cx('reply-content')}>
-                                    <strong className={cx('reply-name')}>
-                                        Đang trả lời{' '}
-                                        {me._id === replyData.user?._id ? 'chính bạn' : replyData.user.fullName}
-                                    </strong>
-                                    <p className={cx('reply-text')}>
-                                        {replyData?.message.type === 'ImageAttachment'
-                                            ? 'Trả lời hình ảnh'
-                                            : replyData?.message.type === 'Attachment'
-                                              ? 'Trả lời tệp đính kèm'
-                                              : replyData.message.content}
-                                    </p>
-                                </div>
-                                <CloseIcon
-                                    theme="dark"
-                                    small
-                                    className={cx('reply-close')}
-                                    onClick={handleCloseReplyBox}
-                                />
-                            </div>
-                        )}
                     </div>
                     <div className={cx('c-footer')} onClick={handleReadLastMessage}>
                         <MessageInput
@@ -426,10 +378,10 @@ function Conversation({ id }) {
             >
                 <Icon className={cx('r-close-btn')} element={<RiArrowRightSLine />} onClick={toggleRightSide} />
                 {id &&
-                    (isLoadingRight ? (
-                        <RightMessage.Skeleton></RightMessage.Skeleton>
+                    (isLoadConversation ? (
+                        <ConversationInformationLoading></ConversationInformationLoading>
                     ) : (
-                        <RightMessage
+                        <ConversationInformation
                             hide={!isShowRight}
                             data={conversation}
                             isGroup={conversation?.isGroup}

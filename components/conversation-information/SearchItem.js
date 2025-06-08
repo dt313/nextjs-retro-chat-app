@@ -4,12 +4,11 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
 import Avatar from '@/components/avatar';
 
-import styles from './RightMessage.module.scss';
+import styles from './ConversationInformation.module.scss';
 
 const cx = classNames.bind(styles);
 

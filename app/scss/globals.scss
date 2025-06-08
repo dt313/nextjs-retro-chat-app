@@ -140,3 +140,23 @@ a {
         background-color: #1dbfaf;
     }
 }
+
+// Scrollbar
+
+html *::-webkit-scrollbar {
+    border-radius: 0;
+    width: 8px;
+}
+
+html *::-webkit-scrollbar-thumb {
+    background: #ffffff;
+    border-radius: 8px;
+}
+
+html *::-webkit-scrollbar-track {
+    background: #ede0d0;
+}
+
+html *::-webkit-scrollbar-thumb:hover {
+    background: #939393;
+}

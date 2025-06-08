@@ -10,12 +10,14 @@ import { useAutoResize } from '@/hooks';
 import { BsImage } from 'react-icons/bs';
 import { CgAttachment } from 'react-icons/cg';
 import { FaArrowUp } from 'react-icons/fa6';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 
 import CloseIcon from '@/components/close-icon';
 import Icon from '@/components/icon';
 import Image from '@/components/image';
+
+import { closeReplyBox } from '@/redux/actions/reply-box-action';
 
 import { SpinnerLoader } from '../loading';
 import styles from './MessageInput.module.scss';
@@ -30,6 +32,9 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
     const [previewFiles, setPreviewFiles] = useState([]);
 
     const { user: me } = useSelector((state) => state.auth);
+    const { isOpenReplyBox, replyData } = useSelector((state) => state.replyBox);
+    const dispatch = useDispatch();
+
     const handleChange = (e) => {
         setValue(e.target.value);
     };
@@ -78,6 +83,7 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
         onSubmit({
             content: value,
             attachments: files.length > 0 ? files : null,
+            replyData: isOpenReplyBox ? replyData : null,
         });
 
         setValue('');
@@ -134,75 +140,104 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
         setFiles((prev) => prev.filter((_, index) => previewFiles[index].id !== id));
     };
 
+    const handleCloseReplyBox = () => {
+        dispatch(closeReplyBox());
+    };
+
+    console.log(isOpenReplyBox, replyData);
     return (
         <div className={cx('wrapper')}>
-            {previewFiles.length > 0 && (
-                <div className={cx('preview')}>
-                    {previewFiles.map((item) => {
-                        if (item.type === 'image') {
-                            return (
-                                <div className={cx('preview-image')} key={item.id}>
-                                    <CloseIcon
-                                        theme="dark"
-                                        small
-                                        className={cx('preview-delete')}
-                                        onClick={() => handleDeleteFile(item.id)}
-                                    />
-                                    <Image className={cx('preview-img')} src={item.src} width={100} height={100} />
-                                </div>
-                            );
-                        }
-                        if (item.type === 'file') {
-                            return (
-                                <div className={cx('preview-file')} key={item.id}>
-                                    <CloseIcon
-                                        theme="dark"
-                                        small
-                                        className={cx('preview-delete')}
-                                        onClick={() => handleDeleteFile(item.id)}
-                                    />
-                                    <span className={cx('preview-file-name')}>{item.name}</span>
-                                </div>
-                            );
-                        }
-                    })}
+            {isOpenReplyBox && (
+                <div className={cx('reply-box')}>
+                    <div className={cx('reply-content')}>
+                        <strong className={cx('reply-name')}>
+                            Đang trả lời {me._id === replyData.user?._id ? 'chính bạn' : replyData.user.fullName}
+                        </strong>
+                        <p className={cx('reply-text')}>
+                            {replyData?.message.type === 'ImageAttachment'
+                                ? 'Trả lời hình ảnh'
+                                : replyData?.message.type === 'Attachment'
+                                  ? 'Trả lời tệp đính kèm'
+                                  : replyData.message.content}
+                        </p>
+                    </div>
+                    <CloseIcon theme="dark" small className={cx('reply-close')} onClick={handleCloseReplyBox} />
                 </div>
             )}
-            <textarea
-                ref={textRef}
-                className={cx('input')}
-                type="text"
-                placeholder="Nhập tin nhắn..."
-                value={value}
-                onFocus={handleFocus}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                onKeyDown={handleKeyDown}
-            />
-            <div className={cx('extra')}>
-                <div className={cx('attachment')}>
-                    <Icon className={cx('attach-icon')} medium element={<BsImage />} onClick={handleOpenFileInput} />
-                    <Icon
-                        className={cx('attach-icon')}
-                        medium
-                        element={<CgAttachment />}
-                        onClick={handleOpenFileInput}
-                    />
-                    <input
-                        type="file"
-                        hidden
-                        ref={fileInputRef}
-                        accept={FILE_ACCEPT_LIST}
-                        multiple
-                        onChange={handleFileChange}
-                    />
-                </div>
-                <div className={'submit'}>
-                    {!isLoading ? (
-                        <Icon className={cx('submit-icon')} element={<FaArrowUp />} medium onClick={handleSubmit} />
-                    ) : (
-                        <SpinnerLoader small />
-                    )}
+            <div className={cx('container')}>
+                {previewFiles.length > 0 && (
+                    <div className={cx('preview')}>
+                        {previewFiles.map((item) => {
+                            if (item.type === 'image') {
+                                return (
+                                    <div className={cx('preview-image')} key={item.id}>
+                                        <CloseIcon
+                                            theme="dark"
+                                            small
+                                            className={cx('preview-delete')}
+                                            onClick={() => handleDeleteFile(item.id)}
+                                        />
+                                        <Image className={cx('preview-img')} src={item.src} width={100} height={100} />
+                                    </div>
+                                );
+                            }
+                            if (item.type === 'file') {
+                                return (
+                                    <div className={cx('preview-file')} key={item.id}>
+                                        <CloseIcon
+                                            theme="dark"
+                                            small
+                                            className={cx('preview-delete')}
+                                            onClick={() => handleDeleteFile(item.id)}
+                                        />
+                                        <span className={cx('preview-file-name')}>{item.name}</span>
+                                    </div>
+                                );
+                            }
+                        })}
+                    </div>
+                )}
+                <textarea
+                    ref={textRef}
+                    className={cx('input')}
+                    type="text"
+                    placeholder="Nhập tin nhắn..."
+                    value={value}
+                    onFocus={handleFocus}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    onKeyDown={handleKeyDown}
+                />
+                <div className={cx('extra')}>
+                    <div className={cx('attachment')}>
+                        <Icon
+                            className={cx('attach-icon')}
+                            medium
+                            element={<BsImage />}
+                            onClick={handleOpenFileInput}
+                        />
+                        <Icon
+                            className={cx('attach-icon')}
+                            medium
+                            element={<CgAttachment />}
+                            onClick={handleOpenFileInput}
+                        />
+                        <input
+                            type="file"
+                            hidden
+                            ref={fileInputRef}
+                            accept={FILE_ACCEPT_LIST}
+                            multiple
+                            onChange={handleFileChange}
+                        />
+                    </div>
+                    <div className={'submit'}>
+                        {!isLoading ? (
+                            <Icon className={cx('submit-icon')} element={<FaArrowUp />} medium onClick={handleSubmit} />
+                        ) : (
+                            <SpinnerLoader small />
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

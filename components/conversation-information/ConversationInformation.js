@@ -10,8 +10,6 @@ import { useRouter } from 'next/navigation';
 import { FaRegUserCircle } from 'react-icons/fa';
 import { IoSearch } from 'react-icons/io5';
 import { TiUserAdd } from 'react-icons/ti';
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css';
 import { useDispatch, useSelector } from 'react-redux';
 
 import AttachFile from '@/components/attach-file';
@@ -25,6 +23,7 @@ import GroupInvitation from '@/components/group-invitation';
 import GroupMembers from '@/components/group-members';
 import Icon from '@/components/icon';
 import Information from '@/components/information';
+import { SpinnerLoader } from '@/components/loading';
 
 import { conversationService } from '@/services';
 
@@ -34,13 +33,12 @@ import { calculateTime, getAvatarFromConversation, getNameFromConversation } fro
 
 import { addToast } from '@/redux/actions/toast-action';
 
-import { SpinnerLoader } from '../loading';
-import styles from './RightMessage.module.scss';
+import styles from './ConversationInformation.module.scss';
 import SearchItem from './SearchItem';
 
 const cx = classNames.bind(styles);
 
-function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
+function ConversationInformation({ hide, isGroup = true, data = {}, onClose }) {
     const [isShowSearch, setIsShowSearch] = useState(false);
     const [isShowInvitation, setIsShowInvitation] = useState(false);
     const [simValue, setSimValue] = useState('');
@@ -250,52 +248,18 @@ function RightMessage({ hide, isGroup = true, data = {}, onClose }) {
     );
 }
 
-RightMessage.propTypes = {
+ConversationInformation.propTypes = {
     hide: PropTypes.bool,
     isGroup: PropTypes.bool,
     data: PropTypes.object,
     onClose: PropTypes.func,
 };
-RightMessage.defaultProps = {
+ConversationInformation.defaultProps = {
     hide: false,
     isGroup: true,
     data: {},
     onClose: () => {},
 };
 
-RightMessage.Skeleton = function RightMessageSkeleton() {
-    return (
-        <div className={cx('wrapper')}>
-            <div className={cx('header')}>
-                <SkeletonTheme baseColor="#e0d4c4" highlightColor="#f5f1ec">
-                    <Skeleton circle width={96} height={96} />
-                    <Skeleton width={150} height={24} />
-                </SkeletonTheme>
-            </div>
-
-            <div className={cx('action')}>
-                <SkeletonTheme baseColor="#e0d4c4" highlightColor="#f5f1ec">
-                    <Skeleton width={32} height={32} circle />
-                    <Skeleton width={32} height={32} circle />
-                    <Skeleton width={32} height={32} circle />
-                </SkeletonTheme>
-            </div>
-
-            <div className={cx('information')}>
-                <SkeletonTheme baseColor="#e0d4c4" highlightColor="#f5f1ec">
-                    <Skeleton count={3} width="100%" height={30} />
-                </SkeletonTheme>
-            </div>
-
-            <div className={cx('details')} style={{ marginTop: '20px' }}>
-                <SkeletonTheme baseColor="#e0d4c4" highlightColor="#f5f1ec">
-                    <Skeleton count={4} width="100%" height={20} />
-                </SkeletonTheme>
-            </div>
-        </div>
-    );
-};
-
-const MemorizedRightMessage = memo(RightMessage);
-MemorizedRightMessage.Skeleton = RightMessage.Skeleton;
+const MemorizedRightMessage = memo(ConversationInformation);
 export default MemorizedRightMessage;

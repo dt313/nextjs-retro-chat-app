@@ -1,4 +1,12 @@
+@use '/app/scss/mixins.scss' as *;
+
 .wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.container {
     width: 100%;
     height: 100%;
     display: flex;
@@ -112,5 +120,48 @@
         overflow: hidden;
         white-space: nowrap;
         width: 100%;
+    }
+}
+
+// reply box
+
+.reply-box {
+    width: 100%;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+
+    .reply-content {
+        font-family: var(--font-family);
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .reply-name {
+        @include font-default;
+        text-align: left;
+        font-size: 1.5rem;
+    }
+
+    .reply-text {
+        display: inline-block;
+        @include font-default;
+        font-size: 1.4rem;
+        color: var(--text-low-color);
+        text-align: left;
+        margin-top: 4px;
+        max-width: 500px;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .reply-close {
+        margin-left: 12px;
     }
 }

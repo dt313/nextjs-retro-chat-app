@@ -8,7 +8,7 @@ import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
 import dynamic from 'next/dynamic';
-import { check } from 'prettier';
+import { HiArrowDown } from 'react-icons/hi';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Avatar from '@/components/avatar';
@@ -18,8 +18,10 @@ import { conversationService } from '@/services';
 
 import { getMessageNotification } from '@/helpers/conversation-info';
 
+import { closeReplyBox } from '@/redux/actions/reply-box-action';
 import { addToast } from '@/redux/actions/toast-action';
 
+import Icon from '../icon/Icon';
 import styles from './MessageBox.module.scss';
 
 const Message = dynamic(() => import('../message'), {});
@@ -44,13 +46,17 @@ function MessageBox({
     const [isTopLoading, setIsTopLoading] = useState(false);
     const [isBottomLoading, setIsBottomLoading] = useState(false);
     const [isAfterFinish, setIsAfterFinish] = useState(true);
+    const [isShowScrollBottom, setIsShowScrollBottom] = useState(false);
     const { user: me } = useSelector((state) => state.auth);
 
     const dispatch = useDispatch();
     const shouldScrollBottom = useRef(true);
     useEffect(() => {
+        const container = scrollContainerRef.current;
+        if (!container) return;
+
         if (shouldScrollBottom.current) {
-            messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+            container.scrollTop = container.scrollHeight;
         }
         shouldScrollBottom.current = true;
     }, [list]);
@@ -79,6 +85,10 @@ function MessageBox({
             eventBus.off(`no-typing-${conversationId}`, handleNoTyping);
         };
     }, [eventBus]);
+
+    useEffect(() => {
+        dispatch(closeReplyBox());
+    }, []);
 
     const handleLoadMoreAfterMessage = async () => {
         try {
@@ -142,6 +152,10 @@ function MessageBox({
                 });
             });
         }
+
+        const isNearBottom =
+            container.scrollTop + container.clientHeight >= container.scrollHeight - container.clientHeight;
+        setIsShowScrollBottom(!isNearBottom);
     };
 
     useEffect(() => {
@@ -197,6 +211,10 @@ function MessageBox({
 
         return isCreator;
     }, [conversationId, participants, isGroup, me._id]);
+
+    const handleClickScrollBottom = () => {
+        messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
 
     return (
         <div className={cx('wrapper')} ref={scrollContainerRef} onScroll={handleScroll}>
@@ -290,6 +308,12 @@ function MessageBox({
                     </div>
                 );
             })}
+
+            {isShowScrollBottom && (
+                <span className={cx('scroll-btn')} onClick={handleClickScrollBottom}>
+                    <Icon element={<HiArrowDown />} medium />
+                </span>
+            )}
 
             {typingUsers.length > 0 && (
                 <div className={cx('typing-users')}>
