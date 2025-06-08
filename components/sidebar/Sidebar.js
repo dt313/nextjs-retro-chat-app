@@ -113,25 +113,23 @@ function LeftMessage({ className }) {
                 />
             </div>
             <div className={cx('message-list')}>
-                {list.map((conv, index) =>
-                    !isLoading ? (
-                        <ConversationPreview
-                            className={cx('message-preview')}
-                            key={conv._id}
-                            slug={conv._id}
-                            avatar={getAvatarFromConversation(conv, me._id)}
-                            name={getNameFromConversation(conv, me._id)}
-                            message={getLastMessageContent(conv.lastMessage, me._id)}
-                            time={calculateTime(conv.lastMessage?.sentAt)}
-                            isReaded={checkIsRead(conv.lastMessage.readedBy, me._id)}
-                            active={activeId === conv._id}
-                            isOnline={checkOnline(conv)}
-                            isGroup={conv.isGroup}
-                        />
-                    ) : (
-                        <ConversationPreview.Skeleton key={index} />
-                    ),
-                )}
+                {!isLoading
+                    ? list.map((conv) => (
+                          <ConversationPreview
+                              className={cx('message-preview')}
+                              key={conv._id}
+                              slug={conv._id}
+                              avatar={getAvatarFromConversation(conv, me._id)}
+                              name={getNameFromConversation(conv, me._id)}
+                              message={getLastMessageContent(conv.lastMessage, me._id)}
+                              time={calculateTime(conv.lastMessage?.sentAt)}
+                              isReaded={checkIsRead(conv.lastMessage.readedBy, me._id)}
+                              active={activeId === conv._id}
+                              isOnline={checkOnline(conv)}
+                              isGroup={conv.isGroup}
+                          />
+                      ))
+                    : [1, 2, 3, 4].map((key) => <ConversationPreview.Skeleton key={key} />)}
             </div>
         </div>
     );

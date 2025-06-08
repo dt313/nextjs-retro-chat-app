@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
+import { Skeleton, SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
 import Avatar from '@/components/avatar';

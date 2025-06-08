@@ -129,43 +129,41 @@ function SearchContent() {
                 </div>
 
                 <div className={cx('list')}>
-                    {list.map((item, index) => {
-                        if (filterValue === 'user') {
-                            return !isLoading ? (
-                                <UserCard
-                                    key={item._id}
-                                    id={item._id}
-                                    slug={item.username}
-                                    name={item.fullName}
-                                    email={item.email}
-                                    avatar={item.avatar}
-                                    isFriendRequestByMe={item.isFriendRequestedByMe}
-                                    isFriendRequestByOther={item.isFriendRequestedByOther}
-                                    isFriend={item.isFriend}
-                                    createdAt={item.createdAt}
-                                />
-                            ) : (
-                                <UserCard.Skeleton key={index} />
-                            );
-                        }
-                        if (filterValue === 'group') {
-                            return !isLoading ? (
-                                <GroupCard
-                                    key={item._id}
-                                    id={item._id}
-                                    name={item.name}
-                                    createdAt={item.createdAt}
-                                    members={item.participants?.length}
-                                    thumbnail={item.thumbnail}
-                                    isJoined={item.isJoined}
-                                    isPrivate={item.isPrivate}
-                                    participants={item.participants}
-                                />
-                            ) : (
-                                <UserCard.Skeleton key={index} />
-                            );
-                        }
-                    })}
+                    {!isLoading
+                        ? list.map((item) => {
+                              if (filterValue === 'user') {
+                                  return (
+                                      <UserCard
+                                          key={item._id}
+                                          id={item._id}
+                                          slug={item.username}
+                                          name={item.fullName}
+                                          email={item.email}
+                                          avatar={item.avatar}
+                                          isFriendRequestByMe={item.isFriendRequestedByMe}
+                                          isFriendRequestByOther={item.isFriendRequestedByOther}
+                                          isFriend={item.isFriend}
+                                          createdAt={item.createdAt}
+                                      />
+                                  );
+                              }
+                              if (filterValue === 'group') {
+                                  return (
+                                      <GroupCard
+                                          key={item._id}
+                                          id={item._id}
+                                          name={item.name}
+                                          createdAt={item.createdAt}
+                                          members={item.participants?.length}
+                                          thumbnail={item.thumbnail}
+                                          isJoined={item.isJoined}
+                                          isPrivate={item.isPrivate}
+                                          participants={item.participants}
+                                      />
+                                  );
+                              }
+                          })
+                        : [1, 2, 3, 4].map((key) => <UserCard.Skeleton key={key} />)}
                 </div>
             </div>
         </div>

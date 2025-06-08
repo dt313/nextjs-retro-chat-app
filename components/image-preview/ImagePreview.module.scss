@@ -125,7 +125,7 @@
     }
 
     .active .img {
-        border: 2px solid #333;
+        border: 2px solid var(--red);
         filter: brightness(1);
     }
 }
@@ -147,6 +147,7 @@
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 3rem !important;
+    z-index: 12;
 
     &:hover {
         color: #c4c4c4e6;

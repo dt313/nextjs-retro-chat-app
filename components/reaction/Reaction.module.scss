@@ -1,10 +1,10 @@
 .reaction {
-    padding: 4px;
+    padding: 2px 4px;
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 2;
-    border-radius: 9999px;
+    border-radius: 12px;
     box-shadow:
         rgba(0, 0, 0, 0.25) 0px 14px 28px,
         rgba(0, 0, 0, 0.22) 0px 10px 10px;
@@ -17,12 +17,13 @@
 .reaction.light {
     background-color: #ffffff;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    border: 1px solid #818181;
 }
 
 .icon-box {
-    height: 32px;
-    width: 32px;
-    margin: 4px;
+    height: 24px;
+    width: 24px;
+    margin: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
