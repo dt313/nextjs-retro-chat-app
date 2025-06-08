@@ -259,13 +259,15 @@ function Profile({ slug }) {
     };
 
     useEffect(() => {
-        document.title = type === 'user' ? basicInfo?.fullName : basicInfo?.name;
+        if (window) {
+            document.title = type === 'user' ? basicInfo?.fullName : basicInfo?.name;
+        }
     }, [type, basicInfo]);
 
     return (
         <div className={cx('wrapper')}>
             <Head>
-                <title>{document.title}</title>
+                <title>{document.title || 'Profile'}</title>
                 <meta name="description" content="Profile" />
             </Head>
             <Squares

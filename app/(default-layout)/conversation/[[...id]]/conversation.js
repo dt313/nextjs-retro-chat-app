@@ -294,17 +294,19 @@ function Conversation({ id }) {
     }, []);
 
     useEffect(() => {
-        if (!id) {
-            document.title = 'Cuộc trò chuyện';
-            return;
+        if (window) {
+            if (!id) {
+                document.title = 'Cuộc trò chuyện';
+                return;
+            }
+            document.title = getNameFromConversation(conversation, me._id, true);
         }
-        document.title = getNameFromConversation(conversation, me._id, true);
     }, [id, conversation]);
 
     return (
         <div className={cx('wrapper')}>
             <Head>
-                <title>{document.title}</title>
+                <title>{document?.title || 'Cuộc trò chuyện'}</title>
                 <meta name="description" content="Cùng nói chuyện nào !!" />
             </Head>
             <div className={cx('left-side', isShowLeft ? 'show' : 'hide', { transition: transition })}>
