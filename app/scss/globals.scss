@@ -145,11 +145,11 @@ a {
 
 html *::-webkit-scrollbar {
     border-radius: 0;
-    width: 8px;
+    width: 4px;
 }
 
 html *::-webkit-scrollbar-thumb {
-    background: #ffffff;
+    background: #444;
     border-radius: 8px;
 }
 
@@ -158,5 +158,5 @@ html *::-webkit-scrollbar-track {
 }
 
 html *::-webkit-scrollbar-thumb:hover {
-    background: #939393;
+    background: #666;
 }

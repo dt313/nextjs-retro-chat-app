@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
@@ -38,6 +38,10 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
     const handleChange = (e) => {
         setValue(e.target.value);
     };
+
+    useEffect(() => {
+        if (isOpenReplyBox) textRef.current.focus();
+    }, [replyData, isOpenReplyBox]);
 
     const handleFocus = () => {
         const socket = getSocket();
@@ -146,7 +150,6 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
         dispatch(closeReplyBox());
     };
 
-    console.log(isOpenReplyBox, replyData);
     return (
         <div className={cx('wrapper')}>
             {isOpenReplyBox && (

@@ -267,7 +267,7 @@ function Profile({ slug }) {
     return (
         <div className={cx('wrapper')}>
             <Head>
-                <title>{document.title || 'Profile'}</title>
+                <title>{document?.title || 'Profile'}</title>
                 <meta name="description" content="Profile" />
             </Head>
             <Squares
