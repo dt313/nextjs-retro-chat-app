@@ -10,6 +10,7 @@ import { attachmentService } from '@/services';
 
 import { addToast } from '@/redux/actions/toast-action';
 
+import ExtraDescription from '../extra-description';
 import { SpinnerLoader } from '../loading';
 import styles from './AttachFile.module.scss';
 import File from './File';
@@ -83,7 +84,9 @@ function AttachFile({ conversationId }) {
                 </div>
             )}
 
-            {files.length === 0 && !isLoading && <p className={cx('no-content')}>Không có file nào</p>}
+            {files.length === 0 && !isLoading && (
+                <ExtraDescription style={{ textAlign: 'start' }}>Không có file nào</ExtraDescription>
+            )}
         </div>
     );
 }

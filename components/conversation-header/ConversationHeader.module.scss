@@ -6,6 +6,7 @@
     display: flex;
     align-items: center;
     padding: 0 24px;
+
     position: relative;
     @include respond-to('mobile') {
         padding-left: 64px;
@@ -13,9 +14,11 @@
 }
 
 .user-info {
-    width: 100%;
     display: flex;
+    width: 100%;
     height: 100%;
+    max-width: calc(100% - 36px);
+
     align-items: center;
 }
 
@@ -23,9 +26,18 @@
     margin-right: 8px;
 }
 
+.dots-icon {
+    width: 36px;
+}
+
 .dots-icon:hover {
     cursor: pointer;
     opacity: 0.5;
+}
+
+.user-info-text {
+    max-width: calc(100% - 52px);
+    width: 100%;
 }
 
 .user-name {
@@ -33,6 +45,7 @@
     font-family: Lora;
     color: var(--foreground);
     font-size: 1.5rem;
+    width: 100%;
     overflow: hidden;
     text-wrap: nowrap;
     white-space: nowrap;

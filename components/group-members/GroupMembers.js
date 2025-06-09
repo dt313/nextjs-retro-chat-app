@@ -103,29 +103,27 @@ function GroupMembers({ groupId, meRole }) {
                 />
             </div>
             <div className={cx('members')}>
-                {members?.length > 0 &&
-                    members.map((member, index) =>
-                        !isLoading ? (
-                            <GroupMember
-                                key={member._id}
-                                id={member.user._id}
-                                name={member?.user?.fullName}
-                                avatar={member.user.avatar}
-                                date={calculateTime(member.jointAt)}
-                                role={member.role}
-                                meRole={meRole}
-                                conversationId={member.conversationId}
-                                onClickDeleteAction={() =>
-                                    handleDeleteUserFromConversation(member.conversationId, member.user._id)
-                                }
-                                onClickChangRoleAction={() =>
-                                    handleChangeRole(member.conversationId, member.user._id, member.role)
-                                }
-                            />
-                        ) : (
-                            <GroupMember.Skeleton key={index} />
-                        ),
-                    )}
+                {!isLoading
+                    ? members?.length > 0 &&
+                      members.map((member) => (
+                          <GroupMember
+                              key={member._id}
+                              id={member.user._id}
+                              name={member?.user?.fullName}
+                              avatar={member.user.avatar}
+                              date={calculateTime(member.jointAt)}
+                              role={member.role}
+                              meRole={meRole}
+                              conversationId={member.conversationId}
+                              onClickDeleteAction={() =>
+                                  handleDeleteUserFromConversation(member.conversationId, member.user._id)
+                              }
+                              onClickChangRoleAction={() =>
+                                  handleChangeRole(member.conversationId, member.user._id, member.role)
+                              }
+                          />
+                      ))
+                    : [1, 2].map((key) => <GroupMember.Skeleton key={key} />)}
             </div>
         </div>
     );

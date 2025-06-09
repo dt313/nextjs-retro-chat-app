@@ -27,7 +27,7 @@
 
 .name {
     @include font-default;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 500;
     margin-bottom: 4px;
 }
@@ -38,8 +38,8 @@
     border-radius: 50%;
     background-color: var(--red);
     position: absolute;
-    bottom: 2px;
-    right: 0px;
+    bottom: 4px;
+    right: 2px;
 }
 
 .status.online {

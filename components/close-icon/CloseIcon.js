@@ -9,13 +9,14 @@ import styles from './CloseIcon.module.scss';
 
 const cx = classNames.bind(styles);
 
-function CloseIcon({ onClick, className, theme = 'light', small, large, medium }) {
+function CloseIcon({ onClick, className, theme = 'light', small, large, medium, noBackground }) {
     const classes = cx('wrapper', {
         [className]: className,
         [theme]: theme,
         small,
         large,
         medium,
+        noBackground,
     });
     return <Icon className={classes} element={<Close className={cx('icon')} />} onClick={onClick} />;
 }

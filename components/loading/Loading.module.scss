@@ -94,7 +94,12 @@
     }
 }
 
-.small {
+.spinner.small {
     width: 24px;
     --b: 4px;
+}
+
+.spinner.medium {
+    width: 32px;
+    --b: 6px;
 }

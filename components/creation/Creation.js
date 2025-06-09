@@ -8,6 +8,7 @@ import classNames from 'classnames/bind';
 
 import { types } from '@/config/ui-config';
 import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
 
 import SubmitButton from '@/components/auth-with-password/SubmitButton';
 import CloseIcon from '@/components/close-icon';
@@ -21,6 +22,10 @@ import { conversationService } from '@/services';
 
 import Validation from '@/utils/input-validation';
 
+import { addToast } from '@/redux/actions/toast-action';
+
+import { SpinnerLoader } from '../loading';
+import message from '../message';
 import styles from './Creation.module.scss';
 
 const cx = classNames.bind(styles);
@@ -46,11 +51,13 @@ function Creation({ onClose }) {
     });
 
     const [buttonDisable, setButtonDisable] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
 
     // const [activeTab, setActiveTab] = useState('user');
     // const [list, setList] = useState([]);
 
     const router = useRouter();
+    const dispatch = useDispatch();
 
     // useEffect(() => {
     //     setList(activeTab === 'user' ? users : groups);
@@ -72,20 +79,32 @@ function Creation({ onClose }) {
     };
 
     const handleCreate = async () => {
-        const formData = new FormData();
-        if (group.thumbnail) formData.append('thumbnail', group.thumbnail);
-        formData.append('name', group.name);
-        formData.append('type', group.type);
-        formData.append('description', group.description);
-        formData.append('rules', group.rules);
-        formData.append('password', group.password);
+        try {
+            setIsLoading(true);
+            const formData = new FormData();
+            if (group.thumbnail) formData.append('thumbnail', group.thumbnail);
+            formData.append('name', group.name);
+            formData.append('type', group.type);
+            formData.append('description', group.description);
+            formData.append('rules', group.rules);
+            formData.append('password', group.password);
 
-        const res = await conversationService.createGroupConversation(formData);
-        const { _id } = res;
+            const res = await conversationService.createGroupConversation(formData);
+            const { _id } = res;
 
-        if (_id) {
-            onClose();
-            router.push(`/conversation/${_id}`);
+            if (_id) {
+                onClose();
+                router.push(`/conversation/${_id}`);
+            }
+        } catch (error) {
+            dispatch(
+                addToast({
+                    type: 'error',
+                    content: error.message,
+                }),
+            );
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -253,7 +272,7 @@ function Creation({ onClose }) {
                             />
                         )}
                         <SubmitButton onClick={handleCreate} disable={buttonDisable}>
-                            Tạo
+                            {isLoading ? <SpinnerLoader small /> : 'Tạo'}
                         </SubmitButton>
                     </div>
                 </div>

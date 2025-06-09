@@ -53,6 +53,7 @@ function SearchContent() {
             if (type === 'user') {
                 const res = await userService.getUsers(searchValue);
                 const users = res.filter((user) => user._id !== me._id);
+
                 setList(users);
             } else if (type === 'group') {
                 const res = await groupService.getGroups(searchValue);

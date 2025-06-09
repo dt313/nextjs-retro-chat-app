@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 
 import { useDebounce } from '@/hooks';
-import { set } from 'lodash';
 import { IoSearch } from 'react-icons/io5';
 import { useDispatch } from 'react-redux';
 
@@ -17,6 +16,7 @@ import { groupService, invitationService } from '@/services';
 import { addToast } from '@/redux/actions/toast-action';
 
 import CloseIcon from '../close-icon';
+import ExtraDescription from '../extra-description';
 import Icon from '../icon';
 import styles from './GroupInvitation.module.scss';
 
@@ -93,21 +93,28 @@ function GroupInvitation({ onClose, id }) {
                 </div>
 
                 <div className={cx('list')}>
-                    {list.map((item, index) =>
-                        !isLoading ? (
-                            <User
-                                key={item._id}
-                                type="invitation"
-                                id={item._id}
-                                avatar={item.avatar}
-                                name={item.fullName}
-                                onClickInvitation={handleInvitation}
-                                onCancelInvitation={handleCancelInvitation}
-                                isSent={item.isRequested}
-                            />
-                        ) : (
-                            <User.Skeleton key={index} />
-                        ),
+                    {!isLoading
+                        ? list?.length > 0 &&
+                          list.map((item) => (
+                              <User
+                                  key={item._id}
+                                  type="invitation"
+                                  id={item._id}
+                                  avatar={item.avatar}
+                                  name={item.fullName}
+                                  onClickInvitation={handleInvitation}
+                                  onCancelInvitation={handleCancelInvitation}
+                                  isSent={item.isRequested}
+                              />
+                          ))
+                        : [1, 2].map((key) => <User.Skeleton key={key} />)}
+
+                    {!isLoading && debounceValue && !list.length && (
+                        <ExtraDescription>Không tìm thấy người dùng</ExtraDescription>
+                    )}
+
+                    {!isLoading && !debounceValue && !list.length && (
+                        <ExtraDescription>Không có người dùng</ExtraDescription>
                     )}
                 </div>
             </div>

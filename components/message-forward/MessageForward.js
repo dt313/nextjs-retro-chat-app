@@ -15,6 +15,7 @@ import { checkStatus } from '@/helpers';
 import { addToast } from '@/redux/actions/toast-action';
 
 import CloseIcon from '../close-icon';
+import ExtraDescription from '../extra-description';
 import Icon from '../icon';
 import Overlay from '../overlay';
 import User from '../user';
@@ -91,20 +92,26 @@ function MessageForward({ messageId, messageType, onClose }) {
                 </div>
 
                 <div className={cx('list')}>
-                    {list.map((item, index) =>
-                        !isLoading ? (
-                            <User
-                                key={item._id}
-                                type="forward"
-                                name={item.fullName}
-                                id={item._id}
-                                avatar={item.avatar}
-                                onClickForward={handleForwardMessage}
-                                isOnline={checkStatus(item._id, onlineUserList)}
-                            />
-                        ) : (
-                            <User.Skeleton key={index} />
-                        ),
+                    {!isLoading
+                        ? list.map((item) => (
+                              <User
+                                  key={item._id}
+                                  type="forward"
+                                  name={item.fullName}
+                                  id={item._id}
+                                  avatar={item.avatar}
+                                  onClickForward={handleForwardMessage}
+                                  isOnline={checkStatus(item._id, onlineUserList)}
+                              />
+                          ))
+                        : [1, 2].map((key) => <User.Skeleton key={key} />)}
+
+                    {!isLoading && debounceValue && !list.length && (
+                        <ExtraDescription>Không tìm thấy bạn bè</ExtraDescription>
+                    )}
+
+                    {!isLoading && !debounceValue && !list.length && (
+                        <ExtraDescription>Không có bạn bè</ExtraDescription>
                     )}
                 </div>
             </div>

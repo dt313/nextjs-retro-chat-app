@@ -16,10 +16,10 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import CloseIcon from '@/components/close-icon';
 import ConversationHeaderLoading from '@/components/conversation-header/ConversationHeaderLoading';
+import ConversationInformation from '@/components/conversation-information';
 import ConversationInformationLoading from '@/components/conversation-information/ConversationInformationLoading';
 import Icon from '@/components/icon';
 import { SpinnerLoader } from '@/components/loading';
-import MessageBox from '@/components/message-box';
 import MessageIcon from '@/components/message-icon';
 import MessageInput from '@/components/message-input';
 
@@ -40,12 +40,20 @@ const SideBar = dynamic(() => import('../../../../components/sidebar'), {
     loading: () => <SpinnerLoader small />,
 });
 
-const ConversationInformation = dynamic(() => import('../../../../components/conversation-information'), {
-    loading: () => <ConversationInformationLoading />,
-});
+// const ConversationInformation = dynamic(() => import('../../../../components/conversation-information'), {
+//     loading: () => <ConversationInformationLoading />,
+// });
 
 const ConversationHeader = dynamic(() => import('../../../../components/conversation-header'), {
     loading: () => <ConversationHeaderLoading />,
+});
+
+const MessageBox = dynamic(() => import('../../../../components/message-box'), {
+    loading: () => (
+        <div className={cx('loader')}>
+            <SpinnerLoader medium />
+        </div>
+    ),
 });
 
 const LIMIT = 30;
@@ -343,17 +351,23 @@ function Conversation({ id }) {
                                 )}
                             </div>
                         )}
-                        <MessageBox
-                            list={messagesList}
-                            conversationId={id}
-                            searchMessageId={searchMessageId}
-                            onLoadMore={handleLoadMoreBeforeMessage}
-                            isBeforeFinish={isBeforeFinish}
-                            setList={setMessageList}
-                            targetName={getNameFromConversation(conversation, me._id, true)}
-                            participants={conversation?.participants}
-                            isGroup={conversation?.isGroup}
-                        />
+                        {isLoadConversation ? (
+                            <div className={cx('loader')}>
+                                <SpinnerLoader medium />
+                            </div>
+                        ) : (
+                            <MessageBox
+                                list={messagesList}
+                                conversationId={id}
+                                searchMessageId={searchMessageId}
+                                onLoadMore={handleLoadMoreBeforeMessage}
+                                isBeforeFinish={isBeforeFinish}
+                                setList={setMessageList}
+                                targetName={getNameFromConversation(conversation, me._id, true)}
+                                participants={conversation?.participants}
+                                isGroup={conversation?.isGroup}
+                            />
+                        )}
                     </div>
                     <div className={cx('c-footer')} onClick={handleReadLastMessage}>
                         <MessageInput

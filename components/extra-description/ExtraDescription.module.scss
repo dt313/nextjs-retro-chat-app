@@ -1,0 +1,7 @@
+@use '/app/scss//mixins.scss' as *;
+.wrapper {
+    width: 100%;
+    @include font-default;
+    text-align: center;
+    font-size: 1.3rem;
+}

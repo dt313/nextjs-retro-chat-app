@@ -14,6 +14,7 @@ import { attachmentService } from '@/services';
 import { openImgPreview } from '@/redux/actions/img-preview-action';
 import { addToast } from '@/redux/actions/toast-action';
 
+import ExtraDescription from '../extra-description';
 import { SpinnerLoader } from '../loading';
 import styles from './AttachImages.module.scss';
 
@@ -88,7 +89,9 @@ function AttachImages({ conversationId }) {
                 )}
             </div>
 
-            {images.length === 0 && !isLoading && <p className={cx('no-content')}>Không có hình ảnh nào</p>}
+            {images.length === 0 && !isLoading && (
+                <ExtraDescription style={{ textAlign: 'start' }}>Không có hình ảnh nào</ExtraDescription>
+            )}
         </div>
     );
 }

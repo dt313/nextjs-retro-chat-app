@@ -6,8 +6,8 @@ import styles from './Loading.module.scss';
 
 const cx = classNames.bind(styles);
 
-function SpinnerLoader({ small = false, className }) {
-    return <div className={cx('spinner', small && 'small', className)}></div>;
+function SpinnerLoader({ small = false, medium = false, className }) {
+    return <div className={cx('spinner', small && 'small', medium && 'medium', className)}></div>;
 }
 
 export default memo(SpinnerLoader);

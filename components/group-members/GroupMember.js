@@ -12,12 +12,22 @@ import ActiveTippy from '@/components/active-tippy';
 import Avatar from '@/components/avatar';
 import Icon from '@/components/icon';
 
-import { getUserRole } from '@/helpers/conversation-info';
+import { ADMIN, OWNER, getUserRole } from '@/helpers/conversation-info';
 
-import Group from '../group/Group';
 import styles from './GroupMembers.module.scss';
 
 const cx = classNames.bind(styles);
+
+function RoleIcon({ role }) {
+    switch (role) {
+        case OWNER:
+            return <span className={cx('role-icon')}>👑</span>;
+        case ADMIN:
+            return <span className={cx('role-icon')}>⚙️</span>;
+        default:
+            return;
+    }
+}
 
 function GroupMember({ id, name, date, avatar, role, meRole, onClickDeleteAction, onClickChangRoleAction }) {
     const { user: me } = useSelector((state) => state.auth);
@@ -30,13 +40,15 @@ function GroupMember({ id, name, date, avatar, role, meRole, onClickDeleteAction
 
     return (
         <div className={cx('member')}>
-            <Avatar size={40} src={avatar} alt={name} />
+            <div className={cx('avatar-wrap')}>
+                <Avatar size={40} src={avatar} alt={name} />
+                <span className={cx('role')}>
+                    <RoleIcon role={getUserRole(role)} />
+                </span>
+            </div>
             <div className={cx('info')}>
                 <span className={cx('name')}>
-                    {name}{' '}
-                    <span className={cx('role')}>
-                        ( {getUserRole(role)} {me._id === id && ' - Bạn'} )
-                    </span>
+                    {name} {me._id === id && '(👤)'}{' '}
                 </span>
                 <span className={cx('date')}>{date}</span>
             </div>

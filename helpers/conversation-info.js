@@ -124,16 +124,20 @@ export const getReplyLabelName = (data, sender, meId) => {
     }
 };
 
+export const OWNER = 'Chủ nhóm';
+export const ADMIN = 'Quản trị viên';
+export const MEMBER = 'Thành viên';
+
 export const getUserRole = (role) => {
     switch (role) {
         case CONVERSATION_PARTICIPANT_ROLE_CREATOR:
-            return 'Chủ nhóm';
+            return OWNER;
         case CONVERSATION_PARTICIPANT_ROLE_ADMIN:
-            return 'Quản trị viên';
+            return ADMIN;
         case CONVERSATION_PARTICIPANT_ROLE_MEMBER:
-            return 'Thành viên';
+            return MEMBER;
         default:
-            return 'Thành viên';
+            return MEMBER;
     }
 };
 

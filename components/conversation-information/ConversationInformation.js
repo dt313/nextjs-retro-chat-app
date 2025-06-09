@@ -33,6 +33,7 @@ import { calculateTime, getAvatarFromConversation, getNameFromConversation } fro
 
 import { addToast } from '@/redux/actions/toast-action';
 
+import ExtraDescription from '../extra-description';
 import styles from './ConversationInformation.module.scss';
 import SearchItem from './SearchItem';
 
@@ -238,6 +239,15 @@ function ConversationInformation({ hide, isGroup = true, data = {}, onClose }) {
                             <div className={cx('sim-loader-wrapper')}>
                                 <SpinnerLoader className={cx('sim-loader')} small />
                             </div>
+                        )}
+
+                        {!simList.length && !debounceValue && !isLoading && (
+                            <ExtraDescription className={cx('extra-des')}>Bắt đầu tìm kiếm</ExtraDescription>
+                        )}
+                        {!simList.length && debounceValue && !isLoading && (
+                            <ExtraDescription className={cx('extra-des')}>
+                                Không có tin nhắn nào chứa key word này
+                            </ExtraDescription>
                         )}
                     </div>
                 </div>

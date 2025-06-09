@@ -241,15 +241,15 @@
     .imagesStack2 {
         align-items: flex-end;
         .m-image:nth-child(2) {
-            position: unset;
-            bottom: 0;
-            left: 0;
-        }
-        .m-image:first-child {
             position: relative;
-            top: 24px;
+            left: unset;
             right: 20%;
         }
+        // .m-image: {
+        //     position: relative;
+        //     top: 24px;
+        //     right: 20%;
+        // }
     }
 
     .imagesStack3 {
@@ -279,8 +279,9 @@
     }
 
     .imageReactions2 {
-        bottom: -16px;
+        bottom: 16px;
         left: unset;
+        right: 12%;
     }
 }
 
@@ -290,6 +291,7 @@
     flex-direction: column;
     padding: 4px 0;
     background-color: #fff;
+    border: 1px solid #818181;
     border-radius: 8px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 

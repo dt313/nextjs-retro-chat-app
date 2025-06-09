@@ -34,6 +34,7 @@ import { invitationService, notificationService } from '@/services';
 import { changeTypeNotification, loadNotification, readNotification } from '@/redux/actions/notification-action';
 import { addToast } from '@/redux/actions/toast-action';
 
+import CenterLoader from '../center-loader';
 import { SpinnerLoader } from '../loading';
 import NotificationItem from './NotificationItem';
 import styles from './NotifyBox.module.scss';
@@ -404,7 +405,11 @@ function NotifyBox({ list }) {
                     );
                 })}
 
-                {isLoading && <SpinnerLoader />}
+                {isLoading && (
+                    <CenterLoader>
+                        <SpinnerLoader small />
+                    </CenterLoader>
+                )}
             </div>
         </div>
     );

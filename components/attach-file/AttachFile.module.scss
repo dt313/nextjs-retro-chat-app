@@ -81,10 +81,6 @@
     box-shadow: var(--box-shadow);
 }
 
-.no-content {
-    @include font-default;
-}
-
 .loading {
     display: flex;
     align-items: center;

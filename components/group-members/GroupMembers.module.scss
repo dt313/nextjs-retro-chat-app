@@ -87,3 +87,14 @@
         background-color: #b7b7b7;
     }
 }
+
+.avatar-wrap {
+    position: relative;
+}
+
+.role-icon {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    font-size: 1.8rem;
+}
