@@ -25,6 +25,7 @@ function User({
     isOnline,
     id,
     type = 'user',
+    hideAddFriend = false,
     onClickInvitation,
     onClickForward,
     onCancelInvitation,
@@ -67,7 +68,7 @@ function User({
                 {type === 'user' && (
                     <>
                         <Icon className={cx('action-icon')} element={<FaFacebookMessenger />} medium />
-                        <Icon className={cx('action-icon')} element={<FiUserPlus />} medium />
+                        {!hideAddFriend && <Icon className={cx('action-icon')} element={<FiUserPlus />} medium />}
                     </>
                 )}
 

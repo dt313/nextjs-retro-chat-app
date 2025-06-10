@@ -36,11 +36,29 @@ export const getInvitationUsers = async (groupId, searchValue) => {
     }
 };
 
-export const getMembersOfGroup = async (groupId, name) => {
+export const getMembersOfGroup = async (groupId, name = '') => {
     try {
         const res = await axios.get(`/groups/${groupId}/members?name=${name}`);
         return res?.data;
     } catch (error) {
         throw new Error(error || 'Failed to fetch members of group');
+    }
+};
+
+export const getMembersOfGroupInProfile = async (groupId, name = '') => {
+    try {
+        const res = await axios.get(`/groups/${groupId}/members/in-profile?name=${name}`);
+        return res?.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to fetch members of group in profile');
+    }
+};
+
+export const getGroupByUserId = async (userId) => {
+    try {
+        const res = await axios.get(`/groups/of/${userId}`);
+        return res?.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to get group of user');
     }
 };

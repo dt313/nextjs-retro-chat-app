@@ -4,6 +4,8 @@ import classNames from 'classnames/bind';
 
 import { FaFileLines } from 'react-icons/fa6';
 
+import { formatBytes } from '@/helpers';
+
 import Icon from '../icon';
 import styles from './AttachFile.module.scss';
 
@@ -20,7 +22,7 @@ function File({ name, size, url, secondary, primary, className, onClick }) {
             <Icon className={cx('icon')} element={<FaFileLines />} />
             <div className={cx('file-info')}>
                 <strong className={cx('file-name')}>{name}</strong>
-                <span className={cx('file-size')}>{size}</span>
+                <span className={cx('file-size')}>{formatBytes(size)}</span>
             </div>
         </div>
     );

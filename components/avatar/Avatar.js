@@ -10,10 +10,11 @@ import dynamic from 'next/dynamic';
 
 import images from '@/assets/images';
 
+import AImage from '@/components/image';
+
 import styles from './Avatar.module.scss';
 
 const cx = classNames.bind(styles);
-const AImage = dynamic(() => import('@/components/image'), { ssr: false });
 
 function Avatar({ src, className, size = 60, fallback = images.noUser, ...props }) {
     const classes = cx('wrapper', {

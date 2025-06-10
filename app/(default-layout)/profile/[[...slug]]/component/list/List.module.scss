@@ -1,0 +1,13 @@
+@use '/app/scss/mixins.scss' as *;
+
+.wrapper {
+    display: flex;
+    padding: 12px;
+    flex-wrap: wrap;
+
+    @include respond-to('tablet') {
+        flex-wrap: nowrap;
+        flex-direction: column;
+        gap: 0;
+    }
+}

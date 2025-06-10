@@ -26,7 +26,7 @@ function AttachFile({ conversationId }) {
         try {
             setIsLoading(true);
             const res = await attachmentService.getFilesOfConversation(conversationId);
-            console.log(res);
+
             if (res && Array.isArray(res)) {
                 setFiles(res);
             }

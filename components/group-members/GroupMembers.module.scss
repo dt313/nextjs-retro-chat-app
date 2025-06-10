@@ -72,6 +72,8 @@
     padding: 8px 4px;
     border-radius: 4px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border: 1px solid #818181;
+
     z-index: 2;
 
     .action {
@@ -92,9 +94,6 @@
     position: relative;
 }
 
-.role-icon {
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-    font-size: 1.8rem;
+.avatar {
+    border: 1.5px solid #aeaeae88;
 }

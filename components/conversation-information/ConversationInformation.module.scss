@@ -74,11 +74,16 @@
     border: none;
     margin-top: 40px;
     @include font-default;
+    @include center-align;
     font-weight: 600;
     color: #fff;
     font-size: 1.5rem;
     cursor: pointer;
     background-color: var(--red);
+
+    .leave-icon {
+        margin-right: 4px;
+    }
 }
 
 .hide {

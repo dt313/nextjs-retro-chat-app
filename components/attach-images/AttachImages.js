@@ -47,7 +47,7 @@ function AttachImages({ conversationId }) {
         try {
             setIsLoading(true);
             const res = await attachmentService.getImagesOfConversation(conversationId);
-            console.log(res);
+
             if (res && Array.isArray(res)) {
                 setImages(res);
             }

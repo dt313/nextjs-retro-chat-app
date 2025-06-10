@@ -1,0 +1,37 @@
+.topic.active {
+    color: var(--red);
+}
+
+.topic {
+    margin: 8px;
+    padding: 0 8px;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    border: 1px solid transparent;
+    z-index: 3;
+    font-family: var(--font-family);
+    color: var(--text-color);
+
+    font-size: 1.5rem;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+
+    &:first-child {
+        margin-left: 0;
+    }
+
+    &:hover {
+        background-color: #d9d9d9;
+    }
+
+    .icon {
+        font-size: 1.6rem;
+        font-weight: bold;
+        margin-right: 4px;
+        margin-top: 4px;
+    }
+}

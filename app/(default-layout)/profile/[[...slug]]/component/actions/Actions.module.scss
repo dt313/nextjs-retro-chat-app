@@ -1,0 +1,55 @@
+@use '/app/scss/mixins.scss' as *;
+
+.actions {
+    margin-top: 32px;
+    gap: 20px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    margin-bottom: 12px;
+    margin-left: 12px;
+}
+
+.action-button {
+    height: 40px;
+    padding: 0 16px;
+    border-radius: 10px;
+    color: var(--text-color);
+    @include center-align;
+    border-radius: 100rem;
+    border: none;
+    outline: none;
+    cursor: pointer;
+
+    background: #acb6e5; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #86fde8, #acb6e5); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(
+        to right,
+        #86fde8,
+        #acb6e5
+    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+    // transition: background 0.2s ease;
+    .button-text {
+        margin-left: 10px;
+        font-size: 1.4rem;
+        font-weight: 600;
+        font-family: var(--font-family);
+        color: var(--text-color);
+        text-transform: uppercase;
+    }
+
+    &:hover {
+        opacity: 0.9;
+    }
+
+    @include respond-to('mobile') {
+        width: 52px;
+        height: 52px;
+
+        .button-text {
+            display: none;
+            visibility: hidden;
+        }
+    }
+}

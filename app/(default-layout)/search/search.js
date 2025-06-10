@@ -6,7 +6,6 @@ import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
 import { useDebounce } from '@/hooks';
-import { set } from 'lodash';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -160,6 +159,7 @@ function SearchContent() {
                                           isJoined={item.isJoined}
                                           isPrivate={item.isPrivate}
                                           participants={item.participants}
+                                          isInvited={item.isInvited}
                                       />
                                   );
                               }

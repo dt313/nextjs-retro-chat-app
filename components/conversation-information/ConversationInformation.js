@@ -6,6 +6,7 @@ import classNames from 'classnames/bind';
 
 import { CONVERSATION_PARTICIPANT_ROLE_CREATOR } from '@/config/types';
 import { useBreakpoint, useDebounce } from '@/hooks';
+import { LogOutIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { FaRegUserCircle } from 'react-icons/fa';
 import { IoSearch } from 'react-icons/io5';
@@ -200,6 +201,7 @@ function ConversationInformation({ hide, isGroup = true, data = {}, onClose }) {
 
                 {isGroup && meRole !== CONVERSATION_PARTICIPANT_ROLE_CREATOR && (
                     <button className={cx('leave-btn')} onClick={handleLeaveGroup}>
+                        <Icon element={<LogOutIcon />} className={cx('leave-icon')} />
                         Rời nhóm
                     </button>
                 )}

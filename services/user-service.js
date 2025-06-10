@@ -44,3 +44,12 @@ export const resetPassword = async (email, password) => {
         throw new Error(error || 'Failed to reset password');
     }
 };
+
+export const getFriendsByUserId = async (id) => {
+    try {
+        const res = await axios.get(`/users/${id}/friends`);
+        return res.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to get friends by user id');
+    }
+};

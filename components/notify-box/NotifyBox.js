@@ -121,7 +121,6 @@ function NotifyBox({ list }) {
 
         switch (type) {
             case NOTIFICATION_FRIEND_REQUEST:
-                console.log(type);
                 return (
                     <div className={cx('question-box')}>
                         <p className={cx('qb-content')}>
@@ -168,7 +167,7 @@ function NotifyBox({ list }) {
                             <strong className={cx('name')} onClick={() => handleClickUser(sender.username)}>
                                 {sender?.fullName}
                             </strong>{' '}
-                            đã mời kết bạn vào nhóm{' '}
+                            đã mời bạn vào nhóm{' '}
                             <strong className={cx('name')} onClick={() => handleClickGroup(group._id)}>
                                 {group?.name}
                             </strong>
@@ -355,9 +354,7 @@ function NotifyBox({ list }) {
 
         const { scrollTop, scrollHeight, clientHeight } = container;
 
-        console.log('scrollTop:', scrollTop + clientHeight >= scrollHeight - 5, isFinish);
         if (scrollTop + clientHeight >= scrollHeight - 5 && !isFinish) {
-            console.log('Loading more notifications...');
             setIsLoading(true);
             loadMoreNotification().then(() => {
                 const waitForRender = () => {

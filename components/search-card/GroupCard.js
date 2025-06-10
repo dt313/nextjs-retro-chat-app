@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
+import { NOTIFICATION_GROUP_INVITATION, TEMP_NOTIFICATION_GROUP_INVITATION_ACCEPTED } from '@/config/types';
 import { useRouter } from 'next/navigation';
+import { BsFillSendCheckFill } from 'react-icons/bs';
 import { FaFacebookMessenger, FaRegUserCircle } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -15,12 +17,13 @@ import Image from '@/components/image';
 import Overlay from '@/components/overlay';
 import SettingBox from '@/components/setting-box';
 
-import { groupService } from '@/services';
+import { groupService, invitationService } from '@/services';
 
-import { calculateTime, getOnlineUsers } from '@/helpers';
+import { calculateTime, getNotificationId, getOnlineUsers } from '@/helpers';
 
 import AuthFunctionWrap from '@/utils/auth-function-wrap';
 
+import { changeTypeNotification } from '@/redux/actions/notification-action';
 import { addToast } from '@/redux/actions/toast-action';
 
 import styles from './SearchCard.module.scss';
@@ -35,12 +38,14 @@ function GroupCard({
     thumbnail,
     isJoined = false,
     isPrivate = false,
+    isInvited = false,
     participants = [],
 }) {
     const [isShowPasswordBox, setIsShowPasswordBox] = useState(false);
     const [joined, setJoined] = useState(isJoined);
     const { list: onlineUsers } = useSelector((state) => state.onlineUsers);
     const { isAuthenticated } = useSelector((state) => state.auth);
+    const { notifications } = useSelector((state) => state.notification);
     const router = useRouter();
     const dispatch = useDispatch();
 
@@ -90,6 +95,30 @@ function GroupCard({
         }
     };
 
+    const handleAcceptGroupInvitation = async () => {
+        try {
+            const res = await invitationService.acceptGroupInvitation(id);
+
+            if (res) {
+                const notificationId = getNotificationId(
+                    notifications,
+                    res.invitedBy._id,
+                    NOTIFICATION_GROUP_INVITATION,
+                );
+
+                if (!notificationId) return;
+                dispatch(
+                    changeTypeNotification({
+                        notificationId,
+                        type: TEMP_NOTIFICATION_GROUP_INVITATION_ACCEPTED,
+                    }),
+                );
+            }
+        } catch (error) {
+            dispatch(addToast({ type: 'error', content: error.message }));
+        }
+    };
+
     const onlineCount = getOnlineUsers(onlineUsers, participants);
 
     return (
@@ -136,10 +165,17 @@ function GroupCard({
                     <span className={cx('ai-label')}>Trang</span>
                 </div>
                 {!joined ? (
-                    <div className={cx('action-item')} onClick={handleJoinGroup}>
-                        <Icon className={cx('ai-icon')} element={<GroupJoinIcon />} medium />
-                        <span className={cx('ai-label')}>Tham gia</span>
-                    </div>
+                    isInvited ? (
+                        <div className={cx('action-item')} onClick={handleAcceptGroupInvitation}>
+                            <Icon className={cx('ai-icon')} element={<BsFillSendCheckFill />} medium />
+                            <span className={cx('ai-label')}>Chấp nhận lời mời</span>
+                        </div>
+                    ) : (
+                        <div className={cx('action-item')} onClick={handleJoinGroup}>
+                            <Icon className={cx('ai-icon')} element={<GroupJoinIcon />} medium />
+                            <span className={cx('ai-label')}>Tham gia</span>
+                        </div>
+                    )
                 ) : (
                     <div className={cx('action-item')} onClick={() => router.push(`/conversation/${id}`)}>
                         <Icon className={cx('ai-icon')} element={<FaFacebookMessenger />} medium />

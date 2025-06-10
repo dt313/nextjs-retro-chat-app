@@ -54,6 +54,15 @@ export const replyGroupInvitation = async (data) => {
     }
 };
 
+export const acceptGroupInvitation = async (groupId) => {
+    try {
+        const res = await axios.get(`/invitation/group/accept/${groupId}`);
+        return res?.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to accept group invitation');
+    }
+};
+
 export const cancelGroupInvitation = async (toUserId, groupId) => {
     try {
         const res = await axios.post(`/invitation/group/cancel/${toUserId}`, { groupId });

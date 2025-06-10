@@ -16,7 +16,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import CloseIcon from '@/components/close-icon';
 import ConversationHeaderLoading from '@/components/conversation-header/ConversationHeaderLoading';
-import ConversationInformation from '@/components/conversation-information';
 import ConversationInformationLoading from '@/components/conversation-information/ConversationInformationLoading';
 import Icon from '@/components/icon';
 import { SpinnerLoader } from '@/components/loading';
@@ -40,9 +39,9 @@ const SideBar = dynamic(() => import('../../../../components/sidebar'), {
     loading: () => <SpinnerLoader small />,
 });
 
-// const ConversationInformation = dynamic(() => import('../../../../components/conversation-information'), {
-//     loading: () => <ConversationInformationLoading />,
-// });
+const ConversationInformation = dynamic(() => import('../../../../components/conversation-information'), {
+    loading: () => <ConversationInformationLoading />,
+});
 
 const ConversationHeader = dynamic(() => import('../../../../components/conversation-header'), {
     loading: () => <ConversationHeaderLoading />,

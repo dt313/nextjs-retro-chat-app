@@ -3,6 +3,7 @@ import { default as checkIsRead } from './check-is-read';
 import { default as checkStatus } from './check-status';
 import { getAvatarFromConversation, getNameFromConversation } from './conversation-info';
 import { default as getNotificationId } from './find-notification-id';
+import { default as formatBytes } from './format-bytes';
 import { default as getLastMessageContent } from './get-last-message-content';
 import { default as getOnlineUsers } from './get-online-users';
 import { default as getReactionIconList } from './get-reaction-list';
@@ -25,4 +26,5 @@ export {
     isLessThan1D,
     checkStatus,
     getOnlineUsers,
+    formatBytes,
 };

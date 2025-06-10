@@ -11,24 +11,13 @@ import { useSelector } from 'react-redux';
 import ActiveTippy from '@/components/active-tippy';
 import Avatar from '@/components/avatar';
 import Icon from '@/components/icon';
+import RoleIcon from '@/components/role-icon';
 
-import { ADMIN, OWNER, getUserRole } from '@/helpers/conversation-info';
+import { getUserRole } from '@/helpers/conversation-info';
 
 import styles from './GroupMembers.module.scss';
 
 const cx = classNames.bind(styles);
-
-function RoleIcon({ role }) {
-    switch (role) {
-        case OWNER:
-            return <span className={cx('role-icon')}>👑</span>;
-        case ADMIN:
-            return <span className={cx('role-icon')}>⚙️</span>;
-        default:
-            return;
-    }
-}
-
 function GroupMember({ id, name, date, avatar, role, meRole, onClickDeleteAction, onClickChangRoleAction }) {
     const { user: me } = useSelector((state) => state.auth);
 
@@ -41,7 +30,7 @@ function GroupMember({ id, name, date, avatar, role, meRole, onClickDeleteAction
     return (
         <div className={cx('member')}>
             <div className={cx('avatar-wrap')}>
-                <Avatar size={40} src={avatar} alt={name} />
+                <Avatar className={cx('avatar')} size={40} src={avatar} alt={name} />
                 <span className={cx('role')}>
                     <RoleIcon role={getUserRole(role)} />
                 </span>

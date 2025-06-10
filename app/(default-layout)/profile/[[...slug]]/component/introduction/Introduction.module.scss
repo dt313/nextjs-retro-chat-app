@@ -1,0 +1,46 @@
+@use '/app/scss/mixins.scss' as *;
+.wrapper {
+    width: 100%;
+    height: fit-content;
+    padding: 24px;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow:
+        #00000005 0px 1px 3px 0px,
+        #1b1f2326 0px 0px 0px 1px;
+}
+
+.extra-info-item {
+    display: flex;
+    align-items: center;
+    @include font-default;
+    font-weight: 500;
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+}
+
+.extra-icon {
+    margin-right: 4px;
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn {
+    margin-top: 8px;
+    width: 100%;
+    padding: 8px;
+    background-color: #89898988;
+    border: 1px solid #333;
+    border-radius: 4px;
+    @include font-default;
+    font-size: 1.5rem;
+    font-weight: 600;
+    outline: none;
+
+    &:hover {
+        background-color: #b3b3b388;
+        cursor: pointer;
+    }
+}
