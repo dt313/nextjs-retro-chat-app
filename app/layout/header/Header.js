@@ -36,7 +36,6 @@ function Header() {
     const { unRead: unReadConversation } = useSelector((state) => state.conversations);
     const { isAuthenticated, user: me } = useSelector((state) => state.auth);
 
-    const pathname = usePathname();
     const router = useRouter();
     const dispatch = useDispatch();
 
@@ -86,7 +85,7 @@ function Header() {
                         onClickOutside={() => setIsShowMenu(false)}
                         render={(attrs) => (
                             <div className={cx('box')} tabIndex="-1" {...attrs}>
-                                <UserMenu />
+                                <UserMenu onHide={() => setIsShowMenu(false)} />
                             </div>
                         )}
                         theme="light"
@@ -122,7 +121,7 @@ function Header() {
     );
 }
 
-const UserMenu = () => {
+const UserMenu = ({ onHide }) => {
     const router = useRouter();
     const dispatch = useDispatch();
     const { user: me } = useSelector((state) => state.auth);

@@ -21,6 +21,7 @@ function InputWithList({
     list = [],
     onChange,
     onSelect,
+
     ...props
 }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -52,7 +53,7 @@ function InputWithList({
                 {...props}
             />
             {isOpen && filteredList.length > 0 && (
-                <div className={cx('options')}>
+                <div className={cx('options')} onMouseDown={(e) => e.preventDefault()}>
                     <ul className={cx('list')} ref={listRef}>
                         {filteredList.map((item) => (
                             <li

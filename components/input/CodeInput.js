@@ -42,7 +42,12 @@ function CodeInput({
                     autoComplete="off"
                     {...props}
                 />
-                <button className={cx('code-send-btn')} disabled={disable} onClick={handleSendCode}>
+                <button
+                    className={cx('code-send-btn')}
+                    disabled={disable}
+                    onClick={handleSendCode}
+                    onMouseDown={(e) => e.preventDefault()}
+                >
                     {buttonTitle}
                 </button>
             </div>

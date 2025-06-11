@@ -54,7 +54,8 @@
     @include center-align;
     min-width: 16px;
     min-height: 16px;
-    border-radius: 50%;
+    padding: 2px;
+    border-radius: 4px;
     background-color: var(--black);
     color: var(--background);
     font-size: 1.2rem;
