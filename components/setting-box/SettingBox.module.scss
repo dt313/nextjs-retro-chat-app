@@ -6,6 +6,7 @@
     background-color: #fff;
     border-radius: 12px;
     padding-bottom: 24px;
+    position: relative;
 }
 
 .large {
@@ -14,33 +15,39 @@
 
 .header {
     @include center-align;
-    padding: 24px;
+    margin-top: 32px;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px 0;
 
     .title {
         @include font-default;
         font-size: 2rem;
-        padding-right: 26px;
         text-align: center;
     }
-
-    .close-icon {
-        position: absolute;
-        right: 12px;
-        top: 12px;
-    }
-}
-
-.content {
-    padding: 0 24px;
 
     .description {
         @include font-default;
         font-size: 1.4rem;
         color: #666;
         text-align: center;
-        margin-bottom: 24px;
+        margin: 0 12px;
+        margin-bottom: 8px;
     }
+}
+
+.close-icon {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    z-index: 2;
+}
+
+.content {
+    padding: 0 24px;
 }
 
 .delete-btn {
@@ -70,7 +77,10 @@
     background: var(--red) !important;
 }
 
-.loading {
-    width: 20px;
-    height: 20px;
+.large {
+    max-width: min(500px, 100% - 32px);
+
+    .description {
+        margin: 0 40px;
+    }
 }

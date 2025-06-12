@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
+import { SpinnerLoader } from '../loading';
 import styles from './Input.module.scss';
 
 const cx = classNames.bind(styles);
@@ -19,14 +20,22 @@ function CodeInput({
     ...props
 }) {
     const [focus, setFocus] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const classes = cx('code-input-wrapper', className, { focusBorder: focus });
-    const handleSendCode = (e) => {
+    const handleSendCode = async (e) => {
         if (disable) {
             e.preventDefault();
             return;
         }
 
-        onClickButton();
+        try {
+            setIsLoading(true);
+            await onClickButton();
+        } catch (error) {
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
     };
     return (
         <div className={classes}>
@@ -48,7 +57,7 @@ function CodeInput({
                     onClick={handleSendCode}
                     onMouseDown={(e) => e.preventDefault()}
                 >
-                    {buttonTitle}
+                    {isLoading ? <SpinnerLoader small /> : buttonTitle}
                 </button>
             </div>
             {<p className={cx('error-message')}>{errorMessage}</p>}

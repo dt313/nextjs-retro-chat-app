@@ -34,6 +34,12 @@
     box-shadow: var(--box-shadow);
     background-color: var(--background);
     word-break: break-word;
+    @include font-default;
+    font-size: 1.6rem;
+
+    @include respond-to('mobile') {
+        font-size: 1.4rem;
+    }
 }
 
 .m-file {

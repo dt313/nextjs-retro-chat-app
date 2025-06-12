@@ -50,14 +50,17 @@ function NotifyBox({ list }) {
 
     const [isLoading, setIsLoading] = useState(false);
     const [isFinish, setIsFinish] = useState(false);
+    const shouldSetFinish = useRef(true);
 
     const router = useRouter();
 
     useEffect(() => {
-        if (list.length < LIMIT) {
-            setIsFinish(true);
-        } else if (list.length === LIMIT) {
-            setIsFinish(false);
+        if (shouldSetFinish.current) {
+            if (list.length < LIMIT) {
+                setIsFinish(true);
+            } else if (list.length === LIMIT) {
+                setIsFinish(false);
+            }
         }
     }, [list]);
 
@@ -340,6 +343,7 @@ function NotifyBox({ list }) {
             if (res && Array.isArray(res)) {
                 dispatch(loadNotification(res));
                 if (res.length < LIMIT) {
+                    shouldSetFinish.current = false;
                     setIsFinish(true);
                 }
             }

@@ -53,3 +53,16 @@ export const getFriendsByUserId = async (id) => {
         throw new Error(error || 'Failed to get friends by user id');
     }
 };
+
+export const updateProfile = async (formData) => {
+    try {
+        const res = await axios.put(`/users/me`, formData, {
+            headers: {
+                'Content-Type': undefined,
+            },
+        });
+        return res.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to update profile');
+    }
+};

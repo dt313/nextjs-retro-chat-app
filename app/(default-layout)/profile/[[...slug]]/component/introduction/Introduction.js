@@ -1,5 +1,6 @@
 import classNames from 'classnames/bind';
 
+import { redirect } from 'next/navigation';
 import { FaUserFriends } from 'react-icons/fa';
 import { FaUserCheck } from 'react-icons/fa';
 import { FaUsers } from 'react-icons/fa';
@@ -19,9 +20,13 @@ function Introduction({
     groupCount = 0,
     memberCount = 0,
     isParticipant = false,
+    isShowSettingButton = false,
+    links = [],
+    bio = '',
 }) {
     return (
         <div className={cx('wrapper')}>
+            {bio && <p className={cx('bio')}>{bio}</p>}
             <div>
                 {information.map((item, index) => {
                     return item.content && <Information key={index} label={item.name} content={item.content} />;
@@ -45,6 +50,23 @@ function Introduction({
                         <Icon element={<FaUsers />} className={cx('extra-icon')} />
                         {groupCount > 0 ? `${groupCount} nhóm` : 'Chưa thuộc về nhóm chat nào'}
                     </span>
+
+                    {links?.length > 0 &&
+                        links.map((item, index) => {
+                            const SocialIcon = item.icon;
+                            if (item.link) {
+                                return (
+                                    <span
+                                        className={cx('extra-info-item', 'link')}
+                                        key={index}
+                                        onClick={() => window.open(item.link, '_blank')}
+                                    >
+                                        <Icon element={<SocialIcon />} className={cx('extra-icon')} />
+                                        {item.link}
+                                    </span>
+                                );
+                            }
+                        })}
                 </div>
             ) : (
                 <div className={cx('extra-info')}>
@@ -61,7 +83,11 @@ function Introduction({
                     </span>
                 </div>
             )}
-            {/* {type === 'user' && <button className={cx('btn')}>Cài đặt</button>} */}
+            {isShowSettingButton && (
+                <button className={cx('btn')} onClick={() => redirect('/setting')}>
+                    Cài đặt
+                </button>
+            )}
         </div>
     );
 }

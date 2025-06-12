@@ -1,152 +1,10 @@
-const messages = [
-    {
-        user: 'Alice',
-        content: {
-            message:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        type: 'text',
-        timestamp: '2025-04-08T14:30:00Z',
-    },
-    {
-        user: 'Bob',
-        content: {
-            message: 'Good, thanks! What about you?',
-        },
-        timestamp: '2025-04-08T14:31:10Z',
-        type: 'text',
-    },
+import { FaUser } from 'react-icons/fa';
+import { MdOutlineSecurity } from 'react-icons/md';
+import { MdSettingsApplications } from 'react-icons/md';
 
-    {
-        user: 'Bob',
-        content: {
-            name: 'file1-test-color.txt',
-            size: '1024 KB',
-        },
-        timestamp: '2025-04-08T14:31:10Z',
-        type: 'file',
-    },
-    {
-        user: 'Alice',
-        content: {
-            src: 'https://images.unsplash.com/photo-1509281373149-e957c6296406?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmV0cm98ZW58MHx8MHx8fDA%3D',
-            alt: 'message-image',
-        },
-        timestamp: '2025-04-08T14:31:10Z',
-        type: 'image',
-    },
-    {
-        user: 'Alice',
-        content: {
-            message:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        type: 'text',
-        timestamp: '2025-04-08T14:30:00Z',
-    },
-    {
-        user: 'Bob',
-        content: {
-            message: 'Good, thanks! What about you?',
-        },
-        timestamp: '2025-04-08T14:31:10Z',
-        type: 'text',
-    },
+import Validation from '@/utils/input-validation';
 
-    {
-        user: 'Bob',
-        content: {
-            name: 'file1-test-color.txt',
-            size: '1024 KB',
-        },
-        timestamp: '2025-04-08T14:31:10Z',
-        type: 'file',
-    },
-    {
-        user: 'Alice',
-        content: {
-            src: 'https://images.unsplash.com/photo-1509281373149-e957c6296406?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmV0cm98ZW58MHx8MHx8fDA%3D',
-            alt: 'message-image',
-        },
-        timestamp: '2025-04-08T14:31:10Z',
-        type: 'image',
-    },
-];
-
-const reactions = [
-    {
-        id: 1,
-        type: 'LIKE',
-        reacted_user: {
-            username: 'johndoe',
-            name: 'John Doe',
-            avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-        },
-    },
-    {
-        id: 2,
-        type: 'HAHA',
-        reacted_user: {
-            username: 'janedoe',
-            name: 'Jane Doe',
-            avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-        },
-    },
-    {
-        id: 3,
-        type: 'LOVE',
-        reacted_user: {
-            username: 'alice123',
-            name: 'Alice',
-            avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-        },
-    },
-    {
-        id: 4,
-        type: 'ANGRY',
-        reacted_user: {
-            username: 'bobcool',
-            name: '',
-            avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-        },
-    },
-    {
-        id: 5,
-        type: 'CARE',
-        reacted_user: {
-            username: 'alice123',
-            name: 'Alice',
-            avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-        },
-    },
-    {
-        id: 6,
-        type: 'WOW',
-        reacted_user: {
-            username: 'alice123',
-            name: 'Alice',
-            avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-        },
-    },
-    {
-        id: 7,
-        type: 'SAD',
-        reacted_user: {
-            username: 'alice123',
-            name: 'Alice',
-            avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-        },
-    },
-    {
-        id: 8,
-        type: 'ANGRY',
-        reacted_user: {
-            username: 'alice123',
-            name: 'Alice',
-            avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-        },
-    },
-];
+import { storageUtils } from '@/utils';
 
 const types = [
     {
@@ -183,121 +41,324 @@ const types = [
     },
 ];
 
-const users = [
-    {
-        id: 1,
-        name: 'John Doe',
-        avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-        isOnline: true,
-    },
-    {
-        id: 2,
-        name: 'Jane Doe',
-        avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-        isOnline: false,
-    },
-    {
-        id: 3,
-        name: 'John Doe',
-        avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-        isOnline: true,
-    },
-    {
-        id: 4,
-        name: 'Jane Doe',
-        avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-        isOnline: false,
-    },
-    {
-        id: 5,
-        name: 'John Doe',
-        avatar: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-        isOnline: true,
-    },
-];
+export const createSettingMenu = () => {
+    const info = storageUtils.getUser();
 
-const groups = [
-    {
-        id: 1,
-        name: 'John Doe',
-        thumbnail:
-            'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-        memberCount: 10,
-    },
-    {
-        id: 2,
-        name: 'Jane Doe',
-        thumbnail:
-            'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-        memberCount: 10,
-    },
-    {
-        id: 3,
-        name: 'John Doe',
-        thumbnail:
-            'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-        memberCount: 10,
-    },
-    {
-        id: 4,
-        name: 'Jane Doe',
-        thumbnail:
-            'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-        memberCount: 10,
-    },
-];
+    return [
+        {
+            title: 'Thông tin cá nhân',
+            icon: <FaUser />,
+            tag: 'info',
+            content: {
+                title: 'Thông tin cá nhân',
+                description: 'Quản lí thông tin cá nhân của bạn',
+                lists: [
+                    {
+                        title: 'Thông tin cơ bản',
+                        description: 'Quản lí hiển thị, tên người dùng, bio và avatar của bạn',
+                        items: [
+                            {
+                                title: 'Họ và tên',
+                                content: info?.fullName || '',
+                                name: 'fullName',
+                                box: {
+                                    name: 'Cập nhật tên của bạn',
+                                    type: 'text',
+                                    description:
+                                        'Tên sẽ được hiển thị trên trang cá nhân, trong các bình luận và bài viết của bạn.',
+                                    label: 'Tên nhóm chat',
+                                    placeholder: 'Tên nhóm chat',
+                                    value: info?.fullName || '',
+                                    extra: '',
+                                    field: 'fullName',
+                                    validate: (value) => {
+                                        return Validation({
+                                            value,
+                                            rules: [
+                                                Validation.isRequired(),
+                                                Validation.minWord(2),
+                                                Validation.minLetterEachWord(2),
+                                                Validation.maxLength(25),
+                                            ],
+                                        });
+                                    },
+                                },
+                            },
+                            {
+                                title: 'Tên người dùng',
+                                content: info?.username || '',
+                                name: 'username',
 
-const images = [
-    {
-        id: 1,
-        src: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-    },
-    {
-        id: 2,
-        src: 'https://images.unsplash.com/photo-1496293455970-f8581aae0e3b?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cmV0cm98ZW58MHx8MHx8fDA%3D',
-    },
-    {
-        id: 3,
-        src: 'https://images.unsplash.com/photo-1488693161025-5f967b74de89?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHJldHJvfGVufDB8fDB8fHww',
-    },
-    {
-        id: 4,
-        src: 'https://images.unsplash.com/photo-1555992336-fb0d29498b13?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mzl8fHJldHJvfGVufDB8fDB8fHww',
-    },
-    {
-        id: 1,
-        src: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-    },
-    {
-        id: 2,
-        src: 'https://images.unsplash.com/photo-1496293455970-f8581aae0e3b?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cmV0cm98ZW58MHx8MHx8fDA%3D',
-    },
-    {
-        id: 3,
-        src: 'https://images.unsplash.com/photo-1488693161025-5f967b74de89?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHJldHJvfGVufDB8fDB8fHww',
-    },
-    {
-        id: 4,
-        src: 'https://images.unsplash.com/photo-1555992336-fb0d29498b13?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mzl8fHJldHJvfGVufDB8fDB8fHww',
-    },
-    {
-        id: 1,
-        src: 'https://images.unsplash.com/photo-1516962126636-27ad087061cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHJldHJvfGVufDB8fDB8fHww',
-    },
-    {
-        id: 2,
-        src: 'https://images.unsplash.com/photo-1496293455970-f8581aae0e3b?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cmV0cm98ZW58MHx8MHx8fDA%3D',
-    },
-    {
-        id: 3,
-        src: 'https://images.unsplash.com/photo-1488693161025-5f967b74de89?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHJldHJvfGVufDB8fDB8fHww',
-    },
-    {
-        id: 4,
-        src: 'https://images.unsplash.com/photo-1555992336-fb0d29498b13?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mzl8fHJldHJvfGVufDB8fDB8fHww',
-    },
-];
+                                box: {
+                                    name: 'Chỉnh sửa tên người dùng',
+                                    type: 'text',
+                                    description:
+                                        'URL trang cá nhân của bạn sẽ bị thay đổi, bạn cũng sẽ không sử dụng được tên người dùng cũ để đăng nhập vào hệ thống nữa.',
+                                    label: 'Tên người dùng (username)',
+                                    placeholder: 'Tên nhóm chat',
+                                    value: info?.username || '',
+                                    extra: `URL: ${process.env.NEXT_PUBLIC_URL}/profile/@user-name`,
+
+                                    field: 'username',
+                                    validate: (value) => {
+                                        return Validation({
+                                            value: value,
+                                            rules: [
+                                                Validation.isRequired(),
+                                                Validation.nonSpecialLetter(),
+                                                Validation.minLetter(5),
+                                                Validation.maxLength(20),
+                                            ],
+                                        });
+                                    },
+                                },
+                            },
+                            {
+                                title: 'Giới thiệu',
+                                content: info?.bio || '',
+                                name: 'bio',
+                                box: {
+                                    name: 'Chỉnh sửa phần giới thiệu',
+                                    type: 'textarea',
+                                    description:
+                                        'Phần giới thiệu (tiểu sử) được hiển thị tại trang cá nhân của bạn, giúp mọi người hiểu rõ hơn về bạn.',
+                                    label: 'Giới thiệu (bio)',
+                                    placeholder: 'Giới thiệu về bản thân',
+                                    value: info?.bio || '',
+                                    field: 'bio',
+                                    validate: (value) => {
+                                        return Validation({
+                                            value: value,
+                                            rules: [Validation.maxLength(300)],
+                                        });
+                                    },
+                                },
+                            },
+                            {
+                                title: 'Avatar',
+                                content: info?.avatar,
+                                isImage: true,
+                                name: 'avatar',
+                                box: {
+                                    name: 'Ảnh đại diện',
+                                    type: 'image',
+                                    description:
+                                        'Ảnh đại diện giúp mọi người nhận biết bạn dễ dàng hơn qua các bài viết, bình luận, tin nhắn..',
+                                    label: 'Tên nhóm chat',
+                                    placeholder: 'Tên nhóm chat',
+                                    value: info?.avatar,
+                                    field: 'avatar',
+                                    validate: () => {},
+                                },
+                            },
+                        ],
+                    },
+                    {
+                        title: 'Thông tin mạng xã hội',
+                        description: 'Quản lí thông tin mạng xã hội của bạn',
+                        items: [
+                            {
+                                title: 'Trang web cá nhân',
+                                content: info?.website || '',
+                                isLarge: true,
+                                name: 'website',
+                                box: {
+                                    name: 'Trang web cá nhân',
+                                    type: 'text',
+                                    description:
+                                        'Địa chỉ trang web cá nhân sẽ được hiển thị trên trang cá nhân của bạn. Ví dụ: https://example.com',
+                                    label: 'URL',
+                                    placeholder: 'https://example.com',
+                                    value: info?.website || '',
+                                    field: 'website',
+                                    validate: (value) => {
+                                        return Validation({
+                                            value: value,
+                                            rules: [Validation.isLinkWeb(), Validation.maxLength(100)],
+                                        });
+                                    },
+                                },
+                            },
+                            {
+                                title: 'Github',
+                                content: info?.gh_link || '',
+                                isLarge: true,
+                                name: 'ghLink',
+
+                                box: {
+                                    name: 'Trang Github',
+                                    type: 'text',
+                                    description:
+                                        'Địa chỉ trang github sẽ được hiển thị trên trang cá nhân của bạn. Ví dụ: https://github.com/username',
+                                    label: 'URL',
+                                    placeholder: 'https://github.com/username',
+                                    value: info?.gh_link || '',
+                                    field: 'ghLink',
+                                    validate: (value) => {
+                                        return Validation({
+                                            value: value,
+                                            rules: [Validation.isSocialLink('github'), Validation.maxLength(100)],
+                                        });
+                                    },
+                                },
+                            },
+                            {
+                                title: 'Linkedin',
+                                content: info?.lkLink || '',
+                                isLarge: true,
+                                name: 'lkLink',
+                                box: {
+                                    name: 'Trang Linkedin',
+                                    type: 'text',
+                                    description:
+                                        'Địa chỉ trang linkedin sẽ được hiển thị trên trang cá nhân của bạn. Ví dụ: https://linkedin.com/in/username',
+                                    label: 'URL',
+                                    placeholder: 'https://linkedin.com/in/username',
+                                    value: info?.lkLink || '',
+                                    field: 'lkLink',
+                                    validate: (value) => {
+                                        return Validation({
+                                            value: value,
+                                            rules: [Validation.isSocialLink('linkedin'), Validation.maxLength(100)],
+                                        });
+                                    },
+                                },
+                            },
+                            {
+                                title: 'Facebook',
+                                content: info?.fbLink || '',
+                                isLarge: true,
+                                name: 'fbLink',
+
+                                box: {
+                                    name: 'Trang Facebook',
+                                    type: 'text',
+                                    description:
+                                        'Địa chỉ trang facebook sẽ được hiển thị trên trang cá nhân của bạn. Ví dụ: https://facebook.com/username',
+                                    label: 'URL',
+                                    placeholder: 'https://facebook.com/username',
+                                    value: info?.fbLink || '',
+                                    field: 'fbLink',
+                                    validate: (value) => {
+                                        return Validation({
+                                            value: value,
+                                            rules: [Validation.isSocialLink('facebook'), Validation.maxLength(100)],
+                                        });
+                                    },
+                                },
+                            },
+                            {
+                                title: 'Instagram',
+                                content: info?.igLink || '',
+                                isLarge: true,
+                                name: 'igLink',
+
+                                box: {
+                                    name: 'Trang Instagram',
+                                    type: 'text',
+                                    description:
+                                        'Địa chỉ trang instagram sẽ được hiển thị trên trang cá nhân của bạn. Ví dụ: https://instagram.com/username',
+                                    label: 'URL',
+                                    placeholder: 'https://instagram.com/username',
+                                    value: info?.igLink || '',
+                                    field: 'igLink',
+                                    validate: (value) => {
+                                        return Validation({
+                                            value: value,
+                                            rules: [Validation.isSocialLink('instagram'), Validation.maxLength(100)],
+                                        });
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        {
+            title: 'Mật khẩu và bảo mật',
+            icon: <MdOutlineSecurity />,
+            tag: 'security',
+            content: {
+                title: 'Mật khẩu và bảo mật',
+                description: 'Quản lí mật khẩu và cài đặt bảo mật',
+                lists: [
+                    {
+                        title: 'Đăng nhập và bảo mật',
+                        description: 'Quản lí mật khẩu và cài đặt bảo mật cho tài khoản của bạn',
+                        items: [
+                            {
+                                title: 'Mật khẩu',
+                                content: '**********',
+                                name: 'password',
+                                box: {
+                                    name: 'Đặt lại mật khẩu',
+                                    type: 'text',
+                                    description:
+                                        'Chúng tôi sẽ gửi link để bạn đặt lại mật khẩu vào gmail của bạn sau khi bạn nhập email chính xác',
+                                    label: 'Nhập email của bạn',
+                                    placeholder: 'example@gmail.com',
+                                    value: info?.email || '',
+                                    field: 'password',
+                                    validate: (value) => {
+                                        return Validation({
+                                            value: value,
+                                            rules: [Validation.isRequired(), Validation.minLetter(4)],
+                                        });
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        // {
+        //     title: 'Ứng dụng',
+        //     icon: <MdSettingsApplications />,
+        //     tag: 'app',
+        //     content: {
+        //         title: 'Ứng dụng',
+        //         description: 'Quản lí thông tin ứng dụng của bạn',
+        //         lists: [
+        //             {
+        //                 title: 'Theme ứng dụng và khác',
+        //                 description: 'Quản lí mật khẩu và cài đặt bảo mật cho tài khoản của bạn',
+        //                 items: [
+        //                     {
+        //                         title: 'Theme',
+        //                         content: 'theme',
+        //                         box: {
+        //                             headerTitle: 'Chọn theme cho website',
+        //                             headerDescription:
+        //                                 'Chọn giao diện phù hợp để cá nhân hóa trải nghiệm trang web của bạn.',
+        //                             type: 'theme',
+        //                             content: '',
+        //                             extraDescription: '',
+        //                         },
+        //                     },
+        //                     {
+        //                         title: 'Màu chính',
+        //                         content: 'color',
+        //                         isColor: true,
+        //                         box: {
+        //                             headerTitle: 'Chọn màu chính của website',
+        //                             headerDescription:
+        //                                 'Chọn màu yêu thích của bạn để cá nhân hóa trải nghiệm trang web của bạn',
+        //                             type: 'primary-color',
+
+        //                             content: '',
+        //                             extraDescription: '',
+        //                         },
+        //                     },
+        //                 ],
+        //             },
+        //         ],
+        //     },
+        // },
+    ];
+};
 
 const FILE_ACCEPT_LIST =
     '.jpg,.jpeg,.png,.txt,.csv,,.md,.js,.ts,.jsx,.tsx,.html,.css,.scss,.json,.xml,.py,.java,.cpp,.c,.cs,.php,.rb,.go,.rs,.sh,.bat,.kt,.sql';
-export { messages, reactions, types, users, groups, images, FILE_ACCEPT_LIST };
+export { types, FILE_ACCEPT_LIST };

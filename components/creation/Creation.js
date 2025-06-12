@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 
 import { types } from '@/config/ui-config';
+import { throttle } from 'lodash';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 
@@ -25,7 +26,6 @@ import Validation from '@/utils/input-validation';
 import { addToast } from '@/redux/actions/toast-action';
 
 import { SpinnerLoader } from '../loading';
-import message from '../message';
 import styles from './Creation.module.scss';
 
 const cx = classNames.bind(styles);
@@ -79,6 +79,7 @@ function Creation({ onClose }) {
     };
 
     const handleCreate = async () => {
+        if (isLoading) return;
         try {
             setIsLoading(true);
             const formData = new FormData();

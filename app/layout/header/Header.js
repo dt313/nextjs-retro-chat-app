@@ -131,6 +131,8 @@ const UserMenu = ({ onHide }) => {
             const res = await authService.logout();
             if (res) {
                 dispatch(logout());
+                onHide();
+
                 window.location.href = '/';
             }
         } catch (error) {
@@ -140,7 +142,13 @@ const UserMenu = ({ onHide }) => {
     return (
         <div className={cx('user-menu')}>
             <span className={cx('um-item', 'separate', 'no-hover', 'name')}>{me.fullName}</span>
-            <span className={cx('um-item')} onClick={() => router.push(`/profile/@${me.username}`)}>
+            <span
+                className={cx('um-item')}
+                onClick={() => {
+                    router.push(`/profile/@${me.username}`);
+                    onHide();
+                }}
+            >
                 Trang cá nhân
             </span>
             <span className={cx('um-item')} onClick={handleLogout}>

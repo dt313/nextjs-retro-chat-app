@@ -53,6 +53,7 @@
     position: absolute;
     bottom: 12px;
     right: 50%;
+    transform: translateX(50%);
     display: block;
     @include center-align;
     width: 36px;

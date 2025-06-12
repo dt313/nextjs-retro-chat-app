@@ -28,62 +28,19 @@ const cx = classNames.bind(styles);
 function Reaction({ onClick, theme = 'dark' }) {
     return (
         <div className={cx('reaction', theme)}>
-            <span
-                className={cx('icon-box')}
-                onClick={() => {
-                    onClick(REACTION_TYPE_LIKE);
-                }}
-            >
-                <Like className={cx('icon')} />
-            </span>
-            <span
-                className={cx('icon-box')}
-                onClick={() => {
-                    onClick(REACTION_TYPE_LOVE);
-                }}
-            >
-                <Love className={cx('icon')} />
-            </span>
-            <span
-                className={cx('icon-box')}
-                onClick={() => {
-                    onClick(REACTION_TYPE_CARE);
-                }}
-            >
-                <Care className={cx('icon')} />
-            </span>
-            <span
-                className={cx('icon-box')}
-                onClick={() => {
-                    onClick(REACTION_TYPE_HAHA);
-                }}
-            >
-                <Haha className={cx('icon')} />
-            </span>
-            <span
-                className={cx('icon-box')}
-                onClick={() => {
-                    onClick(REACTION_TYPE_ANGRY);
-                }}
-            >
-                <Angry className={cx('icon')} />
-            </span>
-            <span
-                className={cx('icon-box')}
-                onClick={() => {
-                    onClick(REACTION_TYPE_SAD);
-                }}
-            >
-                <Sad className={cx('icon')} />
-            </span>
-            <span
-                className={cx('icon-box')}
-                onClick={() => {
-                    onClick(REACTION_TYPE_WOW);
-                }}
-            >
-                <Wow className={cx('icon')} />
-            </span>
+            {[
+                { type: REACTION_TYPE_LIKE, Icon: Like },
+                { type: REACTION_TYPE_LOVE, Icon: Love },
+                { type: REACTION_TYPE_CARE, Icon: Care },
+                { type: REACTION_TYPE_HAHA, Icon: Haha },
+                { type: REACTION_TYPE_ANGRY, Icon: Angry },
+                { type: REACTION_TYPE_SAD, Icon: Sad },
+                { type: REACTION_TYPE_WOW, Icon: Wow },
+            ].map(({ type, Icon }) => (
+                <span key={type} className={cx('icon-box')} onClick={() => onClick(type)}>
+                    <Icon className={cx('icon')} />
+                </span>
+            ))}
         </div>
     );
 }

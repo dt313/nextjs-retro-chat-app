@@ -45,7 +45,7 @@ function GroupMembers({ groupId, meRole }) {
     };
 
     useEffect(() => {
-        fetchMembersOfGroup(debounceValue);
+        fetchMembersOfGroup(value);
     }, [debounceValue]);
 
     const handleDeleteUserFromConversation = async (conversationId, userId) => {

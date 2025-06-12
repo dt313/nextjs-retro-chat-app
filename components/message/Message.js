@@ -1,4 +1,4 @@
-import { Fragment, memo, useEffect, useState } from 'react';
+import { Fragment, memo, useEffect, useRef, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
@@ -68,6 +68,7 @@ function Message({
     const [reactionsList, setReactionsList] = useState(reactions);
     const [readUsers, setReadUsers] = useState([]);
     const { user: me } = useSelector((state) => state.auth);
+    const isProcessing = useRef(false);
     const router = useRouter();
 
     const dispatch = useDispatch();
@@ -120,6 +121,7 @@ function Message({
 
     const handleDownloadFile = async (url, name) => {
         try {
+            isProcessing.current = true;
             const response = await fetch(url, { mode: 'cors' }); // thêm mode: 'cors' nếu cần
             if (!response.ok) throw new Error('Network response was not ok');
 
@@ -238,7 +240,10 @@ function Message({
     };
 
     const handleReaction = async (reactionType) => {
+        if (isProcessing.current) return;
+
         try {
+            isProcessing.current = true;
             const res = await messageService.reaction(id, {
                 messageType: getReplyType(type),
                 type: reactionType,
@@ -251,11 +256,14 @@ function Message({
             dispatch(addToast({ type: 'error', content: error.message }));
         } finally {
             setVisibility((prev) => ({ ...prev, reaction: false }));
+            isProcessing.current = false;
         }
     };
 
     const handleCancelReaction = async (reactionId) => {
+        if (isProcessing.current) return;
         try {
+            isProcessing.current = true;
             const res = await messageService.cancelReaction(reactionId);
             if (res) {
                 const newReactions = reactionsList.filter((r) => r.user._id !== me._id);
@@ -267,6 +275,7 @@ function Message({
             }
         } catch (error) {
             dispatch(addToast({ type: 'error', content: error.message }));
+            isProcessing.current = false;
         }
     };
 
@@ -290,6 +299,7 @@ function Message({
             const res = await conversationService.updateConversation(conversationId, formData);
             if (res) {
                 eventBus.emit(`conversation-update-${res._id}`, res);
+                setVisibility((prev) => ({ ...prev, more: false }));
             }
         } catch (error) {
             dispatch(addToast({ type: 'error', content: error.message }));
@@ -394,14 +404,18 @@ function Message({
                                         )}
                                         <span
                                             className={cx('more-item')}
-                                            onClick={() => setVisibility((prev) => ({ ...prev, forward: true }))}
+                                            onClick={() =>
+                                                setVisibility((prev) => ({ ...prev, forward: true, more: false }))
+                                            }
                                         >
                                             Chuyển tiếp
                                         </span>
                                         {me._id === sender._id && (
                                             <span
                                                 className={cx('more-item')}
-                                                onClick={() => setVisibility((prev) => ({ ...prev, delete: true }))}
+                                                onClick={() =>
+                                                    setVisibility((prev) => ({ ...prev, delete: true, more: false }))
+                                                }
                                             >
                                                 Xóa
                                             </span>
@@ -468,19 +482,18 @@ function Message({
             )}
             {visibility.delete && (
                 <Overlay onClick={() => setVisibility((prev) => ({ ...prev, delete: false }))}>
-                    <div onClick={(e) => e.stopPropagation()}>
-                        <SettingBox
-                            onClose={() => setVisibility((prev) => ({ ...prev, delete: false }))}
-                            submitText="Xoá"
-                            content={{
-                                name: 'Xóa tin nhắn',
-                                type: 'delete',
-                                description: 'Bạn có chắc chắn muốn xóa tin nhắn này không ?',
-                                validate: () => {},
-                            }}
-                            onSubmit={handleDeleteMessage}
-                        />
-                    </div>
+                    <SettingBox
+                        onClose={() => setVisibility((prev) => ({ ...prev, delete: false }))}
+                        submitText="Xoá"
+                        content={{
+                            id: 1,
+                            name: 'Xóa tin nhắn',
+                            type: 'delete',
+                            description: 'Bạn có chắc chắn muốn xóa tin nhắn này không ?',
+                            validate: () => {},
+                        }}
+                        onSubmit={handleDeleteMessage}
+                    />
                 </Overlay>
             )}
         </div>

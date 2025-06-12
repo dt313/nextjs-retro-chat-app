@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
@@ -17,8 +19,13 @@ function File({ name, size, url, secondary, primary, className, onClick }) {
         primary,
         [className]: className,
     });
+
+    const handleClick = () => {
+        onClick(url, name);
+    };
+
     return (
-        <div className={classes} onClick={() => onClick(url, name)}>
+        <div className={classes} onClick={handleClick}>
             <Icon className={cx('icon')} element={<FaFileLines />} />
             <div className={cx('file-info')}>
                 <strong className={cx('file-name')}>{name}</strong>

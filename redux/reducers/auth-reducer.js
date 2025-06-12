@@ -1,6 +1,6 @@
 import { storageUtils } from '@/utils';
 
-import { LOGIN, LOGOUT } from '../actions/auth-action';
+import { LOGIN, LOGOUT, UPDATE_USER } from '../actions/auth-action';
 
 const initialState = {
     isAuthenticated: false,
@@ -21,6 +21,11 @@ const authBoxReducer = (state = initialState, action) => {
             return {
                 isAuthenticated: false,
                 user: {},
+            };
+        case UPDATE_USER:
+            return {
+                ...state,
+                user: action.user,
             };
 
         default:

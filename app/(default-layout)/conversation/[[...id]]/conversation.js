@@ -7,6 +7,7 @@ import classNames from 'classnames/bind';
 import eventBus from '@/config/emit';
 import withAuth from '@/hoc/with-auth';
 import { useTypingStatus } from '@/hooks';
+import { throttle } from 'lodash';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { redirect, useRouter, useSearchParams } from 'next/navigation';
@@ -115,24 +116,28 @@ function Conversation({ id }) {
 
     useEffect(() => {
         fetchConversation();
-    }, []);
+    }, [id]);
 
-    const handleReadLastMessage = async () => {
-        try {
-            const [conv] = list.filter((c) => c._id === id);
-            const alreadyRead = conv.lastMessage.readedBy.includes(me._id);
+    const handleReadLastMessage = throttle(
+        async () => {
+            try {
+                const [conv] = list.filter((c) => c._id === id);
+                const alreadyRead = conv.lastMessage.readedBy.includes(me._id);
 
-            if (!alreadyRead) {
-                const res = await conversationService.readLastMessage(id);
+                if (!alreadyRead) {
+                    const res = await conversationService.readLastMessage(id);
 
-                if (res) {
-                    dispatch(readLastMessage({ conversationId: id, meId: me._id }));
+                    if (res) {
+                        dispatch(readLastMessage({ conversationId: id, meId: me._id }));
+                    }
                 }
+            } catch (error) {
+                dispatch(addToast({ type: 'error', content: error.message }));
             }
-        } catch (error) {
-            // dispatch(addToast({ type: 'error', content: error.message }));
-        }
-    };
+        },
+        3000,
+        { leading: true },
+    );
 
     useEffect(() => {
         const addMessageFromWS = (message) => {
@@ -340,9 +345,9 @@ function Conversation({ id }) {
                                 <Icon
                                     className={cx('pin-icon')}
                                     element={<TbPinFilled />}
-                                    onClick={() => router.push(`?message=${conversation?.pinnedMessage._id}`)}
+                                    onClick={() => router.push(`?message=${conversation?.pinnedMessage?._id}`)}
                                 />
-                                <p className={cx('pin-text')}>{conversation?.pinnedMessage.content}</p>
+                                <p className={cx('pin-text')}>{conversation?.pinnedMessage?.content}</p>
                                 {((conversation.isGroup &&
                                     getRoleFromConversation(conversation, me._id) === 'creator') ||
                                     !conversation.isGroup) && (

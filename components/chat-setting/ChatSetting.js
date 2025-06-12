@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
-import { set } from 'lodash';
 import { useRouter } from 'next/navigation';
 import { IoIosImages } from 'react-icons/io';
 import { LuText } from 'react-icons/lu';

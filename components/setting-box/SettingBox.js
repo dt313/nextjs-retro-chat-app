@@ -13,7 +13,7 @@ import styles from './SettingBox.module.scss';
 
 const cx = classNames.bind(styles);
 
-function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu', isLoading }) {
+function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu', isLoading, large }) {
     const [value, setValue] = useState(content?.value || '');
     const [errorMessage, setErrorMessage] = useState('');
     const [buttonDisable, setButtonDisable] = useState(true);
@@ -32,7 +32,8 @@ function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu', isLoading
     );
 
     const handleSubmit = useCallback(() => {
-        onSubmit(value).then(() => {
+        if (isLoading) return;
+        onSubmit(content.field, value).then(() => {
             setValue('');
             onClose();
         });
@@ -44,21 +45,22 @@ function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu', isLoading
     }, [value]);
 
     return (
-        <div className={cx('wrapper')}>
+        <div className={cx('wrapper', large && 'large')} onClick={(e) => e.stopPropagation()}>
+            <CloseIcon
+                className={cx('close-icon')}
+                large
+                onClick={() => {
+                    console.log('close');
+                    setValue('');
+                    onClose();
+                }}
+            />
             <div className={cx('header')}>
-                <h3 className={cx('title')}>{content.name}</h3>
-                <CloseIcon
-                    className={cx('close-icon')}
-                    large
-                    onClick={() => {
-                        setValue('');
-                        onClose();
-                    }}
-                />
+                <h3 className={cx('title')}>{content?.name || content.headerTitle}</h3>
+                <p className={cx('description')}>{content.description}</p>
             </div>
 
             <div className={cx('content')}>
-                <p className={cx('description')}>{content.description}</p>
                 {content.type !== 'delete' && (
                     <SettingInput
                         type={content.type}
@@ -74,7 +76,7 @@ function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu', isLoading
                     onClick={handleSubmit}
                     disable={buttonDisable}
                 >
-                    {isLoading ? <SpinnerLoader small className={cx('loading')} /> : submitText}
+                    {isLoading ? <SpinnerLoader small /> : submitText}
                 </SubmitButton>
             </div>
         </div>

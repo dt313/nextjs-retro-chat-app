@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 
 import { RiArrowLeftSLine } from 'react-icons/ri';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import images from '@/assets/images';
 
@@ -42,6 +42,8 @@ AuthItem.propTypes = {
 function AuthForm({ type = LOGIN_AUTH_BOX }) {
     const [isShowPasswordAuth, setIsShowPasswordAuth] = useState(false);
 
+    const { isAuthenticated } = useSelector((state) => state.auth);
+
     const dispatch = useDispatch();
 
     const authItems = [
@@ -76,10 +78,12 @@ function AuthForm({ type = LOGIN_AUTH_BOX }) {
     if (type === FORGET_PASSWORD_BOX) {
         return (
             <div className={cx('wrapper')}>
-                <div className={cx('back')} onClick={() => dispatch(openAuthBox(LOGIN_AUTH_BOX))}>
-                    <Icon className={cx('back-icon')} element={<RiArrowLeftSLine />} />
-                    <span className={cx('back-text')}>Quay lại</span>
-                </div>
+                {!isAuthenticated && (
+                    <div className={cx('back')} onClick={() => dispatch(openAuthBox(LOGIN_AUTH_BOX))}>
+                        <Icon className={cx('back-icon')} element={<RiArrowLeftSLine />} />
+                        <span className={cx('back-text')}>Quay lại</span>
+                    </div>
+                )}
                 <div className={cx('container')}>
                     <ForgotPassword />
                 </div>

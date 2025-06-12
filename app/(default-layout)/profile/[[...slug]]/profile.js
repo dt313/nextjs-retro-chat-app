@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 
 import dynamic from 'next/dynamic';
+import { FaFacebook, FaGithub, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import { TbWorldWww } from 'react-icons/tb';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Avatar from '@/components/avatar';
@@ -67,12 +69,12 @@ function Profile({ slug }) {
     const { user: me } = useSelector((state) => state.auth);
 
     const dispatch = useDispatch();
-
     useEffect(() => {
         const fetchAPI = async () => {
             try {
                 setIsLoading(true);
                 const newSlug = decodeURIComponent(slug);
+
                 if (newSlug.startsWith('@')) {
                     const res = await userService.getUserByUsername(newSlug.slice(1));
                     setBasicInfo(res);
@@ -159,6 +161,36 @@ function Profile({ slug }) {
                   },
               ];
 
+    const links =
+        type === 'user'
+            ? [
+                  {
+                      icon: TbWorldWww,
+                      link: basicInfo?.website || '',
+                  },
+                  {
+                      icon: FaFacebook,
+                      link: basicInfo?.fbLink || '',
+                  },
+                  {
+                      icon: FaFacebook,
+                      link: basicInfo?.fbLink || '',
+                  },
+                  {
+                      icon: FaLinkedin,
+                      link: basicInfo?.lkLink || '',
+                  },
+                  {
+                      icon: FaGithub,
+                      link: basicInfo?.ghLink || '',
+                  },
+                  {
+                      icon: FaInstagram,
+                      link: basicInfo?.igLink || '',
+                  },
+              ]
+            : [];
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('container')}>
@@ -173,7 +205,7 @@ function Profile({ slug }) {
                                         {type === 'user' ? basicInfo?.fullName : basicInfo?.name}
                                     </h1>
                                     <p className={cx('description')}>
-                                        {type === 'user' ? basicInfo?.fullName : 'Nhóm chat'}
+                                        {type === 'user' ? basicInfo?.username : 'Nhóm chat'}
                                     </p>
                                 </div>
                             </div>
@@ -204,6 +236,7 @@ function Profile({ slug }) {
                                 <IntroductionLoading />
                             ) : (
                                 <Introduction
+                                    bio={basicInfo.bio}
                                     type={type}
                                     information={information}
                                     isFriend={basicInfo.isFriend}
@@ -211,6 +244,8 @@ function Profile({ slug }) {
                                     groupCount={basicInfo.groups}
                                     memberCount={basicInfo.members}
                                     isParticipant={basicInfo.isMember}
+                                    isShowSettingButton={me._id === basicInfo._id && type === 'user'}
+                                    links={links}
                                 />
                             )}
                         </div>

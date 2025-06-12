@@ -1,0 +1,58 @@
+@use '/app/scss/mixins.scss' as *;
+.wrapper {
+    // height: 100%;
+    overflow: hidden;
+    margin-bottom: 40px;
+}
+
+.header {
+    margin-bottom: 32px;
+}
+
+.title {
+    margin-bottom: 8px;
+    @include font-default;
+    font-size: 2rem;
+    letter-spacing: 0.1px;
+}
+
+.des {
+    @include font-default;
+    font-size: 1.5rem;
+    opacity: 0.9;
+    letter-spacing: 0.1px;
+}
+
+.content {
+    border-radius: 12px;
+}
+
+.item:first-child {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.item:last-child {
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    border: none;
+}
+
+@keyframes fadeOut {
+    0% {
+        background-color: var(--red); // Starting color (yellow)
+    }
+    100% {
+        background-color: #dedede; // Ending color (transparent)
+    }
+}
+
+.edited {
+    animation: fadeOut 2s forwards;
+}
+
+@media (max-width: 468px) {
+    .title {
+        font-size: 1.8rem;
+    }
+}

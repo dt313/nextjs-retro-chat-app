@@ -97,6 +97,10 @@
         font-weight: 500;
         font-size: 1.4rem;
         font-family: var(--font-family);
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         cursor: pointer;
     }
 

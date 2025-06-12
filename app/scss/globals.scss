@@ -79,15 +79,22 @@ a {
         width: 100%;
     }
 
-    .header .content {
+    .header,
+    .content {
         width: 100%;
     }
+}
+
+.other-layout > .container,
+.other-layout > .container > .content {
+    height: 100vh;
 }
 
 .qr-container {
     max-width: 500px;
     width: 100%;
     min-height: 100px;
+    margin: 0 12px;
     background-color: #ffffff;
     display: flex;
     justify-content: center;
@@ -104,14 +111,16 @@ a {
     }
 
     .qr-title {
+        font-family: LargeRetro;
+        letter-spacing: 1px;
         font-size: 2.6rem;
         text-transform: uppercase;
         font-weight: bold;
     }
 
     .logo-img {
-        height: 70px;
-        width: 70px;
+        height: 100px;
+        width: 100px;
         object-fit: cover;
     }
     .qr-code {
@@ -138,6 +147,17 @@ a {
         background-image: linear-gradient(70.06deg, #2cccff -5%, #22dfbf 106%);
 
         background-color: #1dbfaf;
+    }
+}
+
+@media (max-width: 600px) {
+    .qr-container {
+        max-width: 360px;
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+        }
     }
 }
 

@@ -83,6 +83,7 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
     };
     const handleSubmit = () => {
         if (value.trim() === '' && files.length === 0) return;
+        if (isLoading) return;
 
         onSubmit({
             content: value,
