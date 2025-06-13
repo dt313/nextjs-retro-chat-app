@@ -186,12 +186,13 @@ function ChatSetting({ isGroup, data }) {
     }, [isGroup, conversation]);
 
     const handleSubmit = useCallback(
-        async (value) => {
+        async (field, value) => {
             try {
                 setIsLoading(true);
                 const formData = new FormData();
-                formData.append('type', settingBox?.field);
+                formData.append('type', field);
                 formData.append('value', value);
+                console.log(value);
                 const res = await conversationService.updateConversation(conversation._id, formData);
                 if (res) {
                     eventBus.emit(`conversation-update-${res._id}`, res);
