@@ -1,10 +1,12 @@
 import eventBus from '@/config/emit';
 
+import { storageUtils } from '@/utils';
+
 let reconnectTimeout = null;
 let socket = null;
 
 export const initSocket = (token = null) => {
-    if (socket && socket.readyState === WebSocket.OPEN && !token) return socket;
+    if ((socket && socket.readyState === WebSocket.OPEN) || !token) return socket;
 
     socket = new WebSocket(
         `${process.env.NEXT_PUBLIC_WS}://${process.env.NEXT_PUBLIC_API_DOMAIN}:${process.env.NEXT_PUBLIC_API_PORT}`,
@@ -12,8 +14,18 @@ export const initSocket = (token = null) => {
 
     socket.addEventListener('open', (event) => {
         console.log('WS connected');
+        if (window) {
+            token = storageUtils.getAccessToken();
+        }
 
-        if (token) socket.send(JSON.stringify({ type: 'AUTH', token }));
+        if (token) {
+            setTimeout(() => {
+                if (socket.readyState === WebSocket.OPEN) {
+                    console.log('Auth - Token ', token);
+                    socket.send(JSON.stringify({ type: 'AUTH', token }));
+                }
+            }, 200); // Delay 200ms
+        }
     });
 
     socket.addEventListener('message', (event) => {
@@ -24,6 +36,7 @@ export const initSocket = (token = null) => {
         switch (type) {
             case 'online_users':
                 const { onlineUsers } = data;
+                console.log('online user', onlineUsers);
                 if (onlineUsers) {
                     eventBus.emit('online-users', onlineUsers);
                 }
@@ -46,6 +59,7 @@ export const initSocket = (token = null) => {
 
             case 'message':
                 const { message, conversationId } = data;
+                console.log('message ', message);
                 if (message && conversationId) {
                     eventBus.emit(`message-${conversationId}`, message);
                 }
@@ -80,6 +94,7 @@ export const initSocket = (token = null) => {
 
             case 'last-conversation':
                 const { conversation: lastConversation } = data;
+                console.log('last-message ', lastConversation);
                 if (lastConversation) {
                     eventBus.emit(`last-conversation`, lastConversation);
                     eventBus.emit(`conversation-update-${lastConversation._id}`, lastConversation);
@@ -99,7 +114,12 @@ export const initSocket = (token = null) => {
     });
 
     socket.addEventListener('close', (event) => {
-        console.log('WS server closed');
+        console.log('WS server closed ');
+        if (window) {
+            token = token || storageUtils.getAccessToken();
+        }
+        console.log('reconnect token ', token);
+
         reconnect(token);
     });
 
@@ -112,7 +132,7 @@ export const initSocket = (token = null) => {
 };
 
 function reconnect(token) {
-    console.log('reconnect ws');
+    socket = null;
     if (reconnectTimeout) clearTimeout(reconnectTimeout);
     reconnectTimeout = setTimeout(() => {
         initSocket(token);

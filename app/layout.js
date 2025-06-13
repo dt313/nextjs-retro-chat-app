@@ -1,5 +1,3 @@
-import images from '@/assets/images';
-
 import AuthFormWrap from '@/components/auth-form-wrap';
 import ImagePreviewWrap from '@/components/image-preview/ImagePreviewWrap';
 import StoreProvider from '@/components/store-provider';
