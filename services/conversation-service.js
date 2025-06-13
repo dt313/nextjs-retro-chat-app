@@ -133,3 +133,12 @@ export const deleteGroupConversation = async (conversationId, data) => {
         throw new Error(error || 'Failed to delete conversation');
     }
 };
+
+export const getForwardConversation = async (name = '') => {
+    try {
+        const res = await axios.get(`/conversations/forward?name=${name}`);
+        return res.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to fetch forward conversation');
+    }
+};

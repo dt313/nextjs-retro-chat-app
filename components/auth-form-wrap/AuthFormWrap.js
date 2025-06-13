@@ -49,8 +49,6 @@ function AuthFormWrap() {
             const token = storageUtils.getAccessToken();
             initSocket(token);
             fetchNotifications();
-        } else {
-            initSocket();
         }
     }, [isAuthenticated, user]);
 

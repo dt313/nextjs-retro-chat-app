@@ -23,6 +23,8 @@ function User({
     avatar,
     name,
     isOnline,
+    isGroup,
+    isConversation,
     id,
     type = 'user',
     hideAddFriend = false,
@@ -48,7 +50,7 @@ function User({
     }, [id]);
 
     const handleForwardMessage = useCallback(async () => {
-        const isSent = await onClickForward(id);
+        const isSent = await onClickForward(id, isConversation);
         if (isSent) {
             setIsSend(true);
         }
@@ -58,10 +60,11 @@ function User({
         <div className={cx('wrapper')}>
             <div className={cx('avatar-wrapper')}>
                 <Avatar size={36} src={avatar} />
-                <span className={cx('status', { online: isOnline })}></span>
+                {!(type === 'forward') && <span className={cx('status', { online: isOnline })}></span>}
             </div>
             <div className={cx('info')}>
                 <span className={cx('name')}>{name}</span>
+                {isGroup && <span className={cx('des')}>Nhóm chat</span>}
             </div>
 
             <div className={cx('action')}>

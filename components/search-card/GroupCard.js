@@ -138,7 +138,7 @@ function GroupCard({
                         <span className={cx('label')}>NAME</span>
                         <p className={cx('info-content')}>
                             {name}
-                            {<span className={cx('status', { online: onlineCount > 0 })}></span>}
+                            {isAuthenticated && <span className={cx('status', { online: onlineCount > 0 })}></span>}
                         </p>
                     </div>
                     <div className={cx('info-item')}>

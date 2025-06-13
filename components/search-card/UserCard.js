@@ -145,7 +145,10 @@ function UserCard({
                     <div className={cx('info-item')}>
                         <span className={cx('label')}>NAME</span>
                         <p className={cx('info-content')}>
-                            {name} {<span className={cx('status', { online: checkStatus(id, onlineUserList) })}></span>}
+                            {name}{' '}
+                            {isAuthenticated && (
+                                <span className={cx('status', { online: checkStatus(id, onlineUserList) })}></span>
+                            )}
                         </p>
                     </div>
                     <div className={cx('info-item')}>

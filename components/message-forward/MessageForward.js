@@ -8,7 +8,7 @@ import { useDebounce } from '@/hooks';
 import { IoSearch } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { messageService, userService } from '@/services';
+import { conversationService, messageService, userService } from '@/services';
 
 import { checkStatus } from '@/helpers';
 
@@ -36,7 +36,7 @@ function MessageForward({ messageId, messageType, onClose }) {
     const fetchFriends = async (value) => {
         try {
             setIsLoading(true);
-            const res = await userService.getFriends(value);
+            const res = await conversationService.getForwardConversation(value);
             if (res) setList(res);
         } catch (error) {
             dispatch(addToast({ type: 'error', content: error.message }));
@@ -49,9 +49,9 @@ function MessageForward({ messageId, messageType, onClose }) {
     }, [debounceValue]);
 
     const handleForwardMessage = useCallback(
-        async (userId) => {
+        async (id, isConversation) => {
             try {
-                const res = await messageService.forwardMessage(messageId, { friendId: userId, messageType });
+                const res = await messageService.forwardMessage(messageId, { id, isConversation, messageType });
                 if (res) {
                     return true;
                 }
@@ -65,6 +65,8 @@ function MessageForward({ messageId, messageType, onClose }) {
                 );
                 return false;
             }
+
+            console.log(id, isConversation);
         },
         [messageId],
     );
@@ -97,11 +99,12 @@ function MessageForward({ messageId, messageType, onClose }) {
                               <User
                                   key={item._id}
                                   type="forward"
-                                  name={item.fullName}
+                                  name={item.name}
                                   id={item._id}
-                                  avatar={item.avatar}
+                                  avatar={item.thumbnail}
+                                  isGroup={item?.isGroup}
+                                  isConversation={item?.isConversation}
                                   onClickForward={handleForwardMessage}
-                                  isOnline={checkStatus(item._id, onlineUserList)}
                               />
                           ))
                         : [1, 2].map((key) => <User.Skeleton key={key} />)}

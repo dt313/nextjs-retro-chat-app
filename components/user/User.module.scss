@@ -32,6 +32,13 @@
     margin-bottom: 4px;
 }
 
+.des {
+    @include font-default;
+    font-size: 1.3rem;
+    font-weight: 400;
+    margin-bottom: 4px;
+}
+
 .status {
     width: 10px;
     height: 10px;

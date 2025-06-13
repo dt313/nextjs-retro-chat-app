@@ -18,14 +18,11 @@ export const initSocket = (token = null) => {
             token = storageUtils.getAccessToken();
         }
 
-        if (token) {
-            setTimeout(() => {
-                if (socket.readyState === WebSocket.OPEN) {
-                    console.log('Auth - Token ', token);
-                    socket.send(JSON.stringify({ type: 'AUTH', token }));
-                }
-            }, 200); // Delay 200ms
-        }
+        setTimeout(() => {
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ type: 'AUTH', token }));
+            }
+        }, 200); // Delay 200ms
     });
 
     socket.addEventListener('message', (event) => {
@@ -36,7 +33,6 @@ export const initSocket = (token = null) => {
         switch (type) {
             case 'online_users':
                 const { onlineUsers } = data;
-                console.log('online user', onlineUsers);
                 if (onlineUsers) {
                     eventBus.emit('online-users', onlineUsers);
                 }
@@ -59,7 +55,6 @@ export const initSocket = (token = null) => {
 
             case 'message':
                 const { message, conversationId } = data;
-                console.log('message ', message);
                 if (message && conversationId) {
                     eventBus.emit(`message-${conversationId}`, message);
                 }
@@ -94,7 +89,6 @@ export const initSocket = (token = null) => {
 
             case 'last-conversation':
                 const { conversation: lastConversation } = data;
-                console.log('last-message ', lastConversation);
                 if (lastConversation) {
                     eventBus.emit(`last-conversation`, lastConversation);
                     eventBus.emit(`conversation-update-${lastConversation._id}`, lastConversation);
@@ -118,7 +112,6 @@ export const initSocket = (token = null) => {
         if (window) {
             token = token || storageUtils.getAccessToken();
         }
-        console.log('reconnect token ', token);
 
         reconnect(token);
     });
