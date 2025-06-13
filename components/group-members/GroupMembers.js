@@ -111,6 +111,7 @@ function GroupMembers({ groupId, meRole }) {
                               id={member.user._id}
                               name={member?.user?.fullName}
                               avatar={member.user.avatar}
+                              username={member?.user?.username}
                               date={calculateTime(member.jointAt)}
                               role={member.role}
                               meRole={meRole}

@@ -45,6 +45,9 @@
         font-weight: 500;
         font-size: 1.5rem;
         margin-bottom: 4px;
+        &:hover {
+            cursor: pointer;
+        }
     }
 
     .date {
@@ -96,4 +99,7 @@
 
 .avatar {
     border: 1.5px solid #aeaeae88;
+    &:hover {
+        cursor: pointer;
+    }
 }

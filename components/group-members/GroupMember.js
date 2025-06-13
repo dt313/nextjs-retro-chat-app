@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 
 import { CONVERSATION_PARTICIPANT_ROLE_ADMIN, CONVERSATION_PARTICIPANT_ROLE_CREATOR } from '@/config/types';
+import { useRouter } from 'next/navigation';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -18,7 +19,7 @@ import { getUserRole } from '@/helpers/conversation-info';
 import styles from './GroupMembers.module.scss';
 
 const cx = classNames.bind(styles);
-function GroupMember({ id, name, date, avatar, role, meRole, onClickDeleteAction, onClickChangRoleAction }) {
+function GroupMember({ id, name, date, avatar, username, role, meRole, onClickDeleteAction, onClickChangRoleAction }) {
     const { user: me } = useSelector((state) => state.auth);
 
     const hideAction = role === CONVERSATION_PARTICIPANT_ROLE_CREATOR || me._id === id || meRole === role;
@@ -27,16 +28,22 @@ function GroupMember({ id, name, date, avatar, role, meRole, onClickDeleteAction
         (meRole === CONVERSATION_PARTICIPANT_ROLE_CREATOR || meRole === CONVERSATION_PARTICIPANT_ROLE_ADMIN) &&
         !hideAction;
 
+    const router = useRouter();
+
+    const handleRedirectProfile = () => {
+        router.push(`/profile/@${username}`);
+    };
+
     return (
         <div className={cx('member')}>
             <div className={cx('avatar-wrap')}>
-                <Avatar className={cx('avatar')} size={40} src={avatar} alt={name} />
+                <Avatar className={cx('avatar')} size={40} src={avatar} alt={name} onClick={handleRedirectProfile} />
                 <span className={cx('role')}>
                     <RoleIcon role={getUserRole(role)} />
                 </span>
             </div>
             <div className={cx('info')}>
-                <span className={cx('name')}>
+                <span className={cx('name')} onClick={handleRedirectProfile}>
                     {name} {me._id === id && '(👤)'}{' '}
                 </span>
                 <span className={cx('date')}>{date}</span>
@@ -71,6 +78,7 @@ GroupMember.propTypes = {
     name: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
     avatar: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
     role: PropTypes.string.isRequired,
     meRole: PropTypes.string.isRequired,
     onClickDeleteAction: PropTypes.func.isRequired,

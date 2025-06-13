@@ -315,6 +315,8 @@ function Conversation({ id }) {
         }
     }, [id, conversation]);
 
+    useEffect(() => {}, []);
+
     return (
         <div className={cx('wrapper')}>
             <Head>

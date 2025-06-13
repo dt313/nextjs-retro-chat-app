@@ -173,10 +173,6 @@ function Profile({ slug }) {
                       link: basicInfo?.fbLink || '',
                   },
                   {
-                      icon: FaFacebook,
-                      link: basicInfo?.fbLink || '',
-                  },
-                  {
                       icon: FaLinkedin,
                       link: basicInfo?.lkLink || '',
                   },
