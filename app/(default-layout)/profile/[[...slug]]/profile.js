@@ -5,11 +5,14 @@ import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
 import { FaFacebook, FaGithub, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import { IoIosArrowBack } from 'react-icons/io';
 import { TbWorldWww } from 'react-icons/tb';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Avatar from '@/components/avatar';
+import Icon from '@/components/icon/Icon';
 import Overlay from '@/components/overlay';
 import ProfileNavItem from '@/components/profile-nav-item';
 import QR from '@/components/qr';
@@ -67,8 +70,10 @@ function Profile({ slug }) {
     const [isLoading, setIsLoading] = useState(false);
 
     const { user: me } = useSelector((state) => state.auth);
+    const { conversationId } = useSelector((state) => state.lastConversation);
 
     const dispatch = useDispatch();
+    const router = useRouter();
     useEffect(() => {
         const fetchAPI = async () => {
             try {
@@ -191,6 +196,12 @@ function Profile({ slug }) {
         <div className={cx('wrapper')}>
             <div className={cx('container')}>
                 <div className={cx('profile')}>
+                    {conversationId && (
+                        <div className={cx('back-icon')} onClick={() => router.push(`/conversation/${conversationId}`)}>
+                            <Icon element={<IoIosArrowBack />} small />
+                            <span className={cx('back-text')}>Quay lại</span>
+                        </div>
+                    )}
                     <div className={cx('wallpaper')}>
                         <div className={cx('header')}>
                             <div className={cx('info')}>

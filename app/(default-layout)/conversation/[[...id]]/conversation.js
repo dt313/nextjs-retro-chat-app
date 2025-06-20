@@ -32,6 +32,7 @@ import { getRoleFromConversation, getTargetIdFromConversation } from '@/helpers/
 import { checkStatus, getAvatarFromConversation, getNameFromConversation, getOnlineUsers } from '@/helpers';
 
 import { readLastMessage } from '@/redux/actions/conversations-action';
+import { updateLastConversation } from '@/redux/actions/last-conversation-action';
 import { addToast } from '@/redux/actions/toast-action';
 
 import styles from './conversation.module.scss';
@@ -98,9 +99,11 @@ function Conversation({ id }) {
                 setConversation({});
                 return;
             }
+
             const conversation = await conversationService.getConversationById(id);
             if (conversation) {
                 setConversation(conversation);
+                dispatch(updateLastConversation(id));
             }
 
             const messages = await conversationService.getMessageOfConversationById({ id });

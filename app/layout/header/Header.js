@@ -35,7 +35,7 @@ function Header() {
     const { notifications, unRead: unReadNotification } = useSelector((state) => state.notification);
     const { unRead: unReadConversation } = useSelector((state) => state.conversations);
     const { isAuthenticated, user: me } = useSelector((state) => state.auth);
-
+    const { conversationId } = useSelector((state) => state.lastConversation);
     const router = useRouter();
     const dispatch = useDispatch();
 
@@ -61,7 +61,14 @@ function Header() {
             {isAuthenticated ? (
                 <div className={cx('header-menu')}>
                     {
-                        <span className={cx('hmenu-item', 'message')} onClick={() => router.push('/conversation')}>
+                        <span
+                            className={cx('hmenu-item', 'message')}
+                            onClick={() =>
+                                conversationId
+                                    ? router.push(`/conversation/${conversationId}`)
+                                    : router.push(`/conversation`)
+                            }
+                        >
                             {unReadConversation > 0 && (
                                 <span className={cx('message-count')}>{unReadConversation}</span>
                             )}

@@ -32,7 +32,7 @@ import { getReplyContent, getReplyLabelName, getReplyType } from '@/helpers/conv
 import { calculateTime, getTime, isLessThan1D } from '@/helpers';
 
 import { openImgPreview } from '@/redux/actions/img-preview-action';
-import { closeReplyBox, openReplyBox } from '@/redux/actions/reply-box-action';
+import { openReplyBox } from '@/redux/actions/reply-box-action';
 import { addToast } from '@/redux/actions/toast-action';
 
 import styles from './Message.module.scss';
