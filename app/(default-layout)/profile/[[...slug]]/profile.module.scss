@@ -156,16 +156,11 @@
 .content,
 .introduction {
     width: 100%;
-    background-color: #fff;
-    border-radius: 16px;
-    box-shadow:
-        #00000005 0px 1px 3px 0px,
-        #1b1f2326 0px 0px 0px 1px;
 }
 
 .content {
-    min-height: 300px;
 }
+
 .introduction {
     max-width: 300px;
     min-width: 300px;
@@ -175,6 +170,16 @@
     @include respond-to('laptop') {
         max-width: 500px;
     }
+}
+
+.content-wrap {
+    background-color: #fff;
+    height: fit-content;
+    min-height: 300px;
+    border-radius: 16px;
+    box-shadow:
+        #00000005 0px 1px 3px 0px,
+        #1b1f2326 0px 0px 0px 1px;
 }
 
 .nav {

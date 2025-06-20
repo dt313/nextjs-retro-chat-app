@@ -101,12 +101,15 @@ function ConversationInformation({ hide, isGroup = true, data = {}, onClose }) {
         }
     }, [debounceValue]);
 
-    const handleClickSimItem = useCallback((id) => {
-        router.push(`?message=${id}`);
-        if (breakpoint === 'lg' || breakpoint === 'md' || breakpoint === 'sm') {
-            onClose();
-        }
-    }, []);
+    const handleClickSimItem = useCallback(
+        (id) => {
+            router.push(`?message=${id}`);
+            if (breakpoint === 'md' || breakpoint === 'sm') {
+                onClose();
+            }
+        },
+        [breakpoint],
+    );
 
     const handleLeaveGroup = async () => {
         try {

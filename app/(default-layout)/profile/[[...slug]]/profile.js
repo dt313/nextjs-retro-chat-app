@@ -257,33 +257,35 @@ function Profile({ slug }) {
                             )}
                         </div>
                         <div className={cx('content')}>
-                            <div className={cx('nav')}>
-                                <div className={cx('topic-list')}>
-                                    {tags.map((nav, index) => {
-                                        return (
-                                            <ProfileNavItem
-                                                className={cx('nav-link')}
-                                                key={index}
-                                                active={tag === nav.tag}
-                                                topic={nav.name}
-                                                icon={nav.icon}
-                                                onClick={() => {
-                                                    if (tag === nav.tag) {
-                                                        return;
-                                                    }
-                                                    const idx = profileUserTag.findIndex(
-                                                        (item) => item.tag === nav.tag,
-                                                    );
-                                                    setTag(profileUserTag[idx].tag);
-                                                }}
-                                            />
-                                        );
-                                    })}
+                            <div className={cx('content-wrap')}>
+                                <div className={cx('nav')}>
+                                    <div className={cx('topic-list')}>
+                                        {tags.map((nav, index) => {
+                                            return (
+                                                <ProfileNavItem
+                                                    className={cx('nav-link')}
+                                                    key={index}
+                                                    active={tag === nav.tag}
+                                                    topic={nav.name}
+                                                    icon={nav.icon}
+                                                    onClick={() => {
+                                                        if (tag === nav.tag) {
+                                                            return;
+                                                        }
+                                                        const idx = profileUserTag.findIndex(
+                                                            (item) => item.tag === nav.tag,
+                                                        );
+                                                        setTag(profileUserTag[idx].tag);
+                                                    }}
+                                                />
+                                            );
+                                        })}
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div className={cx('content-list')}>
-                                <List id={basicInfo._id} type={type} tag={tag} />
+                                <div className={cx('content-list')}>
+                                    <List id={basicInfo._id} type={type} tag={tag} />
+                                </div>
                             </div>
                         </div>
                     </div>

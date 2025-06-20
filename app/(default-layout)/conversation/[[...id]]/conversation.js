@@ -93,6 +93,14 @@ function Conversation({ id }) {
         isTyping,
     });
 
+    const fetchMessageOfConversation = async () => {
+        const messages = await conversationService.getMessageOfConversationById({ id });
+        if (messages) {
+            setMessageList(messages.reverse());
+            setIsBeforeFinish(messages.length < LIMIT);
+        }
+    };
+
     const fetchConversation = async () => {
         try {
             if (!id) {
@@ -106,11 +114,7 @@ function Conversation({ id }) {
                 dispatch(updateLastConversation(id));
             }
 
-            const messages = await conversationService.getMessageOfConversationById({ id });
-            if (messages) {
-                setMessageList(messages.reverse());
-                setIsBeforeFinish(messages.length < LIMIT);
-            }
+            await fetchMessageOfConversation();
         } catch (error) {
             dispatch(addToast({ type: 'error', content: error.message }));
             redirect('/conversation');
@@ -222,6 +226,9 @@ function Conversation({ id }) {
         if (breakpoint === 'lg' || breakpoint === 'xl') {
             setIsShowLeft(true);
             setIsShowRight(true);
+            if (!id) {
+                setIsShowRight(false);
+            }
             setIsShowContent(true);
         } else if (breakpoint === 'md') {
             setIsShowLeft(true);
@@ -231,20 +238,9 @@ function Conversation({ id }) {
             setIsShowLeft(true);
             setIsShowContent(false);
             setIsShowRight(false);
-        }
-    }, [breakpoint]);
-
-    // Handle mobile navigation when id changes
-    useEffect(() => {
-        if (breakpoint === 'sm' || breakpoint === 'xs') {
-            if (id === null) {
-                setIsShowLeft(true);
-                setIsShowRight(false);
-                setIsShowContent(false);
-            } else {
-                setIsShowLeft(false);
-                setIsShowRight(false);
+            if (id) {
                 setIsShowContent(true);
+                setIsShowLeft(false);
             }
         }
     }, [id, breakpoint]);
@@ -375,6 +371,7 @@ function Conversation({ id }) {
                                 targetName={getNameFromConversation(conversation, me._id, true)}
                                 participants={conversation?.participants}
                                 isGroup={conversation?.isGroup}
+                                back={fetchMessageOfConversation}
                             />
                         )}
                     </div>

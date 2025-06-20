@@ -96,12 +96,15 @@ function LeftMessage({ className }) {
         }
     }, [searchValue]);
 
-    const checkOnline = useCallback((conv) => {
-        if (!conv) return false;
-        if (conv.isGroup) return false;
-        const id = getTargetIdFromConversation(conv, me._id);
-        return checkStatus(id, onlineUserList);
-    }, []);
+    const checkOnline = useCallback(
+        (conv) => {
+            if (!conv) return false;
+            if (conv.isGroup) return false;
+            const id = getTargetIdFromConversation(conv, me._id);
+            return checkStatus(id, onlineUserList);
+        },
+        [id],
+    );
 
     return (
         <div className={cx('wrapper', className)}>

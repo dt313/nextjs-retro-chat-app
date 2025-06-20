@@ -8,6 +8,7 @@ import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
 import dynamic from 'next/dynamic';
+import { usePathname, useRouter } from 'next/navigation';
 import { HiArrowDown } from 'react-icons/hi';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -38,6 +39,7 @@ function MessageBox({
     setList,
     participants,
     isGroup = false,
+    back = () => {},
 }) {
     const messageEndRef = useRef(null);
     const scrollContainerRef = useRef(null);
@@ -47,9 +49,13 @@ function MessageBox({
     const [isBottomLoading, setIsBottomLoading] = useState(false);
     const [isAfterFinish, setIsAfterFinish] = useState(true);
     const [isShowScrollBottom, setIsShowScrollBottom] = useState(false);
+    const [isFinding, setIsFinding] = useState(false);
     const { user: me } = useSelector((state) => state.auth);
 
     const dispatch = useDispatch();
+    const pathname = usePathname();
+    const router = useRouter();
+
     const shouldScrollBottom = useRef(true);
     useEffect(() => {
         const container = scrollContainerRef.current;
@@ -178,6 +184,7 @@ function MessageBox({
                 const res = await conversationService.findMessage(conversationId, searchMessageId);
                 if (res && Array.isArray(res)) {
                     setList(res);
+                    setIsFinding(true);
 
                     timeoutId = setTimeout(() => {
                         scrollToMessage(searchMessageId);
@@ -212,7 +219,20 @@ function MessageBox({
         return isCreator;
     }, [conversationId, participants, isGroup, me._id]);
 
-    const handleClickScrollBottom = () => {
+    const handleClickScrollBottom = async () => {
+        if (isFinding) {
+            back().then(() => {
+                setIsFinding(false);
+                router.replace(pathname);
+            });
+
+            setTimeout(() => {
+                messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+            }, 500);
+            return;
+        }
+
+        /// wait for render
         messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
@@ -309,7 +329,7 @@ function MessageBox({
                 );
             })}
 
-            {isShowScrollBottom && (
+            {(isShowScrollBottom || isFinding) && (
                 <span className={cx('scroll-btn')} onClick={handleClickScrollBottom}>
                     <Icon element={<HiArrowDown />} medium />
                 </span>
@@ -345,6 +365,7 @@ MessageBox.propTypes = {
     setList: PropTypes.func.isRequired,
     participants: PropTypes.array.isRequired,
     isGroup: PropTypes.bool,
+    back: PropTypes.func.isRequired,
 };
 
 export default memo(MessageBox);
