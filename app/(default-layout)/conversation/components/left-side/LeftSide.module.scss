@@ -1,0 +1,70 @@
+@use '/app/scss/mixins.scss' as *;
+
+.left-side {
+    height: 100%;
+}
+
+// left
+
+.left-side {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border-right: var(--solid-border);
+    // transition: width 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.left-side.transition {
+    transition: width 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.toggle-btn {
+    height: 40px;
+    width: 8px;
+    position: absolute;
+    right: 2px;
+    border-radius: 12px;
+    background-color: #292626;
+    transition: width 0.6s cubic-bezier(0.075, 0.82, 0.165, 1);
+    z-index: 1;
+
+    &:hover {
+        opacity: 0.8;
+        width: 12px;
+        cursor: pointer;
+    }
+
+    @include respond-to('mobile') {
+        display: none;
+    }
+}
+
+.left-side.show {
+    width: 25%;
+
+    @include respond-to('laptop') {
+        width: 40%;
+    }
+
+    @include respond-to('mobile') {
+        width: 100%;
+        border: none;
+        transition: none;
+
+        .toggle-btn {
+            display: none;
+        }
+    }
+}
+
+.left-side.hide {
+    width: 0;
+    border: none;
+    .left-wrap {
+        visibility: hidden;
+    }
+    .toggle-btn {
+        right: -16px;
+    }
+}

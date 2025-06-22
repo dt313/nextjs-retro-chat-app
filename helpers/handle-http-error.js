@@ -32,8 +32,9 @@ export default function handleHttpError(error) {
         message === 'Invalid Refresh Token' ||
         message === 'Invalid Access Token'
     ) {
+        console.log('-------');
         storageUtils.clearAuth();
-        window.location.reload();
+        window.location.href = '/';
     }
 
     return message;

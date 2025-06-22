@@ -34,7 +34,7 @@ import { calculateTime, getAvatarFromConversation, getNameFromConversation } fro
 
 import { addToast } from '@/redux/actions/toast-action';
 
-import ExtraDescription from '../extra-description';
+import ExtraDescription from '../../../../../components/extra-description';
 import styles from './ConversationInformation.module.scss';
 import SearchItem from './SearchItem';
 
@@ -104,7 +104,8 @@ function ConversationInformation({ hide, isGroup = true, data = {}, onClose }) {
     const handleClickSimItem = useCallback(
         (id) => {
             router.push(`?message=${id}`);
-            if (breakpoint === 'md' || breakpoint === 'sm') {
+            console.log(breakpoint);
+            if (breakpoint === 'md' || breakpoint === 'sm' || breakpoint === 'xs') {
                 onClose();
             }
         },

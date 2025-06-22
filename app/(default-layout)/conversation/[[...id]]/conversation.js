@@ -4,26 +4,23 @@ import { useCallback, useEffect, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
+import ConversationHeaderLoading from '@/app/(default-layout)/conversation/components/conversation-header/ConversationHeaderLoading';
+import ConversationInformationLoading from '@/app/(default-layout)/conversation/components/conversation-information/ConversationInformationLoading';
 import eventBus from '@/config/emit';
 import withAuth from '@/hoc/with-auth';
 import { useTypingStatus } from '@/hooks';
 import { throttle } from 'lodash';
 import dynamic from 'next/dynamic';
-import Head from 'next/head';
 import { redirect, useRouter, useSearchParams } from 'next/navigation';
 import { RiArrowRightSLine } from 'react-icons/ri';
 import { TbPinFilled } from 'react-icons/tb';
 import { useDispatch, useSelector } from 'react-redux';
 
 import CloseIcon from '@/components/close-icon';
-import ConversationHeaderLoading from '@/components/conversation-header/ConversationHeaderLoading';
-import ConversationInformationLoading from '@/components/conversation-information/ConversationInformationLoading';
 import Icon from '@/components/icon';
 import { SpinnerLoader } from '@/components/loading';
 import MessageIcon from '@/components/message-icon';
 import MessageInput from '@/components/message-input';
-
-import useBreakpoint from '@/hooks/useBreakpoint';
 
 import { conversationService, messageService } from '@/services';
 
@@ -35,21 +32,18 @@ import { readLastMessage } from '@/redux/actions/conversations-action';
 import { updateLastConversation } from '@/redux/actions/last-conversation-action';
 import { addToast } from '@/redux/actions/toast-action';
 
+import { useSidebar } from '../context/SidebarContext';
 import styles from './conversation.module.scss';
 
-const SideBar = dynamic(() => import('../../../../components/sidebar'), {
-    loading: () => <SpinnerLoader small />,
-});
-
-const ConversationInformation = dynamic(() => import('../../../../components/conversation-information'), {
+const ConversationInformation = dynamic(() => import('../components/conversation-information'), {
     loading: () => <ConversationInformationLoading />,
 });
 
-const ConversationHeader = dynamic(() => import('../../../../components/conversation-header'), {
+const ConversationHeader = dynamic(() => import('../components/conversation-header'), {
     loading: () => <ConversationHeaderLoading />,
 });
 
-const MessageBox = dynamic(() => import('../../../../components/message-box'), {
+const MessageBox = dynamic(() => import('../components/message-box'), {
     loading: () => (
         <div className={cx('loader')}>
             <SpinnerLoader medium />
@@ -62,16 +56,13 @@ const LIMIT = 30;
 const cx = classNames.bind(styles);
 
 function Conversation({ id }) {
-    const [isShowRight, setIsShowRight] = useState(false);
-    const [isShowLeft, setIsShowLeft] = useState(false);
-    const [isShowContent, setIsShowContent] = useState(false);
+    const { isShowLeft, isShowContent, isShowRight, transition, setIsShowRight, toggleRightSide } = useSidebar();
 
     const [isBeforeFinish, setIsBeforeFinish] = useState(false);
 
     const [conversation, setConversation] = useState(null);
     const [messagesList, setMessageList] = useState([]);
     const [isTyping, setIsTyping] = useState(false);
-    const [transition, setTransition] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadConversation, setIsLoadConversation] = useState(false);
@@ -83,8 +74,6 @@ function Conversation({ id }) {
     const { user: me } = useSelector((state) => state.auth);
     const { list } = useSelector((state) => state.conversations);
     const { list: onlineUserList } = useSelector((state) => state.onlineUsers);
-
-    const breakpoint = useBreakpoint();
     const dispatch = useDispatch();
 
     useTypingStatus({
@@ -206,45 +195,6 @@ function Conversation({ id }) {
         [id, conversation, dispatch],
     );
 
-    const toggleRightSide = useCallback(() => {
-        if (breakpoint === 'lg' || breakpoint === 'xl') {
-            setIsShowRight(!isShowRight);
-        } else {
-            setIsShowRight(!isShowRight);
-            setIsShowContent(isShowRight);
-        }
-        setTransition(true);
-    }, [breakpoint, isShowRight, isShowContent]);
-
-    const toggleLeftSide = useCallback(() => {
-        setIsShowLeft(!isShowLeft);
-        setTransition(true);
-    }, [isShowLeft]);
-
-    // Set initial layout based on breakpoint
-    useEffect(() => {
-        if (breakpoint === 'lg' || breakpoint === 'xl') {
-            setIsShowLeft(true);
-            setIsShowRight(true);
-            if (!id) {
-                setIsShowRight(false);
-            }
-            setIsShowContent(true);
-        } else if (breakpoint === 'md') {
-            setIsShowLeft(true);
-            setIsShowContent(true);
-            setIsShowRight(false);
-        } else if (breakpoint === 'sm' || breakpoint === 'xs') {
-            setIsShowLeft(true);
-            setIsShowContent(false);
-            setIsShowRight(false);
-            if (id) {
-                setIsShowContent(true);
-                setIsShowLeft(false);
-            }
-        }
-    }, [id, breakpoint]);
-
     const handleCloseRightSide = useCallback(() => {
         setIsShowRight(false);
     }, []);
@@ -284,12 +234,15 @@ function Conversation({ id }) {
         }
     };
 
-    const checkOnline = (conv) => {
-        if (!conv) return false;
-        if (conv.isGroup) return false;
-        const id = getTargetIdFromConversation(conv, me._id);
-        return checkStatus(id, onlineUserList);
-    };
+    const checkOnline = useCallback(
+        (conv) => {
+            if (!conv) return false;
+            if (conv.isGroup) return false;
+            const id = getTargetIdFromConversation(conv, me._id);
+            return checkStatus(id, onlineUserList);
+        },
+        [onlineUserList, id],
+    );
 
     const onlineCount = getOnlineUsers(onlineUserList, conversation?.participants);
 
@@ -317,17 +270,18 @@ function Conversation({ id }) {
     useEffect(() => {}, []);
 
     return (
-        <div className={cx('wrapper')}>
-            <Head>
-                <title>{document?.title || 'Cuộc trò chuyện'}</title>
-                <meta name="description" content="Cùng nói chuyện nào !!" />
-            </Head>
-            <div className={cx('left-side', isShowLeft ? 'show' : 'hide', { transition: transition })}>
-                <SideBar className={cx('left-wrap')} />
-                <span className={cx('toggle-btn')} onClick={toggleLeftSide}></span>
-            </div>
+        <>
             {id ? (
-                <div className={cx('content', isShowContent ? 'show' : 'hide')}>
+                <div
+                    className={cx('content', isShowContent ? 'show' : 'hide')}
+                    // style={{
+                    //     backgroundImage:
+                    //         'url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2aSb48Nsjn0zGny9IE7wr47XQx9F5hqYebA&s)',
+                    //     backgroundRepeat: 'no-repeat',
+                    //     backgroundSize: 'cover',
+                    //     backgroundPosition: 'center',
+                    // }}
+                >
                     {isLoadConversation ? (
                         <ConversationHeaderLoading />
                     ) : (
@@ -411,7 +365,7 @@ function Conversation({ id }) {
                         />
                     ))}
             </div>
-        </div>
+        </>
     );
 }
 

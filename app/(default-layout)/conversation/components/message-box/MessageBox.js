@@ -13,6 +13,7 @@ import { HiArrowDown } from 'react-icons/hi';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Avatar from '@/components/avatar';
+import Icon from '@/components/icon';
 import { SpinnerLoader, ThreeDotLoading } from '@/components/loading';
 
 import { conversationService } from '@/services';
@@ -22,7 +23,6 @@ import { getMessageNotification } from '@/helpers/conversation-info';
 import { closeReplyBox } from '@/redux/actions/reply-box-action';
 import { addToast } from '@/redux/actions/toast-action';
 
-import Icon from '../icon/Icon';
 import styles from './MessageBox.module.scss';
 
 const Message = dynamic(() => import('../message'), {});

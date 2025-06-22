@@ -1,0 +1,10 @@
+@use '/app/scss/mixins.scss' as *;
+
+.conversation-wrapper {
+    display: flex;
+    width: 100%;
+    height: calc(100vh - var(--header-height));
+    overflow: hidden;
+    @include respond-to('laptop') {
+    }
+}
