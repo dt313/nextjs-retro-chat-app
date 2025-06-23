@@ -8,6 +8,7 @@ import { useBreakpoint } from '@/hooks';
 import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 
+import ImagePreviewWrap from '@/components/image-preview/ImagePreviewWrap';
 import { SpinnerLoader } from '@/components/loading';
 
 import { SidebarContext } from './context/SidebarContext';
@@ -77,6 +78,7 @@ export default function ConversationLayout({ children }) {
                 <LeftSide />
 
                 {children}
+                <ImagePreviewWrap />
             </div>
         </SidebarContext.Provider>
     );

@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
@@ -14,7 +14,7 @@ import InputSearch from '@/components/input-search';
 
 import { conversationService } from '@/services';
 
-import { findConversation, initConversation, newConversation } from '@/redux/actions/conversations-action';
+import { findConversation, initConversation } from '@/redux/actions/conversations-action';
 import { addToast } from '@/redux/actions/toast-action';
 
 import ConversationList from './ConversationList';
@@ -67,17 +67,6 @@ function SideBar({ className }) {
         };
         fetchConversationsByName();
     }, [debounceValue]);
-
-    useEffect(() => {
-        const handleSortConversation = (conversation) => {
-            dispatch(newConversation({ conversation, meId: me._id }));
-        };
-
-        eventBus.on('last-conversation', handleSortConversation);
-        return () => {
-            eventBus.off('last-conversation', handleSortConversation);
-        };
-    }, [list]);
 
     useEffect(() => {
         if (debounceValue === '') {

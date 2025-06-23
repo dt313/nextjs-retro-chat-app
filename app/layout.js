@@ -1,5 +1,4 @@
 import AuthFormWrap from '@/components/auth-form-wrap';
-import ImagePreviewWrap from '@/components/image-preview/ImagePreviewWrap';
 import StoreProvider from '@/components/store-provider';
 import ThemeWrapper from '@/components/theme-wrapper';
 import Toast from '@/components/toast/Toast';
@@ -34,7 +33,6 @@ export default function RootLayout({ children }) {
                     <ThemeWrapper>
                         {children}
                         <AuthFormWrap />
-                        <ImagePreviewWrap />
                         <Toast placement="top left" duration={5000} />
                     </ThemeWrapper>
                 </body>

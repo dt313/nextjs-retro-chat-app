@@ -6,7 +6,7 @@ import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
 import HeadlessTippy from '@tippyjs/react/headless';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { IoNotifications } from 'react-icons/io5';
 import { PiNotePencilFill } from 'react-icons/pi';
 import { useDispatch, useSelector } from 'react-redux';

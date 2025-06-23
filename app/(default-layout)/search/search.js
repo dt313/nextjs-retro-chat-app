@@ -4,7 +4,6 @@ import { Suspense, useEffect, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
-import eventBus from '@/config/emit';
 import { useDebounce } from '@/hooks';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,7 +14,6 @@ import { GroupCard, UserCard } from '@/components/search-card';
 
 import { groupService, userService } from '@/services';
 
-import { newConversation } from '@/redux/actions/conversations-action';
 import { addToast } from '@/redux/actions/toast-action';
 
 import styles from './search.module.scss';
@@ -34,17 +32,6 @@ function SearchContent() {
     const debounceValue = useDebounce(searchValue, 1300);
     const router = useRouter();
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        const handleSortConversation = (conversation) => {
-            dispatch(newConversation({ conversation, meId: me._id }));
-        };
-
-        eventBus.on('last-conversation', handleSortConversation);
-        return () => {
-            eventBus.off('last-conversation', handleSortConversation);
-        };
-    }, [list]);
 
     const fetchAPI = async (type) => {
         try {

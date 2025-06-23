@@ -25,7 +25,7 @@ import { getNickNameFromConversation } from '@/helpers/conversation-info';
 
 import Validation from '@/utils/input-validation';
 
-import { deleteConversation } from '@/redux/actions/conversations-action';
+import { deleteConversation, updateConversation } from '@/redux/actions/conversations-action';
 import { addToast } from '@/redux/actions/toast-action';
 
 import styles from './ChatSetting.module.scss';
@@ -193,10 +193,10 @@ function ChatSetting({ isGroup, data }) {
                 const formData = new FormData();
                 formData.append('type', field);
                 formData.append('value', value);
-                console.log(value);
                 const res = await conversationService.updateConversation(conversation._id, formData);
                 if (res) {
                     eventBus.emit(`conversation-update-${res._id}`, res);
+                    dispatch(updateConversation(res));
                 }
             } catch (error) {
                 dispatch(addToast({ type: 'error', content: error.message }));

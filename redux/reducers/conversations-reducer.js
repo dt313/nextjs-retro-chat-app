@@ -6,12 +6,17 @@ import {
     INIT_CONVERSATION,
     NEW_CONVERSATION,
     READ_LAST_MESSAGE,
+    RESET_COUNT,
+    UPDATE_CONVERSATION,
 } from '../actions/conversations-action';
 
 const initialState = {
     list: [],
     unRead: 0,
 };
+
+let count = 0;
+let prevTitle = '';
 
 const conversationsReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -47,6 +52,12 @@ const conversationsReducer = (state = initialState, action) => {
 
             if (isSender) {
                 isRead = true;
+            }
+
+            if (!isSender && window.document.hidden) {
+                if (count === 0) prevTitle = window.document.title;
+                count++;
+                window.document.title = `${count} new message`;
             }
 
             return {
@@ -89,6 +100,27 @@ const conversationsReducer = (state = initialState, action) => {
             return {
                 ...state,
                 list: filteredList,
+            };
+
+        case UPDATE_CONVERSATION:
+            const updatedConversation = action.payload;
+
+            const updateConversations = state.list.map((conv) => {
+                if (conv._id === updatedConversation._id) {
+                    return updatedConversation;
+                }
+                return conv;
+            });
+            return {
+                ...state,
+                list: updateConversations,
+            };
+
+        case RESET_COUNT:
+            count = 0;
+            window.document.title = prevTitle;
+            return {
+                ...state,
             };
 
         default:

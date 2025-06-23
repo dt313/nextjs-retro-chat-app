@@ -137,7 +137,7 @@ function ConversationInformation({ hide, isGroup = true, data = {}, onClose }) {
         <div className={cx('wrapper', hide && 'hide')}>
             <div className={cx('header')}>
                 <Avatar src={getAvatarFromConversation(data, me._id)} className={cx('avatar')} size={96} />
-                <h4 className={cx('name')}>{getNameFromConversation(data, me._id)}</h4>
+                <h4 className={cx('name')}>{getNameFromConversation(data, me._id, true)}</h4>
             </div>
 
             <div className={cx('action')}>

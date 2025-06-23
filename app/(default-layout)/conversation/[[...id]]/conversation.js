@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
@@ -76,6 +76,8 @@ function Conversation({ id }) {
     const { list: onlineUserList } = useSelector((state) => state.onlineUsers);
     const dispatch = useDispatch();
 
+    const title = useRef('');
+
     useTypingStatus({
         conversationId: id,
         userId: me._id,
@@ -97,10 +99,11 @@ function Conversation({ id }) {
                 return;
             }
 
-            const conversation = await conversationService.getConversationById(id);
-            if (conversation) {
-                setConversation(conversation);
+            const res = await conversationService.getConversationById(id);
+            if (res) {
+                setConversation(res);
                 dispatch(updateLastConversation(id));
+                title.current = getNameFromConversation(res, me._id, true);
             }
 
             await fetchMessageOfConversation();
@@ -259,15 +262,14 @@ function Conversation({ id }) {
 
     useEffect(() => {
         if (window) {
-            if (!id) {
+            if (!title || !id) {
                 document.title = 'Cuộc trò chuyện';
                 return;
+            } else {
+                document.title = title.current;
             }
-            document.title = getNameFromConversation(conversation, me._id, true);
         }
-    }, [id, conversation]);
-
-    useEffect(() => {}, []);
+    }, [title.current, id]);
 
     return (
         <>

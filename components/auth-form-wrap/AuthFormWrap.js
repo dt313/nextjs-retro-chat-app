@@ -17,7 +17,7 @@ import { storageUtils } from '@/utils';
 
 import { login } from '@/redux/actions/auth-action';
 import { closeAuthBox } from '@/redux/actions/auth-box-action';
-import { initConversation } from '@/redux/actions/conversations-action';
+import { initConversation, newConversation, resetCount } from '@/redux/actions/conversations-action';
 import { initNotifications } from '@/redux/actions/notification-action';
 import { addOnlineUser, deleteUser, initOnlineUsers } from '@/redux/actions/online-users-action';
 
@@ -43,6 +43,20 @@ function AuthFormWrap() {
             dispatch(initConversation({ conversations, meId: user._id }));
         }
     };
+
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible') {
+                dispatch(resetCount());
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+        };
+    }, []);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -74,10 +88,16 @@ function AuthFormWrap() {
             dispatch(deleteUser(offlineUser));
         };
 
+        const handleSortConversation = (conversation) => {
+            dispatch(newConversation({ conversation, meId: user._id }));
+        };
+
+        eventBus.on('last-conversation', handleSortConversation);
         eventBus.on('new_online_user', handleAddOnlineUser);
         eventBus.on('offline_user', handleOfflineUser);
 
         return () => {
+            eventBus.off('last-conversation', handleSortConversation);
             eventBus.off('new_online_user', handleAddOnlineUser);
             eventBus.off('offline_user', handleOfflineUser);
         };
