@@ -29,6 +29,8 @@
     --text-low-color: #5b5b5b;
     --box-shadow: var(--black) 3px 3px;
     --red: #b54c37;
+
+    --epr-highlight-color: #b54c37 !important;
 }
 
 [data-theme='dark'] {
@@ -179,4 +181,84 @@ html *::-webkit-scrollbar-track {
 
 html *::-webkit-scrollbar-thumb:hover {
     background: #666;
+}
+
+// emoji-picker
+.epr_x558go:focus {
+    border: 1px solid #9a9a9a !important;
+}
+
+.epr_-f1jbax:focus:before {
+    border: none !important;
+}
+
+.epr_-tul3d0 {
+    max-height: 32px !important;
+}
+.epr_-a3ewa5 {
+    max-width: 32px !important;
+}
+
+.epr_-u8wwnq {
+    min-height: 32px !important;
+}
+.epr_xfdx0l {
+    min-width: 32px !important;
+}
+
+.epr_jkst5z:focus {
+    background-color: #fbb6a8 !important;
+}
+
+.epr_jkst5z:hover {
+    background-color: #fbb6a8 !important;
+}
+
+.epr_-rk4ix5 {
+    font-size: 1.4rem !important;
+}
+
+.epr_-3yva2a {
+    border-top: 1px solid #9a9a9a !important;
+}
+
+.epr_cnf3p8 .epr-active {
+    border: 1px solid #b54c37 !important;
+}
+
+.epr_-j7gyxp:focus {
+    box-shadow: 0 0 0 3px #fbb6a8 !important;
+}
+
+.epr_6daqyu * {
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        Roboto,
+        Oxygen,
+        Ubuntu,
+        Cantarell,
+        'Fira Sans',
+        'Droid Sans',
+        'Helvetica Neue',
+        sans-serif !important;
+}
+
+.epr_-ivanlx {
+    border-radius: 50px !important;
+    font-size: 1.4rem !important;
+}
+
+.epr_-z2fuzw {
+    height: 36px !important;
+}
+
+.epr_-8ygbw8 {
+    padding-bottom: 8px !important;
+}
+
+.epr_-kg0voo {
+    display: none !important;
 }

@@ -54,8 +54,8 @@ const conversationsReducer = (state = initialState, action) => {
                 isRead = true;
             }
 
+            if (count === 0) prevTitle = window.document.title;
             if (!isSender && window.document.hidden) {
-                if (count === 0) prevTitle = window.document.title;
                 count++;
                 window.document.title = `${count} new message`;
             }
@@ -118,7 +118,9 @@ const conversationsReducer = (state = initialState, action) => {
 
         case RESET_COUNT:
             count = 0;
-            window.document.title = prevTitle;
+            if (!!prevTitle) {
+                window.document.title = prevTitle;
+            }
             return {
                 ...state,
             };

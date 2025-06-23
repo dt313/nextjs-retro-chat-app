@@ -7,11 +7,15 @@ import classNames from 'classnames/bind';
 import { FILE_ACCEPT_LIST } from '@/config/ui-config';
 import { getSocket } from '@/config/ws';
 import { useAutoResize } from '@/hooks';
+import HeadlessTippy from '@tippyjs/react/headless';
+import dynamic from 'next/dynamic';
 import { BsImage } from 'react-icons/bs';
 import { CgAttachment } from 'react-icons/cg';
 import { FaArrowUp } from 'react-icons/fa6';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
+
+import SmilingFace from '@/assets/svg/emoji/smiling';
 
 import CloseIcon from '@/components/close-icon';
 import Icon from '@/components/icon';
@@ -22,6 +26,13 @@ import { closeReplyBox } from '@/redux/actions/reply-box-action';
 import { SpinnerLoader } from '../loading';
 import styles from './MessageInput.module.scss';
 
+const Picker = dynamic(
+    () => {
+        return import('emoji-picker-react');
+    },
+    { ssr: false },
+);
+
 const cx = classNames.bind(styles);
 
 function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
@@ -30,6 +41,7 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
     const fileInputRef = useRef(null);
     const [files, setFiles] = useState([]);
     const [previewFiles, setPreviewFiles] = useState([]);
+    const [isVisible, setIsVisible] = useState(false);
 
     const { user: me } = useSelector((state) => state.auth);
     const { isOpenReplyBox, replyData } = useSelector((state) => state.replyBox);
@@ -151,6 +163,11 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
         dispatch(closeReplyBox());
     };
 
+    const handleEmojiClick = (emojiData) => {
+        // setIsVisible(false);
+        setValue((prev) => prev + emojiData.emoji);
+    };
+
     return (
         <div className={cx('wrapper')}>
             {isOpenReplyBox && (
@@ -236,6 +253,71 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
                             multiple
                             onChange={handleFileChange}
                         />
+                        <HeadlessTippy
+                            visible={isVisible}
+                            onClickOutside={() => setIsVisible(false)}
+                            render={(attrs) => (
+                                <div className={cx('')} tabIndex="-1" {...attrs}>
+                                    <Picker
+                                        className={cx('emoji-picker')}
+                                        lazyLoadEmojis={true}
+                                        onEmojiClick={handleEmojiClick}
+                                        searchPlaceholder="Tìm kiếm"
+                                        emojiStyle="facebook"
+                                        categories={[
+                                            {
+                                                category: 'suggested',
+                                                name: 'Gần đây',
+                                            },
+                                            {
+                                                category: 'smileys_people',
+                                                name: 'Mặt cười và hình người',
+                                            },
+                                            {
+                                                category: 'animals_nature',
+                                                name: 'Động vật và thiên nhiên',
+                                            },
+                                            {
+                                                category: 'food_drink',
+                                                name: 'Ẩm thực',
+                                            },
+                                            {
+                                                category: 'travel_places',
+                                                name: 'Du lịch',
+                                            },
+                                            {
+                                                category: 'activities',
+                                                name: 'Hoạt động',
+                                            },
+                                            {
+                                                category: 'objects',
+                                                name: 'Đồ vật',
+                                            },
+                                            {
+                                                category: 'symbols',
+                                                name: 'Biểu tượng',
+                                            },
+                                            {
+                                                category: 'flags',
+                                                name: 'Cờ',
+                                            },
+                                        ]}
+                                    />
+                                </div>
+                            )}
+                            interactive
+                        >
+                            <div className={cx('icon-wrapper')}>
+                                <Icon
+                                    className={cx('attach-icon')}
+                                    medium
+                                    element={<SmilingFace />}
+                                    onClick={() => setIsVisible(true)}
+                                    width={400}
+                                    height={500}
+                                />
+                            </div>
+                        </HeadlessTippy>
                     </div>
                     <div className={'submit'}>
                         {!isLoading ? (

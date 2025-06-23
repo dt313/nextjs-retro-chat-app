@@ -165,3 +165,18 @@
         margin-left: 12px;
     }
 }
+
+// emoji-picker
+
+.icon-wrapper {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.emoji-picker {
+    background-color: #fff !important;
+    border-radius: 8px !important;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1) !important;
+    border: 1px solid #818181 !important;
+}
