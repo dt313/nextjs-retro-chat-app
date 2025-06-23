@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 import {
+    DELETE_CONVERSATION,
     FIND_CONVERSATION,
     INIT_CONVERSATION,
     NEW_CONVERSATION,
@@ -80,6 +81,14 @@ const conversationsReducer = (state = initialState, action) => {
             return {
                 ...state,
                 list: action.payload,
+            };
+
+        case DELETE_CONVERSATION:
+            const deletedConversationId = action.payload;
+            const filteredList = state.list.filter((con) => con._id !== deletedConversationId);
+            return {
+                ...state,
+                list: filteredList,
             };
 
         default:

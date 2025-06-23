@@ -25,6 +25,7 @@ import { getNickNameFromConversation } from '@/helpers/conversation-info';
 
 import Validation from '@/utils/input-validation';
 
+import { deleteConversation } from '@/redux/actions/conversations-action';
 import { addToast } from '@/redux/actions/toast-action';
 
 import styles from './ChatSetting.module.scss';
@@ -209,19 +210,19 @@ function ChatSetting({ isGroup, data }) {
     const handleDelete = useCallback(async () => {
         try {
             setIsLoading(true);
+            let res;
 
             if (conversation.isGroup) {
                 // delete conversation
-                const res = await conversationService.deleteGroupConversation(conversation._id);
-                if (res) {
-                    router.push('/conversation');
-                }
+                res = await conversationService.deleteGroupConversation(conversation._id);
             } else {
                 // leave conversation
-                const res = await conversationService.leaveConversation(conversation._id);
-                if (res) {
-                    router.push('/conversation');
-                }
+                res = await conversationService.leaveConversation(conversation._id);
+            }
+
+            if (res) {
+                router.push('/conversation');
+                dispatch(deleteConversation(res._id));
             }
         } catch (error) {
             dispatch(addToast({ type: 'error', content: error.message }));

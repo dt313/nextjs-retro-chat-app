@@ -32,6 +32,7 @@ import { getEmailFromConversation, getUsernameFromConversation } from '@/helpers
 
 import { calculateTime, getAvatarFromConversation, getNameFromConversation } from '@/helpers';
 
+import { deleteConversation } from '@/redux/actions/conversations-action';
 import { addToast } from '@/redux/actions/toast-action';
 
 import ExtraDescription from '../../../../../components/extra-description';
@@ -117,6 +118,7 @@ function ConversationInformation({ hide, isGroup = true, data = {}, onClose }) {
             const res = await conversationService.leaveConversation(data._id);
             if (res) {
                 router.push('/conversation');
+                dispatch(deleteConversation(res._id));
             }
         } catch (error) {
             dispatch(addToast({ type: 'error', content: error.message }));
