@@ -57,7 +57,7 @@ const conversationsReducer = (state = initialState, action) => {
             if (count === 0) prevTitle = window.document.title;
             if (!isSender && window.document.hidden) {
                 count++;
-                window.document.title = `${count} new message`;
+                window.document.title = `${count} tin nhắn mới`;
             }
 
             return {

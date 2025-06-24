@@ -76,7 +76,7 @@ function Conversation({ id }) {
     const { list: onlineUserList } = useSelector((state) => state.onlineUsers);
     const dispatch = useDispatch();
 
-    const title = useRef('');
+    const title = useRef('Cuộc trò chuyện');
 
     useTypingStatus({
         conversationId: id,
@@ -131,11 +131,11 @@ function Conversation({ id }) {
                     }
                 }
             } catch (error) {
-                dispatch(addToast({ type: 'error', content: error.message }));
+                // dispatch(addToast({ type: 'error', content: error.message }));
             }
         },
         3000,
-        { leading: true },
+        { leading: true, trailing: false },
     );
 
     useEffect(() => {

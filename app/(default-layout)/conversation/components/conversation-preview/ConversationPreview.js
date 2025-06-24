@@ -1,9 +1,10 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
+import { set, throttle } from 'lodash';
 import { useRouter } from 'next/navigation';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -36,22 +37,26 @@ function ConversationPreview({
 
     const router = useRouter();
 
-    const handleClickMessagePreview = async () => {
-        try {
-            if (isReaded) {
-                router.push(`/conversation/${slug}`);
-                return;
-            } else {
-                const res = await conversationService.readLastMessage(slug);
-                if (res) {
-                    dispatch(readLastMessage({ conversationId: slug, meId: me._id }));
+    const handleClickMessagePreview = throttle(
+        async () => {
+            try {
+                if (isReaded) {
                     router.push(`/conversation/${slug}`);
+                    return;
+                } else {
+                    const res = await conversationService.readLastMessage(slug);
+                    if (res) {
+                        dispatch(readLastMessage({ conversationId: slug, meId: me._id }));
+                        router.push(`/conversation/${slug}`);
+                    }
                 }
+            } catch (error) {
+                // dispatch(addToast({ type: 'error', content: error.message }));
             }
-        } catch (error) {
-            dispatch(addToast({ type: 'error', content: error.message }));
-        }
-    };
+        },
+        3000,
+        { leading: true, trailing: false },
+    );
 
     const classes = cx('wrapper', {
         [className]: className,

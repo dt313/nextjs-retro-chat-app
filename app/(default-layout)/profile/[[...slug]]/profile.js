@@ -132,6 +132,8 @@ function Profile({ slug }) {
     useEffect(() => {
         if (window) {
             document.title = type === 'user' ? basicInfo?.fullName : basicInfo?.name;
+        } else {
+            document.title = 'Profile';
         }
     }, [type, basicInfo]);
 
