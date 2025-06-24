@@ -24,8 +24,6 @@ export default function ConversationLayout({ children }) {
     const [isShowRight, setIsShowRight] = useState(false);
     const [isShowContent, setIsShowContent] = useState(false);
 
-    console.log('ConversationLayout', { isShowLeft, isShowContent, isShowRight, breakpoint });
-
     const toggleLeftSide = () => {
         setIsShowLeft((prev) => !prev);
         setTransition(true);

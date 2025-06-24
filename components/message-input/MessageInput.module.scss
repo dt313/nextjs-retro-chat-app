@@ -83,7 +83,8 @@
         #fff 0px 8px 16px -8px;
 
     &:hover {
-        color: var(--red);
+        opacity: 1;
+        color: #ff3838;
     }
 }
 
@@ -96,6 +97,7 @@
     .preview-img {
         width: 100%;
         height: 100%;
+        border: 1px solid #818181;
         border-radius: 4px;
     }
 }
@@ -108,14 +110,16 @@
     padding: 0 1rem;
     border-radius: 4px;
     position: relative;
-    background-color: var(--black);
-    color: var(--background);
+    background-color: #fff;
     font-size: 1.4rem;
     font-weight: 500;
     line-height: 1.4;
+    border: 1px solid #818181;
 
     .preview-file-name {
         max-width: 100px;
+        @include font-default;
+        color: #333;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
@@ -179,4 +183,34 @@
     border-radius: 8px !important;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1) !important;
     border: 1px solid #818181 !important;
+}
+
+// drag and drop
+.drag-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px dashed var(--red);
+    background-color: #e8c9c977;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.drag-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    @include font-default;
+    color: var(--red);
+    font-size: 1.6rem;
+    font-weight: 500;
+
+    svg {
+        color: var(--red);
+    }
 }

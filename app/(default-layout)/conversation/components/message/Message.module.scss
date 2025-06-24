@@ -86,6 +86,7 @@
     border: var(--solid-border);
     box-shadow: var(--box-shadow);
     background-color: #fff;
+    object-fit: contain;
     cursor: pointer;
 
     &:hover {
@@ -112,6 +113,10 @@
         bottom: 24px;
         left: 20%;
     }
+
+    @include respond-to('mobile') {
+        max-width: 200px;
+    }
 }
 
 .imagesStack3 {
@@ -130,6 +135,10 @@
         position: relative;
         bottom: 48px;
         left: 0;
+    }
+
+    @include respond-to('mobile') {
+        max-width: 200px;
     }
 }
 

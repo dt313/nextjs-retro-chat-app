@@ -4,7 +4,7 @@ import { memo, useEffect, useRef, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
-import { FILE_ACCEPT_LIST } from '@/config/ui-config';
+import { FILE_ACCEPT_LIST, emojiCategories } from '@/config/ui-config';
 import { getSocket } from '@/config/ws';
 import { useAutoResize } from '@/hooks';
 import HeadlessTippy from '@tippyjs/react/headless';
@@ -22,6 +22,7 @@ import Icon from '@/components/icon';
 import Image from '@/components/image';
 
 import { closeReplyBox } from '@/redux/actions/reply-box-action';
+import { addToast } from '@/redux/actions/toast-action';
 
 import { SpinnerLoader } from '../loading';
 import styles from './MessageInput.module.scss';
@@ -37,14 +38,16 @@ const cx = classNames.bind(styles);
 
 function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
     const [value, setValue] = useState('');
-    const textRef = useAutoResize(value);
-    const fileInputRef = useRef(null);
     const [files, setFiles] = useState([]);
     const [previewFiles, setPreviewFiles] = useState([]);
-    const [isVisible, setIsVisible] = useState(false);
-
+    const [isVisibleEmoji, setIsVisibleEmoji] = useState(false);
+    const [isDragOver, setIsDragOver] = useState(false);
     const { user: me } = useSelector((state) => state.auth);
     const { isOpenReplyBox, replyData } = useSelector((state) => state.replyBox);
+    const fileInputRef = useRef(null);
+    const containerRef = useRef(null);
+    const textRef = useAutoResize(value);
+
     const dispatch = useDispatch();
 
     const handleChange = (e) => {
@@ -54,6 +57,55 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
     useEffect(() => {
         if (isOpenReplyBox) textRef.current.focus();
     }, [replyData, isOpenReplyBox]);
+
+    // Add drag and drop event listeners
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container) return;
+
+        const handleDragEnter = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsDragOver(true);
+        };
+
+        const handleDragLeave = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            // Only set dragOver to false if we're leaving the container entirely
+            if (!container.contains(e.relatedTarget)) {
+                setIsDragOver(false);
+            }
+        };
+
+        const handleDragOver = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        };
+
+        const handleDrop = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsDragOver(false);
+
+            const droppedFiles = Array.from(e.dataTransfer.files);
+            if (droppedFiles.length > 0) {
+                processFiles(droppedFiles);
+            }
+        };
+
+        container.addEventListener('dragenter', handleDragEnter);
+        container.addEventListener('dragleave', handleDragLeave);
+        container.addEventListener('dragover', handleDragOver);
+        container.addEventListener('drop', handleDrop);
+
+        return () => {
+            container.removeEventListener('dragenter', handleDragEnter);
+            container.removeEventListener('dragleave', handleDragLeave);
+            container.removeEventListener('dragover', handleDragOver);
+            container.removeEventListener('drop', handleDrop);
+        };
+    }, [files, previewFiles]);
 
     const handleFocus = () => {
         const socket = getSocket();
@@ -93,6 +145,33 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
             console.error('WebSocket is null or undefined');
         }
     };
+
+    const handleOnPaste = (e) => {
+        const clipboardItems = e.clipboardData.items;
+        const pastedFiles = [];
+        let hasFiles = false;
+
+        for (let i = 0; i < clipboardItems.length; i++) {
+            const item = clipboardItems[i];
+
+            if (item.kind === 'file') {
+                const file = item.getAsFile();
+                if (file) {
+                    pastedFiles.push(file);
+                    hasFiles = true;
+                }
+            }
+        }
+
+        if (pastedFiles.length > 0) {
+            processFiles(pastedFiles);
+        }
+
+        if (hasFiles) {
+            e.preventDefault(); // Prevent default paste behavior if files are pasted
+        }
+    };
+
     const handleSubmit = () => {
         if (value.trim() === '' && files.length === 0) return;
         if (isLoading) return;
@@ -122,36 +201,68 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
         fileInputRef.current.click();
     };
 
-    const handleFileChange = (e) => {
-        const inputFiles = e.target.files;
+    const processFiles = (inputFiles) => {
         let newPreviewFiles = [];
         let newFiles = [];
-        if (inputFiles.length > 0) {
-            for (const file of inputFiles) {
-                const isExist = files.some((f) => f.name === file.name && f.size === file.size);
-                if (isExist) {
-                    alert(`${file.name} is attached`);
-                    continue;
-                }
-                if (file.type.startsWith('image/')) {
-                    newPreviewFiles.push({
-                        id: uuidv4(),
-                        type: 'image',
-                        src: URL.createObjectURL(file),
-                    });
-                    newFiles.push(file);
-                } else {
-                    newPreviewFiles.push({ id: uuidv4(), type: 'file', name: file.name });
-                    newFiles.push(file);
-                }
+
+        for (const file of inputFiles) {
+            const isExist = files.some((f) => f.name === file.name && f.size === file.size);
+            if (isExist) {
+                dispatch(
+                    addToast({
+                        type: 'warning',
+                        content: `File ${file.name} đã tồn tại trong danh sách đính kèm.`,
+                    }),
+                );
+                continue;
+            }
+
+            // Check file extension against accepted types
+            const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+            const acceptedExtensions = FILE_ACCEPT_LIST.split(',').map((ext) => ext.trim().toLowerCase());
+            const fileAccepted = acceptedExtensions.includes(fileExtension);
+
+            if (!fileAccepted) {
+                dispatch(
+                    addToast({
+                        type: 'warning',
+                        content: `Kiểu tệp ${fileExtension} không được hỗ trợ`,
+                    }),
+                );
+                continue;
+            }
+
+            if (file.type.startsWith('image/')) {
+                newPreviewFiles.push({
+                    id: uuidv4(),
+                    type: 'image',
+                    src: URL.createObjectURL(file),
+                });
+                newFiles.push(file);
+            } else {
+                newPreviewFiles.push({
+                    id: uuidv4(),
+                    type: 'file',
+                    name: file.name,
+                });
+                newFiles.push(file);
             }
         }
+
         if (files.length + newFiles.length > 10) {
             alert('You can only upload up to 10 files');
             return;
         }
+
         setPreviewFiles((prev) => [...prev, ...newPreviewFiles]);
         setFiles((prev) => [...prev, ...newFiles]);
+    };
+
+    const handleFileChange = (e) => {
+        const inputFiles = e.target.files;
+        if (inputFiles.length > 0) {
+            processFiles(inputFiles);
+        }
     };
 
     const handleDeleteFile = (id) => {
@@ -164,7 +275,7 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
     };
 
     const handleEmojiClick = (emojiData) => {
-        // setIsVisible(false);
+        // setIsVisibleEmoji(false);
         setValue((prev) => prev + emojiData.emoji);
     };
 
@@ -187,7 +298,16 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
                     <CloseIcon theme="dark" small className={cx('reply-close')} onClick={handleCloseReplyBox} />
                 </div>
             )}
-            <div className={cx('container')}>
+            <div className={cx('container')} ref={containerRef}>
+                {isDragOver && (
+                    <div className={cx('drag-overlay')}>
+                        <div className={cx('drag-message')}>
+                            <Icon element={<BsImage />} large />
+                            <span> Thả file hoặc ảnh vào đây</span>
+                        </div>
+                    </div>
+                )}
+
                 {previewFiles.length > 0 && (
                     <div className={cx('preview')}>
                         {previewFiles.map((item) => {
@@ -229,6 +349,7 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
                     onFocus={handleFocus}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    onPaste={handleOnPaste}
                     onKeyDown={handleKeyDown}
                 />
                 <div className={cx('extra')}>
@@ -254,8 +375,8 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
                             onChange={handleFileChange}
                         />
                         <HeadlessTippy
-                            visible={isVisible}
-                            onClickOutside={() => setIsVisible(false)}
+                            visible={isVisibleEmoji}
+                            onClickOutside={() => setIsVisibleEmoji(false)}
                             render={(attrs) => (
                                 <div className={cx('')} tabIndex="-1" {...attrs}>
                                     <Picker
@@ -264,44 +385,7 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
                                         onEmojiClick={handleEmojiClick}
                                         searchPlaceholder="Tìm kiếm"
                                         emojiStyle="facebook"
-                                        categories={[
-                                            {
-                                                category: 'suggested',
-                                                name: 'Gần đây',
-                                            },
-                                            {
-                                                category: 'smileys_people',
-                                                name: 'Mặt cười và hình người',
-                                            },
-                                            {
-                                                category: 'animals_nature',
-                                                name: 'Động vật và thiên nhiên',
-                                            },
-                                            {
-                                                category: 'food_drink',
-                                                name: 'Ẩm thực',
-                                            },
-                                            {
-                                                category: 'travel_places',
-                                                name: 'Du lịch',
-                                            },
-                                            {
-                                                category: 'activities',
-                                                name: 'Hoạt động',
-                                            },
-                                            {
-                                                category: 'objects',
-                                                name: 'Đồ vật',
-                                            },
-                                            {
-                                                category: 'symbols',
-                                                name: 'Biểu tượng',
-                                            },
-                                            {
-                                                category: 'flags',
-                                                name: 'Cờ',
-                                            },
-                                        ]}
+                                        categories={emojiCategories}
                                     />
                                 </div>
                             )}
@@ -312,7 +396,7 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
                                     className={cx('attach-icon')}
                                     medium
                                     element={<SmilingFace />}
-                                    onClick={() => setIsVisible(true)}
+                                    onClick={() => setIsVisibleEmoji(true)}
                                     width={400}
                                     height={500}
                                 />

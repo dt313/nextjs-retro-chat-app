@@ -41,6 +41,45 @@ const types = [
     },
 ];
 
+export const emojiCategories = [
+    {
+        category: 'suggested',
+        name: 'Gần đây',
+    },
+    {
+        category: 'smileys_people',
+        name: 'Mặt cười và hình người',
+    },
+    {
+        category: 'animals_nature',
+        name: 'Động vật và thiên nhiên',
+    },
+    {
+        category: 'food_drink',
+        name: 'Ẩm thực',
+    },
+    {
+        category: 'travel_places',
+        name: 'Du lịch',
+    },
+    {
+        category: 'activities',
+        name: 'Hoạt động',
+    },
+    {
+        category: 'objects',
+        name: 'Đồ vật',
+    },
+    {
+        category: 'symbols',
+        name: 'Biểu tượng',
+    },
+    {
+        category: 'flags',
+        name: 'Cờ',
+    },
+];
+
 export const createSettingMenu = () => {
     const info = storageUtils.getUser();
 
