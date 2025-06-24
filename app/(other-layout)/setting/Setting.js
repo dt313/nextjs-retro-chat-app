@@ -5,7 +5,7 @@ import { useState } from 'react';
 import classNames from 'classnames/bind';
 
 import { createSettingMenu } from '@/config/ui-config';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { IoMenu } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
 
@@ -15,8 +15,8 @@ import CloseIcon from '@/components/close-icon';
 import Icon from '@/components/icon';
 import Image from '@/components/image';
 
+import styles from './Setting.module.scss';
 import SettingContent from './components/setting-content';
-import styles from './setting.module.scss';
 
 const cx = classNames.bind(styles);
 
