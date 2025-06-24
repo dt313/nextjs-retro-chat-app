@@ -168,7 +168,7 @@ export const createSettingMenu = () => {
                                     validate: (value) => {
                                         return Validation({
                                             value: value,
-                                            rules: [Validation.maxLength(300)],
+                                            rules: [Validation.isRequired(), Validation.maxLength(300)],
                                         });
                                     },
                                 },
@@ -187,7 +187,19 @@ export const createSettingMenu = () => {
                                     placeholder: 'Tên nhóm chat',
                                     value: info?.avatar,
                                     field: 'avatar',
-                                    validate: () => {},
+                                    validate: (value) => {
+                                        return Validation({
+                                            value: value,
+                                            rules: [
+                                                Validation.isRequired(),
+                                                Validation.isDifferent(
+                                                    info?.avatar,
+                                                    value,
+                                                    'Vui lòng chọn ảnh khác với ảnh hiện tại.',
+                                                ),
+                                            ],
+                                        });
+                                    },
                                 },
                             },
                         ],
@@ -213,7 +225,11 @@ export const createSettingMenu = () => {
                                     validate: (value) => {
                                         return Validation({
                                             value: value,
-                                            rules: [Validation.isLinkWeb(), Validation.maxLength(100)],
+                                            rules: [
+                                                Validation.isRequired(),
+                                                Validation.isLinkWeb(),
+                                                Validation.maxLength(100),
+                                            ],
                                         });
                                     },
                                 },
@@ -236,7 +252,11 @@ export const createSettingMenu = () => {
                                     validate: (value) => {
                                         return Validation({
                                             value: value,
-                                            rules: [Validation.isSocialLink('github'), Validation.maxLength(100)],
+                                            rules: [
+                                                Validation.isRequired(),
+                                                Validation.isSocialLink('github'),
+                                                Validation.maxLength(100),
+                                            ],
                                         });
                                     },
                                 },
@@ -258,7 +278,11 @@ export const createSettingMenu = () => {
                                     validate: (value) => {
                                         return Validation({
                                             value: value,
-                                            rules: [Validation.isSocialLink('linkedin'), Validation.maxLength(100)],
+                                            rules: [
+                                                Validation.isRequired(),
+                                                Validation.isSocialLink('linkedin'),
+                                                Validation.maxLength(100),
+                                            ],
                                         });
                                     },
                                 },
@@ -281,7 +305,11 @@ export const createSettingMenu = () => {
                                     validate: (value) => {
                                         return Validation({
                                             value: value,
-                                            rules: [Validation.isSocialLink('facebook'), Validation.maxLength(100)],
+                                            rules: [
+                                                Validation.isRequired(),
+                                                Validation.isSocialLink('facebook'),
+                                                Validation.maxLength(100),
+                                            ],
                                         });
                                     },
                                 },
@@ -304,7 +332,11 @@ export const createSettingMenu = () => {
                                     validate: (value) => {
                                         return Validation({
                                             value: value,
-                                            rules: [Validation.isSocialLink('instagram'), Validation.maxLength(100)],
+                                            rules: [
+                                                Validation.isRequired(),
+                                                Validation.isSocialLink('instagram'),
+                                                Validation.maxLength(100),
+                                            ],
                                         });
                                     },
                                 },

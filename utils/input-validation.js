@@ -109,3 +109,13 @@ Validation.isConfirmPassWord = function (password, message) {
         },
     };
 };
+
+Validation.isDifferent = function (preValue, value, message) {
+    return {
+        test: function () {
+            if (preValue === value) {
+                return message || 'Vui lòng nhập giá trị khác với giá trị hiện tại.';
+            }
+        },
+    };
+};

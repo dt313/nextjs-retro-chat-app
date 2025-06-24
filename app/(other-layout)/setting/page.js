@@ -1,4 +1,4 @@
-import Setting from './Setting';
+import Setting from './setting';
 
 function Page() {
     return (

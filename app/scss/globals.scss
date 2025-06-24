@@ -167,12 +167,12 @@ a {
 
 html *::-webkit-scrollbar {
     border-radius: 0;
-    width: 4px;
+    width: 8px;
 }
 
 html *::-webkit-scrollbar-thumb {
-    background: #444;
     border-radius: 8px;
+    background: #666;
 }
 
 html *::-webkit-scrollbar-track {
@@ -180,7 +180,7 @@ html *::-webkit-scrollbar-track {
 }
 
 html *::-webkit-scrollbar-thumb:hover {
-    background: #666;
+    background: #444;
 }
 
 // emoji-picker

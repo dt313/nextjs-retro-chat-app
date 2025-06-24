@@ -34,8 +34,6 @@ function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu', isLoading
     const handleSubmit = useCallback(() => {
         if (isLoading) return;
 
-        console.log('value, ', value);
-
         onSubmit(content.field, value).then(() => {
             setValue('');
             onClose();

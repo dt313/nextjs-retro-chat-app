@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 
 import { types } from '@/config/ui-config';
-import { throttle } from 'lodash';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 
@@ -66,7 +65,9 @@ function Creation({ onClose }) {
     const handleChange = (e) => {
         if (e.target.name === 'thumbnail') {
             const file = e.target.files[0];
+            console.log('thumbnail', file);
             setGroup({ ...group, thumbnail: file });
+            setIsShowPreview(true);
             return;
         }
         setGroup({ ...group, [e.target.name]: e.target.value });
@@ -277,31 +278,6 @@ function Creation({ onClose }) {
                         </SubmitButton>
                     </div>
                 </div>
-                {/* 
-                <div className={cx('r-side')}>
-                    <div className={cx('r-side-header')}>
-                        <span
-                            className={cx('rh-item', { active: activeTab === 'user' })}
-                            onClick={() => setActiveTab('user')}
-                        >
-                            User
-                        </span>
-                        <span
-                            className={cx('rh-item', { active: activeTab === 'group' })}
-                            onClick={() => setActiveTab('group')}
-                        >
-                            Group
-                        </span>
-                    </div>
-                    <div className={cx('r-side-content')}>
-                        {list.map((item) => {
-                            if (activeTab === 'user') {
-                                return <User key={item.id} {...item} />;
-                            }
-                            return <Group key={item.id} {...item} />;
-                        })}
-                    </div>
-                </div> */}
 
                 <CloseIcon className={cx('close-icon')} large onClick={onClose} />
             </div>

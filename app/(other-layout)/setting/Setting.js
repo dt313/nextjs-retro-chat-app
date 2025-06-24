@@ -15,8 +15,8 @@ import CloseIcon from '@/components/close-icon';
 import Icon from '@/components/icon';
 import Image from '@/components/image';
 
-import styles from './Setting.module.scss';
 import SettingContent from './components/setting-content';
+import styles from './setting.module.scss';
 
 const cx = classNames.bind(styles);
 

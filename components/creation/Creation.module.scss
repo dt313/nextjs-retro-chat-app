@@ -11,6 +11,7 @@
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     overscroll-behavior: none;
     position: relative;
+    margin: 0 8px;
 
     @include respond-to(tablet) {
         max-width: 576px;
@@ -67,69 +68,4 @@
     min-height: 120px;
     max-height: 120px;
     margin-bottom: 24px;
-}
-
-// Right-side
-
-.r-side {
-    width: 40%;
-    padding: 44px 24px;
-    background-color: #ddc5aa55;
-    border-top-right-radius: 12px;
-    border-bottom-right-radius: 12px;
-    border-left: var(--solid-border);
-}
-
-.r-side-header {
-    display: flex;
-    justify-content: center;
-    margin-top: 24px;
-    margin-bottom: 12px;
-    padding-bottom: 12px;
-    gap: 24px;
-    border-bottom: var(--solid-border);
-}
-
-.rh-item {
-    @include font-default;
-    font-size: 1.6rem;
-    cursor: pointer;
-
-    &:hover {
-        color: var(--red);
-    }
-}
-
-.rh-item.active {
-    font-weight: 600;
-    color: var(--red);
-}
-
-.r-side-content {
-    max-height: calc(100% - 48px);
-    height: 100%;
-    overflow-y: auto;
-    overscroll-behavior: none;
-}
-
-.close-icon {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-}
-
-.password-option {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 4px;
-    margin-bottom: 12px;
-
-    .toggle-label {
-        @include font-default;
-        font-size: 1.4rem;
-        font-weight: 500;
-        color: var(--text-color);
-    }
 }

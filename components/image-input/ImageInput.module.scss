@@ -13,6 +13,8 @@
     border: 2px dashed #ccc;
     overflow: hidden;
     transition: all 0.3s ease;
+    position: relative;
+
     &:hover {
         cursor: pointer;
         border-color: #000;

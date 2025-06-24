@@ -95,7 +95,11 @@ function ChatSetting({ isGroup, data }) {
             validate: (value) => {
                 return Validation({
                     value: value,
-                    rules: [Validation.isRequired(), Validation.minLetter(4)],
+                    rules: [
+                        Validation.isRequired(),
+                        Validation.minLetter(4),
+                        Validation.isDifferent(conversation.name, value, 'Tên nhóm chat trùng với tên hiện tại.'),
+                    ],
                 });
             },
         },
@@ -112,7 +116,14 @@ function ChatSetting({ isGroup, data }) {
             validate: (value) => {
                 return Validation({
                     value: value,
-                    rules: [Validation.maxLength(150)],
+                    rules: [
+                        Validation.maxLength(150),
+                        Validation.isDifferent(
+                            conversation?.description,
+                            value,
+                            'Phần giới thiệu trùng với phần hiện tại.',
+                        ),
+                    ],
                 });
             },
         },
@@ -129,7 +140,10 @@ function ChatSetting({ isGroup, data }) {
             validate: (value) => {
                 return Validation({
                     value: value,
-                    rules: [Validation.maxLength(1000)],
+                    rules: [
+                        Validation.maxLength(1000),
+                        Validation.isDifferent(conversation?.rules, value, 'Phần quy định trùng với phần hiện tại.'),
+                    ],
                 });
             },
         },
@@ -141,7 +155,14 @@ function ChatSetting({ isGroup, data }) {
             description: 'Chỉnh sửa hình nền của đoạn chat của bạn',
             value: conversation?.thumbnail,
             field: 'thumbnail',
-            validate: defaultFn,
+            validate: (value) => {
+                return Validation({
+                    value: value,
+                    rules: [
+                        Validation.isDifferent(conversation?.thumbnail, value, 'Ảnh đại diện trùng với ảnh hiện tại.'),
+                    ],
+                });
+            },
         },
         // {
         //     id: 5,
