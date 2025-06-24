@@ -5,16 +5,14 @@ import { useEffect, useState } from 'react';
 import classNames from 'classnames';
 
 import { useBreakpoint } from '@/hooks';
-import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 
 import ImagePreviewWrap from '@/components/image-preview/ImagePreviewWrap';
-import { SpinnerLoader } from '@/components/loading';
 
+import LeftSide from './components/left-side';
 import { SidebarContext } from './context/SidebarContext';
 import styles from './layout.scss';
 
-const LeftSide = dynamic(() => import('./components/left-side'));
 const cx = classNames.bind(styles);
 
 export default function ConversationLayout({ children }) {
@@ -25,6 +23,8 @@ export default function ConversationLayout({ children }) {
     const [transition, setTransition] = useState(false);
     const [isShowRight, setIsShowRight] = useState(false);
     const [isShowContent, setIsShowContent] = useState(false);
+
+    console.log('ConversationLayout', { isShowLeft, isShowContent, isShowRight, breakpoint });
 
     const toggleLeftSide = () => {
         setIsShowLeft((prev) => !prev);
@@ -50,13 +50,15 @@ export default function ConversationLayout({ children }) {
             setIsShowContent(true);
             setIsShowRight(false);
         } else if (breakpoint === 'sm' || breakpoint === 'xs') {
+            if (id) {
+                setIsShowLeft(false);
+                setIsShowContent(true);
+                setIsShowRight(false);
+                return;
+            }
             setIsShowLeft(true);
             setIsShowContent(false);
             setIsShowRight(false);
-            if (id) {
-                setIsShowContent(true);
-                setIsShowLeft(false);
-            }
         }
     }, [id, breakpoint]);
 

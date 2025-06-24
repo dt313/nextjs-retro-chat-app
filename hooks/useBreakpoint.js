@@ -9,24 +9,25 @@ export const breakpoints = {
     xl: 1280,
 };
 
+const getCurrentBreakpoint = () => {
+    if (typeof window === 'undefined') {
+        return 'lg'; // Default trên server, chọn breakpoint phù hợp
+    }
+    const width = window.innerWidth;
+
+    if (width >= breakpoints.xl) return 'xl';
+    if (width >= breakpoints.lg) return 'lg';
+    if (width >= breakpoints.md) return 'md';
+    if (width >= breakpoints.sm) return 'sm';
+    return 'xs';
+};
+
 const useBreakpoint = () => {
-    const [breakpoint, setBreakpoint] = useState('lg');
+    const [breakpoint, setBreakpoint] = useState(getCurrentBreakpoint());
 
     useEffect(() => {
         const handleResize = () => {
-            const width = window.innerWidth;
-
-            if (width >= breakpoints.xl) {
-                setBreakpoint('xl');
-            } else if (width >= breakpoints.lg) {
-                setBreakpoint('lg');
-            } else if (width >= breakpoints.md) {
-                setBreakpoint('md');
-            } else if (width >= breakpoints.sm) {
-                setBreakpoint('sm');
-            } else {
-                setBreakpoint('xs');
-            }
+            setBreakpoint(getCurrentBreakpoint());
         };
 
         // Initial check
@@ -35,7 +36,7 @@ const useBreakpoint = () => {
         window.addEventListener('resize', handleResize);
 
         return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    }, [breakpoint]);
 
     return breakpoint;
 };
