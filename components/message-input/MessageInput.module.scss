@@ -14,7 +14,7 @@
 }
 
 .preview {
-    display: flex; // giữ cái này thôi
+    display: flex;
     align-items: center;
     gap: 8px;
     padding: 8px 1rem;
@@ -30,7 +30,7 @@
     max-height: 100px;
     width: 100%;
     padding: 8px 1rem;
-    min-height: 40px;
+    min-height: 60px;
     outline: none;
     resize: none;
     font-size: 1.6rem;
@@ -40,6 +40,11 @@
     color: var(--text-color);
     border: none;
     transition: height 0.2s ease-in-out;
+
+    @include respond-to('mobile') {
+        min-height: 40px;
+        font-size: 1.5rem;
+    }
 }
 
 .extra {

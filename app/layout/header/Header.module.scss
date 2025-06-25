@@ -10,6 +10,7 @@
 
     @include respond-to('mobile') {
         padding: 0 1rem;
+        height: var(--mobile-header-height);
     }
 }
 

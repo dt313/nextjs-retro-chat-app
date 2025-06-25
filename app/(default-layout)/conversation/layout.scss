@@ -5,6 +5,7 @@
     width: 100%;
     height: calc(100vh - var(--header-height));
     overflow: hidden;
-    @include respond-to('laptop') {
+    @include respond-to('mobile') {
+        height: calc(100vh - var(--mobile-header-height));
     }
 }

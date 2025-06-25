@@ -9,7 +9,9 @@
 
     position: relative;
     @include respond-to('mobile') {
-        padding-left: 64px;
+        padding-left: 52px;
+        padding-right: 12px;
+        height: var(--mobile-header-height);
     }
 }
 
@@ -50,6 +52,10 @@
     text-wrap: nowrap;
     white-space: nowrap;
     text-overflow: ellipsis;
+
+    @include respond-to('mobile') {
+        font-size: 1.4rem;
+    }
 }
 
 .user-status {
@@ -58,6 +64,10 @@
     line-height: 1.5;
     color: var(--text-low-color);
     font-weight: 400;
+
+    @include respond-to('mobile') {
+        font-size: 1.3rem;
+    }
 }
 
 .user-status::after {
@@ -83,8 +93,9 @@
     @include respond-to('mobile') {
         display: block;
         position: absolute;
-        top: 24px;
-        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 6px;
         width: 36px;
         height: 36px;
         border-radius: 10rem;

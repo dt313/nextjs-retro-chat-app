@@ -53,6 +53,16 @@
         background-color: var(--background);
         z-index: 10;
     }
+
+    @include respond-to('mobile') {
+        position: absolute;
+        right: 0;
+        top: var(--mobile-header-height);
+        height: calc(100vh - var(--mobile-header-height));
+        border: none;
+        background-color: var(--background);
+        z-index: 10;
+    }
 }
 
 .right-side.transition {

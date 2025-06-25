@@ -7,6 +7,10 @@
     position: relative;
     display: flex;
     flex-direction: column-reverse;
+
+    @include respond-to('mobile') {
+        margin: 8px 0;
+    }
 }
 
 .message {
