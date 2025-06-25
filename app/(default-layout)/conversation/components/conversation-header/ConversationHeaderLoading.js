@@ -6,9 +6,9 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import styles from './ConversationHeader.module.scss';
 
 const cx = classNames.bind(styles);
-function ConversationHeaderLoading() {
+function ConversationHeaderLoading({ style, ...props }) {
     return (
-        <div className={cx('c-header')}>
+        <div className={cx('c-header')} style={style} {...props}>
             <SkeletonTheme baseColor="#e0d4c4" highlightColor="#f5f1ec">
                 <div className={cx('user-info')}>
                     <Skeleton circle width={44} height={44} className={cx('h-avatar')} />

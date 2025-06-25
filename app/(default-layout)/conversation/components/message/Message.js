@@ -54,6 +54,7 @@ function Message({
     isHighlight = false,
     isCreator = false,
     getReadUser,
+    theme,
 }) {
     const [visibility, setVisibility] = useState({
         time: false,
@@ -144,7 +145,13 @@ function Message({
     const renderMessage = () => {
         if (isDelete) {
             return (
-                <p className={cx('m-text', 'delete-message')}>
+                <p
+                    className={cx('m-text', 'delete-message')}
+                    style={{
+                        boxShadow: `${theme.styles.messageBoxShadow}`,
+                        color: theme.styles.textColor,
+                    }}
+                >
                     {me._id === sender?._id ? 'Bạn' : sender.fullName} đã xóa tin nhắn này
                 </p>
             );
@@ -162,6 +169,14 @@ function Message({
                     id={`message-${id}`}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
+                    style={{
+                        backgroundColor:
+                            sender._id === me._id
+                                ? theme.styles.senderBackgroundColor
+                                : theme.styles.receiverBackgroundColor,
+                        color: theme.styles.textColor,
+                        boxShadow: `${theme.styles.messageBoxShadow}`,
+                    }}
                 >
                     {formattedContent}
                 </p>
@@ -177,7 +192,15 @@ function Message({
                     id={`message-${id}`}
                     onClick={() => handleDownloadFile(content.url, content.name)}
                 >
-                    <File className={cx({ highlight: isHighlight })} primary name={content.name} size={content.size} />
+                    <File
+                        className={cx({ highlight: isHighlight })}
+                        primary
+                        name={content.name}
+                        size={content.size}
+                        style={{
+                            boxShadow: `${theme.styles.messageBoxShadow}`,
+                        }}
+                    />
                 </div>
             );
         }
@@ -207,6 +230,9 @@ function Message({
                                     width={200}
                                     height={200}
                                     onClick={() => handleOpenImagePreview(im._id)}
+                                    style={{
+                                        boxShadow: `${theme.styles.messageBoxShadow}`,
+                                    }}
                                 />
                             );
                         })}

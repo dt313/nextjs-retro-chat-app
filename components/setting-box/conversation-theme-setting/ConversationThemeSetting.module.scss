@@ -1,0 +1,150 @@
+@use '/app/scss/mixins.scss' as *;
+
+.wrapper {
+    // width: 100%;
+    display: flex;
+    margin-top: 20px;
+    padding: 20px 0;
+    gap: 8px;
+    border-top: 1.5px solid #8c8c8c;
+}
+
+.list {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 500px;
+}
+
+.preview {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: #d9d9d9;
+        cursor: pointer;
+    }
+
+    &.active {
+        background-color: #bababa;
+    }
+}
+
+.item-image {
+    @include center-align;
+}
+
+.img {
+    width: 38px;
+    height: 38px;
+    object-fit: cover;
+    margin-right: 8px;
+}
+
+.color-box {
+    width: 38px;
+    height: 38px;
+    object-fit: cover;
+    margin-right: 8px;
+    border-radius: 10rem;
+    position: relative;
+
+    &::before {
+        content: '';
+        display: block;
+        width: 12px;
+        height: 12px;
+        border-radius: 10rem;
+        background-color: var(--background);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.item-name {
+    @include font-default;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.preview-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    padding: 8px;
+    flex-direction: column;
+    border-radius: 12px;
+    border: 1.5px solid #8c8c8c;
+    background-color: var(--background);
+    min-height: 500px;
+}
+
+.message {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin: 8px 0;
+
+    .message-text {
+        width: 60%;
+        padding: 12px;
+        @include font-default;
+        font-size: 1.4rem;
+        line-height: 1.6;
+        border: var(--solid-border);
+
+        border-top-right-radius: 0;
+        border-top-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+        border-bottom-left-radius: 12px;
+        background-color: #edcfac;
+        box-shadow: var(--box-shadow);
+    }
+}
+
+.is-sender {
+    justify-content: flex-start;
+
+    .message-text {
+        border-top-right-radius: 12px;
+        border-top-left-radius: 0;
+        background-color: var(--background);
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .wrapper {
+        flex-direction: column;
+    }
+
+    .list,
+    .preview {
+        width: 100%;
+    }
+
+    .list {
+        max-height: 70px;
+    }
+
+    .message {
+        .message-text {
+            width: 75%;
+        }
+    }
+
+    .preview-content {
+        min-height: auto;
+    }
+}

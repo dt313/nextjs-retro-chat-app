@@ -13,6 +13,10 @@
     max-width: 600px;
 }
 
+.superLarge {
+    max-width: 700px;
+}
+
 .header {
     @include center-align;
     margin-top: 32px;
@@ -83,4 +87,51 @@
     .description {
         margin: 0 40px;
     }
+}
+
+.btns {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    > * {
+        flex: 1;
+    }
+}
+
+.cancel-btn {
+    @include center-align;
+    width: 100%;
+    height: 44px;
+    border-radius: 10rem;
+    padding: 12px 42px;
+    border: none;
+    margin-top: 24px;
+    font-size: 1.4rem;
+    font-family: var(--font-family);
+    color: var(--text-color);
+    font-weight: 600;
+    color: #333;
+    background-color: #f0f0f0;
+    font-size: 1.7rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s ease;
+    border: var(--solid-border);
+
+    @include respond-to('mobile') {
+        display: none;
+    }
+
+    &:hover {
+        cursor: pointer;
+        background-color: #cbcbcb;
+    }
+}
+
+.submit-btn {
+    min-width: none;
+    border: 1px solid transparent;
 }

@@ -11,12 +11,12 @@ import styles from './ConversationHeader.module.scss';
 
 const cx = classNames.bind(styles);
 
-function ConversationHeader({ thumbnail, name, status, onlineCount, isGroup, onClickDotIcon }) {
+function ConversationHeader({ thumbnail, name, status, onlineCount, isGroup, onClickDotIcon, ...props }) {
     const handleClickRedirectToSideBar = () => {
         redirect('/conversation');
     };
     return (
-        <div className={cx('c-header')}>
+        <div className={cx('c-header')} {...props}>
             <Icon
                 className={cx('c-close-btn')}
                 element={<RiArrowLeftSLine />}

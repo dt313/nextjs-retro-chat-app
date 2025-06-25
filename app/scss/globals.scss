@@ -183,6 +183,16 @@ html *::-webkit-scrollbar-thumb:hover {
     background: #444;
 }
 
+@media (max-width: 600px) {
+    html *::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    html *::-webkit-scrollbar-thumb {
+        width: 4px;
+    }
+}
+
 // emoji-picker
 .epr_x558go:focus {
     border: 1px solid #9a9a9a !important;

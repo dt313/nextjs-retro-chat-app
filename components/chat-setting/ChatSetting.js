@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
+import { set } from 'lodash';
 import { useRouter } from 'next/navigation';
 import { IoIosImages } from 'react-icons/io';
 import { LuText } from 'react-icons/lu';
@@ -59,18 +60,35 @@ function ChatSetting({ isGroup, data }) {
             placeholder: 'Nhập biệt danh của người bạn này',
             value: getNickNameFromConversation(conversation, me._id),
             field: 'nickname',
-            validate: defaultFn,
+            validate: (value) => {
+                return Validation({
+                    value: value,
+                    rules: [
+                        Validation.isRequired(),
+                        Validation.isDifferent(conversation.name, value, 'Biệt dạnh trùng với biệt danh hiện tại.'),
+                    ],
+                });
+            },
         },
-        // {
-        //     id: 2,
-        //     name: 'Chỉnh sửa hình nền',
-        //     icon: <IoIosImages />,
-        //     type: 'image',
-        //     description: 'Chỉnh sửa hình nền của đoạn chat của bạn',
-        //     value: conversation?.backgroundUrl,
-        //     field: 'backgroundUrl',
-        //     validate: defaultFn,
-        // },
+        {
+            id: 2,
+            name: 'Chỉnh sửa chủ đề',
+            icon: <IoIosImages />,
+            type: 'conversation-theme',
+            description: 'Chỉnh sửa chủ đề của cuộc trò chuyện',
+            value: conversation?.theme || 'default',
+            field: 'theme',
+            superLarge: true,
+            validate: (value) => {
+                return Validation({
+                    value: value,
+                    rules: [
+                        Validation.isRequired(),
+                        Validation.isDifferent(conversation.name, value, 'Chủ đề trùng với chủ đề hiện tại.'),
+                    ],
+                });
+            },
+        },
         {
             id: 3,
             name: 'Xóa cuộc trò chuyện',
@@ -159,21 +177,31 @@ function ChatSetting({ isGroup, data }) {
                 return Validation({
                     value: value,
                     rules: [
+                        Validation.isRequired(),
                         Validation.isDifferent(conversation?.thumbnail, value, 'Ảnh đại diện trùng với ảnh hiện tại.'),
                     ],
                 });
             },
         },
-        // {
-        //     id: 5,
-        //     name: 'Chỉnh sửa hình nền',
-        //     icon: <IoIosImages />,
-        //     type: 'image',
-        //     description: 'Chỉnh sửa hình nền của đoạn chat của bạn',
-        //     value: conversation?.backgroundUrl,
-        //     field: 'backgroundUrl',
-        //     validate: defaultFn,
-        // },
+        {
+            id: 5,
+            name: 'Chỉnh sửa chủ đề',
+            icon: <IoIosImages />,
+            type: 'conversation-theme',
+            description: 'Chỉnh sửa chủ đề của cuộc trò chuyện',
+            value: conversation?.theme || 'default',
+            field: 'theme',
+            superLarge: true,
+            validate: (value) => {
+                return Validation({
+                    value: value,
+                    rules: [
+                        Validation.isRequired(),
+                        Validation.isDifferent(conversation.name, value, 'Chủ đề trùng với chủ đề hiện tại.'),
+                    ],
+                });
+            },
+        },
         {
             id: 6,
             name: 'Cài đặt mật khẩu',
@@ -282,6 +310,8 @@ function ChatSetting({ isGroup, data }) {
                         onSubmit={settingBox.type === 'delete' ? handleDelete : handleSubmit}
                         submitText={settingBox.type === 'delete' ? 'Xóa' : 'Lưu'}
                         isLoading={isLoading}
+                        large={settingBox.isLarge}
+                        superLarge={settingBox.superLarge}
                     />
                 </Overlay>
             )}

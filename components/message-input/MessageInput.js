@@ -36,7 +36,7 @@ const Picker = dynamic(
 
 const cx = classNames.bind(styles);
 
-function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
+function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, ...props }) {
     const [value, setValue] = useState('');
     const [files, setFiles] = useState([]);
     const [previewFiles, setPreviewFiles] = useState([]);
@@ -280,7 +280,7 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading }) {
     };
 
     return (
-        <div className={cx('wrapper')}>
+        <div className={cx('wrapper')} {...props}>
             {isOpenReplyBox && (
                 <div className={cx('reply-box')}>
                     <div className={cx('reply-content')}>

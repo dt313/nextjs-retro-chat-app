@@ -12,6 +12,7 @@
     overscroll-behavior: none;
     position: relative;
     margin: 0 8px;
+    overflow: hidden;
 
     @include respond-to(tablet) {
         max-width: 576px;
@@ -37,6 +38,10 @@
     padding: 44px 24px;
     overscroll-behavior: none;
     overflow-y: auto;
+
+    &::-webkit-scrollbar-track {
+        background: #e2e2e2;
+    }
 }
 
 .ls-input {
@@ -68,4 +73,26 @@
     min-height: 120px;
     max-height: 120px;
     margin-bottom: 24px;
+}
+
+.close-icon {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+}
+
+.password-option {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+    margin-bottom: 12px;
+
+    .toggle-label {
+        @include font-default;
+        font-size: 1.4rem;
+        font-weight: 500;
+        color: var(--text-color);
+    }
 }

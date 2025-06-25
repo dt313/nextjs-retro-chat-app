@@ -10,10 +10,11 @@ import SettingInput from '@/components/setting-input';
 
 import { SpinnerLoader } from '../loading';
 import styles from './SettingBox.module.scss';
+import ConversationThemeSetting from './conversation-theme-setting';
 
 const cx = classNames.bind(styles);
 
-function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu', isLoading, large }) {
+function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu', isLoading, large, superLarge }) {
     const [value, setValue] = useState(content?.value || '');
     const [errorMessage, setErrorMessage] = useState('');
     const [buttonDisable, setButtonDisable] = useState(true);
@@ -31,6 +32,15 @@ function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu', isLoading
         [content, value],
     );
 
+    const handleChangeTheme = useCallback(
+        (theme) => {
+            setValue(theme);
+            const error = content?.validate(theme);
+            setErrorMessage(error);
+        },
+        [content],
+    );
+
     const handleSubmit = useCallback(() => {
         if (isLoading) return;
 
@@ -46,7 +56,7 @@ function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu', isLoading
     }, [value]);
 
     return (
-        <div className={cx('wrapper', large && 'large')} onClick={(e) => e.stopPropagation()}>
+        <div className={cx('wrapper', { large, superLarge })} onClick={(e) => e.stopPropagation()}>
             <CloseIcon
                 className={cx('close-icon')}
                 large
@@ -72,13 +82,25 @@ function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu', isLoading
                         errorMessage={errorMessage}
                     />
                 )}
-                <SubmitButton
-                    className={cx({ deleteBtn: content.type === 'delete' })}
-                    onClick={handleSubmit}
-                    disable={buttonDisable}
-                >
-                    {isLoading ? <SpinnerLoader small /> : submitText}
-                </SubmitButton>
+
+                {content.type === 'conversation-theme' && (
+                    <ConversationThemeSetting value={content.value} onChangeTheme={handleChangeTheme} />
+                )}
+
+                <div className={cx('btns')}>
+                    {content.type === 'conversation-theme' && (
+                        <button className={cx('cancel-btn')} onClick={onClose} type="button">
+                            Huỷ
+                        </button>
+                    )}
+                    <SubmitButton
+                        className={cx('submit-btn', { deleteBtn: content.type === 'delete' })}
+                        onClick={handleSubmit}
+                        disable={buttonDisable}
+                    >
+                        {isLoading ? <SpinnerLoader small /> : submitText}
+                    </SubmitButton>
+                </div>
             </div>
         </div>
     );

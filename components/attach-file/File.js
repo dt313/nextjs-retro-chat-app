@@ -13,7 +13,7 @@ import styles from './AttachFile.module.scss';
 
 const cx = classNames.bind(styles);
 
-function File({ name, size, url, secondary, primary, className, onClick }) {
+function File({ name, size, url, secondary, primary, className, onClick, ...props }) {
     const classes = cx('file', {
         secondary,
         primary,
@@ -25,7 +25,7 @@ function File({ name, size, url, secondary, primary, className, onClick }) {
     };
 
     return (
-        <div className={classes} onClick={handleClick}>
+        <div className={classes} onClick={handleClick} {...props}>
             <Icon className={cx('icon')} element={<FaFileLines />} />
             <div className={cx('file-info')}>
                 <strong className={cx('file-name')}>{name}</strong>

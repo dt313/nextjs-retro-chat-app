@@ -54,6 +54,10 @@
     padding-bottom: 0px;
     overflow-y: scroll;
     overscroll-behavior: none;
+
+    &::-webkit-scrollbar-track {
+        background: #e2e2e2;
+    }
 }
 
 .app-img {

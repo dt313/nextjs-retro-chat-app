@@ -80,6 +80,161 @@ export const emojiCategories = [
     },
 ];
 
+export const THEME_SETTING_SAMPLE_MESSAGE = [
+    {
+        id: 1,
+        content: 'Có rất nhiều chủ đề để bạn lựa chọn và những chủ đề này đều khác nhau đôi chút.',
+        sender: 'user',
+        isSender: false,
+    },
+    {
+        id: 2,
+        content: 'Tin nhắn mà bạn gửi cho người khác sẽ có màu này.',
+        sender: 'bot',
+        isSender: false,
+    },
+    {
+        id: 3,
+        content: 'Tin nhắn của bạn bè sẽ tương tự như thế này',
+        sender: 'user',
+        isSender: true,
+    },
+];
+
+export const CONVERSATION_THEME_LIST = [
+    {
+        id: 1,
+        name: 'default',
+        title: 'Mặc định',
+        boxColor: '#edcfac',
+        styles: {
+            senderBackgroundColor: '#edcfac',
+            receiverBackgroundColor: '#ede0d0',
+            textColor: '#000',
+            backgroundColor: '#ede0d0',
+            messageBoxShadow: '#333 3px 3px',
+        },
+    },
+    {
+        id: 2,
+        name: 'blue',
+        title: 'Xanh biển',
+
+        boxColor: '#a8d5ff',
+        styles: {
+            senderBackgroundColor: '#a8d5ff',
+            receiverBackgroundColor: '#d0e9ff',
+            textColor: '#000',
+            backgroundColor: '#f0f9ff',
+            messageBoxShadow: '#555 3px 3px',
+        },
+    },
+    {
+        id: 3,
+        name: 'green',
+        title: 'Xanh lá',
+        boxColor: '#a9e8a9',
+        styles: {
+            senderBackgroundColor: '#a9e8a9',
+            receiverBackgroundColor: '#d2f8d2',
+            textColor: '#000',
+            backgroundColor: '#f1fff1',
+            messageBoxShadow: '#333 3px 3px',
+        },
+    },
+    {
+        id: 4,
+        name: 'pink',
+        title: 'Hồng',
+        boxColor: '#ffb3d1',
+        styles: {
+            senderBackgroundColor: '#ffb3d1',
+            receiverBackgroundColor: '#ffe0ec',
+            textColor: '#000',
+            backgroundColor: '#fff0f5',
+            messageBoxShadow: '#777 3px 3px',
+        },
+    },
+    {
+        id: 5,
+        name: 'purple',
+        title: 'Tím',
+        boxColor: '#d3b3ff',
+        styles: {
+            senderBackgroundColor: '#d3b3ff',
+            receiverBackgroundColor: '#e9d9ff',
+            textColor: '#000',
+            backgroundColor: '#f7f3ff',
+            messageBoxShadow: '#555 3px 3px',
+        },
+    },
+    {
+        id: 6,
+        name: 'yellow',
+        title: 'Vàng',
+        boxColor: '#ffe88a',
+        styles: {
+            senderBackgroundColor: '#ffe88a',
+            receiverBackgroundColor: '#fff9d1',
+            textColor: '#000',
+            backgroundColor: '#fffbeb',
+            messageBoxShadow: '#555 3px 3px',
+        },
+    },
+    {
+        id: 7,
+        name: 'gray',
+        title: 'Xám',
+        boxColor: '#c9c9c9',
+        styles: {
+            senderBackgroundColor: '#c9c9c9',
+            receiverBackgroundColor: '#e0e0e0',
+            textColor: '#000',
+            backgroundColor: '#f9f9f9',
+            messageBoxShadow: '#777 3px 3px',
+        },
+    },
+    {
+        id: 8,
+        name: 'mint',
+        title: 'Bạc hà',
+        boxColor: '#a3f0c3',
+        styles: {
+            senderBackgroundColor: '#a3f0c3',
+            receiverBackgroundColor: '#d9ffe9',
+            textColor: '#000',
+            backgroundColor: '#e9fff3',
+            messageBoxShadow: '#555 3px 3px',
+        },
+    },
+    {
+        id: 9,
+        name: 'orange',
+        title: 'Cam',
+        boxColor: '#ffc88a',
+        styles: {
+            senderBackgroundColor: '#ffc88a',
+            receiverBackgroundColor: '#ffe8d1',
+            textColor: '#000',
+            backgroundColor: '#fff3e9',
+            messageBoxShadow: '#555 3px 3px',
+        },
+    },
+    {
+        id: 10,
+        name: 'red',
+        title: 'Đỏ',
+        boxColor: '#ffb1b1',
+        styles: {
+            senderBackgroundColor: '#ffb1b1',
+            receiverBackgroundColor: '#ffe3e3',
+            textColor: '#000',
+            backgroundColor: '#fff5f5',
+            messageBoxShadow: '#777 3px 3px',
+        },
+    },
+];
+
 export const createSettingMenu = () => {
     const info = storageUtils.getUser();
 

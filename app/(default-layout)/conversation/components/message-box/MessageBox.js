@@ -39,7 +39,9 @@ function MessageBox({
     setList,
     participants,
     isGroup = false,
+    theme,
     back = () => {},
+    ...props
 }) {
     const messageEndRef = useRef(null);
     const scrollContainerRef = useRef(null);
@@ -237,7 +239,7 @@ function MessageBox({
     };
 
     return (
-        <div className={cx('wrapper')} ref={scrollContainerRef} onScroll={handleScroll}>
+        <div className={cx('wrapper')} ref={scrollContainerRef} onScroll={handleScroll} {...props}>
             {isTopLoading && (
                 <div className={cx('loading-wrap')}>
                     <SpinnerLoader small />
@@ -275,6 +277,7 @@ function MessageBox({
                                             isDeleted={at.isDeleted}
                                             isHighlight={at._id === searchMessageId}
                                             getReadUser={getReadUser}
+                                            theme={theme}
                                         />
                                     );
                                 }
@@ -300,6 +303,7 @@ function MessageBox({
                                 isDeleted={images.isDeleted}
                                 isHighlight={images._id === searchMessageId}
                                 getReadUser={getReadUser}
+                                theme={theme}
                             />
                         )}
 
@@ -323,6 +327,7 @@ function MessageBox({
                                 isHighlight={mes._id === searchMessageId}
                                 getReadUser={getReadUser}
                                 isCreator={checkIsCreator()}
+                                theme={theme}
                             />
                         )}
                     </div>

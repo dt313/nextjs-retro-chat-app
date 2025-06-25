@@ -20,6 +20,10 @@
     scroll-behavior: smooth;
     border-radius: 16px;
     z-index: 1;
+
+    &::-webkit-scrollbar-track {
+        background: #e2e2e2;
+    }
 }
 
 .header,

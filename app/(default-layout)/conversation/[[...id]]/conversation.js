@@ -25,6 +25,7 @@ import MessageInput from '@/components/message-input';
 import { conversationService, messageService } from '@/services';
 
 import { getRoleFromConversation, getTargetIdFromConversation } from '@/helpers/conversation-info';
+import findConversationThemeByName from '@/helpers/find-conversation-by-name';
 
 import { checkStatus, getAvatarFromConversation, getNameFromConversation, getOnlineUsers } from '@/helpers';
 
@@ -32,6 +33,7 @@ import { readLastMessage } from '@/redux/actions/conversations-action';
 import { updateLastConversation } from '@/redux/actions/last-conversation-action';
 import { addToast } from '@/redux/actions/toast-action';
 
+// import ConversationInformation from '../components/conversation-information';
 import { useSidebar } from '../context/SidebarContext';
 import styles from './conversation.module.scss';
 
@@ -59,13 +61,12 @@ function Conversation({ id }) {
     const { isShowLeft, isShowContent, isShowRight, transition, setIsShowRight, toggleRightSide } = useSidebar();
 
     const [isBeforeFinish, setIsBeforeFinish] = useState(false);
-
     const [conversation, setConversation] = useState(null);
     const [messagesList, setMessageList] = useState([]);
     const [isTyping, setIsTyping] = useState(false);
-
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadConversation, setIsLoadConversation] = useState(false);
+    const [theme, setTheme] = useState(findConversationThemeByName('default'));
 
     const searchParams = useSearchParams();
     const searchMessageId = searchParams.get('message');
@@ -102,6 +103,7 @@ function Conversation({ id }) {
             const res = await conversationService.getConversationById(id);
             if (res) {
                 setConversation(res);
+                setTheme(findConversationThemeByName(res.theme) || 'default');
                 dispatch(updateLastConversation(id));
                 title.current = getNameFromConversation(res, me._id, true);
             }
@@ -156,6 +158,8 @@ function Conversation({ id }) {
         const updateConversation = (conversation) => {
             if (conversation) {
                 setConversation(conversation);
+                setTheme(findConversationThemeByName(conversation.theme) || 'default');
+                title.current = getNameFromConversation(conversation, me._id, true);
             }
         };
 
@@ -285,7 +289,7 @@ function Conversation({ id }) {
                     // }}
                 >
                     {isLoadConversation ? (
-                        <ConversationHeaderLoading />
+                        <ConversationHeaderLoading style={{ backgroundColor: theme.styles?.backgroundColor }} />
                     ) : (
                         <ConversationHeader
                             isGroup={conversation?.isGroup}
@@ -294,9 +298,16 @@ function Conversation({ id }) {
                             status={checkOnline(conversation)}
                             onlineCount={onlineCount}
                             onClickDotIcon={toggleRightSide}
+                            style={{ backgroundColor: theme.styles?.backgroundColor }}
                         />
                     )}
-                    <div className={cx('c-content')} onClick={handleReadLastMessage}>
+                    <div
+                        className={cx('c-content')}
+                        onClick={handleReadLastMessage}
+                        style={{
+                            backgroundColor: theme.styles?.backgroundColor,
+                        }}
+                    >
                         {conversation?.pinnedMessage && (
                             <div className={cx('pin')}>
                                 <Icon
@@ -328,6 +339,7 @@ function Conversation({ id }) {
                                 participants={conversation?.participants}
                                 isGroup={conversation?.isGroup}
                                 back={fetchMessageOfConversation}
+                                theme={theme}
                             />
                         )}
                     </div>
@@ -337,6 +349,7 @@ function Conversation({ id }) {
                             conversationId={id}
                             setIsTyping={handleIsTyping}
                             isLoading={isLoading}
+                            style={{ backgroundColor: theme.styles?.backgroundColor }}
                         />
                     </div>
                 </div>

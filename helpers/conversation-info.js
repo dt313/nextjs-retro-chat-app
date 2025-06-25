@@ -151,6 +151,8 @@ export const getMessageNotification = (mes, meId, target) => {
             return `${updatedName} đã đặt biệt danh cho ${isMe ? target : 'bạn'}`;
         case 'group-name-updated':
             return `${updatedName} đã thay đổi tên nhóm`;
+        case 'theme-updated':
+            return `${updatedName} đã thay đổi giao diện cuộc hội thoại`;
         case 'background-url-updated':
             return `${updatedName} đã thay đổi hình nền của cuộc hội thoại`;
         case 'group-description-updated':
