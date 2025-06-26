@@ -1,0 +1,47 @@
+export const CALL_STATES = {
+    CALLING: 'calling',
+    RINGING: 'ringing',
+    CONNECTING: 'connecting',
+    CONNECTED: 'connected',
+    ENDED: 'ended',
+};
+
+export const CONNECTING_STATUS = CALL_STATES.CONNECTING;
+
+// Action Types
+export const PHONE_ACTIONS = {
+    CALL_START: 'CALL_START',
+    CALL_ANSWER: 'CALL_ANSWER',
+    CALL_END: 'CALL_END',
+    CALL_STATUS_CHANGE: 'CALL_STATUS_CHANGE',
+    CALL_INCOMING: 'CALL_INCOMING',
+    CALL_REJECTED: 'CALL_REJECTED',
+};
+
+// Action Creators
+export const call = (payload) => ({
+    type: PHONE_ACTIONS.CALL_START,
+    payload,
+});
+
+export const answerCall = () => ({
+    type: PHONE_ACTIONS.CALL_ANSWER,
+});
+
+export const rejectCall = () => ({
+    type: PHONE_ACTIONS.CALL_REJECTED,
+});
+
+export const stop = () => ({
+    type: PHONE_ACTIONS.CALL_END,
+});
+
+export const changeStatus = (status) => ({
+    type: PHONE_ACTIONS.CALL_STATUS_CHANGE,
+    payload: status,
+});
+
+export const incomingCall = (payload) => ({
+    type: PHONE_ACTIONS.CALL_INCOMING,
+    payload,
+});

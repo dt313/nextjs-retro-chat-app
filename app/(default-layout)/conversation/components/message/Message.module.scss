@@ -43,6 +43,7 @@
 
     @include respond-to('mobile') {
         font-size: 1.4rem;
+        padding: 8px 12px;
     }
 }
 

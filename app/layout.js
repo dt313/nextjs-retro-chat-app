@@ -1,4 +1,7 @@
+import { Phone } from 'lucide-react';
+
 import AuthFormWrap from '@/components/auth-form-wrap';
+import PhoneCallModal from '@/components/phone-call-modal';
 import StoreProvider from '@/components/store-provider';
 import ThemeWrapper from '@/components/theme-wrapper';
 import Toast from '@/components/toast/Toast';
@@ -34,6 +37,7 @@ export default function RootLayout({ children }) {
                         {children}
                         <AuthFormWrap />
                         <Toast placement="top left" duration={5000} />
+                        <PhoneCallModal />
                     </ThemeWrapper>
                 </body>
             </StoreProvider>

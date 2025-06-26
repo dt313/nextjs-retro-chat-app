@@ -102,6 +102,36 @@ export const initSocket = (token = null) => {
                 }
                 break;
 
+            case 'incoming_call':
+                if (data) {
+                    eventBus.emit('incoming_call', data);
+                }
+                break;
+
+            case 'ice_candidate':
+                if (data) {
+                    eventBus.emit('ice_candidate', data);
+                }
+                break;
+
+            case 'offer':
+                if (data) {
+                    eventBus.emit('offer', data);
+                }
+                break;
+
+            case 'answer':
+                if (data) {
+                    eventBus.emit('answer', data);
+                }
+                break;
+
+            case 'call_end':
+                if (data) {
+                    eventBus.emit('call_end', data);
+                }
+                break;
+
             default:
                 console.warn('? unknow message type', type);
         }

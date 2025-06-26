@@ -85,19 +85,19 @@ export const THEME_SETTING_SAMPLE_MESSAGE = [
         id: 1,
         content: 'Có rất nhiều chủ đề để bạn lựa chọn và những chủ đề này đều khác nhau đôi chút.',
         sender: 'user',
-        isSender: false,
+        isSender: true,
     },
     {
         id: 2,
         content: 'Tin nhắn mà bạn gửi cho người khác sẽ có màu này.',
         sender: 'bot',
-        isSender: false,
+        isSender: true,
     },
     {
         id: 3,
         content: 'Tin nhắn của bạn bè sẽ tương tự như thế này',
         sender: 'user',
-        isSender: true,
+        isSender: false,
     },
 ];
 
