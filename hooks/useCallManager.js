@@ -7,7 +7,7 @@ import { CALL_STATES, changeStatus, stop } from '@/redux/actions/phone-action';
 
 export const useCallManager = () => {
     const dispatch = useDispatch();
-    const { isOpen, receiver, sender, status, callDirection } = useSelector((state) => state.phone);
+    const { isOpen, receiver, sender, status, callDirection, isVideo } = useSelector((state) => state.phone);
     const { user: me } = useSelector((state) => state.auth);
 
     const peerConnectionRef = useRef(null);
@@ -15,112 +15,151 @@ export const useCallManager = () => {
     const remoteAudioRef = useRef(null);
     const pendingIceCandidatesRef = useRef([]);
 
+    // ✅ Thêm video refs
+    const localVideoRef = useRef(null);
+    const remoteVideoRef = useRef(null);
+
     const ICE_SERVERS = [
         { urls: 'stun:stun.l.google.com:19302' },
         { urls: 'stun:stun1.l.google.com:19302' },
         { urls: 'stun:stun2.l.google.com:19302' },
     ];
 
-    const setupPeerConnection = useCallback(async () => {
-        try {
-            const peerConnection = new RTCPeerConnection({
-                iceServers: ICE_SERVERS,
-            });
+    const setupPeerConnection = useCallback(
+        async (withVideo = false) => {
+            try {
+                const peerConnection = new RTCPeerConnection({
+                    iceServers: ICE_SERVERS,
+                });
 
-            peerConnectionRef.current = peerConnection;
+                peerConnectionRef.current = peerConnection;
 
-            // Get user media
-            const stream = await navigator.mediaDevices.getUserMedia({
-                audio: {
-                    echoCancellation: true,
-                    noiseSuppression: true,
-                    autoGainControl: true,
-                },
-                video: false,
-            });
+                // Get user media
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true,
+                    },
+                    video: withVideo
+                        ? {
+                              width: { ideal: 640 },
+                              height: { ideal: 480 },
+                              frameRate: { ideal: 30 },
+                          }
+                        : false,
+                });
 
-            localStreamRef.current = stream;
+                localStreamRef.current = stream;
 
-            // Add tracks to peer connection
-            stream.getTracks().forEach((track) => {
-                peerConnection.addTrack(track, stream);
-            });
-
-            // Handle remote stream
-            peerConnection.ontrack = (event) => {
-                console.log('Received remote stream');
-                if (remoteAudioRef.current) {
-                    remoteAudioRef.current.srcObject = event.streams[0];
-                    remoteAudioRef.current.play().catch((e) => console.error('Error playing remote audio:', e));
+                // ✅ Hiển thị local video stream
+                if (withVideo && localVideoRef.current) {
+                    localVideoRef.current.srcObject = stream;
+                    localVideoRef.current.play().catch((e) => console.error('Error playing local video:', e));
                 }
-            };
 
-            // Handle ICE candidates
-            peerConnection.onicecandidate = (event) => {
-                if (event.candidate) {
-                    const socket = getSocket();
-                    if (socket?.readyState === WebSocket.OPEN) {
-                        socket.send(
-                            JSON.stringify({
-                                type: 'ICE_CANDIDATE',
-                                data: {
-                                    candidate: event.candidate,
-                                    conversationId: receiver?.conversationId,
-                                    excludeId: me._id,
-                                },
-                            }),
-                        );
+                // Add tracks to peer connection
+                stream.getTracks().forEach((track) => {
+                    peerConnection.addTrack(track, stream);
+                });
+
+                // Handle remote stream
+                peerConnection.ontrack = (event) => {
+                    console.log('Received remote stream');
+                    const remoteStream = event.streams[0];
+
+                    if (withVideo && remoteVideoRef.current) {
+                        // ✅ Hiển thị remote video stream
+                        remoteVideoRef.current.srcObject = remoteStream;
+                        remoteVideoRef.current.play().catch((e) => console.error('Error playing remote video:', e));
                     }
-                }
-            };
 
-            // Handle connection state changes
-            peerConnection.onconnectionstatechange = () => {
-                console.log('Connection state:', peerConnection.connectionState);
+                    if (!withVideo && remoteAudioRef.current) {
+                        // Audio only
+                        remoteAudioRef.current.srcObject = remoteStream;
+                        remoteAudioRef.current.play().catch((e) => console.error('Error playing remote audio:', e));
+                    }
+                };
 
-                switch (peerConnection.connectionState) {
-                    case 'connected':
-                        dispatch(changeStatus(CALL_STATES.CONNECTED));
-                        break;
-                    case 'disconnected':
-                    case 'failed':
-                    case 'closed':
-                        cleanup();
-                        dispatch(stop());
-                        break;
-                }
-            };
+                // Handle ICE candidates
+                peerConnection.onicecandidate = (event) => {
+                    if (event.candidate) {
+                        const socket = getSocket();
+                        if (socket?.readyState === WebSocket.OPEN) {
+                            socket.send(
+                                JSON.stringify({
+                                    type: 'ICE_CANDIDATE',
+                                    data: {
+                                        candidate: event.candidate,
+                                        conversationId: receiver?.conversationId,
+                                        excludeId: me._id,
+                                    },
+                                }),
+                            );
+                        }
+                    }
+                };
 
-            // Handle ICE connection state
-            peerConnection.oniceconnectionstatechange = () => {
-                console.log('ICE connection state:', peerConnection.iceConnectionState);
-                if (peerConnection.iceConnectionState === 'failed') {
-                    // Attempt ICE restart
-                    peerConnection.restartIce();
-                } else if (peerConnection.iceConnectionState === 'disconnected') {
-                    setTimeout(() => {
-                        if (peerConnection.iceConnectionState === 'disconnected') {
+                // Handle connection state changes
+                peerConnection.onconnectionstatechange = () => {
+                    console.log('Connection state:', peerConnection.connectionState);
+
+                    switch (peerConnection.connectionState) {
+                        case 'connected':
+                            dispatch(changeStatus(CALL_STATES.CONNECTED));
+                            break;
+                        case 'disconnected':
+                        case 'failed':
+                        case 'closed':
                             cleanup();
                             dispatch(stop());
-                        }
-                    }, 5000);
-                }
-            };
+                            break;
+                    }
+                };
 
-            return peerConnection;
-        } catch (error) {
-            console.error('Error setting up peer connection:', error);
-            alert('Không thể truy cập microphone. Vui lòng cho phép quyền truy cập.');
-            dispatch(stop());
-            return null;
-        }
-    }, [dispatch, receiver?.conversationId]);
+                // Handle ICE connection state
+                peerConnection.oniceconnectionstatechange = () => {
+                    console.log('ICE connection state:', peerConnection.iceConnectionState);
+                    if (peerConnection.iceConnectionState === 'failed') {
+                        // Attempt ICE restart
+                        peerConnection.restartIce();
+                    } else if (peerConnection.iceConnectionState === 'disconnected') {
+                        setTimeout(() => {
+                            if (peerConnection.iceConnectionState === 'disconnected') {
+                                cleanup();
+                                dispatch(stop());
+                            }
+                        }, 5000);
+                    }
+                };
+
+                return peerConnection;
+            } catch (error) {
+                console.error('Error setting up peer connection:', error);
+                alert('Không thể truy cập microphone. Vui lòng cho phép quyền truy cập.');
+                dispatch(stop());
+                return null;
+            }
+        },
+        [dispatch, receiver?.conversationId],
+    );
 
     const cleanup = useCallback(() => {
         // Stop local stream
         if (localStreamRef.current) {
             localStreamRef.current.getTracks().forEach((track) => track.stop());
             localStreamRef.current = null;
+        }
+
+        // ✅ Clear video sources
+        if (localVideoRef.current) {
+            localVideoRef.current.srcObject = null;
+        }
+        if (remoteVideoRef.current) {
+            remoteVideoRef.current.srcObject = null;
+        }
+        if (remoteAudioRef.current) {
+            remoteAudioRef.current.srcObject = null;
         }
 
         // Close peer connection
@@ -134,15 +173,13 @@ export const useCallManager = () => {
     }, []);
 
     const createOffer = useCallback(async () => {
-        const peerConnection = await setupPeerConnection();
+        const peerConnection = await setupPeerConnection(isVideo);
         if (!peerConnection) return;
 
         try {
             const offer = await peerConnection.createOffer();
             await peerConnection.setLocalDescription(offer);
-            console.log('create offer');
 
-            console.log('signalingState ', peerConnection.signalingState);
             const socket = getSocket();
             if (socket?.readyState === WebSocket.OPEN) {
                 socket.send(
@@ -166,12 +203,11 @@ export const useCallManager = () => {
 
     const createAnswer = useCallback(
         async (offer) => {
-            const peerConnection = await setupPeerConnection();
+            const peerConnection = await setupPeerConnection(isVideo);
             if (!peerConnection) return;
 
             try {
                 await peerConnection.setRemoteDescription(offer);
-                console.log('create-anwser', peerConnection.signalingState);
 
                 // Add any pending ICE candidates
                 for (const candidate of pendingIceCandidatesRef.current) {
@@ -263,23 +299,38 @@ export const useCallManager = () => {
         [dispatch],
     );
 
-    const endCall = useCallback(() => {
-        const socket = getSocket();
-        if (socket?.readyState === WebSocket.OPEN) {
-            socket.send(
-                JSON.stringify({
-                    type: 'CALL_END',
-                    data: {
-                        conversationId: receiver?.conversationId,
-                        excludeId: me._id,
-                    },
-                }),
-            );
-        }
+    const endCall = useCallback(
+        (reject = false) => {
+            const socket = getSocket();
+            if (socket?.readyState === WebSocket.OPEN) {
+                if (reject) {
+                    socket.send(
+                        JSON.stringify({
+                            type: 'CALL_REJECT',
+                            data: {
+                                conversationId: receiver?.conversationId,
+                                excludeId: me._id,
+                            },
+                        }),
+                    );
+                } else {
+                    socket.send(
+                        JSON.stringify({
+                            type: 'CALL_END',
+                            data: {
+                                conversationId: receiver?.conversationId,
+                                excludeId: me._id,
+                            },
+                        }),
+                    );
+                }
+            }
 
-        cleanup();
-        dispatch(stop());
-    }, [cleanup, dispatch, receiver?.conversationId]);
+            cleanup();
+            dispatch(stop());
+        },
+        [cleanup, dispatch, receiver?.conversationId],
+    );
 
     // Cleanup on unmount
     useEffect(() => {
@@ -295,6 +346,8 @@ export const useCallManager = () => {
         endCall,
         remoteAudioRef,
         localStreamRef,
+        localVideoRef,
+        remoteVideoRef,
         isCallActive: isOpen && status === CALL_STATES.CONNECTED,
     };
 };

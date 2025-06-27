@@ -5,12 +5,14 @@ import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
+import { useNotifyCallEndOnReload, usePreventLeaveDuringCall } from '@/hooks';
+import { FaVideo, FaVideoSlash } from 'react-icons/fa';
 import { FaMicrophone, FaMicrophoneSlash, FaPhone, FaPhoneSlash } from 'react-icons/fa6';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useCallManager } from '@/hooks/useCallManager';
 
-import { CALL_STATES, answerCall, incomingCall, rejectCall, stop } from '@/redux/actions/phone-action';
+import { CALL_STATES, answerCall, changeStatus, incomingCall, rejectCall, stop } from '@/redux/actions/phone-action';
 
 import Avatar from '../avatar';
 import Icon from '../icon';
@@ -44,17 +46,19 @@ function CallTimer({ startTime, status }) {
     return null;
 }
 
-function CallStatusDisplay({ status, name, callDirection }) {
+function CallStatusDisplay({ status, name, callDirection, isVideo = false }) {
     const getStatusText = () => {
         switch (status) {
             case CALL_STATES.CALLING:
-                return callDirection === 'outgoing' ? 'Đang gọi...' : 'Cuộc gọi đến';
+                return callDirection === 'outgoing' ? `Đang gọi ${isVideo ? 'video' : ''}...` : 'Cuộc gọi đến';
             case CALL_STATES.RINGING:
                 return 'Đang đổ chuông...';
             case CALL_STATES.CONNECTING:
                 return 'Đang kết nối...';
             case CALL_STATES.CONNECTED:
                 return 'Đã kết nối';
+            case CALL_STATES.REJECTED:
+                return 'Đã từ chối';
             default:
                 return 'Đang gọi...';
         }
@@ -68,12 +72,22 @@ function CallStatusDisplay({ status, name, callDirection }) {
     );
 }
 
+function VideoCall({ local, remote }) {
+    return (
+        <div>
+            <video ref={remote} className={cx('remote-video')} autoPlay playsInline />
+            <video ref={local} className={cx('local-video')} autoPlay muted playsInline />
+        </div>
+    );
+}
+
 function PhoneCallModal() {
-    const { isOpen, receiver, sender, status, callDirection, callStartTime } = useSelector((state) => state.phone);
+    const { isOpen, isVideo, receiver, sender, status, callDirection, callStartTime } = useSelector(
+        (state) => state.phone,
+    );
     const dispatch = useDispatch();
     const [isMuted, setIsMuted] = useState(false);
-
-    console.log({ status });
+    const [isVideoEnabled, setIsVideoEnabled] = useState(true);
 
     const {
         handleAnswer,
@@ -82,8 +96,18 @@ function PhoneCallModal() {
         handleRemoteAnswer,
         remoteAudioRef,
         localStreamRef,
+        localVideoRef,
+        remoteVideoRef,
         isCallActive,
     } = useCallManager();
+
+    usePreventLeaveDuringCall(isOpen);
+
+    const handleReload = (reject = false) => {
+        endCall(reject);
+    };
+
+    useNotifyCallEndOnReload(isOpen, status, handleReload);
 
     const toggleMute = () => {
         if (localStreamRef.current) {
@@ -95,6 +119,17 @@ function PhoneCallModal() {
         }
     };
 
+    // ✅ Thêm function để toggle video
+    const toggleVideo = () => {
+        if (localStreamRef.current) {
+            const videoTrack = localStreamRef.current.getVideoTracks()[0];
+            if (videoTrack) {
+                videoTrack.enabled = !videoTrack.enabled;
+                setIsVideoEnabled(videoTrack.enabled);
+            }
+        }
+    };
+
     const handleAcceptCall = () => {
         dispatch(answerCall());
         handleAnswer();
@@ -102,11 +137,13 @@ function PhoneCallModal() {
 
     const handleRejectCall = () => {
         dispatch(rejectCall());
-        endCall();
+        endCall(true);
+        setIsMuted(false);
     };
 
     const handleEndCall = () => {
         endCall();
+        setIsMuted(false);
     };
 
     useEffect(() => {
@@ -115,6 +152,16 @@ function PhoneCallModal() {
                 incomingCall({
                     sender: data.sender,
                     receiver: data.receiver,
+                }),
+            );
+        };
+
+        const handleComingVideoCall = (data) => {
+            dispatch(
+                incomingCall({
+                    sender: data.sender,
+                    receiver: data.receiver,
+                    isVideo: true,
                 }),
             );
         };
@@ -135,18 +182,25 @@ function PhoneCallModal() {
             dispatch(stop());
         };
 
+        const handleCallReject = (data) => {
+            dispatch(changeStatus(CALL_STATES.REJECTED));
+        };
+
         eventBus.on('incoming_call', handleComingCall);
+        eventBus.on('incoming_video_call', handleComingVideoCall);
         eventBus.on('ice_candidate', handleCandidate);
         eventBus.on('offer', handleOffer);
         eventBus.on('answer', handleAnswerRemote);
         eventBus.on('call_end', handleCallEnd);
+        eventBus.on('call_reject', handleCallReject);
 
         return () => {
             eventBus.off('incoming_call', handleComingCall);
+            eventBus.off('incoming_video_call', handleComingVideoCall);
             eventBus.off('ice_candidate', handleCandidate);
             eventBus.off('offer', handleOffer);
             eventBus.off('answer', handleAnswerRemote);
-            eventBus.off('call_end', handleCallEnd);
+            eventBus.off('call_reject', handleCallReject);
         };
     });
 
@@ -158,21 +212,43 @@ function PhoneCallModal() {
     return (
         <div className={cx('phone-call-modal')}>
             <audio ref={remoteAudioRef} autoPlay />
+            {/* ✅ Hiển thị video khi là video call và đã kết nối */}
 
-            <div className={cx('call-content')}>
-                <Avatar className={cx('caller-avatar')} src={displayUser?.avatar || displayUser?.thumbnail} />
+            {isVideo && (
+                <div className={cx('video-container')} style={{ display: isCallActive ? 'block' : 'none' }}>
+                    <video ref={remoteVideoRef} className={cx('remote-video')} autoPlay playsInline />
+                    <video ref={localVideoRef} className={cx('local-video')} autoPlay playsInline />
+                </div>
+            )}
 
-                <CallStatusDisplay status={status} name={displayUser?.name} callDirection={callDirection} />
+            <div className={cx('call-content', { videoDisplay: isVideo && isCallActive })}>
+                <Avatar
+                    className={cx(
+                        'caller-avatar',
+                        { noEffect: status === CALL_STATES.REJECTED },
+                        // { hidden: isVideo && isCallActive },
+                    )}
+                    src={displayUser?.avatar || displayUser?.thumbnail}
+                />
+
+                {!(isVideo && isCallActive) && (
+                    <CallStatusDisplay
+                        status={status}
+                        name={displayUser?.name}
+                        callDirection={callDirection}
+                        isVideo={isVideo}
+                    />
+                )}
 
                 <CallTimer startTime={callStartTime} status={status} />
             </div>
 
-            <div className={cx('call-controls')}>
+            <div className={cx('call-controls', { videoControl: isVideo && isCallActive })}>
                 {isIncomingCall ? (
                     // Incoming call controls
                     <>
                         <button className={cx('control-btn', 'accept')} onClick={handleAcceptCall}>
-                            <Icon element={<FaPhone />} />
+                            <Icon element={isVideo ? <FaVideo /> : <FaPhone />} />
                         </button>
                         <button className={cx('control-btn', 'reject')} onClick={handleRejectCall}>
                             <Icon element={<FaPhoneSlash />} />
@@ -186,6 +262,16 @@ function PhoneCallModal() {
                                 <Icon element={isMuted ? <FaMicrophoneSlash /> : <FaMicrophone />} />
                             </button>
                         )}
+
+                        {isCallActive && (
+                            <button
+                                className={cx('control-btn', 'video', { active: !isVideoEnabled })}
+                                onClick={toggleVideo}
+                            >
+                                <Icon element={isVideoEnabled ? <FaVideo /> : <FaVideoSlash />} />
+                            </button>
+                        )}
+
                         <button className={cx('control-btn', 'end')} onClick={handleEndCall}>
                             <Icon element={<FaPhoneSlash />} />
                         </button>

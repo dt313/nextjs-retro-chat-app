@@ -108,6 +108,12 @@ export const initSocket = (token = null) => {
                 }
                 break;
 
+            case 'incoming_video_call':
+                if (data) {
+                    eventBus.emit('incoming_video_call', data);
+                }
+                break;
+
             case 'ice_candidate':
                 if (data) {
                     eventBus.emit('ice_candidate', data);
@@ -123,6 +129,12 @@ export const initSocket = (token = null) => {
             case 'answer':
                 if (data) {
                     eventBus.emit('answer', data);
+                }
+                break;
+
+            case 'call_reject':
+                if (data) {
+                    eventBus.emit('call_reject', data);
                 }
                 break;
 

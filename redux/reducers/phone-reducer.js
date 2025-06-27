@@ -8,6 +8,7 @@ const initialState = {
     callDirection: null, // 'outgoing' or 'incoming'
     callStartTime: null,
     callDuration: 0,
+    isVideo: false,
 };
 
 const phoneReducer = (state = initialState, action) => {
@@ -21,6 +22,7 @@ const phoneReducer = (state = initialState, action) => {
                 receiver: action.payload.receiver,
                 callDirection: 'outgoing',
                 callStartTime: new Date().getTime(),
+                isVideo: action.payload?.isVideo || false,
             };
 
         case PHONE_ACTIONS.CALL_INCOMING:
@@ -32,6 +34,7 @@ const phoneReducer = (state = initialState, action) => {
                 receiver: action.payload.receiver,
                 callDirection: 'incoming',
                 callStartTime: new Date().getTime(),
+                isVideo: action.payload?.isVideo || false,
             };
 
         case PHONE_ACTIONS.CALL_ANSWER:
@@ -46,8 +49,8 @@ const phoneReducer = (state = initialState, action) => {
                 status: action.payload,
             };
 
-        case PHONE_ACTIONS.CALL_END:
         case PHONE_ACTIONS.CALL_REJECTED:
+        case PHONE_ACTIONS.CALL_END:
             return {
                 ...initialState,
             };

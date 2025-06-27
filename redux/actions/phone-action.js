@@ -3,6 +3,7 @@ export const CALL_STATES = {
     RINGING: 'ringing',
     CONNECTING: 'connecting',
     CONNECTED: 'connected',
+    REJECTED: 'rejected',
     ENDED: 'ended',
 };
 

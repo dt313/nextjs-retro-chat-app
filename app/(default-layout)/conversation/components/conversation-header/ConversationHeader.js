@@ -80,6 +80,46 @@ function ConversationHeader({
         }
     };
 
+    const handleCallVideo = () => {
+        // Prevent multiple calls
+        if (isOpen) return;
+
+        // Don't allow calls to groups (you can modify this logic)
+        if (isGroup) {
+            alert('Không thể gọi nhóm');
+            return;
+        }
+
+        const sender = {
+            id: me._id,
+            name: me.fullName,
+            avatar: me.avatar,
+        };
+
+        const receiver = {
+            conversationId,
+            name,
+            thumbnail,
+        };
+
+        // Dispatch call action
+        dispatch(call({ sender, receiver, isVideo: true }));
+
+        // Send call signal via WebSocket
+        const socket = getSocket();
+        if (socket?.readyState === WebSocket.OPEN) {
+            socket.send(
+                JSON.stringify({
+                    type: 'VIDEO_CALL',
+                    data: { sender, receiver },
+                }),
+            );
+        } else {
+            console.error('WebSocket not connected');
+            dispatch(stop());
+        }
+    };
+
     return (
         <div className={cx('c-header')} {...props}>
             <Icon
@@ -112,7 +152,7 @@ function ConversationHeader({
                     <Icon className={cx('tool-icon')} element={<AiFillPhone />} />
                 </span>
 
-                <span>
+                <span onClick={handleCallVideo}>
                     <Icon className={cx('tool-icon')} element={<IoVideocam />} />
                 </span>
                 <Tippy theme="light" content="Đóng tab bên phải" className={cx('tippy')}>
