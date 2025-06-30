@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { getSocket } from '@/config/ws';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { CALL_STATES, changeStatus, stop } from '@/redux/actions/phone-action';
+import { CALL_STATES, changeStatus, stop, upgradeToVideo } from '@/redux/actions/phone-action';
 
 export const useCallManager = () => {
     const dispatch = useDispatch();

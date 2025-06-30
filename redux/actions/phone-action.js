@@ -7,6 +7,12 @@ export const CALL_STATES = {
     ENDED: 'ended',
 };
 
+export const VISIBILITY = {
+    HIDE: 'HIDE',
+    VISIBLE: 'VISIBLE',
+    SMALL: 'SMALL',
+};
+
 export const CONNECTING_STATUS = CALL_STATES.CONNECTING;
 
 // Action Types
@@ -17,6 +23,7 @@ export const PHONE_ACTIONS = {
     CALL_STATUS_CHANGE: 'CALL_STATUS_CHANGE',
     CALL_INCOMING: 'CALL_INCOMING',
     CALL_REJECTED: 'CALL_REJECTED',
+    CHANGE_VISIBILITY: 'CHANGE_VISIBILITY',
 };
 
 // Action Creators
@@ -44,5 +51,15 @@ export const changeStatus = (status) => ({
 
 export const incomingCall = (payload) => ({
     type: PHONE_ACTIONS.CALL_INCOMING,
+    payload,
+});
+
+export const upgradeToVideo = (payload) => ({
+    type: PHONE_ACTIONS.VIDEO_UPGRADE,
+    payload,
+});
+
+export const changeVisibility = (payload) => ({
+    type: PHONE_ACTIONS.CHANGE_VISIBILITY,
     payload,
 });

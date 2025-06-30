@@ -1,5 +1,6 @@
 import useAutoResize from './useAutoResize';
 import useBreakpoint from './useBreakpoint';
+import { useCallManager } from './useCallManager';
 import useClickOutside from './useClickOutside';
 import useDebounce from './useDebounce';
 import useNotifyCallEndOnReload from './useNotifyCallEndOnReload';
@@ -14,4 +15,5 @@ export {
     useDebounce,
     usePreventLeaveDuringCall,
     useNotifyCallEndOnReload,
+    useCallManager,
 };

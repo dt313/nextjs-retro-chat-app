@@ -14,6 +14,64 @@
     color: white;
 }
 
+.phone-call-modal.hide {
+    visibility: hidden;
+}
+
+.phone-call-modal.small {
+    background: transparent;
+    width: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: unset;
+    right: unset;
+
+    .video-container {
+        width: 100%;
+    }
+
+    .nav {
+        background-color: #33333255;
+        padding: 2px;
+        border-radius: 12px;
+        top: 0;
+        right: 0;
+    }
+}
+
+// nav
+
+.nav {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    // background-color: #acacac22;
+    // border: 1px solid #5d5d5d;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0 4px;
+    padding: 8px 12px;
+    z-index: 3;
+}
+
+.nav-icon {
+    border-radius: 10rem;
+    &:hover {
+        background-color: #4e4e4e;
+        cursor: pointer;
+    }
+
+    &.red {
+        background-color: var(--red);
+    }
+
+    &.red:hover {
+        background-color: red;
+    }
+}
+
 .call-content {
     display: flex;
     flex-direction: column;
@@ -58,6 +116,10 @@
             color: #4ade80;
         }
     }
+}
+
+.call-content.hide {
+    display: none;
 }
 
 .call-controls {
@@ -131,6 +193,7 @@
     align-items: center;
     justify-content: center;
     margin: 0;
+
     .caller-avatar {
         min-width: 40px;
         min-height: 40px;
@@ -174,6 +237,40 @@
 
     video {
         object-fit: contain;
+    }
+}
+
+.video-small {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 200px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    height: calc(var(--header-height) - 4px);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1.5px solid #5b5b5b;
+
+    .local-video,
+    .remote-video {
+        display: inline-block;
+        position: unset;
+        width: 96px;
+        flex: 1;
+        height: 100%;
+        border-radius: unset;
+        object-fit: cover;
+        box-shadow: none;
+        border: unset;
+    }
+
+    @include respond-to('mobile') {
+        // height: var(--mobile-header-height);
     }
 }
 

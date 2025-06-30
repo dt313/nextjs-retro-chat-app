@@ -1,5 +1,3 @@
-import { useRef } from 'react';
-
 import classNames from 'classnames/bind';
 
 import { getSocket } from '@/config/ws';
@@ -14,7 +12,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import Avatar from '@/components/avatar';
 import Icon from '@/components/icon';
 
-import { call, stop } from '@/redux/actions/phone-action';
+import { VISIBILITY, call, changeVisibility, stop } from '@/redux/actions/phone-action';
+import { addToast } from '@/redux/actions/toast-action';
 
 import styles from './ConversationHeader.module.scss';
 
@@ -31,7 +30,7 @@ function ConversationHeader({
     ...props
 }) {
     const { user: me } = useSelector((state) => state.auth);
-    const { isOpen } = useSelector((state) => state.phone);
+    const { isOpen, conversationId: callingId, isVideo } = useSelector((state) => state.phone);
     const dispatch = useDispatch();
 
     // WebRTC refs
@@ -42,7 +41,21 @@ function ConversationHeader({
 
     const handleCall = async () => {
         // Prevent multiple calls
-        if (isOpen) return;
+        if (isOpen && conversationId !== callingId) {
+            dispatch(
+                addToast({
+                    type: 'warning',
+                    content: 'Bạn đang có cuộc gọi khác',
+                }),
+            );
+            return;
+        }
+
+        if (isOpen && conversationId === callingId) {
+            console.log('visible ');
+            dispatch(changeVisibility(VISIBILITY.VISIBLE));
+            return;
+        }
 
         // Don't allow calls to groups (you can modify this logic)
         if (isGroup) {
@@ -63,7 +76,7 @@ function ConversationHeader({
         };
 
         // Dispatch call action
-        dispatch(call({ sender, receiver }));
+        dispatch(call({ sender, receiver, conversationId }));
 
         // Send call signal via WebSocket
         const socket = getSocket();
@@ -82,7 +95,21 @@ function ConversationHeader({
 
     const handleCallVideo = () => {
         // Prevent multiple calls
-        if (isOpen) return;
+        if (isOpen && conversationId !== callingId) {
+            dispatch(
+                addToast({
+                    type: 'warning',
+                    content: 'Bạn đang có cuộc gọi khác',
+                }),
+            );
+            return;
+        }
+
+        if (isOpen && conversationId === callingId) {
+            console.log('visible ');
+            dispatch(changeVisibility(VISIBILITY.VISIBLE));
+            return;
+        }
 
         // Don't allow calls to groups (you can modify this logic)
         if (isGroup) {
@@ -103,7 +130,7 @@ function ConversationHeader({
         };
 
         // Dispatch call action
-        dispatch(call({ sender, receiver, isVideo: true }));
+        dispatch(call({ sender, receiver, isVideo: true, conversationId }));
 
         // Send call signal via WebSocket
         const socket = getSocket();
@@ -148,13 +175,23 @@ function ConversationHeader({
                 </div>
             </div>
             <div className={cx('c-header-tools')}>
-                <span onClick={handleCall}>
-                    <Icon className={cx('tool-icon')} element={<AiFillPhone />} />
-                </span>
+                {!isGroup && (
+                    <span onClick={handleCall}>
+                        <Icon
+                            className={cx('tool-icon', { calling: callingId === conversationId && !isVideo })}
+                            element={<AiFillPhone />}
+                        />
+                    </span>
+                )}
 
-                <span onClick={handleCallVideo}>
-                    <Icon className={cx('tool-icon')} element={<IoVideocam />} />
-                </span>
+                {!isGroup && (
+                    <span onClick={handleCallVideo}>
+                        <Icon
+                            className={cx('tool-icon', { calling: callingId === conversationId && isVideo })}
+                            element={<IoVideocam />}
+                        />
+                    </span>
+                )}
                 <Tippy theme="light" content="Đóng tab bên phải" className={cx('tippy')}>
                     <span>
                         <Icon className={cx('tool-icon')} element={<BsThreeDots />} onClick={onClickDotIcon} />

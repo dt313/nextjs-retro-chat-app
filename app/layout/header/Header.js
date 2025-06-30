@@ -5,9 +5,11 @@ import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
+import { useCallManager } from '@/hooks';
 import HeadlessTippy from '@tippyjs/react/headless';
 import { useRouter } from 'next/navigation';
-import { IoNotifications } from 'react-icons/io5';
+import { AiFillPhone } from 'react-icons/ai';
+import { IoNotifications, IoVideocam } from 'react-icons/io5';
 import { PiNotePencilFill } from 'react-icons/pi';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -23,6 +25,7 @@ import { authService } from '@/services';
 import { logout } from '@/redux/actions/auth-action';
 import { LOGIN_AUTH_BOX, REGISTER_AUTH_BOX, openAuthBox } from '@/redux/actions/auth-box-action';
 import { addNotification } from '@/redux/actions/notification-action';
+import { VISIBILITY, changeVisibility } from '@/redux/actions/phone-action';
 import { addToast } from '@/redux/actions/toast-action';
 
 import styles from './Header.module.scss';
@@ -36,6 +39,8 @@ function Header() {
     const { unRead: unReadConversation } = useSelector((state) => state.conversations);
     const { isAuthenticated, user: me } = useSelector((state) => state.auth);
     const { conversationId } = useSelector((state) => state.lastConversation);
+    const { isOpen, visible, isVideo } = useSelector((state) => state.phone);
+    const { isCallActive } = useCallManager();
     const router = useRouter();
     const dispatch = useDispatch();
 
@@ -53,6 +58,10 @@ function Header() {
         };
     }, []);
 
+    const handleClickPhone = () => {
+        dispatch(changeVisibility(VISIBILITY.VISIBLE));
+    };
+
     return (
         <header className={cx('wrapper')}>
             <h1 className={cx('logo')} onClick={() => router.push('/')}>
@@ -60,6 +69,11 @@ function Header() {
             </h1>
             {isAuthenticated ? (
                 <div className={cx('header-menu')}>
+                    {isOpen && visible === VISIBILITY.HIDE && isCallActive && (
+                        <span className={cx('hmenu-item', 'phone')} onClick={handleClickPhone}>
+                            <Icon element={isVideo ? <IoVideocam /> : <AiFillPhone />} className={cx('phone-icon')} />
+                        </span>
+                    )}
                     {
                         <span
                             className={cx('hmenu-item', 'message')}
