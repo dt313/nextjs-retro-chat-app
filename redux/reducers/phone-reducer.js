@@ -13,6 +13,8 @@ const initialState = {
     visible: VISIBILITY.VISIBLE,
 };
 
+let prevTitle = '';
+
 const phoneReducer = (state = initialState, action) => {
     switch (action.type) {
         case PHONE_ACTIONS.CALL_START:

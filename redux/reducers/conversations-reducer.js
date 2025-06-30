@@ -33,7 +33,7 @@ const conversationsReducer = (state = initialState, action) => {
             };
         case NEW_CONVERSATION:
             const { conversation } = action.payload;
-            const [isExist] = state.list.filter((conv) => conv._id === conversation._id);
+            const isExist = state.list.find((conv) => conv._id === conversation._id);
 
             let isRead = false;
             let sorted = state.list;
@@ -67,10 +67,12 @@ const conversationsReducer = (state = initialState, action) => {
             };
 
         case READ_LAST_MESSAGE:
+            let wasUnread = false;
             const { conversationId, meId } = action.payload;
             const newConversations = state.list.map((conv) => {
                 if (conv._id === conversationId) {
                     const alreadyRead = conv.lastMessage.readedBy.includes(meId);
+                    if (!alreadyRead) wasUnread = true;
                     const updatedLastMessage = {
                         ...conv.lastMessage,
                         readedBy: alreadyRead ? conv.lastMessage.readedBy : [...conv.lastMessage.readedBy, meId],
@@ -85,7 +87,7 @@ const conversationsReducer = (state = initialState, action) => {
             return {
                 ...state,
                 list: newConversations,
-                unRead: state.unRead - 1,
+                unRead: wasUnread ? Math.max(state.unRead - 1, 0) : state.unRead,
             };
 
         case FIND_CONVERSATION:

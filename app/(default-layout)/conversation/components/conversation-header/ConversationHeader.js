@@ -52,7 +52,6 @@ function ConversationHeader({
         }
 
         if (isOpen && conversationId === callingId) {
-            console.log('visible ');
             dispatch(changeVisibility(VISIBILITY.VISIBLE));
             return;
         }
@@ -106,7 +105,6 @@ function ConversationHeader({
         }
 
         if (isOpen && conversationId === callingId) {
-            console.log('visible ');
             dispatch(changeVisibility(VISIBILITY.VISIBLE));
             return;
         }

@@ -26,6 +26,7 @@ import {
 } from '@/redux/actions/phone-action';
 
 import Avatar from '../avatar';
+import HiddenAudio from '../hidden-audio';
 import Icon from '../icon';
 import styles from './PhoneCallModal.module.scss';
 
@@ -96,10 +97,10 @@ function PhoneCallModal() {
     const { isOpen, isVideo, visible, receiver, sender, status, callDirection, callStartTime } = useSelector(
         (state) => state.phone,
     );
-    const { user, me } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const [isMuted, setIsMuted] = useState(false);
     const [isVideoEnabled, setIsVideoEnabled] = useState(true);
+    const ringSoundRef = useRef(null);
 
     const {
         handleAnswer,
@@ -117,6 +118,37 @@ function PhoneCallModal() {
 
     usePreventLeaveDuringCall(isOpen);
 
+    useEffect(() => {
+        // Chỉ chạy trên client
+        ringSoundRef.current = new Audio('/audio/phone-ringing.mp3');
+        ringSoundRef.current.loop = true;
+
+        return () => {
+            ringSoundRef.current?.pause();
+            ringSoundRef.current = null;
+        };
+    }, []);
+
+    useEffect(() => {
+        if (window.document.hidden && status === CALL_STATES.RINGING) {
+            window.document.title = `${sender.name} đang gọi ...`;
+        } else {
+            window.document.title = `Retro`;
+        }
+    }, [status]);
+
+    useEffect(() => {
+        if (!ringSoundRef.current) return;
+        if (status === CALL_STATES.CALLING || status === CALL_STATES.RINGING) {
+            ringSoundRef.current.loop = true;
+            ringSoundRef.current.play();
+        } else {
+            ringSoundRef.loop = false;
+            ringSoundRef.current.pause();
+            ringSoundRef.current.currentTime = 0;
+        }
+    }, [status, ringSoundRef]);
+
     const handleReload = (reject = false) => {
         endCall(reject);
     };
@@ -126,10 +158,12 @@ function PhoneCallModal() {
     // turn of after 15 second
     useEffect(() => {
         let timeoutId;
-        console.log('alo');
         if (isOpen && status === CALL_STATES.CALLING) {
             timeoutId = setTimeout(() => {
                 endCall();
+                ringSoundRef.current.loop = false;
+                ringSoundRef.current.pause();
+                ringSoundRef.current.currentTime = 0;
             }, 15000);
         }
 
@@ -233,6 +267,7 @@ function PhoneCallModal() {
             eventBus.off('ice_candidate', handleCandidate);
             eventBus.off('offer', handleOffer);
             eventBus.off('answer', handleAnswerRemote);
+            eventBus.off('call_end', handleCallEnd);
             eventBus.off('call_reject', handleCallReject);
         };
     }, [handleAnswer]);
@@ -350,6 +385,8 @@ function PhoneCallModal() {
                     </>
                 )}
             </div>
+
+            <HiddenAudio />
         </div>
     );
 }
