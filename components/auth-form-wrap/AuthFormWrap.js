@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import classNames from 'classnames/bind';
 
@@ -29,6 +29,7 @@ const cx = classNames.bind(styles);
 function AuthFormWrap() {
     const authBox = useSelector((state) => state.authBox);
     const { isAuthenticated, user } = useSelector((state) => state.auth);
+    const messageSoundRed = useRef();
 
     const dispatch = useDispatch();
     const fetchNotifications = async () => {
@@ -43,6 +44,15 @@ function AuthFormWrap() {
             dispatch(initConversation({ conversations, meId: user._id }));
         }
     };
+
+    useEffect(() => {
+        messageSoundRed.current = new Audio('/audio/message-sound.mp3');
+
+        return () => {
+            messageSoundRed.current?.pause();
+            messageSoundRed.current = null;
+        };
+    }, []);
 
     useEffect(() => {
         const handleVisibilityChange = () => {
@@ -90,6 +100,14 @@ function AuthFormWrap() {
 
         const handleSortConversation = (conversation) => {
             dispatch(newConversation({ conversation, meId: user._id }));
+            if (!messageSoundRed.current) return;
+
+            if (conversation && conversation.lastMessage && conversation.lastMessage.sender._id !== user._id) {
+                console.log('dsadas');
+                messageSoundRed.current.play().catch((err) => {
+                    console.warn('Autoplay bị chặn:', err);
+                });
+            }
         };
 
         eventBus.on('last-conversation', handleSortConversation);

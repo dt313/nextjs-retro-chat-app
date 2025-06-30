@@ -298,6 +298,7 @@ function Conversation({ id }) {
                             status={checkOnline(conversation)}
                             onlineCount={onlineCount}
                             onClickDotIcon={toggleRightSide}
+                            conversationId={conversation?._id}
                             style={{ backgroundColor: theme.styles?.backgroundColor }}
                         />
                     )}

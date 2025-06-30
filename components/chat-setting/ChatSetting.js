@@ -7,8 +7,9 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
-import { set } from 'lodash';
 import { useRouter } from 'next/navigation';
+import { FaStackExchange } from 'react-icons/fa';
+import { GrTextAlignCenter } from 'react-icons/gr';
 import { IoIosImages } from 'react-icons/io';
 import { LuText } from 'react-icons/lu';
 import { MdDelete } from 'react-icons/md';
@@ -73,7 +74,7 @@ function ChatSetting({ isGroup, data }) {
         {
             id: 2,
             name: 'Chỉnh sửa chủ đề',
-            icon: <IoIosImages />,
+            icon: <FaStackExchange />,
             type: 'conversation-theme',
             description: 'Chỉnh sửa chủ đề của cuộc trò chuyện',
             value: conversation?.theme || 'default',
@@ -124,7 +125,7 @@ function ChatSetting({ isGroup, data }) {
         {
             id: 2,
             name: 'Chỉnh sửa phần giới thiệu',
-            icon: <TbAlphabetLatin />,
+            icon: <GrTextAlignCenter />,
             type: 'textarea',
             description: 'Chỉnh sửa phần giới thiệu của nhóm',
             label: 'Giới thiệu',
@@ -186,7 +187,7 @@ function ChatSetting({ isGroup, data }) {
         {
             id: 5,
             name: 'Chỉnh sửa chủ đề',
-            icon: <IoIosImages />,
+            icon: <FaStackExchange />,
             type: 'conversation-theme',
             description: 'Chỉnh sửa chủ đề của cuộc trò chuyện',
             value: conversation?.theme || 'default',

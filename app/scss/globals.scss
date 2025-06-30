@@ -193,6 +193,15 @@ html *::-webkit-scrollbar-thumb:hover {
     }
 }
 
+// tippy
+
+span[aria-describedby='tippy-tooltip'] {
+    font-family: var(--font-family);
+    font-size: 1.4rem;
+    line-height: 1.5;
+    color: var(--foreground);
+}
+
 // emoji-picker
 .epr_x558go:focus {
     border: 1px solid #9a9a9a !important;

@@ -16,18 +16,23 @@ import styles from './Avatar.module.scss';
 
 const cx = classNames.bind(styles);
 
-function Avatar({ src, className, size = 60, fallback = images.noUser, ...props }) {
+// Dynamically import the Image component to avoid server-side rendering issues
+
+const Image = dynamic(() => import('@/components/image'), {
+    ssr: false,
+});
+
+function Avatar({ src, className, size = null, fallback = images.noUser, ...props }) {
     const classes = cx('wrapper', {
         [className]: className,
     });
+
     return (
-        <AImage
+        <Image
             className={classes}
             src={src}
             fallback={fallback}
-            style={{ minWidth: `${size}px`, minHeight: `${size}px`, width: `${size}px`, height: `${size}px` }}
-            width={size}
-            height={size}
+            style={size && { minWidth: `${size}px`, minHeight: `${size}px`, width: `${size}px`, height: `${size}px` }}
             {...props}
         />
     );
