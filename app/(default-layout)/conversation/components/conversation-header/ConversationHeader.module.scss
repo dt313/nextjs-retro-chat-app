@@ -136,7 +136,7 @@
         @include center-align;
 
         &:hover {
-            background-color: #a5a2a2;
+            background-color: var(--gray-color);
         }
     }
 }
@@ -144,7 +144,12 @@
 .calling {
     animation: pulse 2s infinite;
     border-radius: 10rem;
+    width: 32px;
+    height: 32px;
     color: green;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 @keyframes pulse {

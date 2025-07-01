@@ -18,6 +18,7 @@ function CloseIcon({ onClick, className, theme = 'light', small, large, medium, 
         medium,
         noBackground,
     });
+
     return <Icon className={classes} element={<Close className={cx('icon')} />} onClick={onClick} />;
 }
 

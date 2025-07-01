@@ -31,11 +31,27 @@
     }
 
     .nav {
-        background-color: #33333255;
+        background-color: var(--phone-modal-nav-bg);
         padding: 2px;
-        border-radius: 12px;
-        top: 0;
-        right: 0;
+        border-radius: 4px;
+        top: 2px;
+        right: unset;
+        left: 50%;
+        transform: translateX(-50%);
+
+        .nav-icon span {
+            font-size: 1.6rem;
+        }
+    }
+
+    &:hover .nav {
+        padding: 2px 4px;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+        .nav-icon {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            padding: 4px;
+        }
     }
 }
 
@@ -51,7 +67,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0 4px;
+    gap: 0 8px;
     padding: 8px 12px;
     z-index: 3;
 }
@@ -59,7 +75,7 @@
 .nav-icon {
     border-radius: 10rem;
     &:hover {
-        background-color: #4e4e4e;
+        background-color: var(--phone-modal-nav-hover);
         cursor: pointer;
     }
 
@@ -84,7 +100,7 @@
         height: 120px;
         border-radius: 50%;
         margin-bottom: 20px;
-        border: 4px solid rgba(255, 255, 255, 0.3);
+        border: 4px solid #333;
         animation: pulse 2s infinite;
     }
 
@@ -211,12 +227,12 @@
 
 .videoControl {
     position: absolute;
-    background-color: #000000;
+    background-color: #000;
     padding: 12px 24px;
     border-radius: 12px;
     bottom: 4px;
-    box-shadow: 0 2px 8px rgba(85, 85, 85, 0.6);
-    border: 2px solid #343434;
+    box-shadow: 0 2px 6px #55555599;
+    border: 2px solid #424242;
 
     @include respond-to('mobile') {
         z-index: 3;
@@ -232,7 +248,7 @@
     position: relative;
     width: 100%;
     height: 100%;
-    background: black;
+    background: var(--black);
     overflow: hidden;
 
     video {
@@ -254,7 +270,7 @@
     height: calc(var(--header-height) - 4px);
     border-radius: 12px;
     overflow: hidden;
-    border: 1.5px solid #5b5b5b;
+    border: 1.5px solid var(--gray-color);
 
     .local-video,
     .remote-video {

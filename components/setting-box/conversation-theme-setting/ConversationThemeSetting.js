@@ -2,13 +2,9 @@ import { useState } from 'react';
 
 import classNames from 'classnames/bind';
 
-import { CONVERSATION_THEME_LIST, THEME_SETTING_SAMPLE_MESSAGE } from '@/config/ui-config';
+import { THEME_SETTING_SAMPLE_MESSAGE, getConversationTheme } from '@/config/ui-config';
 
-import images from '@/assets/images';
-
-import Image from '@/components/image';
-
-import findConversationThemeByName from '@/helpers/find-conversation-by-name';
+import findConversationThemeByName from '@/helpers/find-conversation-theme-by-name';
 
 import styles from './ConversationThemeSetting.module.scss';
 
@@ -18,14 +14,14 @@ function ConversationThemeSetting({ onChangeTheme, value }) {
     const [theme, setTheme] = useState(findConversationThemeByName(value) || CONVERSATION_THEME_LIST[0]);
 
     const handleChangeTheme = (id) => {
-        const selectedTheme = CONVERSATION_THEME_LIST.find((item) => item.id === id);
+        const selectedTheme = getConversationTheme().find((item) => item.id === id);
         setTheme(selectedTheme);
         onChangeTheme(selectedTheme.name);
     };
     return (
         <div className={cx('wrapper')}>
             <div className={cx('list')}>
-                {CONVERSATION_THEME_LIST.map((item) => (
+                {getConversationTheme().map((item) => (
                     <div
                         className={cx('item', { active: item.id === theme.id })}
                         key={item.id}

@@ -53,8 +53,8 @@
     border: var(solid-border);
     display: flex;
     align-items: center;
-    background-color: #fff;
-    color: #000;
+    background-color: var(--white);
+    color: var(--black-low);
     text-align: start;
     padding: 16px;
     padding-left: 8px;
@@ -65,13 +65,13 @@
     font-family: var(--font-family);
     font-weight: 500;
     border-radius: 8px;
-    border: 1px solid #15151588;
+    border: 1px solid var(--border-color);
     position: relative;
 
     .content {
         margin: 0px 8px;
         padding-right: 12px;
-        color: #000;
+        color: var(--black-low);
     }
 }
 

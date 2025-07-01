@@ -13,7 +13,7 @@
     height: 44px;
     min-width: 44px;
     min-height: 44px;
-    background-color: #fff;
+    background-color: var(--white);
     border-radius: 8px;
     font-size: 1.8rem;
     margin-right: 8px;
@@ -74,7 +74,7 @@
         font-weight: bold;
     }
 
-    background-color: #fff;
+    background-color: var(--white);
     border-radius: 8px;
     padding: 12px;
     border: var(--solid-border);

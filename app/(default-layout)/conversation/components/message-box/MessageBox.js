@@ -264,7 +264,7 @@ function MessageBox({
                                             type={at.type}
                                             id={at._id}
                                             sender={mes.sender}
-                                            content={{ name: at.name, size: at.size }}
+                                            content={{ name: at.name, size: at.size, url: at.url }}
                                             replyData={{
                                                 replyTo: mes.replyTo,
                                                 replyType: mes.replyType,
@@ -335,7 +335,11 @@ function MessageBox({
             })}
 
             {(isShowScrollBottom || isFinding) && (
-                <span className={cx('scroll-btn')} onClick={handleClickScrollBottom}>
+                <span
+                    className={cx('scroll-btn')}
+                    onClick={handleClickScrollBottom}
+                    style={{ backgroundColor: theme.styles.arrowBackground, color: theme.styles.arrowColor }}
+                >
                     <Icon element={<HiArrowDown />} medium />
                 </span>
             )}

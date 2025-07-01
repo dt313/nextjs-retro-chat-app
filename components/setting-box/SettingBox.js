@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
+import { useTheme } from 'next-themes';
+
 import SubmitButton from '@/components/auth-with-password/SubmitButton';
 import CloseIcon from '@/components/close-icon';
 import SettingInput from '@/components/setting-input';
@@ -18,6 +20,7 @@ function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu', isLoading
     const [value, setValue] = useState(content?.value || '');
     const [errorMessage, setErrorMessage] = useState('');
     const [buttonDisable, setButtonDisable] = useState(true);
+    const { theme, setTheme } = useTheme();
 
     const handleOnChange = useCallback(
         (e) => {
@@ -32,13 +35,19 @@ function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu', isLoading
         [content, value],
     );
 
+    const handleChangeConversationTheme = useCallback(
+        (theme) => {
+            setValue(theme);
+        },
+        [theme, content],
+    );
+
     const handleChangeTheme = useCallback(
         (theme) => {
             setValue(theme);
-            const error = content?.validate(theme);
-            setErrorMessage(error);
+            onSubmit(content.field, theme);
         },
-        [content],
+        [theme, content],
     );
 
     const handleSubmit = useCallback(() => {
@@ -78,29 +87,31 @@ function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu', isLoading
                         label={content.label}
                         placeholder={content.placeholder}
                         value={value}
-                        onChange={handleOnChange}
+                        onChange={content.type === 'theme' ? handleChangeTheme : handleOnChange}
                         errorMessage={errorMessage}
                     />
                 )}
 
                 {content.type === 'conversation-theme' && (
-                    <ConversationThemeSetting value={content.value} onChangeTheme={handleChangeTheme} />
+                    <ConversationThemeSetting value={content.value} onChangeTheme={handleChangeConversationTheme} />
                 )}
 
-                <div className={cx('btns')}>
-                    {content.type === 'conversation-theme' && (
-                        <button className={cx('cancel-btn')} onClick={onClose} type="button">
-                            Huỷ
-                        </button>
-                    )}
-                    <SubmitButton
-                        className={cx('submit-btn', { deleteBtn: content.type === 'delete' })}
-                        onClick={handleSubmit}
-                        disable={buttonDisable}
-                    >
-                        {isLoading ? <SpinnerLoader small /> : submitText}
-                    </SubmitButton>
-                </div>
+                {content.type !== 'theme' && (
+                    <div className={cx('btns')}>
+                        {content.type === 'conversation-theme' && (
+                            <button className={cx('cancel-btn')} onClick={onClose} type="button">
+                                Huỷ
+                            </button>
+                        )}
+                        <SubmitButton
+                            className={cx('submit-btn', { deleteBtn: content.type === 'delete' })}
+                            onClick={handleSubmit}
+                            disable={buttonDisable}
+                        >
+                            {isLoading ? <SpinnerLoader small /> : submitText}
+                        </SubmitButton>
+                    </div>
+                )}
             </div>
         </div>
     );

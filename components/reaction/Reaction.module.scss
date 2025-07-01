@@ -11,13 +11,13 @@
 }
 
 .reaction.dark {
-    background-color: #333;
+    background-color: var(--black-low);
 }
 
 .reaction.light {
-    background-color: #ffffff;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-    border: 1px solid #818181;
+    background-color: var(--white);
+    box-shadow: var(--reaction-box-shadow);
+    border: 1px solid var(--border-color);
 }
 
 .icon-box {

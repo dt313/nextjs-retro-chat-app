@@ -101,7 +101,7 @@ export const THEME_SETTING_SAMPLE_MESSAGE = [
     },
 ];
 
-export const CONVERSATION_THEME_LIST = [
+export const LIGHT_CONVERSATION_THEME_LIST = [
     {
         id: 1,
         name: 'default',
@@ -113,13 +113,14 @@ export const CONVERSATION_THEME_LIST = [
             textColor: '#000',
             backgroundColor: '#ede0d0',
             messageBoxShadow: '#333 3px 3px',
+            arrowBackground: '#b54c37',
+            arrowColor: '#333',
         },
     },
     {
         id: 2,
         name: 'blue',
         title: 'Xanh biển',
-
         boxColor: '#a8d5ff',
         styles: {
             senderBackgroundColor: '#a8d5ff',
@@ -127,6 +128,8 @@ export const CONVERSATION_THEME_LIST = [
             textColor: '#000',
             backgroundColor: '#f0f9ff',
             messageBoxShadow: '#555 3px 3px',
+            arrowBackground: '#1f80cc',
+            arrowColor: '#333',
         },
     },
     {
@@ -140,6 +143,8 @@ export const CONVERSATION_THEME_LIST = [
             textColor: '#000',
             backgroundColor: '#f1fff1',
             messageBoxShadow: '#333 3px 3px',
+            arrowBackground: '#3ba94b',
+            arrowColor: '#333',
         },
     },
     {
@@ -153,6 +158,8 @@ export const CONVERSATION_THEME_LIST = [
             textColor: '#000',
             backgroundColor: '#fff0f5',
             messageBoxShadow: '#777 3px 3px',
+            arrowBackground: '#e66fa3',
+            arrowColor: '#333',
         },
     },
     {
@@ -166,6 +173,8 @@ export const CONVERSATION_THEME_LIST = [
             textColor: '#000',
             backgroundColor: '#f7f3ff',
             messageBoxShadow: '#555 3px 3px',
+            arrowBackground: '#a45de4',
+            arrowColor: '#333',
         },
     },
     {
@@ -179,6 +188,8 @@ export const CONVERSATION_THEME_LIST = [
             textColor: '#000',
             backgroundColor: '#fffbeb',
             messageBoxShadow: '#555 3px 3px',
+            arrowBackground: '#e6b800',
+            arrowColor: '#333',
         },
     },
     {
@@ -192,6 +203,8 @@ export const CONVERSATION_THEME_LIST = [
             textColor: '#000',
             backgroundColor: '#f9f9f9',
             messageBoxShadow: '#777 3px 3px',
+            arrowBackground: '#9e9e9e',
+            arrowColor: '#333',
         },
     },
     {
@@ -205,6 +218,8 @@ export const CONVERSATION_THEME_LIST = [
             textColor: '#000',
             backgroundColor: '#e9fff3',
             messageBoxShadow: '#555 3px 3px',
+            arrowBackground: '#5dcf99',
+            arrowColor: '#333',
         },
     },
     {
@@ -218,6 +233,8 @@ export const CONVERSATION_THEME_LIST = [
             textColor: '#000',
             backgroundColor: '#fff3e9',
             messageBoxShadow: '#555 3px 3px',
+            arrowBackground: '#ff9e42',
+            arrowColor: '#333',
         },
     },
     {
@@ -231,12 +248,174 @@ export const CONVERSATION_THEME_LIST = [
             textColor: '#000',
             backgroundColor: '#fff5f5',
             messageBoxShadow: '#777 3px 3px',
+            arrowBackground: '#e05252',
+            arrowColor: '#333',
         },
     },
 ];
 
+export const DARK_CONVERSATION_THEME_LIST = [
+    {
+        id: 1,
+        name: 'default',
+        title: 'Mặc định',
+        boxColor: '#fff',
+        styles: {
+            senderBackgroundColor: '#edcfac',
+            receiverBackgroundColor: '#ede0d0',
+            textColor: '#000',
+            backgroundColor: '#212121',
+            messageBoxShadow: '#fff 1.5px 1.5px',
+            arrowBackground: '#b54c37',
+            arrowColor: '#333',
+        },
+    },
+
+    {
+        id: 2,
+        name: 'blue',
+        title: 'Xanh biển',
+        boxColor: '#a8d5ff',
+        styles: {
+            senderBackgroundColor: '#a8d5ff',
+            receiverBackgroundColor: '#d0e9ff',
+            textColor: '#000',
+            backgroundColor: '#212121',
+            messageBoxShadow: '#fff 1.5px 1.5px',
+            arrowBackground: '#1f80cc',
+            arrowColor: '#333',
+        },
+    },
+    {
+        id: 3,
+        name: 'green',
+        title: 'Xanh lá',
+        boxColor: '#a9e8a9',
+        styles: {
+            senderBackgroundColor: '#a9e8a9',
+            receiverBackgroundColor: '#d2f8d2',
+            textColor: '#000',
+            backgroundColor: '#212121',
+            messageBoxShadow: '#fff 1.5px 1.5px',
+            arrowBackground: '#3ba94b',
+            arrowColor: '#333',
+        },
+    },
+    {
+        id: 4,
+        name: 'pink',
+        title: 'Hồng',
+        boxColor: '#ffb3d1',
+        styles: {
+            senderBackgroundColor: '#ffb3d1',
+            receiverBackgroundColor: '#ffe0ec',
+            textColor: '#000',
+            backgroundColor: '#212121',
+            messageBoxShadow: '#fff 1.5px 1.5px',
+            arrowBackground: '#e66fa3',
+            arrowColor: '#333',
+        },
+    },
+    {
+        id: 5,
+        name: 'purple',
+        title: 'Tím',
+        boxColor: '#d3b3ff',
+        styles: {
+            senderBackgroundColor: '#d3b3ff',
+            receiverBackgroundColor: '#e9d9ff',
+            textColor: '#000',
+            backgroundColor: '#212121',
+            messageBoxShadow: '#fff 1.5px 1.5px',
+            arrowBackground: '#a45de4',
+            arrowColor: '#333',
+        },
+    },
+    {
+        id: 6,
+        name: 'yellow',
+        title: 'Vàng',
+        boxColor: '#ffe88a',
+        styles: {
+            senderBackgroundColor: '#ffe88a',
+            receiverBackgroundColor: '#fff9d1',
+            textColor: '#000',
+            backgroundColor: '#212121',
+            messageBoxShadow: '#fff 1.5px 1.5px',
+            arrowBackground: '#e6b800',
+            arrowColor: '#333',
+        },
+    },
+    {
+        id: 7,
+        name: 'gray',
+        title: 'Xám',
+        boxColor: '#c9c9c9',
+        styles: {
+            senderBackgroundColor: '#c9c9c9',
+            receiverBackgroundColor: '#e0e0e0',
+            textColor: '#000',
+            backgroundColor: '#212121',
+            messageBoxShadow: '#fff 1.5px 1.5px',
+            arrowBackground: '#9e9e9e',
+            arrowColor: '#333',
+        },
+    },
+    {
+        id: 8,
+        name: 'mint',
+        title: 'Bạc hà',
+        boxColor: '#a3f0c3',
+        styles: {
+            senderBackgroundColor: '#a3f0c3',
+            receiverBackgroundColor: '#d9ffe9',
+            textColor: '#000',
+            backgroundColor: '#212121',
+            messageBoxShadow: '#fff 1.5px 1.5px',
+            arrowBackground: '#5dcf99',
+            arrowColor: '#333',
+        },
+    },
+    {
+        id: 9,
+        name: 'orange',
+        title: 'Cam',
+        boxColor: '#ffc88a',
+        styles: {
+            senderBackgroundColor: '#ffc88a',
+            receiverBackgroundColor: '#ffe8d1',
+            textColor: '#000',
+            backgroundColor: '#212121',
+            messageBoxShadow: '#fff 1.5px 1.5px',
+            arrowBackground: '#ff9e42',
+            arrowColor: '#333',
+        },
+    },
+    {
+        id: 10,
+        name: 'red',
+        title: 'Đỏ',
+        boxColor: '#ffb1b1',
+        styles: {
+            senderBackgroundColor: '#ffb1b1',
+            receiverBackgroundColor: '#ffe3e3',
+            textColor: '#000',
+            backgroundColor: '#212121',
+            messageBoxShadow: '#fff 1.5px 1.5px',
+            arrowBackground: '#e05252',
+            arrowColor: '#333',
+        },
+    },
+];
+
+export const getConversationTheme = () => {
+    const theme = storageUtils.getTheme();
+    return theme === 'light' ? LIGHT_CONVERSATION_THEME_LIST : DARK_CONVERSATION_THEME_LIST;
+};
+
 export const createSettingMenu = () => {
     const info = storageUtils.getUser();
+    const theme = storageUtils.getTheme();
 
     return [
         {
@@ -340,7 +519,7 @@ export const createSettingMenu = () => {
                                         'Ảnh đại diện giúp mọi người nhận biết bạn dễ dàng hơn qua các bài viết, bình luận, tin nhắn..',
                                     label: 'Tên nhóm chat',
                                     placeholder: 'Tên nhóm chat',
-                                    value: info?.avatar,
+                                    value: info?.avatar || '',
                                     field: 'avatar',
                                     validate: (value) => {
                                         return Validation({
@@ -348,7 +527,7 @@ export const createSettingMenu = () => {
                                             rules: [
                                                 Validation.isRequired(),
                                                 Validation.isDifferent(
-                                                    info?.avatar,
+                                                    info?.avatar || '',
                                                     value,
                                                     'Vui lòng chọn ảnh khác với ảnh hiện tại.',
                                                 ),
@@ -539,49 +718,37 @@ export const createSettingMenu = () => {
                 ],
             },
         },
-        // {
-        //     title: 'Ứng dụng',
-        //     icon: <MdSettingsApplications />,
-        //     tag: 'app',
-        //     content: {
-        //         title: 'Ứng dụng',
-        //         description: 'Quản lí thông tin ứng dụng của bạn',
-        //         lists: [
-        //             {
-        //                 title: 'Theme ứng dụng và khác',
-        //                 description: 'Quản lí mật khẩu và cài đặt bảo mật cho tài khoản của bạn',
-        //                 items: [
-        //                     {
-        //                         title: 'Theme',
-        //                         content: 'theme',
-        //                         box: {
-        //                             headerTitle: 'Chọn theme cho website',
-        //                             headerDescription:
-        //                                 'Chọn giao diện phù hợp để cá nhân hóa trải nghiệm trang web của bạn.',
-        //                             type: 'theme',
-        //                             content: '',
-        //                             extraDescription: '',
-        //                         },
-        //                     },
-        //                     {
-        //                         title: 'Màu chính',
-        //                         content: 'color',
-        //                         isColor: true,
-        //                         box: {
-        //                             headerTitle: 'Chọn màu chính của website',
-        //                             headerDescription:
-        //                                 'Chọn màu yêu thích của bạn để cá nhân hóa trải nghiệm trang web của bạn',
-        //                             type: 'primary-color',
-
-        //                             content: '',
-        //                             extraDescription: '',
-        //                         },
-        //                     },
-        //                 ],
-        //             },
-        //         ],
-        //     },
-        // },
+        {
+            title: 'Ứng dụng',
+            icon: <MdSettingsApplications />,
+            tag: 'app',
+            content: {
+                title: 'Ứng dụng',
+                description: 'Quản lí thông tin ứng dụng của bạn',
+                lists: [
+                    {
+                        title: 'Theme ứng dụng và khác',
+                        description: 'Quản lí ứng dụng',
+                        items: [
+                            {
+                                title: 'Theme',
+                                content: theme === 'light' ? 'Sáng' : 'Tối',
+                                box: {
+                                    headerTitle: 'Chọn theme cho website',
+                                    description: 'Chọn giao diện phù hợp để cá nhân hóa trải nghiệm trang web của bạn.',
+                                    type: 'theme',
+                                    content: '',
+                                    extraDescription: '',
+                                    value: theme || '',
+                                    field: 'theme',
+                                    validate: () => {},
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
     ];
 };
 

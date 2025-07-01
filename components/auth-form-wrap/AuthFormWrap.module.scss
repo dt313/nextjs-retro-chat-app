@@ -8,10 +8,11 @@
     max-width: 576px;
     width: 100%;
     margin: 8px;
-    background-color: #fff;
+    background-color: var(--white);
     min-height: 500px;
     border-radius: 16px;
     position: relative;
+    overflow: hidden;
 }
 
 .container::after {
@@ -49,7 +50,7 @@
     right: 24px;
     cursor: pointer;
     border-radius: 50%;
-    background-color: #d2d2d2;
+    background-color: var(--gray-color);
     transition: opacity 0.2s ease;
     z-index: 5;
 

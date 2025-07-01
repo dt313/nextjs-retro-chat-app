@@ -14,6 +14,8 @@ export default function Validation({ value, rules = [] }) {
 Validation.isRequired = function (message) {
     return {
         test: function (value) {
+            if (!value) return message || 'Vui lòng nhập khung này.';
+            if (value instanceof File) return;
             return value.trim() ? undefined : message || 'Vui lòng nhập khung này.';
         },
     };

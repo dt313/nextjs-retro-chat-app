@@ -25,7 +25,7 @@ import MessageInput from '@/components/message-input';
 import { conversationService, messageService } from '@/services';
 
 import { getRoleFromConversation, getTargetIdFromConversation } from '@/helpers/conversation-info';
-import findConversationThemeByName from '@/helpers/find-conversation-by-name';
+import findConversationThemeByName from '@/helpers/find-conversation-theme-by-name';
 
 import { checkStatus, getAvatarFromConversation, getNameFromConversation, getOnlineUsers } from '@/helpers';
 

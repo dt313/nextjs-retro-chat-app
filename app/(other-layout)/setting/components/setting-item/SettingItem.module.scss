@@ -4,10 +4,10 @@
     width: 100%;
     padding: 8px 16px;
     position: relative;
-    background-color: #dedede;
+    background-color: var(--gray-color-low);
 
     &:hover {
-        background-color: #c1c1c1;
+        background-color: var(--gray-color);
         cursor: pointer;
     }
 }
@@ -22,12 +22,13 @@
 .content {
     padding-right: 20px;
     font-family: var(--font-family);
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     font-weight: 500;
+    color: var(--text-color-low);
 }
 
 .border-line {
-    border-bottom: 1px solid #fff;
+    border-bottom: 1px solid var(--white);
 }
 
 .icon {
@@ -41,7 +42,7 @@
 .img {
     margin-right: 8px;
     margin-top: 8px;
-    border: 1.5px solid #b4b4b4;
+    border: 1.5px solid var(--gray-color);
 }
 
 .color {

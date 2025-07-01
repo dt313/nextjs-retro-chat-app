@@ -21,6 +21,7 @@
     font-size: 1.5rem;
     opacity: 0.9;
     letter-spacing: 0.1px;
+    font-weight: 500;
 }
 
 .content {
@@ -43,7 +44,7 @@
         background-color: var(--red); // Starting color (yellow)
     }
     100% {
-        background-color: #dedede; // Ending color (transparent)
+        background-color: var(--gray-color-low); // Ending color (transparent)
     }
 }
 

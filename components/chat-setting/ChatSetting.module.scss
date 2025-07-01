@@ -19,7 +19,7 @@
     }
 
     &:hover {
-        background-color: #d1d1d1;
+        background-color: var(--gray-color);
         cursor: pointer;
     }
 }

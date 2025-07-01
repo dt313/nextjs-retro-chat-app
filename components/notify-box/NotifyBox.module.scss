@@ -1,7 +1,7 @@
 @use '/app/scss/mixins.scss' as *;
 
 .wrapper {
-    background-color: #fff;
+    background-color: var(--white);
     width: 360px;
     max-height: 400px;
     border-radius: 12px;
@@ -19,7 +19,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #ddc4aa;
+    background-color: var(--notification-color);
     border-radius: 12px 12px 0 0;
 }
 
@@ -27,6 +27,7 @@
     font-size: 2rem;
     font-weight: 600;
     font-family: Lona;
+    color: #000;
 }
 
 .notify-list {
@@ -63,7 +64,7 @@
 }
 
 .notify-item.unread {
-    background-color: #d8d8d8;
+    background-color: var(--notification-unread-color);
 }
 
 .avatar {
@@ -87,6 +88,7 @@
 
 .setting-icon {
     cursor: pointer;
+    color: #000;
 }
 
 // question notification
@@ -121,7 +123,7 @@
         border-radius: 4px;
         border: none;
         background-color: var(--red);
-        color: #fff;
+        color: var(--white);
         font-size: 1.3rem;
         cursor: pointer;
     }
@@ -131,7 +133,7 @@
     }
 
     .cancel-btn {
-        background-color: #a8a8a8;
+        background-color: var(--gray-color);
         color: black;
     }
 }

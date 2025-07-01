@@ -94,7 +94,7 @@
     height: 0;
     border-style: solid;
     border-width: 0 12px 12px 12px;
-    border-color: transparent transparent #ddc4aa transparent;
+    border-color: transparent transparent var(--notification-color) transparent;
     position: absolute;
     top: -12px;
 }

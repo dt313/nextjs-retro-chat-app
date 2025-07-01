@@ -6,7 +6,7 @@
     display: flex;
     border-radius: 12px;
     border: var(--solid-border);
-    background-color: var(--background);
+    background-color: var(--search-bg-color);
     box-shadow: var(--box-shadow);
 }
 
@@ -19,6 +19,8 @@
     @include font-default;
     outline: none;
     font-family: var(--font-family);
+    color: var(--search-text-color);
+
     background-color: transparent;
 }
 

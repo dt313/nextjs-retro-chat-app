@@ -6,7 +6,7 @@
     margin-top: 20px;
     padding: 20px 0;
     gap: 8px;
-    border-top: 1.5px solid #8c8c8c;
+    border-top: 1.5px solid var(--border-color);
 }
 
 .list {
@@ -31,12 +31,12 @@
     transition: background-color 0.2s ease;
 
     &:hover {
-        background-color: #d9d9d9;
+        background-color: var(--gray-color-low);
         cursor: pointer;
     }
 
     &.active {
-        background-color: #bababa;
+        background-color: var(--gray-color);
     }
 }
 
@@ -86,7 +86,7 @@
     padding: 8px;
     flex-direction: column;
     border-radius: 12px;
-    border: 1.5px solid #8c8c8c;
+    border: 1.5px solid var(--border-color);
     background-color: var(--background);
     min-height: 500px;
 }
@@ -109,7 +109,7 @@
         border-top-left-radius: 0;
         border-bottom-right-radius: 12px;
         border-bottom-left-radius: 12px;
-        background-color: #edcfac;
+        background-color: var(--bg-match-color);
         box-shadow: var(--box-shadow);
     }
 }

@@ -1,4 +1,4 @@
-import { Phone } from 'lucide-react';
+import { ThemeProvider } from 'next-themes';
 
 import AuthFormWrap from '@/components/auth-form-wrap';
 import PhoneCallModal from '@/components/phone-call-modal';
@@ -30,17 +30,17 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
     return (
-        <html lang="en">
-            <StoreProvider>
-                <body>
-                    <ThemeWrapper>
+        <ThemeProvider>
+            <html lang="en" suppressHydrationWarning>
+                <StoreProvider>
+                    <body>
                         {children}
                         <AuthFormWrap />
                         <Toast placement="top left" duration={5000} />
                         <PhoneCallModal />
-                    </ThemeWrapper>
-                </body>
-            </StoreProvider>
-        </html>
+                    </body>
+                </StoreProvider>
+            </html>
+        </ThemeProvider>
     );
 }

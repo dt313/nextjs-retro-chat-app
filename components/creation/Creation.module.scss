@@ -1,19 +1,21 @@
 @use '/app/scss/mixins.scss' as *;
 .wrapper {
     display: flex;
-    background-color: #fff;
+    background-color: var(--white);
     max-width: 520px;
     width: 100%;
     border-radius: 12px;
     min-height: 500px;
     max-height: 648px;
     height: 100%;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    box-shadow: var(--creation-box-shadow);
     overscroll-behavior: none;
     position: relative;
     margin: 0 8px;
     overflow: hidden;
-
+    // background-image: url('../../assets/images/creation-bg.png');
+    // background-position: center;
+    // background-size: cover;
     @include respond-to(tablet) {
         max-width: 576px;
         .r-side {
@@ -37,6 +39,7 @@
     // border-right: var(--solid-border);
     padding: 44px 24px;
     overscroll-behavior: none;
+
     overflow-y: auto;
 
     &::-webkit-scrollbar-track {

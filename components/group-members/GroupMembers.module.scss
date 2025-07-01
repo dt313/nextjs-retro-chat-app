@@ -7,7 +7,7 @@
 .search {
     display: flex;
     align-items: center;
-    background-color: #fff;
+    background-color: var(--white);
     border-radius: 12px;
     padding: 8px 12px;
 }
@@ -19,6 +19,7 @@
     height: 100%;
     margin-left: 12px;
     @include font-default;
+    background-color: transparent;
 }
 
 .members {
@@ -69,7 +70,7 @@
 }
 
 .actions {
-    background-color: #fff;
+    background-color: var(--white);
     display: flex;
     flex-direction: column;
     padding: 8px 4px;
@@ -89,7 +90,7 @@
     }
 
     .action:hover {
-        background-color: #b7b7b7;
+        background-color: var(--gray-color);
     }
 }
 
@@ -98,7 +99,7 @@
 }
 
 .avatar {
-    border: 1.5px solid #aeaeae88;
+    border: 1.5px solid var(--gray-color-low);
     &:hover {
         cursor: pointer;
     }

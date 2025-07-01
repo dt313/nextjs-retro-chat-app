@@ -26,6 +26,6 @@
     transition: color 0.3s ease;
 
     &:hover {
-        color: #7c1818;
+        color: var(--expand-text-color);
     }
 }

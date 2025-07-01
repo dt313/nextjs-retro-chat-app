@@ -65,7 +65,7 @@
 }
 
 .submit-icon {
-    background-color: var(--black);
+    background-color: var(--black-low);
     color: var(--background);
     border-radius: 50rem;
     width: 32px;
@@ -101,7 +101,7 @@
     .preview-img {
         width: 100%;
         height: 100%;
-        border: 1px solid #818181;
+        border: 1px solid var(--gray-color);
         border-radius: 4px;
     }
 }
@@ -114,16 +114,16 @@
     padding: 0 1rem;
     border-radius: 4px;
     position: relative;
-    background-color: #fff;
+    background-color: var(--white);
     font-size: 1.4rem;
     font-weight: 500;
     line-height: 1.4;
-    border: 1px solid #818181;
+    border: 1px solid var(--gray-color);
 
     .preview-file-name {
         max-width: 100px;
         @include font-default;
-        color: #333;
+        color: var(--black-low);
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
@@ -183,10 +183,10 @@
 }
 
 .emoji-picker {
-    background-color: #fff !important;
+    background-color: var(--white) !important;
     border-radius: 8px !important;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1) !important;
-    border: 1px solid #818181 !important;
+    box-shadow: var(--white-box-shadow);
+    border: 1px solid var(--gray-color) !important;
 }
 
 // drag and drop
@@ -197,7 +197,7 @@
     right: 0;
     bottom: 0;
     border: 2px dashed var(--red);
-    background-color: #e8c9c977;
+    background-color: var(--input-drag-enter-bg);
     display: flex;
     align-items: center;
     justify-content: center;

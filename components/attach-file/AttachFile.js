@@ -65,6 +65,7 @@ function AttachFile({ conversationId }) {
         },
         [conversationId],
     );
+
     return (
         <div className={cx('wrapper')}>
             {!isLoading ? (

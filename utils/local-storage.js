@@ -21,6 +21,15 @@ export const getUser = () => {
         return window.localStorage.getItem('user') ? JSON.parse(window.localStorage.getItem('user')) : null;
     }
 };
+
+export const getTheme = () => {
+    if (typeof window !== 'undefined') {
+        return window.localStorage.getItem('theme');
+    } else {
+        return 'light';
+    }
+};
+
 export const clearAuth = () => {
     if (typeof window !== 'undefined') {
         window.localStorage.removeItem('accessToken');
