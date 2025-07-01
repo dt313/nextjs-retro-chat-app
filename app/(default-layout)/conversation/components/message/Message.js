@@ -1,4 +1,4 @@
-import { Fragment, memo, useEffect, useRef, useState } from 'react';
+import { Fragment, memo, useCallback, useEffect, useRef, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
@@ -120,27 +120,31 @@ function Message({
         }
     };
 
-    const handleDownloadFile = async (url, name) => {
-        try {
-            isProcessing.current = true;
-            const response = await fetch(url, { mode: 'cors' }); // thêm mode: 'cors' nếu cần
-            if (!response.ok) throw new Error('Network response was not ok');
+    const handleDownloadFile = useCallback(
+        async (url, name) => {
+            try {
+                isProcessing.current = true;
 
-            const blob = await response.blob();
-            const blobUrl = window.URL.createObjectURL(blob);
+                const response = await fetch(url, { mode: 'cors' }); // thêm mode: 'cors' nếu cần
+                if (!response.ok) throw new Error('Network response was not ok');
 
-            const link = document.createElement('a');
-            link.href = blobUrl;
-            link.download = 'download.txt'; // fallback tên file nếu name undefined
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
+                const blob = await response.blob();
+                const blobUrl = window.URL.createObjectURL(blob);
 
-            window.URL.revokeObjectURL(blobUrl);
-        } catch (error) {
-            dispatch(addToast({ type: 'error', content: error.message }));
-        }
-    };
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = 'download.txt'; // fallback tên file nếu name undefined
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+
+                window.URL.revokeObjectURL(blobUrl);
+            } catch (error) {
+                dispatch(addToast({ type: 'error', content: error.message }));
+            }
+        },
+        [conversationId],
+    );
 
     const renderMessage = () => {
         if (isDelete) {
@@ -190,13 +194,14 @@ function Message({
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                     id={`message-${id}`}
-                    onClick={() => handleDownloadFile(content.url, content.name)}
                 >
                     <File
                         className={cx({ highlight: isHighlight })}
+                        onClick={handleDownloadFile}
                         primary
                         name={content.name}
                         size={content.size}
+                        url={content.url}
                         style={{
                             boxShadow: `${theme.styles.messageBoxShadow}`,
                         }}

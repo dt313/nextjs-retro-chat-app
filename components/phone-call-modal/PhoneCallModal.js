@@ -296,15 +296,15 @@ function PhoneCallModal() {
             {isCallActive && (
                 <div className={cx('nav')}>
                     <span className={cx('nav-icon')} onClick={hideModal}>
-                        <Icon element={<FaMinus />} small />
+                        <Icon element={<FaMinus />} medium />
                     </span>
                     {isVideo && (
                         <span className={cx('nav-icon')} onClick={resizeModal}>
-                            <Icon element={<BsTextareaResize />} small />
+                            <Icon element={<BsTextareaResize />} medium />
                         </span>
                     )}
                     <span className={cx('nav-icon', 'red')} onClick={handleEndCall}>
-                        <Icon element={<IoClose />} small />
+                        <Icon element={<IoClose />} medium />
                     </span>
                 </div>
             )}

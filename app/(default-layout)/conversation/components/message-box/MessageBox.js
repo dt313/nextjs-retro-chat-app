@@ -264,7 +264,7 @@ function MessageBox({
                                             type={at.type}
                                             id={at._id}
                                             sender={mes.sender}
-                                            content={{ name: at.name, size: at.size }}
+                                            content={{ name: at.name, size: at.size, url: at.url }}
                                             replyData={{
                                                 replyTo: mes.replyTo,
                                                 replyType: mes.replyType,

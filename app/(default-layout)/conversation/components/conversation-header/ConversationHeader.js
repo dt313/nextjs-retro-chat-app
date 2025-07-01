@@ -174,20 +174,17 @@ function ConversationHeader({
             </div>
             <div className={cx('c-header-tools')}>
                 {!isGroup && (
-                    <span onClick={handleCall}>
-                        <Icon
-                            className={cx('tool-icon', { calling: callingId === conversationId && !isVideo })}
-                            element={<AiFillPhone />}
-                        />
+                    <span onClick={handleCall} className={cx({ calling: callingId === conversationId && !isVideo })}>
+                        <Icon className={cx('tool-icon')} element={<AiFillPhone />} />
                     </span>
                 )}
 
                 {!isGroup && (
-                    <span onClick={handleCallVideo}>
-                        <Icon
-                            className={cx('tool-icon', { calling: callingId === conversationId && isVideo })}
-                            element={<IoVideocam />}
-                        />
+                    <span
+                        onClick={handleCallVideo}
+                        className={cx({ calling: callingId === conversationId && isVideo })}
+                    >
+                        <Icon className={cx('tool-icon')} element={<IoVideocam />} />
                     </span>
                 )}
                 <Tippy theme="light" content="Đóng tab bên phải" className={cx('tippy')}>
