@@ -1,9 +1,12 @@
+'use client';
+
 import { memo, useCallback, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
+import { useTheme } from 'next-themes';
 import { BsSendCheckFill } from 'react-icons/bs';
 import { BsSend } from 'react-icons/bs';
 import { FaFacebookMessenger } from 'react-icons/fa';
@@ -11,6 +14,7 @@ import { FiUserPlus } from 'react-icons/fi';
 import { MdOutlineGroupAdd } from 'react-icons/md';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { useSelector } from 'react-redux';
 
 import Avatar from '@/components/avatar';
 import Icon from '@/components/icon';
@@ -120,20 +124,28 @@ User.propTypes = {
 };
 
 User.Skeleton = function UserSkeleton() {
+    const { theme } = useTheme();
+
+    const { baseColor, highlightColor } = useMemo(() => {
+        return {
+            baseColor: theme === 'dark' ? '#2b2b2b' : '#e0d4c4',
+            highlightColor: theme === 'dark' ? '#777' : '#f5f1ec',
+        };
+    }, [theme]);
     return (
         <div className={cx('wrapper')}>
             <div className={cx('avatar-wrapper')}>
-                <SkeletonTheme baseColor="#e0d4c4" highlightColor="#f5f1ec">
+                <SkeletonTheme baseColor={baseColor} highlightColor={highlightColor}>
                     <Skeleton circle width={36} height={36} />
                 </SkeletonTheme>
             </div>
             <div className={cx('info')}>
-                <SkeletonTheme baseColor="#e0d4c4" highlightColor="#f5f1ec">
+                <SkeletonTheme baseColor={baseColor} highlightColor={highlightColor}>
                     <Skeleton width={100} height={20} />
                 </SkeletonTheme>
             </div>
             <div className={cx('action')}>
-                <SkeletonTheme baseColor="#e0d4c4" highlightColor="#f5f1ec">
+                <SkeletonTheme baseColor={baseColor} highlightColor={highlightColor}>
                     <Skeleton circle width={20} height={20} />
                 </SkeletonTheme>
             </div>

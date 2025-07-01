@@ -3,7 +3,7 @@
     max-width: 1200px;
     width: 100%;
     height: 90vh;
-    background-color: #fff;
+    background-color: var(--white);
     color: var(--text-color);
     border-radius: 12px;
     border: 2px solid #66666688;
@@ -42,7 +42,7 @@
     padding: 40px;
 
     border-right: 2px solid #66666688;
-    background-color: #fff;
+    background-color: var(--white);
 }
 
 .right-side {
@@ -85,14 +85,14 @@
         font-weight: 500;
         transition: background-color 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
         &:hover {
-            background-color: #b4b4b4;
+            background-color: var(--gray-color);
             cursor: pointer;
         }
     }
 
     .control-btn.active {
         background-color: var(--red);
-        color: #fff;
+        color: var(--white);
     }
 
     .control-btn-icon {
@@ -108,16 +108,11 @@
     height: 40px;
     width: 40px;
     font-size: 3rem;
-    background-color: var(--close-btn-br);
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 9999px;
     cursor: pointer;
-
-    &:hover {
-        background-color: var(--close-btn-hover);
-    }
 }
 
 .menu-icon {
@@ -125,6 +120,10 @@
     left: 20px;
     top: 20px;
     display: none;
+
+    &:hover {
+        background-color: var(--gray-color);
+    }
 }
 
 @media (max-width: 948px) {

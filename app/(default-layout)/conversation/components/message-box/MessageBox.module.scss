@@ -61,6 +61,9 @@
     background-color: var(--red);
     border-radius: 10rem;
     animation: slideUp 0.4s cubic-bezier(0.39, 0.575, 0.565, 1);
+    box-shadow:
+        rgba(0, 0, 0, 0.16) 0px 3px 6px,
+        rgba(0, 0, 0, 0.23) 0px 3px 6px;
 
     &:hover {
         background-color: #924434;

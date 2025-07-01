@@ -335,7 +335,11 @@ function MessageBox({
             })}
 
             {(isShowScrollBottom || isFinding) && (
-                <span className={cx('scroll-btn')} onClick={handleClickScrollBottom}>
+                <span
+                    className={cx('scroll-btn')}
+                    onClick={handleClickScrollBottom}
+                    style={{ backgroundColor: theme.styles.arrowBackground, color: theme.styles.arrowColor }}
+                >
                     <Icon element={<HiArrowDown />} medium />
                 </span>
             )}

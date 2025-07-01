@@ -28,7 +28,7 @@
     text-align: center;
     font-family: var(--font-family);
     padding: 16px 0;
-    text-shadow: 2px 2px #fefefe;
+    text-shadow: var(--search-title-box-shadow);
 }
 
 .title-strong {

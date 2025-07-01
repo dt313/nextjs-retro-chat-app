@@ -1,10 +1,13 @@
-import { memo, useState } from 'react';
+'use client';
+
+import { memo, useMemo } from 'react';
 
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
-import { set, throttle } from 'lodash';
+import { throttle } from 'lodash';
+import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -15,7 +18,6 @@ import Avatar from '@/components/avatar';
 import { conversationService } from '@/services';
 
 import { readLastMessage } from '@/redux/actions/conversations-action';
-import { addToast } from '@/redux/actions/toast-action';
 
 import styles from './ConversationPreview.module.scss';
 
@@ -41,17 +43,18 @@ function ConversationPreview({
         async () => {
             try {
                 if (isReaded) {
-                    router.push(`/conversation/${slug}`);
                     return;
                 } else {
                     const res = await conversationService.readLastMessage(slug);
                     if (res) {
                         dispatch(readLastMessage({ conversationId: slug, meId: me._id }));
-                        router.push(`/conversation/${slug}`);
                     }
                 }
             } catch (error) {
                 // dispatch(addToast({ type: 'error', content: error.message }));
+            } finally {
+                router.push(`/conversation/${slug}`);
+                dispatch(readLastMessage({ conversationId: slug, meId: me._id }));
             }
         },
         3000,
@@ -111,10 +114,19 @@ ConversationPreview.Skeleton = function ConversationPreviewSkeleton({ className 
         className,
     });
 
+    const { theme } = useTheme();
+
+    const { baseColor, highlightColor } = useMemo(() => {
+        return {
+            baseColor: theme === 'dark' ? '#2b2b2b' : '#e0d4c4',
+            highlightColor: theme === 'dark' ? '#777' : '#f5f1ec',
+        };
+    }, [theme]);
+
     return (
         <div className={classes}>
             <div className={cx('avatar-wrapper')} style={{ marginRight: '12px' }}>
-                <SkeletonTheme baseColor="#e0d4c4" highlightColor="#f5f1ec">
+                <SkeletonTheme baseColor={baseColor} highlightColor={highlightColor}>
                     <Skeleton circle width={44} height={44} />
                 </SkeletonTheme>
             </div>

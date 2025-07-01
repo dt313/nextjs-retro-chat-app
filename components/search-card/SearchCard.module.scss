@@ -23,7 +23,7 @@
     font-family: var(--large-retro-font-family);
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: #333;
+    color: var(--black-low);
 }
 
 .title:first-child {
@@ -70,7 +70,7 @@
 .info-item {
     .label {
         font-family: var(--font-family);
-        font-size: 1.2rem;
+        font-size: 1.3rem;
         color: var(--red);
         font-weight: 600;
         text-transform: uppercase;
@@ -78,7 +78,7 @@
 
     .info-content {
         font-family: var(--font-family);
-        font-size: 1.4rem;
+        font-size: 1.3rem;
         color: var(--text-color);
         font-weight: 500;
         word-break: break-word;
@@ -86,9 +86,9 @@
 
     .status {
         display: inline-block;
-        width: 8px;
-        height: 8px;
-        margin-left: 4px;
+        width: 10px;
+        height: 10px;
+        margin-left: 6px;
         border-radius: 50%;
         background-color: red;
     }
@@ -108,7 +108,7 @@
     bottom: 0;
     right: 0;
     left: 0;
-    background-color: rgba(137, 137, 137, 0.8);
+    background-color: var(--search-card-action-bg);
     border-radius: 16px;
     visibility: hidden;
     transition: all 0.15s ease-in-out;
@@ -139,7 +139,7 @@
     .ai-icon {
         width: 36px;
         height: 36px;
-        background-color: #fff;
+        background-color: var(--white);
         border-radius: 50%;
         padding: 4px;
         margin-bottom: 8px;

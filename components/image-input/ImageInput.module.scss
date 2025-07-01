@@ -17,7 +17,7 @@
 
     &:hover {
         cursor: pointer;
-        border-color: #000;
+        border-color: var(--black-low);
     }
 }
 
@@ -38,7 +38,7 @@
     }
 
     &:hover {
-        background-color: #f5f5f5;
+        background-color: var(--gray-color-low);
         cursor: pointer;
     }
 }

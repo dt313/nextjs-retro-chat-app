@@ -9,11 +9,9 @@ import notificationReducer from './notification-reducer';
 import onlineUsersReducer from './online-users-reducer';
 import phoneReducer from './phone-reducer';
 import replyBoxReducer from './reply-box-reducer';
-import themeReducer from './theme-reducer';
 import toastReducer from './toast-reducer';
 
 const rootReducer = combineReducers({
-    theme: themeReducer,
     authBox: authBoxReducer,
     replyBox: replyBoxReducer,
     imgPreview: imgPreviewReducer,

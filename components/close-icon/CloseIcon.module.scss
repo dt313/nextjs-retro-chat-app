@@ -11,8 +11,8 @@
 }
 
 .light {
-    background-color: #d2d2d2;
-    color: #333;
+    background-color: var(--light-close-icon-bg);
+    color: var(--light-close-icon-color);
 
     &:hover {
         opacity: 0.8;
@@ -20,8 +20,8 @@
 }
 
 .dark {
-    background-color: #414141;
-    color: #fff;
+    background-color: var(--dark-close-icon-bg);
+    color: var(--dark-close-icon-color);
 
     &:hover {
         opacity: 0.9;

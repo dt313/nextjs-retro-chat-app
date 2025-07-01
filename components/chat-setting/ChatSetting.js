@@ -168,11 +168,11 @@ function ChatSetting({ isGroup, data }) {
         },
         {
             id: 4,
-            name: 'Chỉnh sửa ảnh đại diện',
+            name: 'Chỉnh sửa hình nền',
             icon: <IoIosImages />,
             type: 'image',
             description: 'Chỉnh sửa hình nền của đoạn chat của bạn',
-            value: conversation?.thumbnail,
+            value: conversation?.thumbnail || '',
             field: 'thumbnail',
             validate: (value) => {
                 return Validation({
@@ -195,7 +195,7 @@ function ChatSetting({ isGroup, data }) {
             superLarge: true,
             validate: (value) => {
                 return Validation({
-                    value: value,
+                    value: value || '',
                     rules: [
                         Validation.isRequired(),
                         Validation.isDifferent(conversation.name, value, 'Chủ đề trùng với chủ đề hiện tại.'),

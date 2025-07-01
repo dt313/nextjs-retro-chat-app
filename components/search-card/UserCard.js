@@ -1,4 +1,6 @@
-import { useState } from 'react';
+'use client';
+
+import { useMemo, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -9,6 +11,7 @@ import {
     NOTIFICATION_FRIEND_REQUEST,
     TEMP_NOTIFICATION_FRIEND_ACCEPTED,
 } from '@/config/types';
+import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
 import { FaFacebookMessenger, FaRegUserCircle } from 'react-icons/fa';
 import { FaUserPlus } from 'react-icons/fa6';
@@ -209,6 +212,15 @@ UserCard.propTypes = {
 };
 
 UserCard.Skeleton = function UserCardSkeleton() {
+    const { theme } = useTheme();
+
+    const { baseColor, highlightColor } = useMemo(() => {
+        return {
+            baseColor: theme === 'dark' ? '#2b2b2b' : '#e0d4c4',
+            highlightColor: theme === 'dark' ? '#777' : '#f5f1ec',
+        };
+    }, [theme]);
+
     return (
         <div
             className={cx('wrapper')}
@@ -219,7 +231,7 @@ UserCard.Skeleton = function UserCardSkeleton() {
                 borderRadius: '10px',
             }}
         >
-            <SkeletonTheme baseColor="#e0d4c4" highlightColor="#f5f1ec">
+            <SkeletonTheme baseColor={baseColor} highlightColor={highlightColor}>
                 <div className={cx('header')}>
                     <Skeleton width={200} height={30} />
                     <Skeleton width={150} height={30} />

@@ -3,7 +3,7 @@
 .wrapper {
     max-width: 400px;
     width: 100%;
-    background-color: #fff;
+    background-color: var(--white);
     border-radius: 12px;
     padding-bottom: 24px;
     position: relative;
@@ -36,7 +36,7 @@
     .description {
         @include font-default;
         font-size: 1.4rem;
-        color: #666;
+        color: var(--setting-box-des-color);
         text-align: center;
         margin: 0 12px;
         margin-bottom: 8px;
@@ -65,7 +65,7 @@
     @include font-default;
     font-size: 1.6rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--white);
     transition: all 0.3s ease;
     display: flex;
     justify-content: center;
@@ -111,8 +111,8 @@
     font-family: var(--font-family);
     color: var(--text-color);
     font-weight: 600;
-    color: #333;
-    background-color: #f0f0f0;
+    color: var(--black-low);
+    background-color: var(--setting-box-cancel-btn-bg);
     font-size: 1.7rem;
     cursor: pointer;
     display: flex;
@@ -127,7 +127,7 @@
 
     &:hover {
         cursor: pointer;
-        background-color: #cbcbcb;
+        background-color: var(--setting-box-cancel-btn-hover);
     }
 }
 

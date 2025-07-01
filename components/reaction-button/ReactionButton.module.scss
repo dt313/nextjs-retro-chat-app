@@ -17,7 +17,7 @@
         cursor: pointer;
     }
 
-    background-color: #fff;
+    background-color: var(--white);
     padding: 2px;
     border-radius: 50px;
     position: relative;
@@ -70,7 +70,7 @@
 .reactions-listbox {
     padding: 8px 20px 0px 20px;
     border-radius: 10px;
-    background-color: #ffffff;
+    background-color: var(--white);
     font-family: var(--system-ui);
     max-width: 600px;
     width: 100%;
@@ -108,7 +108,7 @@
         position: relative;
 
         &:hover {
-            background-color: #e1e1e1;
+            background-color: var(--gray-color-low);
             cursor: pointer;
         }
     }
@@ -126,7 +126,7 @@
         position: relative;
 
         .sub-tabs {
-            color: #fff;
+            color: var(--white);
         }
     }
 
@@ -172,7 +172,7 @@
     display: none;
     margin-top: 4px;
     width: 120%;
-    background-color: #ffffff;
+    background-color: var(--white);
     position: absolute;
     top: 48px;
     left: 0;
@@ -194,7 +194,7 @@
         width: 100%;
         padding: 6px 12px;
         border-radius: 4px;
-        color: #000;
+        color: var(--black-low);
 
         .tab-number {
             font-size: var(--font-family);
@@ -203,7 +203,7 @@
         }
 
         &:hover {
-            background-color: #d9d9d9;
+            background-color: var(--gray-color-low);
         }
     }
 }

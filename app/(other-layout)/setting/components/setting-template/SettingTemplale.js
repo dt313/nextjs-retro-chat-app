@@ -74,6 +74,11 @@ function SettingTemplate({ list = [], headerText, desText }) {
     };
 
     const handleSubmit = async (type, value) => {
+        if (type === 'theme') {
+            changeItemsProperty(value === 'light' ? 'Sáng' : 'Tối');
+            return;
+        }
+
         const formData = new FormData();
         formData.append('type', type);
         formData.append('value', value);

@@ -37,7 +37,7 @@
 }
 
 .hmenu-item:hover {
-    background-color: #bbbbbb77;
+    background-color: var(--gray-color-low);
     cursor: pointer;
 }
 
@@ -57,7 +57,7 @@
     min-height: 16px;
     padding: 2px;
     border-radius: 4px;
-    background-color: var(--black);
+    background-color: var(--black-low);
     color: var(--background);
     font-size: 1.2rem;
     position: absolute;
@@ -76,7 +76,7 @@
 }
 
 .avatar {
-    border: 2px solid #868686;
+    border: 2px solid var(--gray-color-low);
 }
 
 // user menu
@@ -84,11 +84,11 @@
 .user-menu {
     padding: 4px;
     min-width: 100px;
-    background-color: #fff;
+    background-color: var(--white);
     display: flex;
     flex-direction: column;
     border-radius: 8px;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    box-shadow: var(--white-box-shadow);
 
     .um-item {
         flex: 1;
@@ -98,13 +98,13 @@
     }
 
     .um-item:hover {
-        background-color: #c2c2c2;
+        background-color: var(--gray-color);
         cursor: pointer;
     }
 
     .separate {
         padding-bottom: 12px;
-        border-bottom: 1px solid #c2c2c2;
+        border-bottom: 1.5px solid var(--gray-color-low);
         margin: 4px 0 12px 0;
     }
 
@@ -130,7 +130,7 @@
     background-color: var(--red);
     border: none;
     outline: none;
-    color: #fff;
+    color: var(--white);
     font-size: 1.4rem;
     font-weight: 600;
 
@@ -142,7 +142,7 @@
 
 .auth-btn.text {
     background-color: transparent;
-    color: #333;
+    color: var(--black-low);
     font-weight: 600;
 
     &:hover {

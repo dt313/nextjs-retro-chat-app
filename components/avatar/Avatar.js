@@ -10,8 +10,6 @@ import dynamic from 'next/dynamic';
 
 import images from '@/assets/images';
 
-import AImage from '@/components/image';
-
 import styles from './Avatar.module.scss';
 
 const cx = classNames.bind(styles);

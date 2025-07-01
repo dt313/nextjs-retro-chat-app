@@ -1,15 +1,29 @@
+'use client';
+
+import { useMemo } from 'react';
+
 import classNames from 'classnames/bind';
 
+import { useTheme } from 'next-themes';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { useSelector } from 'react-redux';
 
 import styles from './ConversationHeader.module.scss';
 
 const cx = classNames.bind(styles);
 function ConversationHeaderLoading({ style, ...props }) {
+    const { theme } = useTheme();
+
+    const { baseColor, highlightColor } = useMemo(() => {
+        return {
+            baseColor: theme === 'dark' ? '#2b2b2b' : '#e0d4c4',
+            highlightColor: theme === 'dark' ? '#777' : '#f5f1ec',
+        };
+    }, [theme]);
     return (
         <div className={cx('c-header')} style={style} {...props}>
-            <SkeletonTheme baseColor="#e0d4c4" highlightColor="#f5f1ec">
+            <SkeletonTheme baseColor={baseColor} highlightColor={highlightColor}>
                 <div className={cx('user-info')}>
                     <Skeleton circle width={44} height={44} className={cx('h-avatar')} />
 

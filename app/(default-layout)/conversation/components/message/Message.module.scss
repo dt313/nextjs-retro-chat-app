@@ -71,7 +71,7 @@
 
 .delete-message {
     box-shadow: var(--box-shadow);
-    background-color: #b9b9b9 !important;
+    background-color: var(--delete-message-color) !important;
     word-break: break-word;
 }
 
@@ -90,7 +90,7 @@
     border-radius: 12px;
     border: var(--solid-border);
     box-shadow: var(--box-shadow);
-    background-color: #fff;
+    background-color: var(--white);
     object-fit: contain;
     cursor: pointer;
 
@@ -171,7 +171,7 @@
     }
 }
 .time {
-    background-color: #fff;
+    background-color: var(--white);
     @include center-align;
     @include font-default;
     font-size: 1.2rem;
@@ -205,7 +205,7 @@
         cursor: pointer;
 
         &:hover {
-            background-color: #7a7a7a77;
+            background-color: var(--gray-color);
         }
     }
 }
@@ -241,7 +241,7 @@
         border-top-left-radius: 12px;
         border-bottom-right-radius: 12px;
         border-bottom-left-radius: 12px;
-        background-color: #edcfac;
+        background-color: var(--bg-match-color);
     }
 
     .tools {
@@ -310,7 +310,7 @@
     display: flex;
     flex-direction: column;
     padding: 4px 0;
-    background-color: #fff;
+    background-color: var(--white);
     border: 1px solid #818181;
     border-radius: 8px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -326,7 +326,7 @@
     }
 
     .more-item:hover {
-        background-color: #bebebe;
+        background-color: var(--gray-color);
     }
 }
 
@@ -338,17 +338,18 @@
     margin-left: 48px;
 
     .reply-content {
-        background-color: #ffffff99;
+        background-color: var(--reply-message-color);
         max-width: 50%;
         width: fit-content;
         padding: 12px;
         padding-bottom: 24px;
         @include font-default;
+        color: #333;
         border: var(--solid-border);
         border-top-right-radius: 12px;
         border-bottom-right-radius: 12px;
         border-bottom-left-radius: 12px;
-        box-shadow: var(--box-shadow);
+        box-shadow: var(--reply-box-box-shadow);
         cursor: pointer;
     }
 
