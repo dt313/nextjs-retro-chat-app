@@ -3,7 +3,6 @@ import { ThemeProvider } from 'next-themes';
 import AuthFormWrap from '@/components/auth-form-wrap';
 import PhoneCallModal from '@/components/phone-call-modal';
 import StoreProvider from '@/components/store-provider';
-import ThemeWrapper from '@/components/theme-wrapper';
 import Toast from '@/components/toast/Toast';
 
 import './scss/globals.scss';
@@ -30,8 +29,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
     return (
-        <ThemeProvider>
-            <html lang="en" suppressHydrationWarning>
+        <html lang="en" suppressHydrationWarning>
+            <ThemeProvider>
                 <StoreProvider>
                     <body>
                         {children}
@@ -40,7 +39,7 @@ export default function RootLayout({ children }) {
                         <PhoneCallModal />
                     </body>
                 </StoreProvider>
-            </html>
-        </ThemeProvider>
+            </ThemeProvider>
+        </html>
     );
 }

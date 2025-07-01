@@ -48,6 +48,7 @@
     --auth-item-bg-hover: #d2d2d2;
     --notification-color: #ddc4aa;
     --notification-unread-color: #d8d8d8;
+    --drop-box-box-shadow: rgba(103, 103, 103, 0.24) 0px 3px 8px;
 
     --expand-text-color: #7c1818;
     --search-color: #e0e0e0;
@@ -119,7 +120,9 @@
     --search-title-box-shadow: 2px 2px #414141;
     --search-text-color: #333;
 
-    --blur-btn-bg: #cfcfcf;
+    --blur-btn-bg: var(--gray-color-low);
+
+    --drop-box-box-shadow: rgb(61 61 61 / 24%) 0px 3px 8px;
     --blue-btn: #4949ff;
     --image-preview-bg: #00000080;
     --image-preview-img-bg: #ffffff55;
