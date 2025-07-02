@@ -20,6 +20,7 @@ import Icon from '@/components/icon';
 import RoleIcon from '@/components/role-icon';
 
 import { getUserRole } from '@/helpers/conversation-info';
+import getSystemTheme from '@/helpers/get-system-theme';
 
 import styles from './GroupMembers.module.scss';
 
@@ -94,9 +95,10 @@ GroupMember.Skeleton = function GroupMemberSkeleton() {
     const { theme } = useTheme();
 
     const { baseColor, highlightColor } = useMemo(() => {
+        const resolvedTheme = theme === 'system' ? getSystemTheme() : theme;
         return {
-            baseColor: theme === 'dark' ? '#2b2b2b' : '#e0d4c4',
-            highlightColor: theme === 'dark' ? '#777' : '#f5f1ec',
+            baseColor: resolvedTheme === 'dark' ? '#2b2b2b' : '#e0d4c4',
+            highlightColor: resolvedTheme === 'dark' ? '#777' : '#f5f1ec',
         };
     }, [theme]);
     return (

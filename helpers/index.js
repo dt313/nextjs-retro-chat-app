@@ -7,6 +7,7 @@ import { default as formatBytes } from './format-bytes';
 import { default as getLastMessageContent } from './get-last-message-content';
 import { default as getOnlineUsers } from './get-online-users';
 import { default as getReactionIconList } from './get-reaction-list';
+import { default as getSystemTheme } from './get-system-theme';
 import { default as getTime } from './get-time';
 import { default as handleHttpError } from './handle-http-error';
 import { default as reshapeImages } from './image-reshape';

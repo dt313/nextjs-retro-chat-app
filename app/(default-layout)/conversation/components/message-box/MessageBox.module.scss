@@ -32,11 +32,16 @@
 
 .mes-notification {
     @include font-default;
+    color: var(--message-noti-color);
     width: 100%;
     text-align: center;
     font-size: 1.3rem;
     font-weight: 500;
     margin: 4px 0;
+
+    @include respond-to('mobile') {
+        font-size: 1.2rem;
+    }
 }
 
 @keyframes slideUp {

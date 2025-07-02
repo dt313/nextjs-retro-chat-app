@@ -46,6 +46,13 @@
     --left-side-toggle-btn-color: #292626;
     --auth-item-bg: #ededed;
     --auth-item-bg-hover: #d2d2d2;
+    --auth-bg-image:
+        radial-gradient(#ffffff40, #fff0 40%),
+        radial-gradient(hsl(280, 100%, 75%) 30%, hsl(190, 100%, 70%), hsla(190, 100%, 70%, 0.4) 41%, transparent 52%),
+        radial-gradient(hsl(48, 100%, 70%) 37%, transparent 46%),
+        linear-gradient(155deg, transparent 65%, hsl(10, 100%, 60%) 95%), linear-gradient(45deg, #ff00cc, #3333ff);
+    --auth-opacity: 0.08;
+
     --notification-color: #ddc4aa;
     --notification-unread-color: #d8d8d8;
     --drop-box-box-shadow: rgba(103, 103, 103, 0.24) 0px 3px 8px;
@@ -77,6 +84,9 @@
     --setting-box-des-color: #5e5e5e;
     --setting-box-cancel-btn-bg: #f0f0f0;
     --setting-box-cancel-btn-hover: #cbcbcb;
+    --setting-box-border: none;
+    --setting-bg: var(--white);
+
     --toggle-btn-color: #bbb;
     --toggle-btn-disable-color: #ededed;
     --eye-color: #ede0d0;
@@ -91,32 +101,42 @@
     --dark-close-icon-bg: #414141;
     --dark-close-icon-color: var(--black-low);
     --light-close-icon-color: var(--black-low);
+    --input-search-placeholder-text-color: #747474;
+    --message-noti-color: #4f4f4f;
 }
 
 [data-theme='dark'] {
     --background: #212121;
-    --foreground: #fff;
+    --foreground: #ededed;
     --bg-match-color: #fdb564;
-    --text-color: #fff;
+    --text-color: #e3e3e3;
     --text-low-color: #b3b3b3;
     --white: #2f2f2f;
     --white-low: #333;
     --black: #fff;
     --black-low: #ebebeb;
-    --red: #fb6b4e;
+    --red: #b54c37;
+
     --gray-color: #7a7a7a77;
     --gray-color-low: #5a5a5a77;
     --pinned-message-color: #00000090;
     --delete-message-color: #b9b9b9;
     --reply-message-color: #ffffff;
     --left-side-toggle-btn-color: #292626;
-    --auth-item-bg-hover: #cdcdcd;
-    --auth-item-bg: #ededed;
+    --auth-item-bg-hover: #8b8b8b;
+    --auth-item-bg: #6a6a6a;
+    --auth-bg-image:
+        radial-gradient(#00000040, #0000 40%),
+        radial-gradient(hsl(220, 60%, 25%) 30%, hsl(200, 60%, 20%), hsla(200, 60%, 20%, 0.4) 41%, transparent 52%),
+        radial-gradient(hsl(48, 100%, 30%) 37%, transparent 46%),
+        linear-gradient(155deg, transparent 65%, hsl(340, 80%, 40%) 95%), linear-gradient(45deg, #330066, #000033);
+    --auth-opacity: 0.15;
+
     --notification-color: #ffc17a;
     --notification-unread-color: #111;
     --expand-text-color: #7c1818;
     --search-color: #222;
-    --search-bg-color: #f7f7f7;
+    --search-bg-color: #e0e0e0;
     --search-title-box-shadow: 2px 2px #414141;
     --search-text-color: #333;
 
@@ -126,9 +146,9 @@
     --blue-btn: #4949ff;
     --image-preview-bg: #00000080;
     --image-preview-img-bg: #ffffff55;
-    --image-preview-arrow-bg: #ffffff66;
-    --image-preview-arrow-bg-hover: #ffffffe6;
-    --input-bg: #ededed;
+    --image-preview-arrow-bg: #ffffff;
+    --image-preview-arrow-bg-hover: #ffffffcc;
+    --input-bg: #535353;
     --input-border-color: #d2d2d2;
     --input-border-focus-color: #3db8a7;
     --code-input-disable-bg: #bebebe;
@@ -144,6 +164,9 @@
     --setting-box-des-color: #c5c5c5;
     --setting-box-cancel-btn-bg: #3d3d3d;
     --setting-box-cancel-btn-hover: #6b6b6b;
+    --setting-box-border: 1.5px solid #686868;
+    --setting-bg: #111;
+
     --toggle-btn-color: #bbb;
     --toggle-btn-disable-color: #ededed;
     --eye-color: #2b2b2b;
@@ -158,6 +181,14 @@
     --light-close-icon-bg: #646464;
     --light-close-icon-color: var(--black-low);
     --dark-close-icon-color: var(--white-low);
+    --input-search-placeholder-text-color: #4f4f4f;
+    --message-noti-color: #8b8b8b;
+
+    input::placeholder,
+    textarea::placeholder {
+        color: #c4c4c4; /* Màu xám nhạt */
+        opacity: 0.7;
+    }
 }
 
 html,

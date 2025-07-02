@@ -24,7 +24,7 @@ function SettingInput({ type, label, placeholder, value, onChange, errorMessage 
     };
 
     const toggleTheme = () => {
-        const newTheme = theme === 'light' ? 'dark' : 'light';
+        const newTheme = theme === 'dark' ? 'light' : 'dark';
         setTheme(newTheme);
         onChange(newTheme);
     };

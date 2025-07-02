@@ -6,7 +6,6 @@ import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
 import { initSocket } from '@/config/ws';
-import { useTheme } from 'next-themes';
 import { useDispatch, useSelector } from 'react-redux';
 
 import AuthForm from '@/components/auth-form';
@@ -30,7 +29,6 @@ const cx = classNames.bind(styles);
 function AuthFormWrap() {
     const authBox = useSelector((state) => state.authBox);
     const { isAuthenticated, user } = useSelector((state) => state.auth);
-    const { theme } = useTheme();
 
     const messageSoundRed = useRef();
 
@@ -78,16 +76,6 @@ function AuthFormWrap() {
             fetchNotifications();
         }
     }, [isAuthenticated, user]);
-
-    // useEffect(() => {
-    //     const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    //     const localTheme = storageUtils.getTheme();
-
-    //     const finalTheme = localTheme || systemTheme;
-
-    //     dispatch(setThemeAction(finalTheme)); // Gửi vào redux
-    //     storageUtils.setTheme(finalTheme); // Lưu vào localStorage
-    // }, [theme]);
 
     useEffect(() => {
         const handleOnlineUserList = (data) => {

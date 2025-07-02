@@ -491,7 +491,13 @@ function Message({
                         <Icon className={cx('reply-icon')} element={<RiReplyFill />} />
                         {getReplyLabelName(replyData.replyTo.sender, sender, me._id)}
                     </p>
-                    <p className={cx('reply-content')} onClick={() => router.push(`?message=${replyData.id}`)}>
+                    <p
+                        className={cx('reply-content')}
+                        onClick={() => router.push(`?message=${replyData.id}`)}
+                        style={{
+                            boxShadow: `${theme.styles.messageBoxShadow}`,
+                        }}
+                    >
                         {getReplyContent(replyData)}
                     </p>
                 </div>

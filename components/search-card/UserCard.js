@@ -25,6 +25,8 @@ import Image from '@/components/image';
 
 import { conversationService, invitationService } from '@/services';
 
+import getSystemTheme from '@/helpers/get-system-theme';
+
 import { calculateTime, checkStatus, getNotificationId } from '@/helpers';
 
 import AuthFunctionWrap from '@/utils/auth-function-wrap';
@@ -215,9 +217,10 @@ UserCard.Skeleton = function UserCardSkeleton() {
     const { theme } = useTheme();
 
     const { baseColor, highlightColor } = useMemo(() => {
+        const resolvedTheme = theme === 'system' ? getSystemTheme() : theme;
         return {
-            baseColor: theme === 'dark' ? '#2b2b2b' : '#e0d4c4',
-            highlightColor: theme === 'dark' ? '#777' : '#f5f1ec',
+            baseColor: resolvedTheme === 'dark' ? '#2b2b2b' : '#e0d4c4',
+            highlightColor: resolvedTheme === 'dark' ? '#777' : '#f5f1ec',
         };
     }, [theme]);
 

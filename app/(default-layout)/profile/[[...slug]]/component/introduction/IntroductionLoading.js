@@ -8,6 +8,8 @@ import { useTheme } from 'next-themes';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
+import getSystemTheme from '@/helpers/get-system-theme';
+
 import styles from './Introduction.module.scss';
 
 const cx = classNames.bind(styles);
@@ -16,9 +18,10 @@ function IntroductionLoading({}) {
     const { theme } = useTheme();
 
     const { baseColor, highlightColor } = useMemo(() => {
+        const resolvedTheme = theme === 'system' ? getSystemTheme() : theme;
         return {
-            baseColor: theme === 'dark' ? '#2b2b2b' : '#e0d4c4',
-            highlightColor: theme === 'dark' ? '#777' : '#f5f1ec',
+            baseColor: resolvedTheme === 'dark' ? '#2b2b2b' : '#e0d4c4',
+            highlightColor: resolvedTheme === 'dark' ? '#777' : '#f5f1ec',
         };
     }, [theme]);
     return (

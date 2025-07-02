@@ -17,6 +17,8 @@ import Avatar from '@/components/avatar';
 
 import { conversationService } from '@/services';
 
+import getSystemTheme from '@/helpers/get-system-theme';
+
 import { readLastMessage } from '@/redux/actions/conversations-action';
 
 import styles from './ConversationPreview.module.scss';
@@ -117,9 +119,10 @@ ConversationPreview.Skeleton = function ConversationPreviewSkeleton({ className 
     const { theme } = useTheme();
 
     const { baseColor, highlightColor } = useMemo(() => {
+        const resolvedTheme = theme === 'system' ? getSystemTheme() : theme;
         return {
-            baseColor: theme === 'dark' ? '#2b2b2b' : '#e0d4c4',
-            highlightColor: theme === 'dark' ? '#777' : '#f5f1ec',
+            baseColor: resolvedTheme === 'dark' ? '#2b2b2b' : '#e0d4c4',
+            highlightColor: resolvedTheme === 'dark' ? '#777' : '#f5f1ec',
         };
     }, [theme]);
 

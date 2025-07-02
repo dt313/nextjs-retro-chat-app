@@ -2,6 +2,8 @@ import { FaUser } from 'react-icons/fa';
 import { MdOutlineSecurity } from 'react-icons/md';
 import { MdSettingsApplications } from 'react-icons/md';
 
+import getSystemTheme from '@/helpers/get-system-theme';
+
 import Validation from '@/utils/input-validation';
 
 import { storageUtils } from '@/utils';
@@ -415,7 +417,11 @@ export const getConversationTheme = () => {
 
 export const createSettingMenu = () => {
     const info = storageUtils.getUser();
-    const theme = storageUtils.getTheme();
+    let finalTheme = 'light';
+    const localTheme = storageUtils.getTheme();
+    if (!localTheme) {
+        finalTheme = getSystemTheme();
+    }
 
     return [
         {
@@ -732,14 +738,13 @@ export const createSettingMenu = () => {
                         items: [
                             {
                                 title: 'Theme',
-                                content: theme === 'light' ? 'Sáng' : 'Tối',
+                                content: finalTheme === 'dark' ? 'Tối' : 'Sáng',
                                 box: {
                                     headerTitle: 'Chọn theme cho website',
                                     description: 'Chọn giao diện phù hợp để cá nhân hóa trải nghiệm trang web của bạn.',
                                     type: 'theme',
-                                    content: '',
                                     extraDescription: '',
-                                    value: theme || '',
+                                    value: finalTheme,
                                     field: 'theme',
                                     validate: () => {},
                                 },

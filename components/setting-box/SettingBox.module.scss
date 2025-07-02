@@ -7,6 +7,8 @@
     border-radius: 12px;
     padding-bottom: 24px;
     position: relative;
+    border: var(--setting-box-border);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 .large {

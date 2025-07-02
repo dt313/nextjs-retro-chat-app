@@ -19,6 +19,8 @@ import { useSelector } from 'react-redux';
 import Avatar from '@/components/avatar';
 import Icon from '@/components/icon';
 
+import getSystemTheme from '@/helpers/get-system-theme';
+
 import styles from './User.module.scss';
 
 const cx = classNames.bind(styles);
@@ -127,9 +129,10 @@ User.Skeleton = function UserSkeleton() {
     const { theme } = useTheme();
 
     const { baseColor, highlightColor } = useMemo(() => {
+        const resolvedTheme = theme === 'system' ? getSystemTheme() : theme;
         return {
-            baseColor: theme === 'dark' ? '#2b2b2b' : '#e0d4c4',
-            highlightColor: theme === 'dark' ? '#777' : '#f5f1ec',
+            baseColor: resolvedTheme === 'dark' ? '#2b2b2b' : '#e0d4c4',
+            highlightColor: resolvedTheme === 'dark' ? '#777' : '#f5f1ec',
         };
     }, [theme]);
     return (

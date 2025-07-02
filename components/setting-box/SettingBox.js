@@ -20,7 +20,7 @@ function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu', isLoading
     const [value, setValue] = useState(content?.value || '');
     const [errorMessage, setErrorMessage] = useState('');
     const [buttonDisable, setButtonDisable] = useState(true);
-    const { theme, setTheme } = useTheme();
+    const { theme } = useTheme();
 
     const handleOnChange = useCallback(
         (e) => {

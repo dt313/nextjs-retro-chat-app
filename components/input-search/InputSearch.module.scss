@@ -22,6 +22,10 @@
     color: var(--search-text-color);
 
     background-color: transparent;
+
+    &::placeholder {
+        color: var(--input-search-placeholder-text-color) !important; /* Màu xám nhạt */
+    }
 }
 
 .left-icon {
