@@ -99,7 +99,7 @@
 
     --light-close-icon-bg: #d2d2d2;
     --dark-close-icon-bg: #414141;
-    --dark-close-icon-color: var(--black-low);
+    --dark-close-icon-color: var(--white-low);
     --light-close-icon-color: var(--black-low);
     --input-search-placeholder-text-color: #747474;
     --message-noti-color: #4f4f4f;
@@ -447,4 +447,16 @@ span[aria-describedby='tippy-tooltip'] {
     .epr_-xuzz9z {
         background-color: #222;
     }
+}
+
+// mention user
+
+.mention-user {
+    background-color: #fff;
+    color: var(--red);
+    padding: 2px 4px;
+    border-radius: 4px;
+    margin-right: 4px;
+    font-weight: 500;
+    cursor: pointer;
 }

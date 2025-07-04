@@ -6,7 +6,7 @@ import classNames from 'classnames/bind';
 
 import { FILE_ACCEPT_LIST, emojiCategories } from '@/config/ui-config';
 import { getSocket } from '@/config/ws';
-import { useAutoResize } from '@/hooks';
+import { useAutoResize, useDragAndDropFile } from '@/hooks';
 import HeadlessTippy from '@tippyjs/react/headless';
 import dynamic from 'next/dynamic';
 import { BsImage } from 'react-icons/bs';
@@ -25,7 +25,9 @@ import { closeReplyBox } from '@/redux/actions/reply-box-action';
 import { addToast } from '@/redux/actions/toast-action';
 
 import { SpinnerLoader } from '../loading';
+import MentionList from '../mention-list';
 import styles from './MessageInput.module.scss';
+import useMentionObserver from './useMentionObserver';
 
 const Picker = dynamic(
     () => {
@@ -36,7 +38,7 @@ const Picker = dynamic(
 
 const cx = classNames.bind(styles);
 
-function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, ...props }) {
+function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGroup, mentionUsers = [], ...props }) {
     const [value, setValue] = useState('');
     const [files, setFiles] = useState([]);
     const [previewFiles, setPreviewFiles] = useState([]);
@@ -44,17 +46,19 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, ...pro
     const [isDragOver, setIsDragOver] = useState(false);
     const { user: me } = useSelector((state) => state.auth);
     const { isOpenReplyBox, replyData } = useSelector((state) => state.replyBox);
+
+    const [isShowMentionList, setIsShowMentionList] = useState(false);
+    const [mentionPosition, setMentionPosition] = useState(null);
+    const [mentionQuery, setMentionQuery] = useState('');
+    const [selectedIndex, setSelectedIndex] = useState(0);
+    const [mentionedUsers, setMentionedUsers] = useState([]);
     const fileInputRef = useRef(null);
     const containerRef = useRef(null);
     const inputRef = useAutoResize(value);
     const savedRangeRef = useRef(null);
+    const mentionRef = useRef(null);
 
     const dispatch = useDispatch();
-
-    const handleInput = (e) => {
-        const text = e.target.innerText.trim() || '';
-        setValue(text);
-    };
 
     useEffect(() => {
         if (isOpenReplyBox) {
@@ -63,54 +67,157 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, ...pro
         }
     }, [replyData, isOpenReplyBox]);
 
-    // Add drag and drop event listeners
+    useMentionObserver(inputRef, (mentionId) => {
+        const newMentionedUsers = mentionedUsers.filter((p) => p._id !== mentionId);
+        setMentionedUsers(newMentionedUsers);
+    });
+
+    // Click outside handler
     useEffect(() => {
-        const container = containerRef.current;
-        if (!container) return;
-
-        const handleDragEnter = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setIsDragOver(true);
-        };
-
-        const handleDragLeave = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            // Only set dragOver to false if we're leaving the container entirely
-            if (!container.contains(e.relatedTarget)) {
-                setIsDragOver(false);
+        const handleClickOutside = (event) => {
+            if (
+                mentionRef.current &&
+                !mentionRef.current.contains(event.target) &&
+                inputRef.current &&
+                !inputRef.current.contains(event.target)
+            ) {
+                setIsShowMentionList(false);
             }
         };
 
-        const handleDragOver = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    console.log(mentionUsers);
+    // Filter users based on mention query
+    const filteredUsers = mentionUsers
+        .filter(
+            (p) =>
+                p.user._id !== me._id &&
+                (p.user.fullName.toLowerCase().includes(mentionQuery.toLowerCase()) ||
+                    p.user.username.toLowerCase().includes(mentionQuery.toLowerCase())),
+        )
+        .filter((p) => !mentionedUsers.some((m) => m._id === p._id));
+
+    // Get caret position for mention popup
+    const getCaretPosition = () => {
+        const selection = window.getSelection();
+        if (selection.rangeCount === 0) return null;
+
+        const range = selection.getRangeAt(0);
+        const rect = range.getBoundingClientRect();
+        const inputRect = inputRef.current.getBoundingClientRect();
+
+        return {
+            bottom: inputRect.bottom - rect.top + 50,
+            left: rect.left - inputRect.left,
         };
+    };
 
-        const handleDrop = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setIsDragOver(false);
+    const handleInput = (e) => {
+        const text = e.target.innerText.trim() || '';
+        setValue(text);
 
-            const droppedFiles = Array.from(e.dataTransfer.files);
-            if (droppedFiles.length > 0) {
-                processFiles(droppedFiles);
+        // Check for @ mention
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        const textNode = range.startContainer;
+
+        if (textNode.nodeType === Node.TEXT_NODE) {
+            const textContent = textNode.textContent;
+            const cursorPosition = range.startOffset;
+
+            // Find the last @ before cursor
+
+            let atIndex = -1;
+            for (let i = cursorPosition - 1; i >= 0; i--) {
+                if (textContent[i] === '@') {
+                    atIndex = i;
+                    break;
+                }
+                if (textContent[i] === ' ' || textContent[i] === '\n') {
+                    break;
+                }
             }
-        };
 
-        container.addEventListener('dragenter', handleDragEnter);
-        container.addEventListener('dragleave', handleDragLeave);
-        container.addEventListener('dragover', handleDragOver);
-        container.addEventListener('drop', handleDrop);
+            if (atIndex !== -1) {
+                const query = textContent.substring(atIndex + 1, cursorPosition);
+                setMentionQuery(query);
+                setIsShowMentionList(true);
+                setSelectedIndex(0);
 
-        return () => {
-            container.removeEventListener('dragenter', handleDragEnter);
-            container.removeEventListener('dragleave', handleDragLeave);
-            container.removeEventListener('dragover', handleDragOver);
-            container.removeEventListener('drop', handleDrop);
-        };
-    }, [files, previewFiles]);
+                // Update position
+                const position = getCaretPosition();
+                if (position) {
+                    setMentionPosition(position);
+                }
+            } else {
+                setIsShowMentionList(false);
+            }
+        } else {
+            setIsShowMentionList(false);
+        }
+    };
+
+    const processFiles = (inputFiles) => {
+        let newPreviewFiles = [];
+        let newFiles = [];
+
+        for (const file of inputFiles) {
+            const isExist = files.some((f) => f.name === file.name && f.size === file.size);
+            if (isExist) {
+                dispatch(
+                    addToast({
+                        type: 'warning',
+                        content: `File ${file.name} đã tồn tại trong danh sách đính kèm.`,
+                    }),
+                );
+                continue;
+            }
+
+            // Check file extension against accepted types
+            const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+            const acceptedExtensions = FILE_ACCEPT_LIST.split(',').map((ext) => ext.trim().toLowerCase());
+            const fileAccepted = acceptedExtensions.includes(fileExtension);
+
+            if (!fileAccepted) {
+                dispatch(
+                    addToast({
+                        type: 'warning',
+                        content: `Kiểu tệp ${fileExtension} không được hỗ trợ`,
+                    }),
+                );
+                continue;
+            }
+
+            if (file.type.startsWith('image/')) {
+                newPreviewFiles.push({
+                    id: uuidv4(),
+                    type: 'image',
+                    src: URL.createObjectURL(file),
+                });
+                newFiles.push(file);
+            } else {
+                newPreviewFiles.push({
+                    id: uuidv4(),
+                    type: 'file',
+                    name: file.name,
+                });
+                newFiles.push(file);
+            }
+        }
+
+        if (files.length + newFiles.length > 10) {
+            alert('You can only upload up to 10 files');
+            return;
+        }
+
+        setPreviewFiles((prev) => [...prev, ...newPreviewFiles]);
+        setFiles((prev) => [...prev, ...newFiles]);
+    };
+
+    useDragAndDropFile({ containerRef, onDropFiles: processFiles, onDragStateChange: setIsDragOver });
 
     // Set cursor position at the end of content
     const setCursorToEnd = () => {
@@ -192,6 +299,13 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, ...pro
     };
 
     const handleBlur = () => {
+        // Delay hiding to allow clicking on mention items
+        setTimeout(() => {
+            if (!mentionRef.current?.contains(document.activeElement)) {
+                setIsShowMentionList(false);
+            }
+        }, 200);
+
         const socket = getSocket();
 
         if (socket && socket.readyState === WebSocket.OPEN) {
@@ -264,6 +378,35 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, ...pro
     const handleKeyDown = (e) => {
         // Ignore events during IME composition
         if (e.isComposing || e.keyCode === 229) return;
+
+        if (isShowMentionList) {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                setIsShowMentionList(false);
+                return;
+            }
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setSelectedIndex((prev) => (prev + 1) % filteredUsers.length);
+                return;
+            }
+
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setSelectedIndex((prev) => (prev - 1 + filteredUsers.length) % filteredUsers.length);
+                return;
+            }
+
+            if (e.key === 'Enter' || e.key === 'Tab') {
+                e.preventDefault();
+                if (filteredUsers[selectedIndex]) {
+                    insertMention(filteredUsers[selectedIndex]);
+                }
+                return;
+            }
+        }
+
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             handleSubmit();
@@ -272,63 +415,6 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, ...pro
 
     const handleOpenFileInput = () => {
         fileInputRef.current.click();
-    };
-
-    const processFiles = (inputFiles) => {
-        let newPreviewFiles = [];
-        let newFiles = [];
-
-        for (const file of inputFiles) {
-            const isExist = files.some((f) => f.name === file.name && f.size === file.size);
-            if (isExist) {
-                dispatch(
-                    addToast({
-                        type: 'warning',
-                        content: `File ${file.name} đã tồn tại trong danh sách đính kèm.`,
-                    }),
-                );
-                continue;
-            }
-
-            // Check file extension against accepted types
-            const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
-            const acceptedExtensions = FILE_ACCEPT_LIST.split(',').map((ext) => ext.trim().toLowerCase());
-            const fileAccepted = acceptedExtensions.includes(fileExtension);
-
-            if (!fileAccepted) {
-                dispatch(
-                    addToast({
-                        type: 'warning',
-                        content: `Kiểu tệp ${fileExtension} không được hỗ trợ`,
-                    }),
-                );
-                continue;
-            }
-
-            if (file.type.startsWith('image/')) {
-                newPreviewFiles.push({
-                    id: uuidv4(),
-                    type: 'image',
-                    src: URL.createObjectURL(file),
-                });
-                newFiles.push(file);
-            } else {
-                newPreviewFiles.push({
-                    id: uuidv4(),
-                    type: 'file',
-                    name: file.name,
-                });
-                newFiles.push(file);
-            }
-        }
-
-        if (files.length + newFiles.length > 10) {
-            alert('You can only upload up to 10 files');
-            return;
-        }
-
-        setPreviewFiles((prev) => [...prev, ...newPreviewFiles]);
-        setFiles((prev) => [...prev, ...newFiles]);
     };
 
     const handleFileChange = (e) => {
@@ -356,8 +442,90 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, ...pro
         }
     };
 
+    // Insert mention into text
+    const insertMention = (user) => {
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        const textNode = range.startContainer;
+
+        if (textNode.nodeType === Node.TEXT_NODE) {
+            const textContent = textNode.textContent;
+            const cursorPosition = range.startOffset;
+
+            // Find the @ position
+            let atIndex = -1;
+            for (let i = cursorPosition - 1; i >= 0; i--) {
+                if (textContent[i] === '@') {
+                    atIndex = i;
+                    break;
+                }
+                if (textContent[i] === ' ' || textContent[i] === '\n') {
+                    break;
+                }
+            }
+
+            if (atIndex !== -1) {
+                const before = textContent.substring(0, atIndex);
+                const after = textContent.substring(cursorPosition);
+
+                // Cắt textNode hiện tại
+                const parent = textNode.parentNode;
+                parent.removeChild(textNode);
+
+                // Tạo các node mới
+                if (before) parent.appendChild(document.createTextNode(before));
+
+                const mentionSpan = document.createElement('span');
+                mentionSpan.textContent = `@${user.user.fullName}`;
+                mentionSpan.className = 'mention-user'; // <- Bạn gán class CSS ở đây
+                mentionSpan.setAttribute('data-mention-id', user._id); // nếu muốn
+                mentionSpan.contentEditable = 'false';
+
+                parent.appendChild(mentionSpan);
+
+                // Chèn dấu cách sau mention
+                const spaceNode = document.createTextNode('\u00A0');
+                parent.appendChild(spaceNode);
+
+                if (after) parent.appendChild(document.createTextNode(after));
+
+                // Đặt con trỏ sau mention
+                const newRange = document.createRange();
+                newRange.setStartAfter(spaceNode);
+                newRange.collapse(true);
+                selection.removeAllRanges();
+                selection.addRange(newRange);
+
+                // Cập nhật value state nếu bạn đang dùng React state
+                const updatedText = [...parent.childNodes].map((node) => node.textContent).join('');
+                setMentionedUsers((pre) => [...pre, user]);
+                setValue(updatedText);
+            }
+        }
+
+        setIsShowMentionList(false);
+        setMentionQuery('');
+    };
+
     return (
         <div className={cx('wrapper')} {...props}>
+            {isShowMentionList && filteredUsers.length > 0 && isGroup && (
+                <div
+                    ref={mentionRef}
+                    className={cx('mention-list')}
+                    style={{
+                        bottom: mentionPosition.bottom,
+                        left: mentionPosition?.left,
+                    }}
+                >
+                    <MentionList
+                        list={filteredUsers}
+                        onClick={insertMention}
+                        activeIndex={selectedIndex}
+                        onMouseEnter={setSelectedIndex}
+                    />
+                </div>
+            )}
             {isOpenReplyBox && (
                 <div className={cx('reply-box')}>
                     <div className={cx('reply-content')}>
@@ -420,10 +588,12 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, ...pro
                 <div
                     ref={inputRef}
                     contentEditable
+                    spellCheck={false}
+                    autoCorrect="off"
+                    autoCapitalize="off"
                     className={cx('input', { empty: !value })}
                     type="text"
                     data-placeholder="Nhập tin nhắn..."
-                    value={value}
                     onFocus={handleTyping}
                     onInput={handleInput}
                     onBlur={handleBlur}

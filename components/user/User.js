@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -14,7 +14,6 @@ import { FiUserPlus } from 'react-icons/fi';
 import { MdOutlineGroupAdd } from 'react-icons/md';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { useSelector } from 'react-redux';
 
 import Avatar from '@/components/avatar';
 import Icon from '@/components/icon';

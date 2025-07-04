@@ -226,3 +226,11 @@
         color: var(--red);
     }
 }
+
+// mention
+
+.mention-list {
+    position: absolute;
+    width: fit-content;
+    z-index: 1111;
+}

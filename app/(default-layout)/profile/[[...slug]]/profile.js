@@ -110,13 +110,14 @@ function Profile({ slug }) {
         name: 'Mật khẩu',
         type: 'text',
         description: 'Nhóm chat yêu cầu nhập mật khẩu để tham gia nhóm chat này',
+        field: 'password',
         label: 'Mật khẩu',
         placeholder: 'Nhập mật khẩu',
         validate: () => {},
     };
 
-    const handleSubmitPassword = async (password) => {
-        const data = await groupService.joinGroup(basicInfo._id, { password });
+    const handleSubmitPassword = async (type, value) => {
+        const data = await groupService.joinGroup(basicInfo._id, { password: value });
         if (data) {
             setIsMember(true);
             setIsShowPasswordBox(false);

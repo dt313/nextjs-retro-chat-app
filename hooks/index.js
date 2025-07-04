@@ -3,6 +3,7 @@ import useBreakpoint from './useBreakpoint';
 import { useCallManager } from './useCallManager';
 import useClickOutside from './useClickOutside';
 import useDebounce from './useDebounce';
+import useDragAndDropFile from './useDragAndDropFile';
 import useNotifyCallEndOnReload from './useNotifyCallEndOnReload';
 import usePreventLeaveDuringCall from './usePreventLeaveDuringCall.js';
 import useTypingStatus from './useTypingStatus';
@@ -16,4 +17,5 @@ export {
     usePreventLeaveDuringCall,
     useNotifyCallEndOnReload,
     useCallManager,
+    useDragAndDropFile,
 };

@@ -77,12 +77,13 @@ function GroupCard({
         type: 'text',
         description: 'Nhóm chat yêu cầu nhập mật khẩu để tham gia nhóm chat này',
         label: 'Mật khẩu',
+        field: 'password',
         placeholder: 'Nhập mật khẩu',
         validate: () => {},
     };
 
-    const handleSubmitPassword = async (password) => {
-        const data = await groupService.joinGroup(id, { password });
+    const handleSubmitPassword = async (type, value) => {
+        const data = await groupService.joinGroup(id, { password: value });
         if (data) {
             setJoined(true);
             setIsShowPasswordBox(false);

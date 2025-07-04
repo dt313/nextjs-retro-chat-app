@@ -55,6 +55,7 @@ function GroupItem({ id, avatar, name, isParticipant, isInvitedByOther, isOwner 
         type: 'text',
         description: 'Nhóm chat yêu cầu nhập mật khẩu để tham gia nhóm chat này',
         label: 'Mật khẩu',
+        field: 'password',
         placeholder: 'Nhập mật khẩu',
         validate: () => {},
     };
@@ -82,9 +83,9 @@ function GroupItem({ id, avatar, name, isParticipant, isInvitedByOther, isOwner 
             dispatch,
         );
 
-    const handleSubmitPassword = async (password) => {
+    const handleSubmitPassword = async (type, value) => {
         try {
-            const data = await groupService.joinGroup(id, { password });
+            const data = await groupService.joinGroup(id, { password: value });
             if (data) {
                 setIsMember(true);
                 setIsShowPasswordBox(false);

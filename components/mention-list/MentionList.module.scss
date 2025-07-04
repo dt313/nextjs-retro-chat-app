@@ -1,0 +1,57 @@
+.wrapper {
+    z-index: 1000;
+    background-color: var(--white);
+    border: 1px solid #818181;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    width: 220px;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 4px 0;
+    font-size: 14px;
+}
+
+.mention-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.mention-user {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+        background-color: var(--gray-color);
+    }
+
+    &.active {
+        background-color: var(--gray-color-low);
+    }
+}
+
+.mention-user-info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+    overflow: hidden;
+}
+
+.user-name {
+    font-weight: 500;
+    font-family: var(--font-family);
+    color: var(--text-color);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.user-username {
+    color: var(--text-low-color);
+    font-size: 12px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

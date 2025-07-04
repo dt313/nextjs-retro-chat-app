@@ -350,6 +350,8 @@ function Conversation({ id }) {
                             conversationId={id}
                             setIsTyping={handleIsTyping}
                             isLoading={isLoading}
+                            isGroup={conversation?.isGroup}
+                            mentionUsers={conversation?.participants}
                             style={{ backgroundColor: theme.styles?.backgroundColor }}
                         />
                     </div>

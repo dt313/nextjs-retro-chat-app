@@ -340,7 +340,7 @@ function MessageBox({
                     onClick={handleClickScrollBottom}
                     style={{ backgroundColor: theme.styles.arrowBackground, color: theme.styles.arrowColor }}
                 >
-                    <Icon element={<HiArrowDown />} medium />
+                    <Icon className={cx('scroll-btn-icon')} element={<HiArrowDown />} medium />
                 </span>
             )}
 

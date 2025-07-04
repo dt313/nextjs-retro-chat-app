@@ -190,7 +190,7 @@
         flex: 1;
         margin-right: 24px;
         @include font-default;
-        color: var(--white);
+        color: #cfcfcf;
         word-spacing: 1px;
         overflow: hidden;
         font-style: italic;
@@ -204,7 +204,7 @@
     &:hover {
         max-height: 150px;
         height: 100%;
-        background-color: var(--black);
+        background-color: #000;
         .pin-text {
             display: block;
             max-height: 120px;
