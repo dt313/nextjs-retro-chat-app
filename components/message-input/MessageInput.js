@@ -46,16 +46,21 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, ...pro
     const { isOpenReplyBox, replyData } = useSelector((state) => state.replyBox);
     const fileInputRef = useRef(null);
     const containerRef = useRef(null);
-    const textRef = useAutoResize(value);
+    const inputRef = useAutoResize(value);
+    const savedRangeRef = useRef(null);
 
     const dispatch = useDispatch();
 
-    const handleChange = (e) => {
-        setValue(e.target.value);
+    const handleInput = (e) => {
+        const text = e.target.innerText.trim() || '';
+        setValue(text);
     };
 
     useEffect(() => {
-        if (isOpenReplyBox) textRef.current.focus();
+        if (isOpenReplyBox) {
+            inputRef.current?.focus();
+            setCursorToEnd();
+        }
     }, [replyData, isOpenReplyBox]);
 
     // Add drag and drop event listeners
@@ -107,7 +112,67 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, ...pro
         };
     }, [files, previewFiles]);
 
-    const handleFocus = () => {
+    // Set cursor position at the end of content
+    const setCursorToEnd = () => {
+        if (!inputRef.current) return;
+
+        const range = document.createRange();
+        const selection = window.getSelection();
+
+        range.selectNodeContents(inputRef.current);
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    };
+
+    function getRangeInsideInput(inputRef) {
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0) return null;
+
+        const range = selection.getRangeAt(0);
+        const container = inputRef.current;
+
+        if (container && container.contains(range.startContainer)) {
+            return range.cloneRange(); // ✅ range nằm trong ô input
+        }
+
+        return null; // ❌ range nằm ngoài input
+    }
+
+    // Insert text at cursor position
+    const insertTextAtCursor = (text) => {
+        if (!inputRef.current) return;
+
+        let range;
+        const selection = window.getSelection();
+
+        // Use saved range if available, otherwise get current selection
+        if (savedRangeRef.current) {
+            range = savedRangeRef.current;
+        } else if (selection && selection.rangeCount > 0) {
+            range = selection.getRangeAt(0);
+        } else {
+            // If no range available, create one at the end
+            range = document.createRange();
+            range.selectNodeContents(inputRef.current);
+            range.collapse(false);
+        }
+
+        const textNode = document.createTextNode(text);
+        range.insertNode(textNode);
+        range.setStartAfter(textNode);
+        range.setEndAfter(textNode);
+
+        // Restore selection
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        // Update state and focus
+        setValue(inputRef.current.innerText || '');
+        inputRef.current.focus();
+    };
+
+    const handleTyping = () => {
         const socket = getSocket();
 
         if (socket && socket.readyState === WebSocket.OPEN) {
@@ -170,6 +235,13 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, ...pro
         if (hasFiles) {
             e.preventDefault(); // Prevent default paste behavior if files are pasted
         }
+
+        // Handle text paste - strip HTML formatting
+        e.preventDefault();
+        const text = e.clipboardData.getData('text/plain');
+        if (text) {
+            insertTextAtCursor(text);
+        }
     };
 
     const handleSubmit = () => {
@@ -180,16 +252,17 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, ...pro
             content: value,
             attachments: files.length > 0 ? files : null,
             replyData: isOpenReplyBox ? replyData : null,
+        }).then(() => {
+            inputRef.current.innerText = '';
+            setValue('');
+            setFiles([]);
+            setPreviewFiles([]);
+            handleCloseReplyBox();
         });
-
-        setValue('');
-        setFiles([]);
-        setPreviewFiles([]);
-
-        handleCloseReplyBox();
     };
 
     const handleKeyDown = (e) => {
+        // Ignore events during IME composition
         if (e.isComposing || e.keyCode === 229) return;
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -275,8 +348,12 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, ...pro
     };
 
     const handleEmojiClick = (emojiData) => {
-        // setIsVisibleEmoji(false);
-        setValue((prev) => prev + emojiData.emoji);
+        if (!value || !savedRangeRef.current) {
+            inputRef.current.innerText = value + emojiData.emoji;
+            setValue((pre) => pre + emojiData.emoji);
+        } else {
+            insertTextAtCursor(emojiData.emoji);
+        }
     };
 
     return (
@@ -340,18 +417,19 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, ...pro
                         })}
                     </div>
                 )}
-                <textarea
-                    ref={textRef}
-                    className={cx('input')}
+                <div
+                    ref={inputRef}
+                    contentEditable
+                    className={cx('input', { empty: !value })}
                     type="text"
-                    placeholder="Nhập tin nhắn..."
+                    data-placeholder="Nhập tin nhắn..."
                     value={value}
-                    onFocus={handleFocus}
-                    onChange={handleChange}
+                    onFocus={handleTyping}
+                    onInput={handleInput}
                     onBlur={handleBlur}
                     onPaste={handleOnPaste}
                     onKeyDown={handleKeyDown}
-                />
+                ></div>
                 <div className={cx('extra')}>
                     <div className={cx('attachment')}>
                         <Icon
@@ -376,9 +454,23 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, ...pro
                         />
                         <HeadlessTippy
                             visible={isVisibleEmoji}
-                            onClickOutside={() => setIsVisibleEmoji(false)}
+                            onClickOutside={() => {
+                                setIsVisibleEmoji(false);
+                                savedRangeRef.current = null;
+                                setTimeout(() => {
+                                    setCursorToEnd();
+                                }, 0); // Needed to prevent focus loss due to event bubbling
+                            }}
                             render={(attrs) => (
-                                <div className={cx('')} tabIndex="-1" {...attrs}>
+                                <div
+                                    className={cx('')}
+                                    tabIndex="-1"
+                                    onMouseDown={(e) => {
+                                        e.preventDefault();
+                                    }}
+                                    onMouseEnter={handleTyping}
+                                    {...attrs}
+                                >
                                     <Picker
                                         className={cx('emoji-picker')}
                                         lazyLoadEmojis={true}
@@ -391,7 +483,18 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, ...pro
                             )}
                             interactive
                         >
-                            <div className={cx('icon-wrapper')}>
+                            <div
+                                className={cx('icon-wrapper')}
+                                onMouseDown={(e) => {
+                                    e.preventDefault();
+                                    const range = getRangeInsideInput(inputRef);
+                                    if (range) {
+                                        savedRangeRef.current = range;
+                                    } else {
+                                        savedRangeRef.current = null;
+                                    }
+                                }}
+                            >
                                 <Icon
                                     className={cx('attach-icon')}
                                     medium

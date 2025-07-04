@@ -15,6 +15,7 @@ import Icon from '@/components/icon';
 import { VISIBILITY, call, changeVisibility, stop } from '@/redux/actions/phone-action';
 import { addToast } from '@/redux/actions/toast-action';
 
+import { useSidebar } from '../../context/SidebarContext';
 import styles from './ConversationHeader.module.scss';
 
 const cx = classNames.bind(styles);
@@ -31,9 +32,9 @@ function ConversationHeader({
 }) {
     const { user: me } = useSelector((state) => state.auth);
     const { isOpen, conversationId: callingId, isVideo } = useSelector((state) => state.phone);
-    const dispatch = useDispatch();
+    const { isShowRight } = useSidebar();
 
-    // WebRTC refs
+    const dispatch = useDispatch();
 
     const handleClickRedirectToSideBar = () => {
         redirect('/conversation');
@@ -187,7 +188,11 @@ function ConversationHeader({
                         <Icon className={cx('tool-icon')} element={<IoVideocam />} />
                     </span>
                 )}
-                <Tippy theme="light" content="Đóng tab bên phải" className={cx('tippy')}>
+                <Tippy
+                    theme="light"
+                    content={isShowRight ? 'Đóng tab bên phải' : ' Mở tab bên phải'}
+                    className={cx('tippy')}
+                >
                     <span>
                         <Icon className={cx('tool-icon')} element={<BsThreeDots />} onClick={onClickDotIcon} />
                     </span>

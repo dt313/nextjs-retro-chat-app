@@ -31,15 +31,23 @@
     width: 100%;
     padding: 8px 1rem;
     min-height: 60px;
-    outline: none;
-    resize: none;
     font-size: 1.6rem;
+    outline: none;
     line-height: 1.4;
     background-color: transparent;
     font-family: var(--font-family);
     color: var(--text-color);
     border: none;
     transition: height 0.2s ease-in-out;
+    overflow: auto;
+
+    // Add placeholder styling
+    &.empty:before {
+        content: attr(data-placeholder);
+        color: #999;
+        cursor: text;
+        position: absolute;
+    }
 
     @include respond-to('mobile') {
         min-height: 40px;
