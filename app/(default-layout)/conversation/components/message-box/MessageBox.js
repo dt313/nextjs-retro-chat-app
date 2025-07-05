@@ -321,6 +321,7 @@ function MessageBox({
                                     id: mes.replyTo?._id,
                                 }}
                                 reactions={mes.reactions}
+                                mentionedUsers={mes.mentionUsers}
                                 timestamp={mes.createdAt}
                                 isForward={mes.isForwarded}
                                 isDeleted={mes.isDeleted}

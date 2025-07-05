@@ -33,6 +33,8 @@ function MentionList({ list, onClick, onMouseEnter, activeIndex }) {
                             </div>
                         );
                     })}
+
+                    {list.length === 0 && <p className={cx('no-des')}>Không tìm thấy người dùng</p>}
                 </div>
             )}
         </div>

@@ -49,6 +49,7 @@ function Message({
     timestamp,
     replyData = {},
     reactions = [],
+    mentionedUsers = [],
     isForward = true,
     isDeleted = false,
     isHighlight = false,
@@ -164,9 +165,10 @@ function Message({
             const formattedContent = content?.split('\n').map((line, index) => (
                 <Fragment key={index}>
                     {line}
-                    <br />
+                    {index < content.split('\n').length - 1 && <br />}
                 </Fragment>
             ));
+
             return (
                 <p
                     className={cx('m-text', { highlight: isHighlight })}

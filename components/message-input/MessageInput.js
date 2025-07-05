@@ -38,7 +38,7 @@ const Picker = dynamic(
 
 const cx = classNames.bind(styles);
 
-function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGroup, mentionUsers = [], ...props }) {
+function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGroup, participants = [], ...props }) {
     const [value, setValue] = useState('');
     const [files, setFiles] = useState([]);
     const [previewFiles, setPreviewFiles] = useState([]);
@@ -67,8 +67,11 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
         }
     }, [replyData, isOpenReplyBox]);
 
+    console.log({ mentionedUsers });
+
     useMentionObserver(inputRef, (mentionId) => {
-        const newMentionedUsers = mentionedUsers.filter((p) => p._id !== mentionId);
+        const newMentionedUsers = mentionedUsers.filter((u) => u._id !== mentionId);
+
         setMentionedUsers(newMentionedUsers);
     });
 
@@ -89,16 +92,15 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    console.log(mentionUsers);
     // Filter users based on mention query
-    const filteredUsers = mentionUsers
+    const filteredUsers = participants
         .filter(
             (p) =>
                 p.user._id !== me._id &&
                 (p.user.fullName.toLowerCase().includes(mentionQuery.toLowerCase()) ||
                     p.user.username.toLowerCase().includes(mentionQuery.toLowerCase())),
         )
-        .filter((p) => !mentionedUsers.some((m) => m._id === p._id));
+        .filter((p) => !mentionedUsers.some((m) => m._id === p.user._id));
 
     // Get caret position for mention popup
     const getCaretPosition = () => {
@@ -115,9 +117,25 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
         };
     };
 
+    const extractMentionsFromDOM = (element) => {
+        const mentionSpans = element.querySelectorAll('span[data-mention-id]');
+        const users = [];
+
+        mentionSpans.forEach((el) => {
+            const id = el.dataset.mentionId;
+            const participant = participants.find((p) => p.user._id === id);
+            const isExist = mentionedUsers.some((u) => u._id === id);
+            if (!isExist) users.push(participant.user);
+        });
+
+        setMentionedUsers((pre) => [...pre, ...users]);
+    };
+
     const handleInput = (e) => {
         const text = e.target.innerText.trim() || '';
         setValue(text);
+
+        extractMentionsFromDOM(e.target);
 
         // Check for @ mention
         const selection = window.getSelection();
@@ -136,7 +154,8 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
                     atIndex = i;
                     break;
                 }
-                if (textContent[i] === ' ' || textContent[i] === '\n') {
+                if (textContent[i] === ' ' || textContent[i] === '\n' || textContent[i] === '\u00A0') {
+                    if (filteredUsers.length === 0) setIsShowMentionList(false);
                     break;
                 }
             }
@@ -366,13 +385,17 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
             content: value,
             attachments: files.length > 0 ? files : null,
             replyData: isOpenReplyBox ? replyData : null,
-        }).then(() => {
-            inputRef.current.innerText = '';
-            setValue('');
-            setFiles([]);
-            setPreviewFiles([]);
-            handleCloseReplyBox();
-        });
+            mentionedUsers,
+        })
+            .then(() => {
+                inputRef.current.innerText = '';
+                setValue('');
+                setFiles([]);
+                setPreviewFiles([]);
+                handleCloseReplyBox();
+                setMentionedUsers([]);
+            })
+            .catch(() => {});
     };
 
     const handleKeyDown = (e) => {
@@ -443,7 +466,7 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
     };
 
     // Insert mention into text
-    const insertMention = (user) => {
+    const insertMention = (member) => {
         const selection = window.getSelection();
         const range = selection.getRangeAt(0);
         const textNode = range.startContainer;
@@ -476,9 +499,9 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
                 if (before) parent.appendChild(document.createTextNode(before));
 
                 const mentionSpan = document.createElement('span');
-                mentionSpan.textContent = `@${user.user.fullName}`;
+                mentionSpan.textContent = `@${member.user.fullName}`;
                 mentionSpan.className = 'mention-user'; // <- Bạn gán class CSS ở đây
-                mentionSpan.setAttribute('data-mention-id', user._id); // nếu muốn
+                mentionSpan.setAttribute('data-mention-id', member.user._id); // nếu muốn
                 mentionSpan.contentEditable = 'false';
 
                 parent.appendChild(mentionSpan);
@@ -498,7 +521,7 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
 
                 // Cập nhật value state nếu bạn đang dùng React state
                 const updatedText = [...parent.childNodes].map((node) => node.textContent).join('');
-                setMentionedUsers((pre) => [...pre, user]);
+                setMentionedUsers((pre) => [...pre, member.user]);
                 setValue(updatedText);
             }
         }
@@ -509,7 +532,7 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
 
     return (
         <div className={cx('wrapper')} {...props}>
-            {isShowMentionList && filteredUsers.length > 0 && isGroup && (
+            {isShowMentionList && isGroup && (
                 <div
                     ref={mentionRef}
                     className={cx('mention-list')}

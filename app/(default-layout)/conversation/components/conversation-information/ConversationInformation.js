@@ -56,7 +56,7 @@ function ConversationInformation({ hide, isGroup = true, data = {}, onClose }) {
     const dispatch = useDispatch();
 
     const meRole = useMemo(() => {
-        return data?.participants?.find((u) => u.user._id === me._id).role;
+        return data?.participants?.find((u) => u.user._id === me._id)?.role;
     }, [data?.participants, me._id]);
 
     const INFORMATION = [

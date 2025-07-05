@@ -16,6 +16,7 @@ import {
     NOTIFICATION_GROUP_INVITATION,
     NOTIFICATION_GROUP_JOINTED,
     NOTIFICATION_MENTION,
+    NOTIFICATION_MENTIONED,
     NOTIFICATION_REMOVE_FROM_CONVERSATION,
     NOTIFICATION_REPLY_MESSAGE,
     TEMP_NOTIFICATION_FRIEND_ACCEPTED,
@@ -70,6 +71,10 @@ function NotifyBox({ list }) {
 
     const handleClickGroup = (id) => {
         router.push(`/profile/${id}`);
+    };
+
+    const handleGotoConversation = (id) => {
+        router.push(`/conversation/${id}`);
     };
 
     const handleReplyFriendRequest = async (senderId, status, notificationId) => {
@@ -326,6 +331,21 @@ function NotifyBox({ list }) {
                         <p className={cx('qb-content')}>
                             Bạn bị gỡ quyền quản trị viên nhóm{' '}
                             <strong className={cx('name')} onClick={() => handleClickGroup(group._id)}>
+                                {group.name}
+                            </strong>
+                        </p>
+                    </div>
+                );
+
+            case NOTIFICATION_MENTIONED:
+                return (
+                    <div className={cx('text-notify')}>
+                        <p className={cx('qb-content')}>
+                            <strong className={cx('name')} onClick={() => handleClickGroup(group._id)}>
+                                {sender?.fullName}{' '}
+                            </strong>
+                            đã nhắc đến bạn trong tin nhắn{' '}
+                            <strong className={cx('name')} onClick={() => handleGotoConversation(group._id)}>
                                 {group.name}
                             </strong>
                         </p>

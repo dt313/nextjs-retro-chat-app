@@ -47,6 +47,7 @@ function Header() {
     useEffect(() => {
         const handleNotification = (data) => {
             if (data) {
+                console.log({ data });
                 dispatch(addNotification(data));
             }
         };

@@ -185,6 +185,12 @@ function Conversation({ id }) {
                     formData.append('replyTo', message.replyData.message.id);
                     formData.append('replyType', message.replyData.message.type);
                 }
+
+                if (Array.isArray(message.mentionedUsers) && message.mentionedUsers.length > 0) {
+                    const mentionedUserIds = message.mentionedUsers.map((u) => u._id);
+                    formData.append('mentionedUserIds', JSON.stringify(Array.from(mentionedUserIds)));
+                }
+
                 formData.append('isGroup', conversation.isGroup);
                 formData.append('content', message.content);
 
@@ -195,6 +201,7 @@ function Conversation({ id }) {
                 }
             } catch (error) {
                 dispatch(addToast({ type: 'error', content: error.message }));
+                throw error;
             } finally {
                 setIsLoading(false);
             }
@@ -351,7 +358,7 @@ function Conversation({ id }) {
                             setIsTyping={handleIsTyping}
                             isLoading={isLoading}
                             isGroup={conversation?.isGroup}
-                            mentionUsers={conversation?.participants}
+                            participants={conversation?.participants}
                             style={{ backgroundColor: theme.styles?.backgroundColor }}
                         />
                     </div>
