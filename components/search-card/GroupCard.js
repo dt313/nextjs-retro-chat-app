@@ -10,6 +10,7 @@ import { BsFillSendCheckFill } from 'react-icons/bs';
 import { FaFacebookMessenger, FaRegUserCircle } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 
+import images from '@/assets/images';
 import { GroupJoinIcon } from '@/assets/svg/icons/group-join';
 
 import Icon from '@/components/icon';
@@ -131,7 +132,14 @@ function GroupCard({
             <div className={cx('content')}>
                 {thumbnail && (
                     <div className={cx('avatar')}>
-                        <Image src={thumbnail} className={cx('avatar-img')} width={100} height={100} alt="avatar" />
+                        <Image
+                            src={thumbnail}
+                            fallback={images.noImage}
+                            className={cx('avatar-img')}
+                            width={100}
+                            height={100}
+                            alt="avatar"
+                        />
                     </div>
                 )}
                 <div className={cx('info')}>

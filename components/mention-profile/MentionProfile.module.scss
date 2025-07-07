@@ -1,0 +1,74 @@
+@use '/app/scss/mixins.scss' as *;
+.message-mention {
+    color: var(--red);
+    font-weight: 500;
+    cursor: pointer;
+
+    &.mentionHighlight {
+        -webkit-text-fill-color: rgba(0, 0, 0, 0);
+        background: linear-gradient(225deg, #ff3cac, #784ba0 50%, #2b86c5);
+        -webkit-background-clip: text;
+    }
+}
+
+.container {
+    background-color: var(--white);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 8px;
+    padding: 16px;
+    width: 270px;
+    border: 1px solid var(--gray-color);
+}
+
+.profile {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.avatar .avatar-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.full-name {
+    @include font-default;
+    font-weight: bold;
+    font-size: 1.8rem;
+}
+
+.username {
+    @include font-default;
+    color: #888;
+    font-size: 1.4rem;
+}
+
+.actions {
+    margin-top: 8px;
+    display: flex;
+    gap: 8px;
+}
+
+.btn {
+    background-color: var(--red);
+    border: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+    @include font-default;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    color: #fff;
+    transition: opacity 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+
+    &:hover {
+        opacity: 0.8;
+    }
+}

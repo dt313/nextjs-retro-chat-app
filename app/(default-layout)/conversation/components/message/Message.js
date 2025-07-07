@@ -15,10 +15,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light.css';
 
+import ActiveTippy from '@/components/active-tippy';
 import File from '@/components/attach-file/File';
 import Avatar from '@/components/avatar';
 import Icon from '@/components/icon';
 import AImage from '@/components/image';
+import MentionProfile from '@/components/mention-profile';
 import MessageForward from '@/components/message-forward';
 import Overlay from '@/components/overlay';
 import Reaction from '@/components/reaction';
@@ -36,6 +38,10 @@ import { openReplyBox } from '@/redux/actions/reply-box-action';
 import { addToast } from '@/redux/actions/toast-action';
 
 import styles from './Message.module.scss';
+
+ActiveTippy;
+
+ActiveTippy;
 
 const cx = classNames.bind(styles);
 
@@ -223,9 +229,13 @@ function Message({
                         {parsedLine.map((part, partIndex) => {
                             if (part.type === 'mention') {
                                 return (
-                                    <span key={partIndex} className={cx('message-mention')}>
-                                        {part.content}
-                                    </span>
+                                    <MentionProfile
+                                        key={partIndex}
+                                        highlight={me.username === part.mentionedName}
+                                        user={part.mentionedUser}
+                                    >
+                                        {part.content}{' '}
+                                    </MentionProfile>
                                 );
                             } else {
                                 return part.content;
