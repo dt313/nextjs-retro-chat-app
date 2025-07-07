@@ -18,7 +18,7 @@ import { storageUtils } from '@/utils';
 import { login } from '@/redux/actions/auth-action';
 import { closeAuthBox } from '@/redux/actions/auth-box-action';
 import { initConversation, newConversation, resetCount } from '@/redux/actions/conversations-action';
-import { initNotifications } from '@/redux/actions/notification-action';
+import { initNotifications, resetNotificationCount } from '@/redux/actions/notification-action';
 import { addOnlineUser, deleteUser, initOnlineUsers } from '@/redux/actions/online-users-action';
 
 import CloseIcon from '../close-icon';
@@ -59,6 +59,7 @@ function AuthFormWrap() {
         const handleVisibilityChange = () => {
             if (document.visibilityState === 'visible') {
                 dispatch(resetCount());
+                dispatch(resetNotificationCount());
             }
         };
 
@@ -104,7 +105,6 @@ function AuthFormWrap() {
             if (!messageSoundRed.current) return;
 
             if (conversation && conversation.lastMessage && conversation.lastMessage.sender._id !== user._id) {
-                console.log('dsadas');
                 messageSoundRed.current.play().catch((err) => {
                     console.warn('Autoplay bị chặn:', err);
                 });

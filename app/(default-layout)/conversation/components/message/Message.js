@@ -147,6 +147,59 @@ function Message({
         [conversationId],
     );
 
+    // Add this helper function before your renderMessage function
+    const parseMentions = (text, mentionedUsers = []) => {
+        // Regex to match @username or @"display name" patterns
+        const mentionRegex = /@(?:"([^"]+)"|([^\s@]+))/g;
+        const parts = [];
+        let lastIndex = 0;
+        let match;
+
+        while ((match = mentionRegex.exec(text)) !== null) {
+            // Add text before the mention
+            if (match.index > lastIndex) {
+                parts.push({
+                    type: 'text',
+                    content: text.slice(lastIndex, match.index),
+                });
+            }
+
+            // Extract mentioned name (quoted or unquoted)
+            const mentionedName = match[1] || match[2];
+
+            // Find the actual user from mentionedUsers array
+            const mentionedUser = mentionedUsers.find((user) => user.username === mentionedName);
+
+            if (mentionedUser) {
+                // User found - highlight as mention
+                parts.push({
+                    type: 'mention',
+                    content: `@${mentionedUser.fullName}`, // Full match including @
+                    mentionedName: mentionedName,
+                    mentionedUser: mentionedUser,
+                });
+            } else {
+                // User not found - keep as regular text (no highlight)
+                parts.push({
+                    type: 'text',
+                    content: match[0], // Just the mention text as regular text
+                });
+            }
+
+            lastIndex = match.index + match[0].length;
+        }
+
+        // Add remaining text
+        if (lastIndex < text.length) {
+            parts.push({
+                type: 'text',
+                content: text.slice(lastIndex),
+            });
+        }
+
+        return parts;
+    };
+
     const renderMessage = () => {
         if (isDelete) {
             return (
@@ -162,12 +215,26 @@ function Message({
             );
         }
         if (type === 'text') {
-            const formattedContent = content?.split('\n').map((line, index) => (
-                <Fragment key={index}>
-                    {line}
-                    {index < content.split('\n').length - 1 && <br />}
-                </Fragment>
-            ));
+            const formattedContent = content?.split('\n').map((line, lineIndex) => {
+                const parsedLine = parseMentions(line, mentionedUsers);
+
+                return (
+                    <Fragment key={lineIndex}>
+                        {parsedLine.map((part, partIndex) => {
+                            if (part.type === 'mention') {
+                                return (
+                                    <span key={partIndex} className={cx('message-mention')}>
+                                        {part.content}
+                                    </span>
+                                );
+                            } else {
+                                return part.content;
+                            }
+                        })}
+                        {lineIndex < content.split('\n').length - 1 && <br />}
+                    </Fragment>
+                );
+            });
 
             return (
                 <p

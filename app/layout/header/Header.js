@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
@@ -41,13 +41,28 @@ function Header() {
     const { conversationId } = useSelector((state) => state.lastConversation);
     const { isOpen, visible, isVideo } = useSelector((state) => state.phone);
     const { isCallActive } = useCallManager();
+
+    const notificationSound = useRef(null);
     const router = useRouter();
     const dispatch = useDispatch();
 
     useEffect(() => {
+        notificationSound.current = new Audio('/audio/notification.mp3');
+
+        return () => {
+            notificationSound.current?.pause();
+            notificationSound.current = null;
+        };
+    }, []);
+
+    useEffect(() => {
         const handleNotification = (data) => {
             if (data) {
-                console.log({ data });
+                if (notificationSound.current) {
+                    notificationSound.current.play().catch((err) => {
+                        console.warn('Autoplay bị chặn:', err);
+                    });
+                }
                 dispatch(addNotification(data));
             }
         };

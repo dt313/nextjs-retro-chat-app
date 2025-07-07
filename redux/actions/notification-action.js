@@ -3,6 +3,7 @@ export const ADD_NOTIFICATION = 'ADD_NOTIFICATION';
 export const LOAD_MORE_NOTIFICATION = 'LOAD_MORE_NOTIFICATION';
 export const READ_NOTIFICATION = 'READ_NOTIFICATION';
 export const CHANGE_TYPE_NOTIFICATION = 'CHANGE_TYPE_NOTIFICATION';
+export const RESET_NOTIFICATION_COUNT = 'RESET_NOTIFICATION_COUNT';
 
 export const initNotifications = (payload) => {
     return {
@@ -36,5 +37,11 @@ export const readNotification = (payload) => {
     return {
         type: READ_NOTIFICATION,
         payload,
+    };
+};
+
+export const resetNotificationCount = () => {
+    return {
+        type: RESET_COUNT,
     };
 };

@@ -11,6 +11,7 @@ function useMentionObserver(editorRef, onMentionDeleted) {
                 mutation.removedNodes.forEach((node) => {
                     if (node.nodeType === 1 && node.classList.contains('mention-user')) {
                         const mentionId = node.getAttribute('data-mention-id');
+
                         onMentionDeleted?.(mentionId);
                     }
                 });

@@ -6,12 +6,16 @@ import {
     GET_ALL_NOTIFICATION,
     LOAD_MORE_NOTIFICATION,
     READ_NOTIFICATION,
+    RESET_NOTIFICATION_COUNT,
 } from '@/redux/actions/notification-action';
 
 const initialState = {
     notifications: [],
     unRead: 0,
 };
+
+let count = 0;
+let prevTitle = '';
 
 const notificationReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -24,6 +28,11 @@ const notificationReducer = (state = initialState, action) => {
             };
 
         case ADD_NOTIFICATION:
+            if (count === 0) prevTitle = window.document.title;
+            if (window.document.hidden) {
+                count++;
+                window.document.title = `${count} thông báo mới`;
+            }
             return {
                 ...state,
                 notifications: [action.payload, ...state.notifications],
@@ -61,6 +70,13 @@ const notificationReducer = (state = initialState, action) => {
                 ),
                 unRead: state.unRead > 0 ? state.unRead - 1 : 0,
             };
+
+        case RESET_NOTIFICATION_COUNT:
+            count = 0;
+            if (!!prevTitle) {
+                window.document.title = prevTitle;
+            }
+            return state;
 
         default:
             return state;

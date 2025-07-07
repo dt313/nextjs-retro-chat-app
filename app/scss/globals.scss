@@ -53,8 +53,10 @@
         linear-gradient(155deg, transparent 65%, hsl(10, 100%, 60%) 95%), linear-gradient(45deg, #ff00cc, #3333ff);
     --auth-opacity: 0.08;
 
-    --notification-color: #ddc4aa;
+    --notification-color: #dbbb99;
+    --notification-bg: #fff;
     --notification-unread-color: #d8d8d8;
+    --notification-item-hover-color: var(--background);
     --drop-box-box-shadow: rgba(103, 103, 103, 0.24) 0px 3px 8px;
 
     --expand-text-color: #7c1818;
@@ -132,8 +134,11 @@
         linear-gradient(155deg, transparent 65%, hsl(340, 80%, 40%) 95%), linear-gradient(45deg, #330066, #000033);
     --auth-opacity: 0.15;
 
-    --notification-color: #ffc17a;
-    --notification-unread-color: #111;
+    --notification-color: #edd0ac;
+    --notification-unread-color: #3f3f3f;
+    --notification-bg: #222;
+    --notification-item-hover-color: #eac79c77;
+
     --expand-text-color: #7c1818;
     --search-color: #222;
     --search-bg-color: #e0e0e0;
@@ -271,6 +276,7 @@ a {
         font-size: 2.6rem;
         text-transform: uppercase;
         font-weight: bold;
+        color: black;
     }
 
     .logo-img {
@@ -452,7 +458,6 @@ span[aria-describedby='tippy-tooltip'] {
 // mention user
 
 .mention-user {
-    background-color: #fff;
     color: var(--red);
     padding: 2px 4px;
     border-radius: 4px;

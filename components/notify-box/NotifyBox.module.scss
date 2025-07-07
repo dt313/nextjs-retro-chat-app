@@ -1,7 +1,7 @@
 @use '/app/scss/mixins.scss' as *;
 
 .wrapper {
-    background-color: var(--white);
+    background-color: var(--notification-bg);
     width: 360px;
     max-height: 400px;
     border-radius: 12px;
@@ -59,7 +59,7 @@
     margin-bottom: 2px;
     cursor: pointer;
     &:hover {
-        background-color: var(--background);
+        background-color: var(--notification-item-hover-color);
     }
 }
 
@@ -123,7 +123,7 @@
         border-radius: 4px;
         border: none;
         background-color: var(--red);
-        color: var(--white);
+        color: #fff;
         font-size: 1.3rem;
         cursor: pointer;
     }
@@ -134,7 +134,7 @@
 
     .cancel-btn {
         background-color: var(--gray-color);
-        color: black;
+        color: var(--black);
     }
 }
 

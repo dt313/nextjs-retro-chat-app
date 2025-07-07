@@ -67,11 +67,8 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
         }
     }, [replyData, isOpenReplyBox]);
 
-    console.log({ mentionedUsers });
-
     useMentionObserver(inputRef, (mentionId) => {
         const newMentionedUsers = mentionedUsers.filter((u) => u._id !== mentionId);
-
         setMentionedUsers(newMentionedUsers);
     });
 
@@ -119,20 +116,27 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
 
     const extractMentionsFromDOM = (element) => {
         const mentionSpans = element.querySelectorAll('span[data-mention-id]');
-        const users = [];
+        const addedIds = new Set(mentionedUsers.map((u) => u._id));
+        const newUsers = [];
 
         mentionSpans.forEach((el) => {
             const id = el.dataset.mentionId;
-            const participant = participants.find((p) => p.user._id === id);
-            const isExist = mentionedUsers.some((u) => u._id === id);
-            if (!isExist) users.push(participant.user);
+            if (!addedIds.has(id)) {
+                const participant = participants.find((p) => p.user._id === id);
+                if (participant) {
+                    newUsers.push(participant.user);
+                    addedIds.add(id);
+                }
+            }
         });
 
-        setMentionedUsers((pre) => [...pre, ...users]);
+        if (newUsers.length > 0) {
+            setMentionedUsers((prev) => [...prev, ...newUsers]);
+        }
     };
 
     const handleInput = (e) => {
-        const text = e.target.innerText.trim() || '';
+        const text = getTextValueFromContentEditable(e.target).trim() || '';
         setValue(text);
 
         extractMentionsFromDOM(e.target);
@@ -388,12 +392,12 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
             mentionedUsers,
         })
             .then(() => {
-                inputRef.current.innerText = '';
+                setMentionedUsers([]);
+                inputRef.current.innerHTML = '';
                 setValue('');
                 setFiles([]);
                 setPreviewFiles([]);
                 handleCloseReplyBox();
-                setMentionedUsers([]);
             })
             .catch(() => {});
     };
@@ -465,6 +469,28 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
         }
     };
 
+    // Helper function to extract text value with usernames instead of fullNames
+    const getTextValueFromContentEditable = (container) => {
+        const nodes = container.childNodes;
+        let result = '';
+
+        for (let i = 0; i < nodes.length; i++) {
+            const node = nodes[i];
+
+            if (node.nodeType === Node.TEXT_NODE) {
+                result += node.textContent;
+            } else if (node.nodeType === Node.ELEMENT_NODE && node.classList.contains('mention-user')) {
+                // Use username for value instead of fullName
+                const username = node.getAttribute('data-mention-username');
+                result += `@${username}`;
+            } else {
+                result += node.textContent;
+            }
+        }
+
+        return result;
+    };
+
     // Insert mention into text
     const insertMention = (member) => {
         const selection = window.getSelection();
@@ -500,8 +526,9 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
 
                 const mentionSpan = document.createElement('span');
                 mentionSpan.textContent = `@${member.user.fullName}`;
-                mentionSpan.className = 'mention-user'; // <- Bạn gán class CSS ở đây
-                mentionSpan.setAttribute('data-mention-id', member.user._id); // nếu muốn
+                mentionSpan.className = 'mention-user';
+                mentionSpan.setAttribute('data-mention-id', member.user._id);
+                mentionSpan.setAttribute('data-mention-username', member.user.username);
                 mentionSpan.contentEditable = 'false';
 
                 parent.appendChild(mentionSpan);
@@ -519,8 +546,8 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
                 selection.removeAllRanges();
                 selection.addRange(newRange);
 
-                // Cập nhật value state nếu bạn đang dùng React state
-                const updatedText = [...parent.childNodes].map((node) => node.textContent).join('');
+                // Cập nhật value state
+                const updatedText = getTextValueFromContentEditable(parent);
                 setMentionedUsers((pre) => [...pre, member.user]);
                 setValue(updatedText);
             }
