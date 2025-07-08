@@ -6,22 +6,20 @@ import classNames from 'classnames/bind';
 
 import { useDispatch } from 'react-redux';
 
-import Image from '@/components/image';
-
 import { attachmentService } from '@/services';
 
-import { openImgPreview } from '@/redux/actions/img-preview-action';
+import { openImgPreview, openVideoPreview } from '@/redux/actions/img-preview-action';
 import { addToast } from '@/redux/actions/toast-action';
 
 import ExtraDescription from '../extra-description';
 import { SpinnerLoader } from '../loading';
-import styles from './AttachImages.module.scss';
+import styles from './AttachVideos.module.scss';
 
 const cx = classNames.bind(styles);
 
-function AttachImages({ conversationId }) {
+function Attachvideos({ conversationId }) {
     const wrapperRef = useRef(null);
-    const [images, setImages] = useState([]);
+    const [videos, setVideos] = useState([]);
     const [wrapperWidth, setWrapperWidth] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -42,13 +40,13 @@ function AttachImages({ conversationId }) {
         };
     }, []);
 
-    const fetchImages = async () => {
+    const fetchVideos = async () => {
         try {
             setIsLoading(true);
-            const res = await attachmentService.getImagesOfConversation(conversationId);
+            const res = await attachmentService.getVideosOfConversation(conversationId);
 
             if (res && Array.isArray(res)) {
-                setImages(res);
+                setVideos(res);
             }
         } catch (error) {
             dispatch(addToast({ type: 'error', content: error.message }));
@@ -58,13 +56,13 @@ function AttachImages({ conversationId }) {
     };
 
     useEffect(() => {
-        fetchImages();
+        fetchVideos();
     }, []);
 
     const handleOpenImagePreview = (id) => {
-        const index = images.findIndex((img) => img._id === id);
+        const index = videos.findIndex((img) => img._id === id);
         if (index !== -1) {
-            dispatch(openImgPreview({ currentIndex: index, listImages: images }));
+            dispatch(openVideoPreview({ currentIndex: index, listImages: videos }));
         }
     };
 
@@ -72,14 +70,24 @@ function AttachImages({ conversationId }) {
         <div className={cx('wrapper')} ref={wrapperRef}>
             <div className={cx('container')}>
                 {!isLoading ? (
-                    images.map((image) => (
+                    videos.map((image) => (
                         // eslint-disable-next-line jsx-a11y/alt-text
-                        <Image
+                        <video
                             className={cx('image', { sm: wrapperWidth < 300, lg: wrapperWidth > 500 })}
                             key={image?._id}
                             src={image?.url}
                             onClick={() => handleOpenImagePreview(image?._id)}
-                        ></Image>
+                            onMouseEnter={(e) => e.currentTarget.play()}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.pause();
+                                e.currentTarget.currentTime = 0; // Quay về đầu nếu muốn
+                            }}
+                            muted // Cần muted nếu muốn autoplay hoạt động không bị block
+                            playsInline // Hỗ trợ iOS
+                            preload="metadata"
+                        >
+                            Trình duyệt của bạn không hỗ trợ thẻ video.
+                        </video>
                     ))
                 ) : (
                     <div className={cx('loading')}>
@@ -88,15 +96,15 @@ function AttachImages({ conversationId }) {
                 )}
             </div>
 
-            {images.length === 0 && !isLoading && (
-                <ExtraDescription style={{ textAlign: 'start' }}>Không có hình ảnh nào</ExtraDescription>
+            {videos.length === 0 && !isLoading && (
+                <ExtraDescription style={{ textAlign: 'start' }}>Không có videos nào</ExtraDescription>
             )}
         </div>
     );
 }
 
-AttachImages.propTypes = {
+Attachvideos.propTypes = {
     conversationId: PropTypes.string.isRequired,
 };
 
-export default memo(AttachImages);
+export default memo(Attachvideos);

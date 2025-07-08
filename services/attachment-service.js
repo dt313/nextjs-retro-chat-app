@@ -17,3 +17,12 @@ export const getFilesOfConversation = async (id) => {
         throw new Error(error || 'Failed to get files of conversation');
     }
 };
+
+export const getVideosOfConversation = async (id) => {
+    try {
+        const res = await axios.get(`/attachments/videos/${id}`);
+        return res?.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to get images of conversation');
+    }
+};

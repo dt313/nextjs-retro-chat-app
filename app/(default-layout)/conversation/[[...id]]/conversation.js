@@ -34,7 +34,7 @@ import { updateLastConversation } from '@/redux/actions/last-conversation-action
 import { addToast } from '@/redux/actions/toast-action';
 
 // import ConversationInformation from '../components/conversation-information';
-import MessageBox from '../components/message-box/MessageBox';
+// import MessageBox from '../components/message-box/MessageBox';
 import { useSidebar } from '../context/SidebarContext';
 import styles from './conversation.module.scss';
 
@@ -46,13 +46,13 @@ const ConversationHeader = dynamic(() => import('../components/conversation-head
     loading: () => <ConversationHeaderLoading />,
 });
 
-// const MessageBox = dynamic(() => import('../components/message-box'), {
-//     loading: () => (
-//         <div className={cx('loader')}>
-//             <SpinnerLoader medium />
-//         </div>
-//     ),
-// });
+const MessageBox = dynamic(() => import('../components/message-box'), {
+    loading: () => (
+        <div className={cx('loader')}>
+            <SpinnerLoader medium />
+        </div>
+    ),
+});
 
 const LIMIT = 30;
 

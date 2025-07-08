@@ -1,0 +1,40 @@
+@use '/app/scss/mixins.scss' as *;
+
+.wrapper {
+    width: 100%;
+}
+
+.container {
+    width: 100%;
+    gap: 8px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.image {
+    // aspect-ratio: 1/1;
+    border-radius: 8px;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    background-color: var(--white);
+    cursor: pointer;
+    border: 1px solid #818181;
+}
+
+.sm.image {
+    width: 50px;
+    height: 50px;
+}
+
+.lg.image {
+    width: 70px;
+    height: 70px;
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}

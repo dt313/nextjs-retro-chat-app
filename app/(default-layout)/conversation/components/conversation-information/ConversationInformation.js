@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import AttachFile from '@/components/attach-file';
 import AttachImages from '@/components/attach-images';
+import AttachVideos from '@/components/attach-videos';
 import Avatar from '@/components/avatar';
 import ChatSetting from '@/components/chat-setting';
 import CloseIcon from '@/components/close-icon';
@@ -175,12 +176,14 @@ function ConversationInformation({ hide, isGroup = true, data = {}, onClose }) {
                         <ExpandableText className={cx('description')} lineClamp={5}>
                             {data?.description}
                         </ExpandableText>
-                        <div className={cx('rules')}>
-                            <h3 className={cx('rules-header')}>Important Rules</h3>
-                            <div className={cx('rules-text')}>
-                                <ExpandableText>{data?.rules || 'There is no content'}</ExpandableText>
+                        {data?.rules && (
+                            <div className={cx('rules')}>
+                                <h3 className={cx('rules-header')}>Important Rules</h3>
+                                <div className={cx('rules-text')}>
+                                    <ExpandableText>{data?.rules || 'There is no content'}</ExpandableText>
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 )}
             </div>
@@ -203,6 +206,9 @@ function ConversationInformation({ hide, isGroup = true, data = {}, onClose }) {
                 </Details>
                 <Details label="Hình ảnh">
                     <AttachImages conversationId={data?._id} />
+                </Details>
+                <Details label="Videos">
+                    <AttachVideos conversationId={data?._id} />
                 </Details>
 
                 {isGroup && meRole !== CONVERSATION_PARTICIPANT_ROLE_CREATOR && (

@@ -23,7 +23,7 @@ import styles from './ImagePreview.module.scss';
 
 const cx = classNames.bind(styles);
 
-function ImagePreview({ images = [] }) {
+function ImagePreview({ images = [], isVideo }) {
     const dispatch = useDispatch();
     const sliderRef = useRef(null);
     const [list, setList] = useState(images);
@@ -63,6 +63,7 @@ function ImagePreview({ images = [] }) {
 
     const handleDownloadImage = async () => {
         const imgUrl = list[currentIndex].url;
+        const name = list[currentIndex].name;
 
         try {
             const response = await fetch(imgUrl);
@@ -70,7 +71,7 @@ function ImagePreview({ images = [] }) {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'downloaded-image.jpg';
+            a.download = name;
             document.body.appendChild(a);
             a.click();
             a.remove();
@@ -91,7 +92,20 @@ function ImagePreview({ images = [] }) {
                     <Icon element={<BsFillCaretLeftFill />} className={cx('arrow', 'prev')} onClick={goToPrev} />
                     <div className={cx('image-slider')}>
                         <div className={cx('image-wrap')}>
-                            <img className={cx('img')} src={list[currentIndex].url} alt={list[currentIndex].name} />
+                            {isVideo ? (
+                                <video
+                                    className={cx('img')}
+                                    src={list[currentIndex].url}
+                                    alt={list[currentIndex].name}
+                                    controls
+                                    playsInline // Hỗ trợ iOS
+                                    preload="metadata"
+                                >
+                                    Trình duyệt của bạn không hỗ trợ thẻ video.
+                                </video>
+                            ) : (
+                                <img className={cx('img')} src={list[currentIndex].url} alt={list[currentIndex].name} />
+                            )}
                         </div>
                     </div>
                     <Icon element={<BsFillCaretRightFill />} className={cx('arrow', 'next')} onClick={goToNext} />
@@ -127,7 +141,25 @@ function ImagePreview({ images = [] }) {
                         {list.map((image, index) => (
                             <div key={index} onClick={() => handleClickImage(index)}>
                                 <div className={cx('image-wrap', { active: currentIndex === index })}>
-                                    <img className={cx('img')} src={image.url} alt={image.name} />
+                                    {isVideo ? (
+                                        <video
+                                            className={cx('img')}
+                                            src={image.url}
+                                            alt={image.name}
+                                            muted
+                                            playsInline // Hỗ trợ iOS
+                                            preload="metadata"
+                                            onMouseEnter={(e) => e.currentTarget.play()}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.pause();
+                                                e.currentTarget.currentTime = 0; // Quay về đầu nếu muốn
+                                            }}
+                                        >
+                                            Trình duyệt của bạn không hỗ trợ thẻ video.
+                                        </video>
+                                    ) : (
+                                        <img className={cx('img')} src={image.url} alt={image.name} />
+                                    )}
                                 </div>
                             </div>
                         ))}

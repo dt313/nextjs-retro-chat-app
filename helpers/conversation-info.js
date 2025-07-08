@@ -86,6 +86,8 @@ export const getReplyType = (type) => {
         case 'text':
             return REPLY_MESSAGE;
         case 'file':
+        case 'video':
+        case 'audio':
             return REPLY_ATTACHMENT;
         case 'image':
             return REPLY_IMAGE_ATTACHMENT;

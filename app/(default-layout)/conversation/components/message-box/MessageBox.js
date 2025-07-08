@@ -23,10 +23,10 @@ import { getMessageNotification } from '@/helpers/conversation-info';
 import { closeReplyBox } from '@/redux/actions/reply-box-action';
 import { addToast } from '@/redux/actions/toast-action';
 
-import Message from '../message/Message';
+// import Message from '../message/Message';
 import styles from './MessageBox.module.scss';
 
-// const Message = dynamic(() => import('../message'), {});
+const Message = dynamic(() => import('../message'), {});
 
 const cx = classNames.bind(styles);
 const LIMIT = 30;
@@ -257,7 +257,7 @@ function MessageBox({
 
                         {attachments?.length > 0 &&
                             attachments.map((at) => {
-                                if (at.type === 'file') {
+                                if (at.type === 'file' || at.type === 'video' || at.type === 'audio') {
                                     return (
                                         <Message
                                             key={at._id}

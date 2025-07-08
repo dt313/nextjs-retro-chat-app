@@ -10,11 +10,11 @@ import ImagePreview from './ImagePreview';
 
 function ImagePreviewWrap() {
     const imgPreview = useSelector((state) => state.imgPreview);
-    const { isOpen, currentIndex, listImages } = imgPreview;
+    const { isOpen, currentIndex, listImages, isVideo } = imgPreview;
 
     const reshapedImages = useMemo(() => reshapeImages(listImages, currentIndex), [listImages, currentIndex]);
 
-    return <div>{isOpen && <ImagePreview images={reshapedImages} />}</div>;
+    return <div>{isOpen && <ImagePreview images={reshapedImages} isVideo={isVideo} />}</div>;
 }
 
 export default ImagePreviewWrap;

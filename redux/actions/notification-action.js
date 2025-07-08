@@ -42,6 +42,6 @@ export const readNotification = (payload) => {
 
 export const resetNotificationCount = () => {
     return {
-        type: RESET_COUNT,
+        type: RESET_NOTIFICATION_COUNT,
     };
 };

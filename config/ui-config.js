@@ -757,6 +757,46 @@ export const createSettingMenu = () => {
     ];
 };
 
-const FILE_ACCEPT_LIST =
-    '.jpg,.jpeg,.png,.txt,.csv,,.md,.js,.ts,.jsx,.tsx,.html,.css,.scss,.json,.xml,.py,.java,.cpp,.c,.cs,.php,.rb,.go,.rs,.sh,.bat,.kt,.sql';
+const FILE_ACCEPT_LIST = [
+    // Hình ảnh
+    '.jpg',
+    '.jpeg',
+    '.png',
+    // Văn bản
+    '.txt',
+    '.csv',
+    '.md',
+    '.json',
+    '.xml',
+    // Web
+    '.html',
+    '.css',
+    '.scss',
+    // JS / TS
+    '.js',
+    '.ts',
+    '.jsx',
+    '.tsx',
+    // Code
+    '.py',
+    '.java',
+    '.cpp',
+    '.c',
+    '.cs',
+    '.php',
+    '.rb',
+    '.go',
+    '.rs',
+    '.sh',
+    '.bat',
+    '.kt',
+    '.sql',
+    // Video
+    '.mp4',
+    '.webm',
+    '.ogg',
+    '.mov',
+    ,
+].join(',');
+
 export { types, FILE_ACCEPT_LIST };

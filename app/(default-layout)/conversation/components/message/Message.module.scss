@@ -47,8 +47,13 @@
     }
 }
 
-.m-file {
+.m-file,
+.m-video,
+.m-audio {
     max-width: 60%;
+}
+
+.m-audio {
 }
 
 @keyframes scaleOut {

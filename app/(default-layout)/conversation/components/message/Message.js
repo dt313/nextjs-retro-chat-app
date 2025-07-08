@@ -17,6 +17,7 @@ import 'tippy.js/themes/light.css';
 
 import ActiveTippy from '@/components/active-tippy';
 import File from '@/components/attach-file/File';
+import Audio from '@/components/audio';
 import Avatar from '@/components/avatar';
 import Icon from '@/components/icon';
 import AImage from '@/components/image';
@@ -26,6 +27,7 @@ import Overlay from '@/components/overlay';
 import Reaction from '@/components/reaction';
 import ReactionButton from '@/components/reaction-button';
 import SettingBox from '@/components/setting-box';
+import Video from '@/components/video';
 
 import { attachmentService, conversationService, messageService } from '@/services';
 
@@ -289,6 +291,49 @@ function Message({
             );
         }
 
+        if (type === 'video') {
+            return (
+                <div
+                    className={cx('m-video')}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    id={`message-${id}`}
+                >
+                    <Video
+                        controls
+                        style={{
+                            borderRadius: '8px',
+                            boxShadow: theme.styles.messageBoxShadow,
+                        }}
+                        src={content.url}
+                    >
+                        Trình duyệt của bạn không hỗ trợ thẻ video.
+                    </Video>
+                </div>
+            );
+        }
+
+        if (type === 'audio') {
+            return (
+                <div
+                    className={cx('m-audio')}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    id={`message-${id}`}
+                >
+                    <Audio
+                        className={cx({ highlight: isHighlight })}
+                        src={content.url}
+                        id={content._id}
+                        style={{
+                            borderRadius: '10rem',
+                            boxShadow: theme.styles.messageBoxShadow,
+                        }}
+                    />
+                </div>
+            );
+        }
+
         if (type === 'image') {
             const isMultiImage = content?.length > 3;
 
@@ -391,7 +436,8 @@ function Message({
 
     const handleDeleteMessage = async () => {
         try {
-            const res = await messageService.deleteMessage(type, id);
+            const messageType = type === 'video' || type === 'audio' ? 'file' : type;
+            const res = await messageService.deleteMessage(messageType, id);
             if (res) {
                 setIsDelete(true);
                 setVisibility((prev) => ({ ...prev, delete: false }));

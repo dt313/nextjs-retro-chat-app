@@ -100,17 +100,20 @@
     }
 }
 
-.preview-image {
+.preview-image,
+.preview-video {
     width: 40px;
     height: 36px;
     position: relative;
     margin-right: 12px;
 
-    .preview-img {
+    .preview-img,
+    .preview-video-player {
         width: 100%;
         height: 100%;
         border: 1px solid var(--gray-color);
         border-radius: 4px;
+        object-fit: contain;
     }
 }
 
@@ -233,4 +236,139 @@
     position: absolute;
     width: fit-content;
     z-index: 1111;
+}
+
+// recording
+
+.audio-recording {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: var(--background);
+    gap: 8px;
+    padding: 6px;
+}
+
+.cancel-btn,
+.send-btn {
+    background-color: var(--white);
+    color: var(--text-color);
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.record-bar {
+    flex: 1;
+    background-color: var(--white);
+    border-radius: 100px;
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+
+// lớp hiệu ứng nền động
+
+.record-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #66666655; // màu nền progress nhạt hơn
+    border-radius: inherit;
+    z-index: 0;
+    transition: width 1s linear;
+}
+
+.stop-btn {
+    background-color: var(--black);
+    color: var(--white);
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.timer {
+    background-color: var(--black);
+    color: var(--white);
+    border-radius: 999px;
+    padding: 2px 8px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 2;
+}
+
+.finish-btn,
+.play-btn {
+    background-color: var(--black);
+    color: var(--white);
+    border-radius: 10rem;
+    border: none;
+    outline: none;
+    width: 28px;
+    height: 28px;
+    z-index: 2;
+    position: relative;
+}
+
+.audio-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.audio-fake {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 4px;
+    z-index: 2;
+
+    .bar {
+        width: 4px;
+        background: var(--black-low);
+        border-radius: 2px;
+        animation: pulse 1.2s infinite ease-in-out;
+        animation-play-state: paused;
+        z-index: 2;
+    }
+
+    &.playing {
+        .bar {
+            animation-play-state: running; // ▶️ khi playing
+        }
+    }
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        transform: scaleY(0.3);
+    }
+    50% {
+        transform: scaleY(1.2);
+    }
 }

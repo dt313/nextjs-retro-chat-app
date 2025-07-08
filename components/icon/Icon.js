@@ -8,7 +8,7 @@ import styles from './Icon.module.scss';
 
 const cx = classNames.bind(styles);
 
-function Icon({ element, className, large, small, medium, onClick }) {
+function Icon({ element, className, large, small, medium, onClick, ...props }) {
     const classes = cx('wrapper', {
         large,
         small,
@@ -16,7 +16,7 @@ function Icon({ element, className, large, small, medium, onClick }) {
         [className]: className,
     });
     return (
-        <span className={classes} onClick={onClick}>
+        <span className={classes} onClick={onClick} {...props}>
             {element}
         </span>
     );

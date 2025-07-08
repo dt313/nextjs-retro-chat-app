@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { conversationService, messageService, userService } from '@/services';
 
+import { getMessageType } from '@/helpers/conversation-info';
+
 import { checkStatus } from '@/helpers';
 
 import { addToast } from '@/redux/actions/toast-action';
@@ -30,7 +32,7 @@ function MessageForward({ messageId, messageType, onClose }) {
 
     const debounceValue = useDebounce(value, 1300);
 
-    const { list: onlineUserList } = useSelector((state) => state.onlineUsers);
+    // const { list: onlineUserList } = useSelector((state) => state.onlineUsers);
 
     const dispatch = useDispatch();
     const fetchFriends = async (value) => {
@@ -51,7 +53,11 @@ function MessageForward({ messageId, messageType, onClose }) {
     const handleForwardMessage = useCallback(
         async (id, isConversation) => {
             try {
-                const res = await messageService.forwardMessage(messageId, { id, isConversation, messageType });
+                const res = await messageService.forwardMessage(messageId, {
+                    id,
+                    isConversation,
+                    messageType: messageType === 'video' || messageType === 'audio' ? 'file' : messageType,
+                });
                 if (res) {
                     return true;
                 }

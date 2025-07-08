@@ -11,7 +11,10 @@ import HeadlessTippy from '@tippyjs/react/headless';
 import dynamic from 'next/dynamic';
 import { BsImage } from 'react-icons/bs';
 import { CgAttachment } from 'react-icons/cg';
+import { FaMicrophone } from 'react-icons/fa';
 import { FaArrowUp } from 'react-icons/fa6';
+import { IoMdPause, IoMdPlay, IoMdSquare } from 'react-icons/io';
+import { TiLocationArrow } from 'react-icons/ti';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -48,15 +51,25 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
     const { isOpenReplyBox, replyData } = useSelector((state) => state.replyBox);
 
     const [isShowMentionList, setIsShowMentionList] = useState(false);
+    const [isShowRecording, setIsShowRecording] = useState(false);
     const [mentionPosition, setMentionPosition] = useState(null);
     const [mentionQuery, setMentionQuery] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [mentionedUsers, setMentionedUsers] = useState([]);
+    const [isRecording, setIsRecording] = useState(false);
+    const [audioUrl, setAudioUrl] = useState(null);
+    const [recordTime, setRecordTime] = useState(0);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [duration, setDuration] = useState(0);
+    const timerRef = useRef(null);
+    const mediaRecorderRef = useRef(null);
+    const audioChunksRef = useRef([]);
     const fileInputRef = useRef(null);
     const containerRef = useRef(null);
     const inputRef = useAutoResize(value);
     const savedRangeRef = useRef(null);
     const mentionRef = useRef(null);
+    const audioRef = useRef(null);
 
     const dispatch = useDispatch();
 
@@ -219,6 +232,14 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
                     id: uuidv4(),
                     type: 'image',
                     src: URL.createObjectURL(file),
+                });
+                newFiles.push(file);
+            } else if (file.type.startsWith('video/')) {
+                newPreviewFiles.push({
+                    id: uuidv4(),
+                    type: 'video',
+                    src: URL.createObjectURL(file),
+                    name: file.name,
                 });
                 newFiles.push(file);
             } else {
@@ -557,6 +578,179 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
         setMentionQuery('');
     };
 
+    const formatTime = (seconds) => {
+        const min = Math.floor(seconds / 60);
+        const sec = seconds % 60;
+        return `${min}:${sec.toString().padStart(2, '0')}`;
+    };
+
+    const startRecording = async () => {
+        // Clear timer cũ nếu có
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+        }
+
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.ondataavailable = (e) => {
+            if (e.data.size > 0) {
+                audioChunksRef.current.push(e.data);
+            }
+        };
+
+        mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+            const url = URL.createObjectURL(audioBlob);
+            setAudioUrl(url);
+            audioChunksRef.current = [];
+            setIsRecording(false); // Set recording to false when stopped
+
+            // Stop all tracks to release microphone
+            stream.getTracks().forEach((track) => track.stop());
+        };
+
+        mediaRecorderRef.current = mediaRecorder;
+        mediaRecorder.start();
+
+        setIsShowRecording(true);
+        setIsRecording(true);
+        setRecordTime(0);
+
+        // Bắt đầu timer
+        timerRef.current = setInterval(() => {
+            setRecordTime((prev) => {
+                return prev + 1;
+            });
+        }, 1000);
+    };
+
+    useEffect(() => {
+        if (recordTime === 10 && isRecording) {
+            stopRecording();
+        }
+    }, [recordTime, isRecording]);
+
+    const stopRecording = () => {
+        // clear timer
+
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+            mediaRecorderRef.current.stop();
+        }
+
+        setIsRecording(false);
+        setDuration(recordTime);
+        setRecordTime(0);
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+        }
+    };
+
+    const cancelRecord = () => {
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+            mediaRecorderRef.current.stop();
+        }
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+        }
+        // reset all
+        setIsRecording(false);
+        setIsShowRecording(false);
+        setRecordTime(0);
+        setIsPlaying(false);
+        setDuration(0);
+        setAudioUrl(null);
+        audioChunksRef.current = [];
+    };
+
+    const handleToggle = () => {
+        if (!audioRef.current || !audioUrl) return;
+
+        if (isPlaying) {
+            audioRef.current.pause();
+            setIsPlaying(false);
+            if (timerRef.current) {
+                clearInterval(timerRef.current);
+                timerRef.current = null;
+            }
+        } else {
+            audioRef.current.play();
+            setIsPlaying(true);
+            // Bắt đầu timer
+            timerRef.current = setInterval(() => {
+                setRecordTime((prev) => {
+                    if (prev >= duration) {
+                        return 0;
+                    }
+                    return prev + 1;
+                });
+            }, 1000);
+        }
+    };
+
+    useEffect(() => {
+        return () => {
+            if (timerRef.current) {
+                clearInterval(timerRef.current);
+            }
+            if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+                mediaRecorderRef.current.stop();
+            }
+            if (audioUrl) {
+                URL.revokeObjectURL(audioUrl);
+                setAudioUrl(null);
+            }
+        };
+    }, []);
+
+    const handleEnded = () => {
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+        }
+        setRecordTime(0);
+        audioRef.current.pause();
+        setIsPlaying(false);
+    };
+
+    // Add function to send audio
+    const sendAudio = () => {
+        if (!audioUrl) return;
+
+        // Convert blob URL to actual file
+        fetch(audioUrl)
+            .then((res) => res.blob())
+            .then((blob) => {
+                const audioFile = new File([blob], `audio_${Date.now()}.webm`, { type: 'audio/webm' });
+
+                // Use your existing onSubmit function
+                onSubmit({
+                    content: '',
+                    attachments: [audioFile],
+                    replyData: isOpenReplyBox ? replyData : null,
+                })
+                    .then(() => {
+                        // Reset recording state
+                        setIsShowRecording(false);
+                        setIsRecording(false);
+                        setRecordTime(0);
+                        setAudioUrl(null);
+                        setIsPlaying(false);
+                        audioChunksRef.current = [];
+                        handleCloseReplyBox();
+                        if (timerRef.current) {
+                            clearInterval(timerRef.current);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error sending audio:', error);
+                    });
+            })
+            .catch((error) => {
+                console.error('Error converting audio:', error);
+            });
+    };
+
     return (
         <div className={cx('wrapper')} {...props}>
             {isShowMentionList && isGroup && (
@@ -603,9 +797,10 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
                     </div>
                 )}
 
-                {previewFiles.length > 0 && (
+                {previewFiles.length > 0 && !isShowRecording && (
                     <div className={cx('preview')}>
                         {previewFiles.map((item) => {
+                            console.log(item);
                             if (item.type === 'image') {
                                 return (
                                     <div className={cx('preview-image')} key={item.id}>
@@ -632,6 +827,34 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
                                     </div>
                                 );
                             }
+                            if (item.type === 'video') {
+                                return (
+                                    <div className={cx('preview-video')} key={item.id}>
+                                        <CloseIcon
+                                            theme="dark"
+                                            small
+                                            className={cx('preview-delete')}
+                                            onClick={() => handleDeleteFile(item.id)}
+                                        />
+                                        <video
+                                            className={cx('preview-video-player')}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.play();
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.pause();
+                                                e.currentTarget.currentTime = 0; // Quay về đầu nếu muốn
+                                            }}
+                                            muted // Cần muted nếu muốn autoplay hoạt động không bị block
+                                            playsInline // Hỗ trợ iOS
+                                            preload="metadata"
+                                        >
+                                            <source src={item.src} type="video/mp4" />
+                                            Trình duyệt của bạn không hỗ trợ video.
+                                        </video>
+                                    </div>
+                                );
+                            }
                         })}
                     </div>
                 )}
@@ -652,6 +875,12 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
                 ></div>
                 <div className={cx('extra')}>
                     <div className={cx('attachment')}>
+                        <Icon
+                            className={cx('attach-icon')}
+                            medium
+                            element={<FaMicrophone />}
+                            onClick={startRecording}
+                        />
                         <Icon
                             className={cx('attach-icon')}
                             medium
@@ -734,6 +963,78 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
                         )}
                     </div>
                 </div>
+
+                {isShowRecording && (
+                    <div className={cx('audio-recording')}>
+                        <CloseIcon className={cx('cancel-btn')} onClick={cancelRecord}></CloseIcon>
+
+                        <div className={cx('record-bar')}>
+                            <div
+                                className={cx('record-progress')}
+                                style={{
+                                    width: isPlaying
+                                        ? `${(recordTime / (duration - 1)) * 100}%`
+                                        : `${isRecording ? `${(recordTime / (10 - 1)) * 100}%` : `${(recordTime / (duration - 1)) * 100}%`}`,
+                                }}
+                            />
+
+                            {!isRecording ? (
+                                // Playback controls for completed recording
+                                <>
+                                    <button className={cx('play-btn')} onClick={handleToggle}>
+                                        {isPlaying ? (
+                                            <Icon className={cx('audio-icon')} element={<IoMdPause />} small />
+                                        ) : (
+                                            <Icon
+                                                className={cx('audio-icon')}
+                                                style={{ paddingLeft: 6 }}
+                                                element={<IoMdPlay />}
+                                                small
+                                            />
+                                        )}
+                                    </button>
+                                    <audio ref={audioRef} src={audioUrl} hidden onEnded={handleEnded} />
+                                </>
+                            ) : (
+                                <button className={cx('finish-btn')} onClick={stopRecording}>
+                                    <Icon className={cx('audio-icon')} element={<IoMdSquare />} small />
+                                </button>
+                            )}
+
+                            {audioUrl && (
+                                <div className={cx('audio-fake', { playing: isPlaying })}>
+                                    {[...Array(20)].map((_, i) => {
+                                        const randomHeight = Math.floor(Math.random() * 20) + 5;
+                                        return (
+                                            <span
+                                                key={i}
+                                                className={cx('bar')}
+                                                style={{
+                                                    height: `${randomHeight}px`,
+                                                    animationDelay: `${i * 0.05}s`,
+                                                }}
+                                            />
+                                        );
+                                    })}
+                                </div>
+                            )}
+
+                            <div className={cx('timer')}>
+                                {isRecording || isPlaying
+                                    ? formatTime(recordTime)
+                                    : formatTime(recordTime !== 0 ? recordTime : duration)}
+                            </div>
+                        </div>
+
+                        {isLoading ? (
+                            <SpinnerLoader small />
+                        ) : (
+                            <button className={cx('send-btn')} onClick={sendAudio}>
+                                <Icon element={<TiLocationArrow />} />
+                            </button>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     );

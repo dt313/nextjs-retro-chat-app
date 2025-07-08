@@ -1,0 +1,149 @@
+@use '/app/scss/mixins.scss' as *;
+.audio-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border-radius: 10rem;
+    border: var(--solid-border);
+
+    &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+}
+
+.play-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: var(--red);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+
+    &:hover {
+        background-color: #d34b30;
+
+        transform: scale(1.05);
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+
+    svg {
+        margin-left: 2px;
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.waveform {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+    height: 40px;
+    padding: 0 8px;
+}
+
+.bar {
+    width: 3px;
+    background-color: #ccc;
+    border-radius: 2px;
+    transition: background-color 0.3s ease;
+    animation: none;
+
+    &.playing {
+        background-color: var(--red);
+
+        animation: wave 1s ease-in-out infinite;
+    }
+}
+
+.timer {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-color-low);
+    min-width: 40px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+@keyframes wave {
+    0%,
+    100% {
+        transform: scaleY(0.5);
+        opacity: 0.7;
+    }
+    50% {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
+
+// // Dark mode support
+// @media (prefers-color-scheme: dark) {
+//     .audio-wrapper {
+//         background-color: #2a2a2a;
+//         color: white;
+
+//         &:hover {
+//             background-color: #363636;
+//         }
+//     }
+
+//     .timer {
+//         color: #ccc;
+//     }
+
+//     .bar {
+//         background-color: #555;
+
+//         &.playing {
+//             background-color: #4a9eff;
+//         }
+//     }
+// }
+
+// Responsive design
+@media (max-width: 768px) {
+    .audio-wrapper {
+        gap: 12px;
+        padding: 10px 12px;
+    }
+
+    .play-btn {
+        width: 36px;
+        height: 36px;
+
+        svg {
+            width: 18px;
+            height: 18px;
+        }
+    }
+
+    .waveform {
+        height: 36px;
+        padding: 0 4px;
+    }
+
+    .bar {
+        width: 2px;
+    }
+
+    .timer {
+        font-size: 12px;
+        min-width: 35px;
+    }
+}

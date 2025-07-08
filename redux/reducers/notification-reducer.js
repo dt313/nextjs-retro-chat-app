@@ -1,5 +1,3 @@
-import { NOTIFICATION_FRIEND_REQUEST } from '@/config/types';
-
 import {
     ADD_NOTIFICATION,
     CHANGE_TYPE_NOTIFICATION,
