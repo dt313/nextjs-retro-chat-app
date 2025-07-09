@@ -75,8 +75,6 @@ function Audio({ className, src, id, ...props }) {
         return `${minutes}:${seconds.toString().padStart(2, '0')}`;
     };
 
-    console.log('re-render');
-
     return (
         <div className={cx('audio-wrapper', className)} {...props} ref={containerRef}>
             <button className={cx('play-btn')} onClick={togglePlay}>

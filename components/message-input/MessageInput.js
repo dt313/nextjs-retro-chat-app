@@ -73,8 +73,6 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
 
     const dispatch = useDispatch();
 
-    console.log(props);
-
     useEffect(() => {
         if (isOpenReplyBox) {
             inputRef.current?.focus();
@@ -696,7 +694,7 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
         audioChunksRef.current = [];
     };
 
-    const handleToggle = () => {
+    const handleToggle = async () => {
         if (!audioRef.current || !audioUrl) return;
 
         if (isPlaying) {
@@ -707,17 +705,26 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
                 timerRef.current = null;
             }
         } else {
-            audioRef.current.play();
-            setIsPlaying(true);
-            // Bắt đầu timer
-            timerRef.current = setInterval(() => {
-                setRecordTime((prev) => {
-                    if (prev >= duration) {
-                        return 0;
-                    }
-                    return prev + 1;
-                });
-            }, 1000);
+            try {
+                audioRef.current.play();
+                setIsPlaying(true);
+                // Bắt đầu timer
+                timerRef.current = setInterval(() => {
+                    setRecordTime((prev) => {
+                        if (prev >= duration) {
+                            return 0;
+                        }
+                        return prev + 1;
+                    });
+                }, 1000);
+            } catch (error) {
+                dispatch(
+                    addToast({
+                        type: 'error',
+                        content: error.message,
+                    }),
+                );
+            }
         }
     };
 
@@ -729,6 +736,9 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
             if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
                 mediaRecorderRef.current.stop();
             }
+
+            audioRef.current = null;
+
             if (audioUrl) {
                 URL.revokeObjectURL(audioUrl);
                 setAudioUrl(null);
@@ -744,6 +754,33 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
         audioRef.current.pause();
         setIsPlaying(false);
     };
+
+    // Create Audio object when audioUrl changes
+    useEffect(() => {
+        if (audioUrl && !audioRef.current) {
+            audioRef.current = new Audio(audioUrl);
+
+            // Set up event listeners
+            audioRef.current.addEventListener('ended', handleEnded);
+            audioRef.current.addEventListener('error', (error) => {
+                dispatch(
+                    addToast({
+                        type: 'error',
+                        content: 'Error with audio: ' + error.message,
+                    }),
+                );
+            });
+        }
+
+        return () => {
+            // Clean up when audioUrl changes
+            if (audioRef.current && audioRef.current.src !== audioUrl) {
+                audioRef.current.pause();
+                audioRef.current.removeEventListener('ended', handleEnded);
+                audioRef.current = null;
+            }
+        };
+    }, [audioUrl]);
 
     // Add function to send audio
     const sendAudio = () => {
@@ -832,7 +869,6 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
                 {previewFiles.length > 0 && !isShowRecording && (
                     <div className={cx('preview')}>
                         {previewFiles.map((item) => {
-                            console.log(item);
                             if (item.type === 'image') {
                                 return (
                                     <div className={cx('preview-image')} key={item.id}>
@@ -1025,7 +1061,7 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
                                             />
                                         )}
                                     </button>
-                                    <audio ref={audioRef} src={audioUrl} hidden onEnded={handleEnded} />
+                                    {/* <audio ref={audioRef} src={audioUrl} hidden onEnded={handleEnded} /> */}
                                 </>
                             ) : (
                                 <button className={cx('finish-btn')} onClick={stopRecording}>
