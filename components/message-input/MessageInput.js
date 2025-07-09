@@ -623,7 +623,6 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
                 setAudioUrl(url);
                 audioChunksRef.current = [];
                 setIsRecording(false); // Set recording to false when stopped
-
                 // Stop all tracks to release microphone
                 stream.getTracks().forEach((track) => track.stop());
             };
@@ -755,6 +754,14 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
         setIsPlaying(false);
     };
 
+    const handleError = (error) => {
+        dispatch(
+            addToast({
+                type: 'error',
+                content: 'Error with audio: ' + error.message,
+            }),
+        );
+    };
     // Create Audio object when audioUrl changes
     useEffect(() => {
         if (audioUrl && !audioRef.current) {
@@ -762,14 +769,7 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
 
             // Set up event listeners
             audioRef.current.addEventListener('ended', handleEnded);
-            audioRef.current.addEventListener('error', (error) => {
-                dispatch(
-                    addToast({
-                        type: 'error',
-                        content: 'Error with audio: ' + error.message,
-                    }),
-                );
-            });
+            audioRef.current.addEventListener('error', handleError);
         }
 
         return () => {
@@ -777,6 +777,7 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
             if (audioRef.current && audioRef.current.src !== audioUrl) {
                 audioRef.current.pause();
                 audioRef.current.removeEventListener('ended', handleEnded);
+                audioRef.current.removeEventListener('error', handleError);
                 audioRef.current = null;
             }
         };
