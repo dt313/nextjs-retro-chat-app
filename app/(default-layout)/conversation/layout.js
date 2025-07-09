@@ -54,8 +54,8 @@ export default function ConversationLayout({ children }) {
                 setIsShowRight(false);
                 return;
             }
-            setIsShowLeft(true);
             setIsShowContent(false);
+            setIsShowLeft(true);
             setIsShowRight(false);
         }
     }, [id, breakpoint]);

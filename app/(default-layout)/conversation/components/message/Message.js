@@ -300,6 +300,7 @@ function Message({
                     id={`message-${id}`}
                 >
                     <Video
+                        className={cx({ highlight: isHighlight })}
                         controls
                         style={{
                             borderRadius: '8px',

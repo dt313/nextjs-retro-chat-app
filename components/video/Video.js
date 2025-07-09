@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { memo, useRef } from 'react';
 
 import classNames from 'classnames/bind';
 
@@ -8,7 +8,7 @@ import styles from './Video.module.scss';
 
 const cx = classNames.bind(styles);
 
-function Video({ src, ...props }) {
+function Video({ className, src, ...props }) {
     const videoRef = useRef(null);
     const containerRef = useClickOutside(() => {
         if (videoRef.current && !videoRef.current.paused) {
@@ -16,7 +16,7 @@ function Video({ src, ...props }) {
         }
     });
     return (
-        <div className={cx('wrapper')} {...props} ref={containerRef}>
+        <div className={cx('wrapper', className)} {...props} ref={containerRef}>
             <video className={cx('video')} src={src} controls ref={videoRef}>
                 Trình duyệt của bạn không hỗ trợ thẻ video.
             </video>
@@ -24,4 +24,10 @@ function Video({ src, ...props }) {
     );
 }
 
-export default Video;
+export default memo(Video, (prevProps, nextProps) => {
+    return (
+        prevProps.src === nextProps.src &&
+        prevProps.className === nextProps.className &&
+        prevProps.props === nextProps.props
+    );
+});

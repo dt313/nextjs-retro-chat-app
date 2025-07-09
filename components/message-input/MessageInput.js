@@ -73,6 +73,8 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
 
     const dispatch = useDispatch();
 
+    console.log(props);
+
     useEffect(() => {
         if (isOpenReplyBox) {
             inputRef.current?.focus();
@@ -586,43 +588,73 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
 
     const startRecording = async () => {
         // Clear timer cũ nếu có
-        if (timerRef.current) {
-            clearInterval(timerRef.current);
-        }
 
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        const mediaRecorder = new MediaRecorder(stream);
-
-        mediaRecorder.ondataavailable = (e) => {
-            if (e.data.size > 0) {
-                audioChunksRef.current.push(e.data);
+        try {
+            if (timerRef.current) {
+                clearInterval(timerRef.current);
             }
-        };
 
-        mediaRecorder.onstop = () => {
-            const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-            const url = URL.createObjectURL(audioBlob);
-            setAudioUrl(url);
-            audioChunksRef.current = [];
-            setIsRecording(false); // Set recording to false when stopped
+            // Check if MediaRecorder is supported
+            if (!MediaRecorder.isTypeSupported('audio/webm')) {
+                console.log('WebM not supported, trying MP4');
+                // Try other formats or use Web Audio API
+            }
 
-            // Stop all tracks to release microphone
-            stream.getTracks().forEach((track) => track.stop());
-        };
-
-        mediaRecorderRef.current = mediaRecorder;
-        mediaRecorder.start();
-
-        setIsShowRecording(true);
-        setIsRecording(true);
-        setRecordTime(0);
-
-        // Bắt đầu timer
-        timerRef.current = setInterval(() => {
-            setRecordTime((prev) => {
-                return prev + 1;
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    sampleRate: 44100,
+                },
             });
-        }, 1000);
+
+            // Use 'audio/mp4' or 'audio/aac' for better iOS compatibility
+            const mediaRecorder = new MediaRecorder(stream, {
+                mimeType: 'audio/mp4', // or 'audio/aac'
+            });
+
+            mediaRecorder.ondataavailable = (e) => {
+                if (e.data.size > 0) {
+                    audioChunksRef.current.push(e.data);
+                }
+            };
+
+            mediaRecorder.onstop = () => {
+                const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+                const url = URL.createObjectURL(audioBlob);
+                setAudioUrl(url);
+                audioChunksRef.current = [];
+                setIsRecording(false); // Set recording to false when stopped
+
+                // Stop all tracks to release microphone
+                stream.getTracks().forEach((track) => track.stop());
+            };
+
+            mediaRecorderRef.current = mediaRecorder;
+            mediaRecorder.start();
+
+            setIsShowRecording(true);
+            setIsRecording(true);
+            setRecordTime(0);
+
+            // Bắt đầu timer
+            timerRef.current = setInterval(() => {
+                setRecordTime((prev) => {
+                    return prev + 1;
+                });
+            }, 1000);
+        } catch (error) {
+            if (timerRef.current) {
+                clearInterval(timerRef.current);
+            }
+
+            dispatch(
+                addToast({
+                    type: 'error',
+                    content: error.message,
+                }),
+            );
+        }
     };
 
     useEffect(() => {
@@ -715,7 +747,7 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
 
     // Add function to send audio
     const sendAudio = () => {
-        if (!audioUrl) return;
+        if (!audioUrl || isRecording) return;
 
         // Convert blob URL to actual file
         fetch(audioUrl)
@@ -965,7 +997,7 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
                 </div>
 
                 {isShowRecording && (
-                    <div className={cx('audio-recording')}>
+                    <div className={cx('audio-recording')} style={{ backgroundColor: props.style.backgroundColor }}>
                         <CloseIcon className={cx('cancel-btn')} onClick={cancelRecord}></CloseIcon>
 
                         <div className={cx('record-bar')}>

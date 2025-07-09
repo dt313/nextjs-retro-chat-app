@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
@@ -75,6 +75,8 @@ function Audio({ className, src, id, ...props }) {
         return `${minutes}:${seconds.toString().padStart(2, '0')}`;
     };
 
+    console.log('re-render');
+
     return (
         <div className={cx('audio-wrapper', className)} {...props} ref={containerRef}>
             <button className={cx('play-btn')} onClick={togglePlay}>
@@ -101,4 +103,11 @@ function Audio({ className, src, id, ...props }) {
     );
 }
 
-export default Audio;
+export default memo(Audio, (prevProps, nextProps) => {
+    return (
+        prevProps.src === nextProps.src &&
+        prevProps.className === nextProps.className &&
+        prevProps.props === nextProps.props &&
+        prevProps.id === nextProps.id
+    );
+});
