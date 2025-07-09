@@ -585,17 +585,9 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
     };
 
     const startRecording = async () => {
-        // Clear timer cũ nếu có
-
         try {
             if (timerRef.current) {
                 clearInterval(timerRef.current);
-            }
-
-            // Check if MediaRecorder is supported
-            if (!MediaRecorder.isTypeSupported('audio/webm')) {
-                console.log('WebM not supported, trying MP4');
-                // Try other formats or use Web Audio API
             }
 
             const stream = await navigator.mediaDevices.getUserMedia({
@@ -606,9 +598,21 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
                 },
             });
 
-            // Use 'audio/mp4' or 'audio/aac' for better iOS compatibility
+            // Safari codec compatibility fix
+            let mimeType = 'audio/webm';
+            if (!MediaRecorder.isTypeSupported('audio/webm')) {
+                if (MediaRecorder.isTypeSupported('audio/mp4')) {
+                    mimeType = 'audio/mp4';
+                } else if (MediaRecorder.isTypeSupported('audio/wav')) {
+                    mimeType = 'audio/wav';
+                } else {
+                    // Fallback to default
+                    mimeType = '';
+                }
+            }
+
             const mediaRecorder = new MediaRecorder(stream, {
-                mimeType: 'audio/mp4', // or 'audio/aac'
+                mimeType: mimeType || undefined,
             });
 
             mediaRecorder.ondataavailable = (e) => {
@@ -618,12 +622,14 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
             };
 
             mediaRecorder.onstop = () => {
-                const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+                // Use the same mimeType that was used for recording
+                const audioBlob = new Blob(audioChunksRef.current, {
+                    type: mimeType || 'audio/webm',
+                });
                 const url = URL.createObjectURL(audioBlob);
                 setAudioUrl(url);
                 audioChunksRef.current = [];
-                setIsRecording(false); // Set recording to false when stopped
-                // Stop all tracks to release microphone
+                setIsRecording(false);
                 stream.getTracks().forEach((track) => track.stop());
             };
 
@@ -634,21 +640,17 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
             setIsRecording(true);
             setRecordTime(0);
 
-            // Bắt đầu timer
             timerRef.current = setInterval(() => {
-                setRecordTime((prev) => {
-                    return prev + 1;
-                });
+                setRecordTime((prev) => prev + 1);
             }, 1000);
         } catch (error) {
             if (timerRef.current) {
                 clearInterval(timerRef.current);
             }
-
             dispatch(
                 addToast({
                     type: 'error',
-                    content: error.message,
+                    content: `Recording error: ${error.message}`,
                 }),
             );
         }
@@ -705,7 +707,7 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
             }
         } else {
             try {
-                audioRef.current.play();
+                await audioRef.current.play();
                 setIsPlaying(true);
                 // Bắt đầu timer
                 timerRef.current = setInterval(() => {
@@ -762,22 +764,44 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
             }),
         );
     };
+
     // Create Audio object when audioUrl changes
     useEffect(() => {
         if (audioUrl && !audioRef.current) {
-            audioRef.current = new Audio(audioUrl);
+            try {
+                audioRef.current = new Audio();
 
-            // Set up event listeners
-            audioRef.current.addEventListener('ended', handleEnded);
-            audioRef.current.addEventListener('error', handleError);
+                // Safari needs explicit preload setting
+                audioRef.current.preload = 'metadata';
+
+                // Set up event listeners before setting src
+                audioRef.current.addEventListener('ended', handleEnded);
+                audioRef.current.addEventListener('error', handleError);
+
+                // Load the audio after setting up listeners
+                audioRef.current.addEventListener('loadedmetadata', () => {
+                    console.log('Audio loaded successfully');
+                });
+
+                // Set source after everything is set up
+                audioRef.current.src = audioUrl;
+            } catch (error) {
+                console.error('Error creating audio object:', error);
+                dispatch(
+                    addToast({
+                        type: 'error',
+                        content: 'Failed to create audio player',
+                    }),
+                );
+            }
         }
 
         return () => {
-            // Clean up when audioUrl changes
-            if (audioRef.current && audioRef.current.src !== audioUrl) {
+            if (audioRef.current) {
                 audioRef.current.pause();
                 audioRef.current.removeEventListener('ended', handleEnded);
                 audioRef.current.removeEventListener('error', handleError);
+                audioRef.current.src = '';
                 audioRef.current = null;
             }
         };
@@ -791,7 +815,21 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
         fetch(audioUrl)
             .then((res) => res.blob())
             .then((blob) => {
-                const audioFile = new File([blob], `audio_${Date.now()}.webm`, { type: 'audio/webm' });
+                // Determine file extension based on blob type
+                let extension = 'webm';
+                let mimeType = 'audio/webm';
+
+                if (blob.type.includes('mp4')) {
+                    extension = 'mp4';
+                    mimeType = 'audio/mp4';
+                } else if (blob.type.includes('wav')) {
+                    extension = 'wav';
+                    mimeType = 'audio/wav';
+                }
+
+                const audioFile = new File([blob], `audio_${Date.now()}.${extension}`, {
+                    type: mimeType,
+                });
 
                 // Use your existing onSubmit function
                 onSubmit({
