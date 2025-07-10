@@ -1,3 +1,4 @@
+@use '/app/scss/mixins.scss' as *;
 .wrapper {
     --padding: 24px;
     padding: var(--padding) 0;
@@ -18,4 +19,9 @@
     overflow-y: auto;
     padding-bottom: 50px;
     padding-top: 24px;
+}
+
+.empty-state {
+    text-align: center;
+    @include font-default;
 }

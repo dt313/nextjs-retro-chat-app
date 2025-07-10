@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
@@ -19,6 +19,7 @@ import { addToast } from '@/redux/actions/toast-action';
 import styles from './search.module.scss';
 
 const cx = classNames.bind(styles);
+const LIMIT_ITEM = 30;
 
 function SearchContent() {
     const searchParams = useSearchParams();
@@ -26,35 +27,66 @@ function SearchContent() {
 
     const [searchValue, setSearchValue] = useState(searchParams.get('q') || '');
     const [filterValue, setFilterValue] = useState(searchParams.get('filter') || 'user');
+    const [page, setPage] = useState(1);
+    const lastElement = useRef(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [isLoadMore, setIsLoadMore] = useState(false);
+    const [isFinish, setIsFinish] = useState(false);
     const [list, setList] = useState([]);
 
     const debounceValue = useDebounce(searchValue, 1300);
     const router = useRouter();
     const dispatch = useDispatch();
 
-    const fetchAPI = async (type) => {
+    const fetchAPI = async (type, q, pageNum = 1) => {
         try {
-            setIsLoading(true);
+            if (pageNum === 1) {
+                setIsLoading(true);
+            } else {
+                setIsLoadMore(true);
+            }
+
             if (type === 'user') {
-                const res = await userService.getUsers(searchValue);
+                const res = await userService.getUsers(q, pageNum);
                 const users = res.filter((user) => user._id !== me._id);
 
-                setList(users);
+                if (pageNum === 1) {
+                    setList(users);
+                } else {
+                    setList((prev) => [...prev, ...users]);
+                }
+
+                if (users.length < LIMIT_ITEM) {
+                    setIsFinish(true);
+                } else {
+                    setIsFinish(false);
+                }
             } else if (type === 'group') {
-                const res = await groupService.getGroups(searchValue);
-                setList(res);
+                const res = await groupService.getGroups(q, pageNum);
+
+                if (pageNum === 1) {
+                    setList(res);
+                } else {
+                    setList((prev) => [...prev, ...res]);
+                }
+
+                if (res.length < LIMIT_ITEM) {
+                    setIsFinish(true);
+                } else {
+                    setIsFinish(false);
+                }
             }
         } catch (error) {
             dispatch(addToast({ type: 'error', content: error.message }));
         } finally {
             setIsLoading(false);
+            setIsLoadMore(false);
         }
     };
 
-    useEffect(() => {
-        fetchAPI(filterValue);
-    }, [filterValue, debounceValue]);
+    // useEffect(() => {
+    //     fetchAPI(filterValue, debounceValue);
+    // }, [filterValue, debounceValue]);
 
     function changeSearchParams(q, filter) {
         const params = new URLSearchParams();
@@ -88,6 +120,36 @@ function SearchContent() {
         setFilterValue(value);
         changeSearchParams(searchValue, value);
     };
+
+    useEffect(() => {
+        if (debounceValue || filterValue) {
+            setPage(1);
+            setIsFinish(false);
+            setList([]);
+            fetchAPI(filterValue, debounceValue, 1);
+        }
+    }, [filterValue, debounceValue]);
+
+    // Intersection Observer for infinite scroll
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && !isLoading && !isLoadMore && !isFinish && list.length > 0) {
+                    const nextPage = page + 1;
+                    setPage(nextPage);
+                    fetchAPI(filterValue, searchValue, nextPage);
+                }
+            },
+            { threshold: 1.0 },
+        );
+
+        const target = lastElement.current;
+        if (target) observer.observe(target);
+
+        return () => {
+            if (target) observer.unobserve(target);
+        };
+    }, [page, isLoading, isLoadMore, isFinish, filterValue, searchValue, list.length]);
 
     return (
         <div className={cx('wrapper')}>
@@ -151,7 +213,10 @@ function SearchContent() {
                                   );
                               }
                           })
-                        : [1, 2, 3, 4].map((key) => <UserCard.Skeleton key={key} />)}
+                        : [...Array(6)].map((_, index) => <UserCard.Skeleton key={`skeleton-${index}`} />)}
+                    {/* Load more indicator */}
+                    {isLoadMore && [...Array(6)].map((_, index) => <UserCard.Skeleton key={`skeleton-${index}`} />)}
+                    <div ref={isFinish ? null : lastElement} style={{ height: '1px' }}></div>
                 </div>
             </div>
         </div>

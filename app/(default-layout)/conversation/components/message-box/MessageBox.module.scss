@@ -5,6 +5,10 @@
     overflow-y: scroll;
     overflow-x: hidden;
     padding: 40px 24px;
+
+    @include respond-to('mobile') {
+        padding: 40px 8px;
+    }
 }
 
 .message-wrapper {

@@ -1,4 +1,5 @@
 @use '/app/scss/mixins.scss' as *;
+
 .audio-wrapper {
     display: flex;
     align-items: center;
@@ -13,6 +14,10 @@
 
     &:hover {
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    @include respond-to('mobile') {
+        gap: 8px;
     }
 }
 
@@ -41,7 +46,6 @@
     }
 
     svg {
-        margin-left: 2px;
         width: 20px;
         height: 20px;
     }
@@ -146,5 +150,16 @@
     .timer {
         font-size: 12px;
         min-width: 35px;
+    }
+}
+
+// Responsive design
+@media (max-width: 480px) {
+    .audio-wrapper {
+        gap: 4px;
+    }
+
+    .bar {
+        width: 1px;
     }
 }

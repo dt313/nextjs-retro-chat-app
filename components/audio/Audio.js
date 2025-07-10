@@ -78,7 +78,7 @@ function Audio({ className, src, id, ...props }) {
     return (
         <div className={cx('audio-wrapper', className)} {...props} ref={containerRef}>
             <button className={cx('play-btn')} onClick={togglePlay}>
-                <Icon element={isPlaying ? <IoMdPause /> : <IoMdPlay />} />
+                <Icon element={isPlaying ? <IoMdPause /> : <IoMdPlay style={{ paddingLeft: '2px' }} />} />
             </button>
 
             <div className={cx('waveform')}>

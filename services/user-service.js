@@ -1,8 +1,8 @@
 import axios from '@/config/axios';
 
-export const getUsers = async (q) => {
+export const getUsers = async (q = '', page = 1) => {
     try {
-        const res = await axios.get(`/users?q=${q}`);
+        const res = await axios.get(`/users?q=${q}&page=${page}`);
         return res?.data;
     } catch (error) {
         throw new Error(error || 'Failed to fetch users');

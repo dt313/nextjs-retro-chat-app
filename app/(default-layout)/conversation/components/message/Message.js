@@ -510,7 +510,6 @@ function Message({
                         <Avatar
                             src={sender?.avatar}
                             className={cx('avatar')}
-                            size={36}
                             onClick={() => router.push(`/profile/@${sender.username}`)}
                         />
                     </Tippy>

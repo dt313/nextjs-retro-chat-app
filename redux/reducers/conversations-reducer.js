@@ -3,7 +3,9 @@ import _ from 'lodash';
 import {
     DELETE_CONVERSATION,
     FIND_CONVERSATION,
+    INCREASE_PAGE,
     INIT_CONVERSATION,
+    LOAD_CONVERSATIONS,
     NEW_CONVERSATION,
     READ_LAST_MESSAGE,
     RESET_COUNT,
@@ -12,6 +14,8 @@ import {
 
 const initialState = {
     list: [],
+    page: 1,
+    hasMore: true,
     unRead: 0,
 };
 
@@ -30,7 +34,9 @@ const conversationsReducer = (state = initialState, action) => {
                 ...state,
                 list: action.payload.conversations,
                 unRead: unReadedConversation.length,
+                hasMore: conversations.length === 20,
             };
+
         case NEW_CONVERSATION:
             const { conversation } = action.payload;
             const isExist = state.list.find((conv) => conv._id === conversation._id);
@@ -125,6 +131,23 @@ const conversationsReducer = (state = initialState, action) => {
             }
             return {
                 ...state,
+            };
+
+        case INCREASE_PAGE:
+            return {
+                ...state,
+                page: state.page + 1,
+            };
+
+        case LOAD_CONVERSATIONS:
+            const loadConversations = action.payload.conversations;
+            // check if conversation exits using lodash
+            const merged = _.unionBy([...state.list, ...loadConversations], '_id');
+
+            return {
+                ...state,
+                list: _.orderBy(merged, ['lastMessage.sentAt'], ['desc']),
+                hasMore: loadConversations.length === 20,
             };
 
         default:

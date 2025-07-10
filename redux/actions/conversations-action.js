@@ -4,7 +4,9 @@ export const READ_LAST_MESSAGE = 'READ_LAST_MESSAGE';
 export const FIND_CONVERSATION = 'FIND_CONVERSATION';
 export const DELETE_CONVERSATION = 'DELETE_CONVERSATION';
 export const UPDATE_CONVERSATION = 'UPDATE_CONVERSATION';
+export const INCREASE_PAGE = 'INCREASE_PAGE';
 export const RESET_COUNT = 'RESET_COUNT';
+export const LOAD_CONVERSATIONS = 'LOAD_CONVERSATIONS';
 
 export const initConversation = (payload) => {
     return {
@@ -51,5 +53,18 @@ export const updateConversation = (payload) => {
 export const resetCount = () => {
     return {
         type: RESET_COUNT,
+    };
+};
+
+export const increasePage = () => {
+    return {
+        type: INCREASE_PAGE,
+    };
+};
+
+export const loadConversations = (payload) => {
+    return {
+        type: LOAD_CONVERSATIONS,
+        payload: payload,
     };
 };

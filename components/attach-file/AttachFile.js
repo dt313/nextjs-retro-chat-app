@@ -76,6 +76,7 @@ function AttachFile({ conversationId }) {
                         name={file.name}
                         size={file.size}
                         url={file.url}
+                        date={file?.createdAt}
                         onClick={handleDownload}
                     />
                 ))

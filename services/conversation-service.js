@@ -13,9 +13,9 @@ export const createGroupConversation = async (data) => {
     }
 };
 
-export const getByMe = async () => {
+export const getByMe = async (page = 1) => {
     try {
-        const res = await axios.get(`/conversations/me`);
+        const res = await axios.get(`/conversations/me?page=${page}`);
         return res?.data;
     } catch (error) {
         throw new Error(error || 'Failed to get conversations');

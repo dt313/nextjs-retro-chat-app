@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useMemo } from 'react';
 
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
+import { format } from 'date-fns';
 import { FaFileLines } from 'react-icons/fa6';
 
 import { formatBytes } from '@/helpers';
@@ -13,7 +14,7 @@ import styles from './AttachFile.module.scss';
 
 const cx = classNames.bind(styles);
 
-function File({ name, size, url, secondary, primary, className, onClick, ...props }) {
+function File({ name, size, url, date = '', secondary, primary, className, onClick, ...props }) {
     const classes = cx('file', {
         secondary,
         primary,
@@ -24,12 +25,18 @@ function File({ name, size, url, secondary, primary, className, onClick, ...prop
         onClick(url, name);
     };
 
+    const formattedDate = useMemo(() => {
+        return date ? format(new Date(date), 'yyyy-MM-dd') : '';
+    }, [date]);
+
     return (
         <div className={classes} onClick={handleClick} {...props}>
             <Icon className={cx('icon')} element={<FaFileLines />} />
             <div className={cx('file-info')}>
                 <strong className={cx('file-name')}>{name}</strong>
-                <span className={cx('file-size')}>{formatBytes(size)}</span>
+                <span className={cx('file-size')}>
+                    {formatBytes(size)} {formattedDate && `(${formattedDate})`}
+                </span>
             </div>
         </div>
     );

@@ -25,6 +25,19 @@
 .avatar {
     margin-right: 12px;
     cursor: pointer;
+
+    min-width: 36px;
+    min-height: 36px;
+    width: 36px;
+    height: 36px;
+
+    @include respond-to('mobile') {
+        margin-right: 8px;
+        min-width: 30px;
+        min-height: 30px;
+        width: 30px;
+        height: 30px;
+    }
 }
 
 .m-text {
@@ -369,6 +382,10 @@
     }
     .reply-icon {
         font-size: 1.4rem;
+    }
+
+    @include respond-to('mobile') {
+        margin-left: 38px;
     }
 }
 
