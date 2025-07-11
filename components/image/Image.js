@@ -31,7 +31,7 @@ function AImage({ src, alt = 'default', className, fallback = images.noImage, ..
 
     // fallback khi ảnh lỗi
     const handleError = (e) => {
-        if (imgSrc !== fallback) setImgSrc(fallbackSrc);
+        setImgSrc(fallbackSrc);
     };
 
     return <img className={classes} src={imgSrc} alt={alt} onError={handleError} {...props} />;
