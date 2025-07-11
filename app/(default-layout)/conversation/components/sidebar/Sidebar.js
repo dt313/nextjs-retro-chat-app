@@ -33,6 +33,7 @@ const SKELETON_COUNT = 4;
 function SideBar({ className }) {
     const [searchValue, setSearchValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [isLoadMore, setIsLoadMore] = useState(false);
 
     const debounceValue = useDebounce(searchValue, SEARCH_DEBOUNCE_MS);
 
@@ -66,6 +67,7 @@ function SideBar({ className }) {
     const handleLoadMore = useCallback(async () => {
         try {
             if (!hasMore || isLoading || debounceValue) return;
+            setIsLoadMore(true);
             dispatch(increasePage());
         } catch (error) {
             throw error;
@@ -78,6 +80,7 @@ function SideBar({ className }) {
 
         try {
             const res = await conversationService.getByMe(page);
+
             if (res && Array.isArray(res)) {
                 if (page === 1) {
                     dispatch(initConversation({ conversations: res, meId }));
@@ -87,6 +90,8 @@ function SideBar({ className }) {
             }
         } catch (error) {
             handleError(error);
+        } finally {
+            setIsLoadMore(false);
         }
     }, [dispatch, page, meId, handleError]);
 
@@ -135,6 +140,7 @@ function SideBar({ className }) {
                     activeId={activeId}
                     onLoadMore={handleLoadMore}
                     hasMore={hasMore}
+                    isLoading={isLoadMore}
                 />
             )}
         </div>

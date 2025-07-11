@@ -1,10 +1,12 @@
-import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
 import ConversationPreview from '@/app/(default-layout)/conversation/components/conversation-preview';
 import { debounce } from 'lodash';
 import { shallowEqual, useSelector } from 'react-redux';
+
+import { SpinnerLoader } from '@/components/loading';
 
 import { getTargetIdFromConversation } from '@/helpers/conversation-info';
 
@@ -21,9 +23,10 @@ import styles from './Sidebar.module.scss';
 
 const cx = classNames.bind(styles);
 
-function ConversationList({ conversations = [], activeId, onLoadMore, hasMore = true }) {
+function ConversationList({ conversations = [], activeId, onLoadMore, hasMore = true, isLoading }) {
     const { user: me } = useSelector((state) => state.auth);
     const isFetchingRef = useRef(false);
+
     const { list: onlineUserList } = useSelector((state) => state.onlineUsers, shallowEqual);
     const containerRef = useRef(null);
 
@@ -52,7 +55,7 @@ function ConversationList({ conversations = [], activeId, onLoadMore, hasMore = 
     }, [conversations, me._id, onlineUserList]);
 
     useEffect(() => {
-        const handleScroll = debounce(async () => {
+        const handleScroll = async () => {
             const container = containerRef.current;
 
             if (!onLoadMore || !hasMore || isFetchingRef.current) return;
@@ -61,12 +64,12 @@ function ConversationList({ conversations = [], activeId, onLoadMore, hasMore = 
 
             if (isNearBottom) {
                 isFetchingRef.current = true;
+
                 onLoadMore().finally(() => {
-                    console.log('Done loading more');
                     isFetchingRef.current = false;
                 });
             }
-        }, 300);
+        };
 
         const container = containerRef.current;
 
@@ -110,6 +113,17 @@ function ConversationList({ conversations = [], activeId, onLoadMore, hasMore = 
                         isGroup={conv.isGroup}
                     />
                 ))}
+            {isLoading && (
+                <div className={cx('loader')}>
+                    <SpinnerLoader small />
+                </div>
+            )}
+
+            {!hasMore && (
+                <div className={cx('empty-state')}>
+                    <p>--- Đã hết ---</p>
+                </div>
+            )}
         </div>
     );
 }

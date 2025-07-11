@@ -1,6 +1,6 @@
 'use client';
 
-import { memo } from 'react';
+import { memo, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -23,20 +23,18 @@ const isExternal = (url) => {
     }
 };
 function AImage({ src, alt = 'default', className, fallback = images.noImage, ...props }) {
+    const fallbackSrc = fallback?.src || fallback;
+    const [imgSrc, setImgSrc] = useState(src || fallbackSrc);
     const classes = cx('wrapper', {
         [className]: className,
     });
 
     // fallback khi ảnh lỗi
     const handleError = (e) => {
-        e.target.src = fallback;
+        if (imgSrc !== fallback) setImgSrc(fallbackSrc);
     };
 
-    if (isExternal(src)) {
-        return <img className={classes} src={src || fallback} alt={alt} onError={handleError} {...props} />;
-    } else {
-        return <Image className={classes} src={src || fallback} alt={alt} onError={handleError} {...props} />;
-    }
+    return <img className={classes} src={imgSrc} alt={alt} onError={handleError} {...props} />;
 }
 
 AImage.propTypes = {

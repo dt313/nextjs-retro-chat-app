@@ -56,7 +56,7 @@ function SearchContent() {
                     setList((prev) => [...prev, ...users]);
                 }
 
-                if (users.length < LIMIT_ITEM) {
+                if (res.length < LIMIT_ITEM) {
                     setIsFinish(true);
                 } else {
                     setIsFinish(false);
