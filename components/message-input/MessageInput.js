@@ -47,6 +47,7 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
     const [isDragOver, setIsDragOver] = useState(false);
     const { user: me } = useSelector((state) => state.auth);
     const { isOpenReplyBox, replyData } = useSelector((state) => state.replyBox);
+    const [isShowRecording, setIsShowRecording] = useState(false);
 
     const [isShowMentionList, setIsShowMentionList] = useState(false);
     const [mentionPosition, setMentionPosition] = useState(null);
@@ -693,6 +694,8 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
                         <Recording
                             style={{ backgroundColor: props.style.backgroundColor }}
                             onSubmit={onSubmit}
+                            isShow={isShowRecording}
+                            setIsShow={setIsShowRecording}
                             isLoading={isLoading}
                         />
 

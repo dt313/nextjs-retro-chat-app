@@ -16,8 +16,7 @@ import { SpinnerLoader } from '../loading';
 import styles from './MessageInput.module.scss';
 
 const cx = classNames.bind(styles);
-function Recording({ onSubmit, isLoading, ...props }) {
-    const [isShowRecording, setIsShowRecording] = useState(false);
+function Recording({ onSubmit, isLoading, isShow, setIsShow, ...props }) {
     const [isRecording, setIsRecording] = useState(false);
     const [audioUrl, setAudioUrl] = useState(null);
     const [recordTime, setRecordTime] = useState(0);
@@ -89,7 +88,7 @@ function Recording({ onSubmit, isLoading, ...props }) {
             mediaRecorderRef.current = mediaRecorder;
             mediaRecorder.start();
 
-            setIsShowRecording(true);
+            setIsShow(true);
             setIsRecording(true);
             setRecordTime(0);
 
@@ -140,12 +139,13 @@ function Recording({ onSubmit, isLoading, ...props }) {
         }
         // reset all
         setIsRecording(false);
-        setIsShowRecording(false);
+        setIsShow(false);
         setRecordTime(0);
         setIsPlaying(false);
         setDuration(0);
         setAudioUrl(null);
         audioChunksRef.current = [];
+        audioRef.current = null;
     };
 
     const handleToggle = async () => {
@@ -184,21 +184,23 @@ function Recording({ onSubmit, isLoading, ...props }) {
 
     useEffect(() => {
         return () => {
-            if (timerRef.current) {
-                clearInterval(timerRef.current);
-            }
-            if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
-                mediaRecorderRef.current.stop();
-            }
+            if (isShow) {
+                if (timerRef.current) {
+                    clearInterval(timerRef.current);
+                }
+                if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+                    mediaRecorderRef.current.stop();
+                }
 
-            audioRef.current = null;
+                audioRef.current = null;
 
-            if (audioUrl) {
-                URL.revokeObjectURL(audioUrl);
-                setAudioUrl(null);
+                if (audioUrl) {
+                    URL.revokeObjectURL(audioUrl);
+                    setAudioUrl(null);
+                }
             }
         };
-    }, []);
+    }, [isShow]);
 
     const handleEnded = () => {
         if (timerRef.current) {
@@ -292,7 +294,7 @@ function Recording({ onSubmit, isLoading, ...props }) {
                 })
                     .then(() => {
                         // Reset recording state
-                        setIsShowRecording(false);
+                        setIsShow(false);
                         setIsRecording(false);
                         setRecordTime(0);
                         setAudioUrl(null);
@@ -320,7 +322,7 @@ function Recording({ onSubmit, isLoading, ...props }) {
             });
     };
 
-    if (!isShowRecording) {
+    if (!isShow) {
         return <Icon className={cx('attach-icon')} medium element={<FaMicrophone />} onClick={startRecording} />;
     }
     return (
