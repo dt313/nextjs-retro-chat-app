@@ -10,6 +10,7 @@
     animation: dot-pulse 2s infinite linear;
     animation-delay: 0.2s;
 }
+
 .dot-pulse::before,
 .dot-pulse::after {
     content: '';

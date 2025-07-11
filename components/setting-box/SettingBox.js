@@ -70,7 +70,6 @@ function SettingBox({ onClose, content, onSubmit, submitText = 'Lưu', isLoading
                 className={cx('close-icon')}
                 large
                 onClick={() => {
-                    console.log('close');
                     setValue('');
                     onClose();
                 }}

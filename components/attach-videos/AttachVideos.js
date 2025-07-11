@@ -97,7 +97,7 @@ function Attachvideos({ conversationId }) {
             </div>
 
             {videos.length === 0 && !isLoading && (
-                <ExtraDescription style={{ textAlign: 'start' }}>Không có videos nào</ExtraDescription>
+                <ExtraDescription style={{ textAlign: 'start' }}>Không có video nào</ExtraDescription>
             )}
         </div>
     );
