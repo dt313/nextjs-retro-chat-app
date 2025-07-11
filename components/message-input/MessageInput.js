@@ -10,7 +10,7 @@ import { useAutoResize, useDragAndDropFile } from '@/hooks';
 import HeadlessTippy from '@tippyjs/react/headless';
 import dynamic from 'next/dynamic';
 import { BsImage } from 'react-icons/bs';
-import { CgAttachment } from 'react-icons/cg';
+import { FaRegFileImage } from 'react-icons/fa';
 import { FaArrowUp } from 'react-icons/fa6';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
@@ -702,7 +702,7 @@ function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGrou
                         <Icon
                             className={cx('attach-icon')}
                             medium
-                            element={<CgAttachment />}
+                            element={<FaRegFileImage />}
                             onClick={handleOpenFileInput}
                         />
                         <input
