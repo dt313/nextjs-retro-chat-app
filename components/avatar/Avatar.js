@@ -6,8 +6,6 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames/bind';
 
-import dynamic from 'next/dynamic';
-
 import images from '@/assets/images';
 
 import Image from '@/components/image';
@@ -24,8 +22,6 @@ function Avatar({ src, className, size = null, fallback = images.noUser, ...prop
     useEffect(() => {
         setImgSrc(src);
     }, [src]);
-
-    console.log(imgSrc);
 
     return (
         <Image
