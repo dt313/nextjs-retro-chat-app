@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -28,6 +28,13 @@ function AImage({ src, alt = 'default', className, fallback = images.noImage, ..
     const classes = cx('wrapper', {
         [className]: className,
     });
+
+    useEffect(() => {
+        setImgSrc(src);
+        if (!src) {
+            setImgSrc(fallback);
+        }
+    }, [src]);
 
     // fallback khi ảnh lỗi
     const handleError = (e) => {
