@@ -8,4 +8,13 @@ import noImage from './no-image.png';
 import noUser from './no-user.png';
 import userIcon from './user-icon.png';
 
-export default { noImage, noUser, ggIcon, ghIcon, fbIcon, userIcon, logo, largeLogo };
+export default {
+    noImage: noImage.src,
+    noUser: noUser.src,
+    ggIcon: ggIcon.src,
+    ghIcon: ghIcon.src,
+    fbIcon: fbIcon.src,
+    userIcon: userIcon.src,
+    logo: logo.src,
+    largeLogo: largeLogo.src,
+};

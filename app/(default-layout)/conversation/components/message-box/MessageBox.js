@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
+import { PHONE_MESSAGE_TYPE } from '@/config/ui-config';
 import dynamic from 'next/dynamic';
 import { usePathname, useRouter } from 'next/navigation';
 import { HiArrowDown } from 'react-icons/hi';
@@ -253,6 +254,31 @@ function MessageBox({
                     <div key={mes._id} className={cx('message-wrapper')}>
                         {mes.messageType === 'notification' && (
                             <p className={cx('mes-notification')}>{getMessageNotification(mes, me._id, targetName)}</p>
+                        )}
+
+                        {PHONE_MESSAGE_TYPE.includes(mes.messageType) && (
+                            <Message
+                                type={mes.messageType}
+                                conversationId={conversationId}
+                                id={mes._id}
+                                sender={mes.sender}
+                                content={mes.content}
+                                replyData={{
+                                    replyTo: mes.replyTo,
+                                    replyType: mes.replyType,
+                                    sender: mes.sender,
+                                    id: mes.replyTo?._id,
+                                }}
+                                reactions={mes.reactions}
+                                mentionedUsers={mes.mentionedUsers}
+                                timestamp={mes.createdAt}
+                                isForward={mes.isForwarded}
+                                isDeleted={mes.isDeleted}
+                                isHighlight={mes._id === searchMessageId}
+                                getReadUser={getReadUser}
+                                isCreator={checkIsCreator()}
+                                theme={theme}
+                            />
                         )}
 
                         {attachments?.length > 0 &&

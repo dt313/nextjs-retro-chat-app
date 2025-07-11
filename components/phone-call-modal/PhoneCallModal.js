@@ -14,6 +14,8 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useCallManager } from '@/hooks/useCallManager';
 
+import { messageService } from '@/services';
+
 import {
     CALL_STATES,
     VISIBILITY,
@@ -24,6 +26,7 @@ import {
     rejectCall,
     stop,
 } from '@/redux/actions/phone-action';
+import { addToast } from '@/redux/actions/toast-action';
 
 import Avatar from '../avatar';
 import HiddenAudio from '../hidden-audio';
@@ -205,9 +208,41 @@ function PhoneCallModal() {
         setIsMuted(false);
     };
 
-    const handleEndCall = () => {
-        endCall();
-        setIsMuted(false);
+    const handleEndCall = async () => {
+        try {
+            endCall();
+            const conversationId = receiver.conversationId;
+
+            let data = {
+                sender: sender.id,
+            };
+
+            if (!isVideo) {
+                data = {
+                    ...data,
+                    type: status === CALL_STATES.CONNECTED ? 'call-ended' : 'call-missed',
+                };
+            } else {
+                data = {
+                    ...data,
+                    type: status === CALL_STATES.CONNECTED ? 'video-call-ended' : 'video-call-missed',
+                };
+            }
+
+            if (data) {
+                const result = await messageService.createCallMessage(conversationId, data);
+                console.log(result);
+            }
+
+            setIsMuted(false);
+        } catch (error) {
+            dispatch(
+                addToast({
+                    type: 'error',
+                    content: error.message,
+                }),
+            );
+        }
     };
 
     useEffect(() => {

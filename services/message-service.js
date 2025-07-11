@@ -13,6 +13,15 @@ export const create = async (id, data) => {
     }
 };
 
+export const createCallMessage = async (id, data) => {
+    try {
+        const res = await axios.post(`/messages/call-message/to/${id}`, data);
+        return res?.data;
+    } catch (error) {
+        throw new Error(error || 'Failed to create message');
+    }
+};
+
 export const reaction = async (messageId, data) => {
     try {
         const res = await axios.post(`/messages/reaction/${messageId}`, data);

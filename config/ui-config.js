@@ -799,4 +799,6 @@ const FILE_ACCEPT_LIST = [
     ,
 ].join(',');
 
-export { types, FILE_ACCEPT_LIST };
+const PHONE_MESSAGE_TYPE = ['call-ended', 'call-missed', 'video-call-ended', 'video-call-missed'];
+
+export { types, FILE_ACCEPT_LIST, PHONE_MESSAGE_TYPE };

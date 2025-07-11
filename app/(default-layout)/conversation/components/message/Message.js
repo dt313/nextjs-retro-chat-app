@@ -1,12 +1,14 @@
-import { Fragment, memo, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
 import eventBus from '@/config/emit';
+import { PHONE_MESSAGE_TYPE } from '@/config/ui-config';
 import Tippy from '@tippyjs/react';
 import HeadlessTippy from '@tippyjs/react/headless';
 import { useRouter } from 'next/navigation';
-import { BsThreeDotsVertical } from 'react-icons/bs';
+import { BsTelephoneOutboundFill, BsTelephoneXFill, BsThreeDotsVertical } from 'react-icons/bs';
+import { FaVideo, FaVideoSlash } from 'react-icons/fa';
 import { ImArrowRight } from 'react-icons/im';
 import { IoArrowUndo } from 'react-icons/io5';
 import { RiReplyFill } from 'react-icons/ri';
@@ -291,6 +293,48 @@ function Message({
             );
         }
 
+        if (PHONE_MESSAGE_TYPE.includes(type)) {
+            const isVideo = type.includes('video');
+            const isMissed = type.includes('missed');
+            const icon = isVideo ? (
+                isMissed ? (
+                    <FaVideoSlash />
+                ) : (
+                    <FaVideo />
+                )
+            ) : isMissed ? (
+                <BsTelephoneXFill />
+            ) : (
+                <BsTelephoneOutboundFill />
+            );
+            let text = '';
+            if (isMissed) {
+                text = isVideo ? 'Đã lỡ cuộc gọi video' : 'Đã lỡ cuộc gọi điện';
+            } else {
+                text = isVideo ? 'Cuộc gọi video đã kết thúc' : 'Cuộc gọi điện đã kết thúc';
+            }
+
+            return (
+                <div
+                    className={cx('m-call', { highlight: isHighlight })}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    id={`message-${id}`}
+                >
+                    <div
+                        className={cx('call-message')}
+                        style={{
+                            boxShadow: `${theme.styles.messageBoxShadow}`,
+                        }}
+                    >
+                        <span className={cx('call-icon', { isMissed })}>{<Icon small element={icon} />}</span>
+
+                        <span className={cx('call-text')}>{text}</span>
+                    </div>
+                </div>
+            );
+        }
+
         if (type === 'video') {
             return (
                 <div
@@ -480,6 +524,8 @@ function Message({
         setVisibility((prev) => ({ ...prev, tools: false }));
     };
 
+    const isCallMessage = useMemo(() => PHONE_MESSAGE_TYPE.includes(type), [type]);
+
     return (
         <div className={classes}>
             {readUsers?.length > 0 && (
@@ -516,7 +562,7 @@ function Message({
                 )}
                 {renderMessage()}
 
-                {visibility.tools && !isDelete ? (
+                {visibility.tools && !isDelete && !isCallMessage ? (
                     <div className={cx('tools')}>
                         <HeadlessTippy
                             visible={visibility.reaction}

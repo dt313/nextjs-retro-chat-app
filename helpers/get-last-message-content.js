@@ -24,6 +24,16 @@ const getLastMessageContent = (message, meId) => {
             return `${name} đã bày tỏ cảm xúc 1 tin nhắn`;
         case 'delete':
             return `${name} đã xóa 1 tin nhắn`;
+
+        case 'call-missed':
+            return `${name} đã gọi`;
+        case 'call-ended':
+            return `Cuộc gọi đã kết thúc `;
+
+        case 'video-call-missed':
+            return `${name} đã gọi video`;
+        case 'video-call-ended':
+            return `Cuộc gọi video đã kết thúc`;
         default:
             return `${name} đã gửi 1 tin nhắn`;
     }
