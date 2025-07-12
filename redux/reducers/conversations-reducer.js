@@ -73,16 +73,26 @@ const conversationsReducer = (state = initialState, action) => {
             };
 
         case READ_LAST_MESSAGE:
-            let wasUnread = false;
             const { conversationId, meId } = action.payload;
+            let wasUnread = false;
+
             const newConversations = state.list.map((conv) => {
                 if (conv._id === conversationId) {
+                    // Check if message exists and has readedBy array
+                    if (!conv.lastMessage || !Array.isArray(conv.lastMessage.readedBy)) {
+                        return conv;
+                    }
+
                     const alreadyRead = conv.lastMessage.readedBy.includes(meId);
-                    if (!alreadyRead) wasUnread = true;
+                    if (!alreadyRead) {
+                        wasUnread = true;
+                    }
+
                     const updatedLastMessage = {
                         ...conv.lastMessage,
                         readedBy: alreadyRead ? conv.lastMessage.readedBy : [...conv.lastMessage.readedBy, meId],
                     };
+
                     return {
                         ...conv,
                         lastMessage: updatedLastMessage,
@@ -90,6 +100,7 @@ const conversationsReducer = (state = initialState, action) => {
                 }
                 return conv;
             });
+
             return {
                 ...state,
                 list: newConversations,

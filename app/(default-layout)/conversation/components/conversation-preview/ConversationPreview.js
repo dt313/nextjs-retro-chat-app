@@ -44,22 +44,23 @@ function ConversationPreview({
     const handleClickMessagePreview = throttle(
         async () => {
             try {
-                if (isReaded) {
-                    return;
-                } else {
+                // Check if message is already read before making API call
+                if (!isReaded) {
                     const res = await conversationService.readLastMessage(slug);
                     if (res) {
+                        // Only dispatch once after successful API call
                         dispatch(readLastMessage({ conversationId: slug, meId: me._id }));
                     }
                 }
             } catch (error) {
-                // dispatch(addToast({ type: 'error', content: error.message }));
+                // Handle error appropriately
+                console.error('Error reading message:', error);
             } finally {
+                // Navigate regardless of read status
                 router.push(`/conversation/${slug}`);
-                dispatch(readLastMessage({ conversationId: slug, meId: me._id }));
             }
         },
-        3000,
+        1000, // Reduced throttle time
         { leading: true, trailing: false },
     );
 

@@ -120,25 +120,30 @@ function Conversation({ id }) {
         fetchConversation();
     }, [id]);
 
-    const handleReadLastMessage = throttle(
-        async () => {
-            try {
-                const [conv] = list.filter((c) => c._id === id);
-                const alreadyRead = conv.lastMessage.readedBy.includes(me._id);
+    const handleReadLastMessage = useCallback(
+        throttle(
+            async () => {
+                try {
+                    // Find the conversation more efficiently
+                    const conv = list.find((c) => c._id === id);
+                    if (!conv || !conv.lastMessage) return;
 
-                if (!alreadyRead) {
-                    const res = await conversationService.readLastMessage(id);
+                    const alreadyRead = conv.lastMessage.readedBy.includes(me._id);
 
-                    if (res) {
-                        dispatch(readLastMessage({ conversationId: id, meId: me._id }));
+                    if (!alreadyRead) {
+                        const res = await conversationService.readLastMessage(id);
+                        if (res) {
+                            dispatch(readLastMessage({ conversationId: id, meId: me._id }));
+                        }
                     }
+                } catch (error) {
+                    dispatch(addToast({ type: 'error', content: error.message }));
                 }
-            } catch (error) {
-                // dispatch(addToast({ type: 'error', content: error.message }));
-            }
-        },
-        3000,
-        { leading: true, trailing: false },
+            },
+            1000, // Reduced throttle time for better responsiveness
+            { leading: true, trailing: false },
+        ),
+        [id, list, me._id, dispatch], // Added dependencies
     );
 
     useEffect(() => {
