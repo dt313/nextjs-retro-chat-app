@@ -137,7 +137,7 @@ function Conversation({ id }) {
                         }
                     }
                 } catch (error) {
-                    dispatch(addToast({ type: 'error', content: error.message }));
+                    console.error('Error : ', error.message);
                 }
             },
             1000, // Reduced throttle time for better responsiveness
