@@ -412,7 +412,11 @@ export const DARK_CONVERSATION_THEME_LIST = [
 
 export const getConversationTheme = () => {
     const theme = storageUtils.getTheme();
-    return theme === 'light' ? LIGHT_CONVERSATION_THEME_LIST : DARK_CONVERSATION_THEME_LIST;
+    if (theme === 'system') {
+        const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        return isDarkMode ? DARK_CONVERSATION_THEME_LIST : LIGHT_CONVERSATION_THEME_LIST;
+    }
+    return theme === 'dark' ? DARK_CONVERSATION_THEME_LIST : LIGHT_CONVERSATION_THEME_LIST;
 };
 
 export const createSettingMenu = () => {
