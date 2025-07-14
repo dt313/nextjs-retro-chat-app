@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -6,12 +6,14 @@ import classNames from 'classnames/bind';
 
 import { useDebounce } from '@/hooks';
 import { IoSearch } from 'react-icons/io5';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Overlay from '@/components/overlay';
 import User from '@/components/user';
 
 import { groupService, invitationService } from '@/services';
+
+import { checkStatus } from '@/helpers';
 
 import { addToast } from '@/redux/actions/toast-action';
 
@@ -26,7 +28,9 @@ function GroupInvitation({ onClose, id }) {
     const [list, setList] = useState([]);
     const [value, setValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const { list: onlineUserList } = useSelector((state) => state.onlineUsers);
     const debounceValue = useDebounce(value, 1300);
+
     const dispatch = useDispatch();
     const fetchUser = async (value) => {
         try {
@@ -95,18 +99,22 @@ function GroupInvitation({ onClose, id }) {
                 <div className={cx('list')}>
                     {!isLoading
                         ? list?.length > 0 &&
-                          list.map((item) => (
-                              <User
-                                  key={item._id}
-                                  type="invitation"
-                                  id={item._id}
-                                  avatar={item.avatar}
-                                  name={item.fullName}
-                                  onClickInvitation={handleInvitation}
-                                  onCancelInvitation={handleCancelInvitation}
-                                  isSent={item.isRequested}
-                              />
-                          ))
+                          list.map((item) => {
+                              const onlineState = checkStatus(item._id, onlineUserList);
+                              return (
+                                  <User
+                                      key={item._id}
+                                      type="invitation"
+                                      id={item._id}
+                                      avatar={item.avatar}
+                                      name={item.fullName}
+                                      onClickInvitation={handleInvitation}
+                                      onCancelInvitation={handleCancelInvitation}
+                                      isSent={item.isRequested}
+                                      isOnline={onlineState}
+                                  />
+                              );
+                          })
                         : [1, 2].map((key) => <User.Skeleton key={key} />)}
 
                     {!isLoading && debounceValue && !list.length && (

@@ -91,6 +91,7 @@ function GroupMembers({ groupId, meRole }) {
     const handleOnChange = (e) => {
         setValue(e.target.value);
     };
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('search')}>

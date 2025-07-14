@@ -6,13 +6,9 @@ import classNames from 'classnames/bind';
 
 import { useDebounce } from '@/hooks';
 import { IoSearch } from 'react-icons/io5';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-import { conversationService, messageService, userService } from '@/services';
-
-import { getMessageType } from '@/helpers/conversation-info';
-
-import { checkStatus } from '@/helpers';
+import { conversationService, messageService } from '@/services';
 
 import { addToast } from '@/redux/actions/toast-action';
 
@@ -31,8 +27,6 @@ function MessageForward({ messageId, messageType, onClose }) {
     const [isLoading, setIsLoading] = useState(false);
 
     const debounceValue = useDebounce(value, 1300);
-
-    // const { list: onlineUserList } = useSelector((state) => state.onlineUsers);
 
     const dispatch = useDispatch();
     const fetchFriends = async (value) => {
@@ -71,8 +65,6 @@ function MessageForward({ messageId, messageType, onClose }) {
                 );
                 return false;
             }
-
-            console.log(id, isConversation);
         },
         [messageId],
     );
@@ -101,18 +93,20 @@ function MessageForward({ messageId, messageType, onClose }) {
 
                 <div className={cx('list')}>
                     {!isLoading
-                        ? list.map((item) => (
-                              <User
-                                  key={item._id}
-                                  type="forward"
-                                  name={item.name}
-                                  id={item._id}
-                                  avatar={item.thumbnail}
-                                  isGroup={item?.isGroup}
-                                  isConversation={item?.isConversation}
-                                  onClickForward={handleForwardMessage}
-                              />
-                          ))
+                        ? list.map((item) => {
+                              return (
+                                  <User
+                                      key={item._id}
+                                      type="forward"
+                                      name={item.name}
+                                      id={item._id}
+                                      avatar={item.thumbnail}
+                                      isGroup={item?.isGroup}
+                                      isConversation={item?.isConversation}
+                                      onClickForward={handleForwardMessage}
+                                  />
+                              );
+                          })
                         : [1, 2].map((key) => <User.Skeleton key={key} />)}
 
                     {!isLoading && debounceValue && !list.length && (

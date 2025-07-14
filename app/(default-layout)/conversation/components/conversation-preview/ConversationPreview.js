@@ -11,15 +11,10 @@ import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { useDispatch, useSelector } from 'react-redux';
 
 import Avatar from '@/components/avatar';
 
-import { conversationService } from '@/services';
-
 import getSystemTheme from '@/helpers/get-system-theme';
-
-import { readLastMessage } from '@/redux/actions/conversations-action';
 
 import styles from './ConversationPreview.module.scss';
 
