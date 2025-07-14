@@ -39,7 +39,16 @@ const Picker = dynamic(
 
 const cx = classNames.bind(styles);
 
-function MessageInput({ onSubmit, conversationId, setIsTyping, isLoading, isGroup, participants = [], ...props }) {
+function MessageInput({
+    onSubmit,
+    onReadLastMessage,
+    conversationId,
+    setIsTyping,
+    isLoading,
+    isGroup,
+    participants = [],
+    ...props
+}) {
     const [value, setValue] = useState('');
     const [files, setFiles] = useState([]);
     const [previewFiles, setPreviewFiles] = useState([]);

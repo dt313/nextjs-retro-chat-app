@@ -32,11 +32,12 @@ function ConversationHeader({
 }) {
     const { user: me } = useSelector((state) => state.auth);
     const { isOpen, conversationId: callingId, isVideo } = useSelector((state) => state.phone);
-    const { isShowRight } = useSidebar();
+    const { isShowRight, setIsShowContent } = useSidebar();
 
     const dispatch = useDispatch();
 
     const handleClickRedirectToSideBar = () => {
+        setIsShowContent(false); // don't show [hide] content-ui when redirect
         redirect('/conversation');
     };
 

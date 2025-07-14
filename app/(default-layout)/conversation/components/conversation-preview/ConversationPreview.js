@@ -36,28 +36,28 @@ function ConversationPreview({
     isGroup = false,
     isOnline = false,
 }) {
-    const { user: me } = useSelector((state) => state.auth);
-    const dispatch = useDispatch();
+    // const { user: me } = useSelector((state) => state.auth);
+    // const dispatch = useDispatch();
 
     const router = useRouter();
 
     const handleClickMessagePreview = throttle(
         async () => {
             try {
-                // Check if message is already read before making API call
-                if (!isReaded) {
-                    const res = await conversationService.readLastMessage(slug);
-                    if (res) {
-                        // Only dispatch once after successful API call
-                        dispatch(readLastMessage({ conversationId: slug, meId: me._id }));
-                    }
-                }
+                // // Check if message is already read before making API call
+                // if (!isReaded) {
+                //     const res = await conversationService.readLastMessage(slug);
+                //     if (res) {
+                //         // Only dispatch once after successful API call
+                //         dispatch(readLastMessage({ conversationId: slug, meId: me._id }));
+                //     }
+                // }
+
+                router.push(`/conversation/${slug}`);
             } catch (error) {
                 // Handle error appropriately
                 console.error('Error reading message:', error);
             } finally {
-                // Navigate regardless of read status
-                router.push(`/conversation/${slug}`);
             }
         },
         1000, // Reduced throttle time

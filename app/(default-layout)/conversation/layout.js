@@ -54,8 +54,9 @@ export default function ConversationLayout({ children }) {
                 setIsShowRight(false);
                 return;
             }
-            setIsShowContent(false);
+
             setIsShowLeft(true);
+            setIsShowContent(false);
             setIsShowRight(false);
         }
     }, [id, breakpoint]);
@@ -69,6 +70,7 @@ export default function ConversationLayout({ children }) {
                 transition,
                 setIsShowLeft,
                 setIsShowRight,
+                setIsShowContent,
                 setTransition,
                 toggleRightSide,
                 toggleLeftSide,

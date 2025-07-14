@@ -288,6 +288,29 @@ function Conversation({ id }) {
         }
     }, [title.current, id]);
 
+    useEffect(() => {
+        const handleFocus = () => {
+            if (document.visibilityState === 'visible' && document.hasFocus()) {
+                handleReadLastMessage();
+            }
+        };
+
+        window.addEventListener('focus', handleFocus);
+
+        // Gọi ngay nếu đang mở tab
+        // handleFocus();
+
+        return () => {
+            window.removeEventListener('focus', handleFocus);
+        };
+    }, [list, handleReadLastMessage]);
+
+    useEffect(() => {
+        if (id) {
+            handleReadLastMessage();
+        }
+    }, [id]);
+
     return (
         <>
             {id ? (
@@ -357,11 +380,12 @@ function Conversation({ id }) {
                             />
                         )}
                     </div>
-                    <div className={cx('c-footer')} onClick={handleReadLastMessage}>
+                    <div className={cx('c-footer')}>
                         <MessageInput
                             onSubmit={handleAddMessage}
                             conversationId={id}
                             setIsTyping={handleIsTyping}
+                            onReadLastMessage={handleReadLastMessage}
                             isLoading={isLoading}
                             isGroup={conversation?.isGroup}
                             participants={conversation?.participants}

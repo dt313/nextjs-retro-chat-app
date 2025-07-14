@@ -30,6 +30,8 @@ function GroupMembers({ groupId, meRole }) {
 
     const dispatch = useDispatch();
 
+    console.log(members);
+
     const fetchMembersOfGroup = async (value) => {
         try {
             setIsLoading(true);
@@ -108,7 +110,7 @@ function GroupMembers({ groupId, meRole }) {
                       members.map((member) => (
                           <GroupMember
                               key={member._id}
-                              id={member.user._id}
+                              id={member.user?._id}
                               name={member?.user?.fullName}
                               avatar={member.user.avatar}
                               username={member?.user?.username}
