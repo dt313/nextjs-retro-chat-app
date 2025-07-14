@@ -417,7 +417,7 @@ export const getConversationTheme = () => {
         return theme === 'dark' ? DARK_CONVERSATION_THEME_LIST : LIGHT_CONVERSATION_THEME_LIST;
     } else {
         const isDarkMode = getSystemTheme();
-        return isDarkMode ? DARK_CONVERSATION_THEME_LIST : LIGHT_CONVERSATION_THEME_LIST;
+        return isDarkMode === 'dark' ? DARK_CONVERSATION_THEME_LIST : LIGHT_CONVERSATION_THEME_LIST;
     }
 };
 
@@ -428,8 +428,7 @@ export const createSettingMenu = () => {
     if (localTheme === 'dark' || localTheme === 'light') {
         finalTheme = localTheme;
     } else {
-        const isDarkMode = getSystemTheme();
-        finalTheme = isDarkMode ? 'dark' : 'light';
+        finalTheme = getSystemTheme();
     }
 
     return [

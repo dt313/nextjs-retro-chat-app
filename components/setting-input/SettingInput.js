@@ -11,6 +11,8 @@ import { useTheme } from 'next-themes';
 import ImageInput from '@/components/image-input';
 import Input from '@/components/input';
 
+import getSystemTheme from '@/helpers/get-system-theme';
+
 import styles from './SettingInput.module.scss';
 
 const cx = classNames.bind(styles);
@@ -24,7 +26,13 @@ function SettingInput({ type, label, placeholder, value, onChange, errorMessage 
     };
 
     const toggleTheme = () => {
-        const newTheme = theme === 'dark' ? 'light' : 'dark';
+        let finalTheme = 'light';
+        if (theme === 'dark' || theme === 'light') {
+            finalTheme = theme;
+        } else {
+            finalTheme = getSystemTheme();
+        }
+        const newTheme = finalTheme === 'dark' ? 'light' : 'dark';
         setTheme(newTheme);
         onChange(newTheme);
     };
