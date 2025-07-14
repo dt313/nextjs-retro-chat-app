@@ -1,6 +1,19 @@
-# 💬 RetroChat
+<br />
 
-**RetroChat** is a modern real-time chat application with a retro-style UI. It supports messaging, file sharing, group chats, reactions, notifications, audio/video calling, and more — built using **Node.js**, **Next.js**, and **WebSocket**.
+<div align="center">
+  <a href="https://github.com/dt313/nextjs-retro-chat-app.git">
+    <img src="./preview/large-logo.png" alt="Logo" width="80" height="80">
+  </a>
+
+<h3 align="center">Retro Chat</h3>
+
+  <p align="center">
+    <strong>RetroChat </strong>is a modern real-time chat application with a retro-style UI. It supports messaging, file sharing, group chats, reactions, notifications, audio/video calling, and more — built using <strong>Node.js</strong>, <strong>Next.js</strong>, and <strong>WebSocket</strong>.
+    <br />
+    <br />
+    <a href="https://retro-chat-app-0407.vercel.app">View Demo</a>
+  </p>
+</div>
 
 ---
 
