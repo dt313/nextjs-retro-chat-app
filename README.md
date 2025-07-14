@@ -1,36 +1,147 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💬 RetroChat
 
-## Getting Started
+**RetroChat** is a modern real-time chat application with a retro-style UI. It supports messaging, file sharing, group chats, reactions, notifications, audio/video calling, and more — built using **Node.js**, **Next.js**, and **WebSocket**.
 
-First, run the development server:
+---
+
+## 🖼️ Screenshots
+
+![Chat UI](./preview/chat.png)
+
+## 🚀 Features
+
+✅ Sign up / Sign in with Google & GitHub  
+✅ Real-time messaging
+✅ Private chats & group chats  
+✅ Send images, files, audio, video and emojis  
+✅ Reactions on messages  
+✅ Real-time notifications  
+✅ Friend requests, join/invite/kick from groups  
+✅ Voice & video calls (WebRTC)  
+✅ OTP verification during signup  
+✅ Responsive UI for mobile & desktop
+
+---
+
+## 🧑‍💻 Tech Stack
+
+### 🖥️ Frontend
+
+- [Next.js](https://nextjs.org/)
+- React 18
+- Redux Toolkit
+- Websocket
+- WebRTC
+
+### 🔧 Backend
+
+- Node.js (Express)
+- MongoDB (Mongoose)
+- JWT Authentication
+- Multer (file uploads)
+- Websocket
+- Nodemailer (for OTP and password reset)
+
+---
+
+## 📦 Getting Started
+
+### ⚙️ 1. Clone the repository
+
+#### Front end
+
+```bash
+git clone https://github.com/dt313/nextjs-retro-chat-app.git
+cd nextjs-retro-chat-app
+```
+
+```bash
+npm install
+```
+
+**ENV SAMPLE**
+
+```bash
+NEXT_PUBLIC_API_URL=https://api.domain:3333/api/v1
+NEXT_PUBLIC_DOMAIN=domain
+NEXT_PUBLIC_PORT=3000
+NEXT_PUBLIC_URL=https://domain:3000
+NEXT_PUBLIC_API_DOMAIN=domain
+NEXT_PUBLIC_API_PORT=3333
+NEXT_PUBLIC_WS=ws
+```
+
+**RUN**
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**RUN ON SSL**
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```bash
+npm run dev -- --experimental-https
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+#### Back end
 
-## Learn More
+```bash
+git clone https://github.com/dt313/nodejs-retro-chat-app.git
+cd nodejs-retro-chat-app
+```
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm install
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**ENV SAMPLE**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+PORT=3333
+DOMAIN=https://domain:3333
+API_BASE_PATH=/api/v1
+CORS_ORIGIN=https://domain:3000
 
-## Deploy on Vercel
+DATABASE_URL=mongodb://root:example@localhost:27017/test?authSource=admin
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET=GOOGLE_CLIENT_SECRET
+GOOGLE_REDIRECT_URI=/auth/oauth2/callback/google
+
+GITHUB_CLIENT_ID=GITHUB_CLIENT_ID
+GITHUB_CLIENT_SECRET=GITHUB_CLIENT_SECRET
+GITHUB_REDIRECT_URI=/auth/oauth2/callback/github
+
+FACEBOOK_CLIENT_ID=FACEBOOK_CLIENT_ID
+FACEBOOK_CLIENT_SECRET=FACEBOOK_CLIENT_SECRET
+FACEBOOK_REDIRECT_URI=/auth/oauth2/callback/facebook
+
+CLOUDINARY_CLOUD_NAME=CLOUDINARY_CLOUD_NAME
+CLOUDINARY_API_KEY=CLOUDINARY_API_KEY
+CLOUDINARY_API_SECRET=CLOUDINARY_API_SECRET
+
+ACCESS_TOKEN_SECRET=ACCESS_TOKEN_SECRET
+REFRESH_TOKEN_SECRET=REFRESH_TOKEN_SECRET
+REFRESH_TOKEN_PATH=REFRESH_TOKEN_PATH
+ACCESS_TOKEN_EXPIRES_IN=dd
+REFRESH_TOKEN_EXPIRES_IN=dd
+
+EMAIL_USER=EMAIL_USER
+EMAIL_PASS=EMAIL_PASS
+COOKIE_DOMAIN=COOKIE_DOMAIN
+COOKIE_MAX_AGE=COOKIE_MAX_AGE
+REDIS_URL=redis://localhost:6379
+
+
+```
+
+**RUN**
+
+```bash
+npm run dev
+```
+
+**RUN ON SSL**
+
+- setting certificate
