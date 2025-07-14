@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import classNames from 'classnames/bind';
 
@@ -13,11 +13,14 @@ const cx = classNames.bind(styles);
 function ConversationThemeSetting({ onChangeTheme, value }) {
     const [theme, setTheme] = useState(findConversationThemeByName(value) || CONVERSATION_THEME_LIST[0]);
 
-    const handleChangeTheme = (id) => {
-        const selectedTheme = getConversationTheme().find((item) => item.id === id);
-        setTheme(selectedTheme);
-        onChangeTheme(selectedTheme.name);
-    };
+    const handleChangeTheme = useMemo(
+        (id) => {
+            const selectedTheme = getConversationTheme().find((item) => item.id === id);
+            setTheme(selectedTheme);
+            onChangeTheme(selectedTheme.name);
+        },
+        [theme],
+    );
     return (
         <div className={cx('wrapper')}>
             <div className={cx('list')}>

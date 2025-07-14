@@ -425,8 +425,11 @@ export const createSettingMenu = () => {
     const info = storageUtils.getUser();
     let finalTheme = 'light';
     const localTheme = storageUtils.getTheme();
-    if (!localTheme) {
-        finalTheme = getSystemTheme();
+    if (localTheme === 'dark' || localTheme === 'light') {
+        finalTheme = localTheme;
+    } else {
+        const isDarkMode = getSystemTheme();
+        finalTheme = isDarkMode ? 'dark' : 'light';
     }
 
     return [

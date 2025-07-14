@@ -30,8 +30,6 @@ function GroupMembers({ groupId, meRole }) {
 
     const dispatch = useDispatch();
 
-    console.log(members);
-
     const fetchMembersOfGroup = async (value) => {
         try {
             setIsLoading(true);
