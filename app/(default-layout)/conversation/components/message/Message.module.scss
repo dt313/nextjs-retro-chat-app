@@ -110,7 +110,7 @@
     border: var(--solid-border);
     box-shadow: var(--box-shadow);
     background-color: var(--white);
-    object-fit: contain;
+    object-fit: contain !important;
     cursor: pointer;
 
     &:hover {

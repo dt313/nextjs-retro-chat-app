@@ -291,7 +291,6 @@ function Conversation({ id }) {
     useEffect(() => {
         const handleFocus = () => {
             if (document.visibilityState === 'visible' && document.hasFocus()) {
-                console.log('read');
                 handleReadLastMessage();
             }
         };
