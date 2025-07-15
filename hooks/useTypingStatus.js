@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 
 import { getSocket } from '@/config/ws';
-import { useRouter } from 'next/router';
 
 export default function useTypingStatus({ conversationId, userId, isTyping }) {
     const socketRef = useRef;

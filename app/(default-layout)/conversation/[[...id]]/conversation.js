@@ -291,6 +291,7 @@ function Conversation({ id }) {
     useEffect(() => {
         const handleFocus = () => {
             if (document.visibilityState === 'visible' && document.hasFocus()) {
+                console.log('read');
                 handleReadLastMessage();
             }
         };
@@ -298,12 +299,12 @@ function Conversation({ id }) {
         window.addEventListener('focus', handleFocus);
 
         // Gọi ngay nếu đang mở tab
-        // handleFocus();
+        handleFocus();
 
         return () => {
             window.removeEventListener('focus', handleFocus);
         };
-    }, [list, handleReadLastMessage]);
+    }, [list]);
 
     useEffect(() => {
         if (id) {
