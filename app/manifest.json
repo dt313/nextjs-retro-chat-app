@@ -1,0 +1,23 @@
+{
+    "name": "RetroChat",
+    "short_name": "RetroChat",
+    "description": "RetroChat – Ứng dụng chat phong cách hoài cổ, mang lại cảm giác nhắn tin retro trên giao diện CRT đầy hoài niệm.",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#1a1a1a",
+    "theme_color": "#b54c37",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/assets/images/retrochat-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/assets/images/retrochat-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
