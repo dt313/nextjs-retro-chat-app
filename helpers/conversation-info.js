@@ -12,10 +12,10 @@ export function getNameFromConversation(conversation, meId, isFullName = false) 
         return conversation?.name;
     } else if (conversation && conversation.isGroup === false) {
         if (conversation?.participants) {
-            const participant = conversation?.participants?.find((item) => item.user._id !== meId);
-            if (isFullName) return participant ? participant.user.fullName : '';
+            const participant = conversation?.participants?.find((item) => item?.user?._id !== meId);
+            if (isFullName) return participant ? participant.user?.fullName : '';
 
-            return participant ? participant.nickname || participant.user.fullName : '';
+            return participant ? participant.nickname || participant.user?.fullName : '';
         }
     } else {
         return '';
@@ -27,7 +27,7 @@ export function getEmailFromConversation(conversation, meId) {
         return '';
     } else if (conversation && conversation.isGroup === false) {
         if (conversation?.participants) {
-            const participant = conversation?.participants?.find((item) => item.user._id !== meId);
+            const participant = conversation?.participants?.find((item) => item?.user?._id !== meId);
             return participant ? participant.user.email : '';
         }
     } else {
@@ -36,13 +36,13 @@ export function getEmailFromConversation(conversation, meId) {
 }
 
 export function getRoleFromConversation(conversation, meId) {
-    const participant = conversation?.participants?.find((item) => item.user._id === meId);
+    const participant = conversation?.participants?.find((item) => item?.user?._id === meId);
     return participant.role;
 }
 
 export function getNickNameFromConversation(conversation, meId) {
     if (conversation.isGroup) return '';
-    const participant = conversation?.participants?.find((item) => item.user._id !== meId);
+    const participant = conversation?.participants?.find((item) => item?.user?._id !== meId);
     return participant.nickname || participant.user.fullName;
 }
 
@@ -51,7 +51,7 @@ export function getUsernameFromConversation(conversation, meId) {
         return '';
     } else if (conversation && conversation.isGroup === false) {
         if (conversation?.participants) {
-            const participant = conversation?.participants?.find((item) => item.user._id !== meId);
+            const participant = conversation?.participants?.find((item) => item?.user?._id !== meId);
             return participant ? participant.user.username : '';
         }
     } else {
@@ -76,8 +76,8 @@ export function getTargetIdFromConversation(conversation, meId) {
     if (conversation.isGroup === true) {
         return null;
     } else {
-        const participant = conversation?.participants?.find((item) => item.user._id !== meId);
-        return participant ? participant.user._id : null;
+        const participant = conversation?.participants?.find((item) => item.user?._id !== meId);
+        return participant ? participant.user?._id : null;
     }
 }
 

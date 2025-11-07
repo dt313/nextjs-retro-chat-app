@@ -22,12 +22,13 @@
     border-radius: 8px;
     overflow-y: auto;
     overscroll-behavior: none;
+    z-index: 1;
 }
 
 .list-item {
     padding: 12px;
     cursor: pointer;
     &:hover {
-        background-color: #f0f0f0;
+        background-color: var(--input-list-item-hover);
     }
 }

@@ -41,10 +41,6 @@
     overscroll-behavior: none;
 
     overflow-y: auto;
-
-    &::-webkit-scrollbar-track {
-        background: #e2e2e2;
-    }
 }
 
 .ls-input {
