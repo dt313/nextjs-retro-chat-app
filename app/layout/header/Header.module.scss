@@ -5,7 +5,8 @@
     padding: 0 2rem;
     justify-content: space-between;
     align-items: center;
-    height: var(--header-height);
+    padding-top: env(safe-area-inset-top);
+    height: calc(var(--header-height) + env(safe-area-inset-top));
     border-bottom: var(--solid-border);
 
     @include respond-to('mobile') {
