@@ -1,4 +1,5 @@
-// mixins.scss
+@use 'sass:map';
+
 @mixin center-align {
     display: flex;
     justify-content: center;
@@ -19,8 +20,8 @@ $breakpoints: (
 );
 
 @mixin respond-to($device) {
-    @if map-has-key($breakpoints, $device) {
-        $size: map-get($breakpoints, $device);
+    @if map.has-key($breakpoints, $device) {
+        $size: map.get($breakpoints, $device);
         @media (max-width: $size) {
             @content;
         }

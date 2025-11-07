@@ -1,4 +1,4 @@
-@use '/app/scss/mixins.scss' as *;
+@use '../../app/scss/mixins.scss' as *;
 .message-mention {
     color: var(--red);
     font-weight: 500;

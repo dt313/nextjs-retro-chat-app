@@ -1,4 +1,4 @@
-@use '/app/scss//mixins.scss' as *;
+@use '../../app/scss/mixins.scss' as *;
 .wrapper {
     width: 100%;
     @include font-default;

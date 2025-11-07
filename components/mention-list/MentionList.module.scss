@@ -1,4 +1,4 @@
-@use '/app/scss/mixins.scss' as *;
+@use '../../app/scss/mixins.scss' as *;
 .wrapper {
     z-index: 1000;
     background-color: var(--white);
