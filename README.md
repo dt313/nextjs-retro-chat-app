@@ -41,7 +41,7 @@
 ### 🖥️ Frontend
 
 - [Next.js](https://nextjs.org/)
-- React 18
+- React 19
 - Redux Toolkit
 - Websocket
 - WebRTC
