@@ -1,9 +1,8 @@
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import classNames from 'classnames/bind';
 
 import ConversationPreview from '@/app/(default-layout)/conversation/components/conversation-preview';
-import { debounce } from 'lodash';
 import { shallowEqual, useSelector } from 'react-redux';
 
 import { SpinnerLoader } from '@/components/loading';
@@ -31,26 +30,26 @@ function ConversationList({ conversations = [], activeId, onLoadMore, hasMore = 
     const containerRef = useRef(null);
 
     const checkOnline = useCallback(
-        (conv) => {
-            if (!conv) return false;
-            if (conv.isGroup) return false;
-            const id = getTargetIdFromConversation(conv, me._id);
+        (conversation) => {
+            if (!conversation) return false;
+            if (conversation.isGroup) return false;
+            const id = getTargetIdFromConversation(conversation, me._id);
             return checkStatus(id, onlineUserList);
         },
         [onlineUserList, me._id],
     );
     // Memoize conversation data
     const conversationData = useMemo(() => {
-        return conversations.map((conv) => ({
-            id: conv._id,
-            slug: conv._id,
-            avatar: getAvatarFromConversation(conv, me._id),
-            name: getNameFromConversation(conv, me._id),
-            message: getLastMessageContent(conv.lastMessage, me._id),
-            time: calculateTime(conv.lastMessage?.sentAt),
-            isReaded: checkIsRead(conv.lastMessage.readedBy, me._id),
-            isOnline: checkOnline(conv),
-            isGroup: conv.isGroup,
+        return conversations.map((conversation) => ({
+            id: conversation._id,
+            slug: conversation._id,
+            avatar: getAvatarFromConversation(conversation, me._id),
+            name: getNameFromConversation(conversation, me._id),
+            message: getLastMessageContent(conversation.lastMessage, me._id),
+            time: calculateTime(conversation.lastMessage?.sentAt),
+            isReaded: checkIsRead(conversation.lastMessage.readedBy, me._id),
+            isOnline: checkOnline(conversation),
+            isGroup: conversation.isGroup,
         }));
     }, [conversations, me._id, onlineUserList]);
 
@@ -98,19 +97,19 @@ function ConversationList({ conversations = [], activeId, onLoadMore, hasMore = 
     return (
         <div className={cx('message-list')} ref={containerRef}>
             {conversationData.length > 0 &&
-                conversationData.map((conv) => (
+                conversationData.map((conversation) => (
                     <ConversationPreview
                         className={cx('message-preview')}
-                        key={conv.id}
-                        slug={conv.id}
-                        avatar={conv.avatar}
-                        name={conv.name}
-                        message={conv.message}
-                        time={conv.time}
-                        isReaded={conv.isReaded}
-                        active={activeId === conv.id}
-                        isOnline={conv.isOnline}
-                        isGroup={conv.isGroup}
+                        key={conversation.id}
+                        slug={conversation.id}
+                        avatar={conversation.avatar}
+                        name={conversation.name}
+                        message={conversation.message}
+                        time={conversation.time}
+                        isReaded={conversation.isReaded}
+                        active={activeId === conversation.id}
+                        isOnline={conversation.isOnline}
+                        isGroup={conversation.isGroup}
                     />
                 ))}
             {isLoading && (
