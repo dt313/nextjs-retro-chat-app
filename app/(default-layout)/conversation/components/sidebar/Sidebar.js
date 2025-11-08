@@ -5,7 +5,6 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames/bind';
 
 import ConversationPreview from '@/app/(default-layout)/conversation/components/conversation-preview';
-import eventBus from '@/config/emit';
 import { useDebounce } from '@/hooks';
 import { useParams } from 'next/navigation';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';

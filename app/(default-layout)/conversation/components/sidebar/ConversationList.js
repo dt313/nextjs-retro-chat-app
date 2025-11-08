@@ -121,7 +121,7 @@ function ConversationList({ conversations = [], activeId, onLoadMore, hasMore = 
 
             {!hasMore && (
                 <div className={cx('empty-state')}>
-                    <p>--- Đã hết ---</p>
+                    <p>Đã hết</p>
                 </div>
             )}
         </div>
