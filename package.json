@@ -1,55 +1,55 @@
 {
-    "name": "retro-chat",
-    "version": "0.1.0",
-    "private": true,
-    "scripts": {
-        "dev": "next dev ",
-        "build": "next build ",
-        "start": "next start",
-        "lint": "next lint",
-        "format": "prettier --write ."
-    },
-    "dependencies": {
-        "@reduxjs/toolkit": "^2.6.1",
-        "@tippyjs/react": "^4.2.6",
-        "axios": "^1.8.4",
-        "classnames": "^2.5.1",
-        "date-fns": "^4.1.0",
-        "emoji-picker-react": "^4.12.2",
-        "framer-motion": "^12.9.2",
-        "html2canvas": "^1.4.1",
-        "html2canvas-pro": "^1.5.11",
-        "i": "^0.3.7",
-        "js-cookie": "^3.0.5",
-        "lodash": "^4.17.21",
-        "lucide-react": "^0.513.0",
-        "next": "^15.3.6",
-        "next-themes": "^0.4.6",
-        "normalize.css": "^8.0.1",
-        "npm": "^11.4.2",
-        "react": "^19.0.0",
-        "react-dom": "^19.0.0",
-        "react-icons": "^5.5.0",
-        "react-loading-skeleton": "^3.5.0",
-        "react-qr-code": "^2.0.15",
-        "react-redux": "^9.2.0",
-        "react-slick": "^0.30.3",
-        "redux": "^5.0.1",
-        "sanitize-html": "^2.17.0",
-        "sass": "^1.86.3",
-        "slick-carousel": "^1.8.1",
-        "uuid": "^11.1.0"
-    },
-    "devDependencies": {
-        "@eslint/eslintrc": "^3",
-        "@trivago/prettier-plugin-sort-imports": "^5.2.2",
-        "@types/node": "22.14.0",
-        "@types/react": "19.1.0",
-        "eslint": "^9",
-        "eslint-config-next": "15.2.4",
-        "prettier": "^3.5.3"
-    },
-    "optionalDependencies": {
-        "sharp": "^0.33.5"
-    }
+  "name": "retro-chat",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev ",
+    "build": "next build ",
+    "start": "next start",
+    "lint": "next lint",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.6.1",
+    "@tippyjs/react": "^4.2.6",
+    "axios": "^1.8.4",
+    "classnames": "^2.5.1",
+    "date-fns": "^4.1.0",
+    "emoji-picker-react": "^4.12.2",
+    "framer-motion": "^12.9.2",
+    "html2canvas": "^1.4.1",
+    "html2canvas-pro": "^1.5.11",
+    "i": "^0.3.7",
+    "js-cookie": "^3.0.5",
+    "lodash": "^4.17.21",
+    "lucide-react": "^0.513.0",
+    "next": "15.3.8",
+    "next-themes": "^0.4.6",
+    "normalize.css": "^8.0.1",
+    "npm": "^11.4.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.5.0",
+    "react-loading-skeleton": "^3.5.0",
+    "react-qr-code": "^2.0.15",
+    "react-redux": "^9.2.0",
+    "react-slick": "^0.30.3",
+    "redux": "^5.0.1",
+    "sanitize-html": "^2.17.0",
+    "sass": "^1.86.3",
+    "slick-carousel": "^1.8.1",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "@types/node": "22.14.0",
+    "@types/react": "19.1.0",
+    "eslint": "^9",
+    "eslint-config-next": "15.2.4",
+    "prettier": "^3.5.3"
+  },
+  "optionalDependencies": {
+    "sharp": "^0.33.5"
+  }
 }
