@@ -254,10 +254,6 @@ UserCard.Skeleton = function UserCardSkeleton() {
                         <Skeleton width={100} height={20} />
                     </div>
                 </div>
-                <div className={cx('action')}>
-                    <Skeleton width={120} height={40} />
-                    <Skeleton width={120} height={40} />
-                </div>
             </SkeletonTheme>
         </div>
     );
