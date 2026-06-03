@@ -58,6 +58,7 @@ function AuthForm({ type = LOGIN_AUTH_BOX }) {
             onClick: () => {
                 window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
             },
+            hideInProduction: true,
         },
         {
             image: images.ghIcon,
@@ -72,8 +73,14 @@ function AuthForm({ type = LOGIN_AUTH_BOX }) {
             onClick: () => {
                 alert('Chức năng này đang được phát triển');
             },
+            hideInProduction: true,
         },
-    ];
+    ].filter((item) => {
+        if (process.env.NODE_ENV === 'production' && item.hideInProduction) {
+            return false;
+        }
+        return true;
+    });
 
     if (type === FORGET_PASSWORD_BOX) {
         return (
